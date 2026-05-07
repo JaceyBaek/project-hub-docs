@@ -7,6 +7,38 @@
 
 ---
 
+## [v1.0.0] — 2026-05-07
+
+### BREAKING CHANGE
+- 두 비서 구조(`hub_assistant` + `project_assistant`)를 단일 비서(`assistant`)로 통합
+- 프로젝트 유형 `general`/`dev` 2종 → `dev` 단일
+
+### Changed
+- **비서 통합** — 단일 비서 "아이다 (Aida)"로 운영
+  - 의미 변경: "돕는 자" → "이익을 주는 자, 보상하는 자" (아랍어 어원에 맞게 정정)
+  - 역할 전환 규칙 섹션 제거, 작업 경로 기반 적용 규칙으로 대체
+- **변수 통일** — `{hub_assistant}` / `{project_assistant}` → `{assistant}`
+  - 대상: CLAUDE.md, TRIGGERS.md, ENHANCEMENTS.md, TODO_GLOBAL.md, README.md, guides/SETUP.md, templates/deliverables/DEPLOYMENT.md
+  - 히스토리·changelog 변수 표기는 작성 시점 보존 원칙으로 유지
+- **`config/personal.yml`** 단일 `assistant` 키 구조
+- **`hub_init.py`** 입력 단계 4 → 3 (사용자 → 비서 → GitHub), 플레이스홀더 `{{ASSISTANT_*}}` 단일화
+- **`init_project.py`**
+  - `--type` 인자 제거
+  - 폴더명 자동 부여(`YYYYMM_폴더명`) 로직 제거
+  - 대화형 가드(`_interactive_collect`) 추가 — 인자 누락 시 1개씩 질문하는 방식으로 보완
+  - `_sync_project_assistant_in_file` 제거 (변수 기반 CLAUDE.md에서는 불필요)
+- **템플릿** `templates/CLAUDE_global.template.md`, `templates/SETUP.template.md` 단일 비서 구조로 재작성
+
+### Removed
+- 두 비서 역할 전환 선언 절차
+- 프로젝트 일반(general) 유형 (Confluence가 더 자연스러운 위치)
+
+### Migration
+- 기존 fork 사용자: `python hub_init.py` 재실행으로 새 `personal.yml` 구조 생성 권장
+- 기존 5개 프로젝트는 변경 영향 없음 (모두 dev 유형이었음)
+
+---
+
 ## [v0.3.0] — 2026-04-29
 
 ### Added
