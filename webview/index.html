@@ -754,10 +754,24 @@
               .replace(/-+/g, '-').replace(/^-|-$/g, '');
           }
           function dpwsExtract(txt) {
-            return (txt.match(/^##[ \t]+.+/mg) || []).map(function(l) {
-              var text = l.replace(/^##[ \t]+/, '').trim();
-              return { text: text, id: dpwsSlug(text) };
-            });
+            // 코드 블록(``` 또는 ~~~) 내부의 `##` 라인은 제외
+            var headings = [];
+            var inCode = false;
+            var lines = txt.split('\n');
+            for (var i = 0; i < lines.length; i++) {
+              var line = lines[i];
+              if (/^(```|~~~)/.test(line)) {
+                inCode = !inCode;
+                continue;
+              }
+              if (inCode) continue;
+              var m = line.match(/^##[ \t]+(.+)/);
+              if (m) {
+                var text = m[1].trim();
+                headings.push({ text: text, id: dpwsSlug(text) });
+              }
+            }
+            return headings;
           }
           function dpwsInject() {
             var stored = dpwsGet();
