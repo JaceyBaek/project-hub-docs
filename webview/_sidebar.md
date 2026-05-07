@@ -10,7 +10,6 @@
 - **플랫폼 현황**
   - [프로젝트 현황](PROJECTS_GLOBAL.md)
   - [전역 TODO](TODO_GLOBAL.md)
-  - [전역 이슈](ISSUES_GLOBAL.md)
   - [고도화 백로그](ENHANCEMENTS.md)
   - [변경 이력](CHANGELOG.md)
 
@@ -19,7 +18,7 @@
   - [산출물 배포](templates/deliverables/DEPLOYMENT.md)
 
 - **아키텍처**
-  - [Atlassian & Miso 연동](docs/architecture.md)
+  - [Atlassian & Miso 연동](guides/architecture.md)
 
 - **히스토리**
   - [2026년 4월](history/202604_history.md)
