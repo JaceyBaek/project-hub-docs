@@ -13,8 +13,10 @@
 | 이슈 등록 뉘앙스 | 프로젝트 맥락이면 해당 프로젝트 issues.md에, 전역이면 ISSUES_GLOBAL.md에 이슈 등록 |
 | 서비스종료 처리 뉘앙스 | 서비스종료 처리 절차 실행 → 산출물 정리 → PROJECTS_GLOBAL.md 서비스종료 섹션 이동 + 종료일 기록 → 프로젝트 CLAUDE.md 상태 `서비스종료` 변경 → 히스토리 기록 |
 | 보류 처리 뉘앙스 | 보류 사유 확인 → PROJECTS_GLOBAL.md 보류 테이블로 이동 및 요약란 기재 → 프로젝트 CLAUDE.md 상태 변경 → 프로젝트 히스토리 기록 |
-| "웹뷰 열어줘", "문서 보기", "docs 서버", "로컬 서버" 뉘앙스 | 백그라운드로 `python -m http.server 3000` 실행 → 1초 대기 → PowerShell `Start-Process "http://localhost:3000/webview/"` 으로 브라우저 자동 오픈 |
-| "웹뷰 종료", "서버 종료", "로컬 서버 종료" 뉘앙스 | 종료할 포트 번호 확인 (기본 3000) → PowerShell `Get-NetTCPConnection -LocalPort {포트} | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }` 실행 |
+| "웹뷰 열어줘", "문서 보기" 뉘앙스 | PowerShell `Start-Process "https://jaceybaek.github.io/project-hub-docs/webview/"` 으로 GitHub Pages 웹뷰 오픈 |
+| "웹뷰 배포 확인", "sync 확인", "배포 상태" 뉘앙스 | `gh run list --repo gsr-ax/project-hub --workflow sync-docs.yml --limit 3` 실행 → 최근 sync 결과 확인 → 실패 시 `gh run view {run-id} --log-failed` 로 원인 확인 |
+| "로컬 서버", "로컬 웹뷰" 뉘앙스 | 백그라운드로 `python -m http.server 3000` 실행 → 1초 대기 → PowerShell `Start-Process "http://localhost:3000/webview/"` 으로 브라우저 자동 오픈 |
+| "로컬 서버 종료", "서버 종료" 뉘앙스 | 종료할 포트 번호 확인 (기본 3000) → PowerShell `Get-NetTCPConnection -LocalPort {포트} | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }` 실행 |
 | "메모리 저장" | 미완료·진행 중 작업 여부 확인 → 없으면 memory 파일 업데이트 → `/compact`는 사용자가 직접 입력 필요 ({hub_assistant} 실행 불가) → 있으면 목록 안내 후 사용자 판단 |
 | "compact", "컴팩트" | ① 이번 세션 작업 내용 기반 memory 파일 업데이트 (user/feedback/project/reference) → ② 글로벌·프로젝트 히스토리 기록 (미기록 시) → ③ 미완료 작업 있으면 목록 안내 → ④ 모두 완료 후 "이제 `/compact`를 입력해 주세요." 안내 |
 | "사이드바 캐시 초기화", "캐시 초기화", "dpws 초기화" | 웹뷰어 사이드바 하위 메뉴 캐시(dpws2) 초기화 안내: 브라우저 개발자 도구(F12) → 콘솔 탭에서 `localStorage.removeItem('dpws2')` 입력 후 F5 새로고침 |
