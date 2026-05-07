@@ -1,3 +1,9 @@
+<!--
+sidebar_title: Atlassian & Miso 연동
+sidebar_order: 1
+sidebar_section: architecture
+-->
+
 # Atlassian & Miso 클라이언트 아키텍처
 
 > `atlassian_client v0.2.0` · `miso_client v0.1.0` — 2026-05-01 기준

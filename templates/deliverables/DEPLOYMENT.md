@@ -1,3 +1,8 @@
+<!--
+sidebar_title: 산출물 배포
+sidebar_order: 3
+-->
+
 # 산출물 템플릿 — 배포 절차
 
 > 본 문서는 산출물 템플릿(`templates/deliverables/*.html`, `templates/deliverables/guides/*.md`, `templates/deliverables/assets/`, `templates/deliverables/index.html`)을 사내 환경에 배포하는 표준 절차를 정의한다.

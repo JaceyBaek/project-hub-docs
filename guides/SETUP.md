@@ -1,3 +1,8 @@
+<!--
+sidebar_title: 셋업 가이드
+sidebar_order: 1
+-->
+
 # project-hub 환경 설정 가이드
 
 > 이 문서는 project-hub 환경 초기 설정부터 GitHub 연동, 개발 환경 구성까지 전 과정을 기술합니다.

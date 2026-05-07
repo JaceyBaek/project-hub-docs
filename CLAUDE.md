@@ -347,6 +347,7 @@ claude mcp add {서버이름} --transport sse -s user -- {서버URL}
 | 의사결정 | `_manage/decisions.md` | ID / 일자 / 결정 내용·근거·결정자 |
 | 변경이력 | `_manage/changelog.md` | 일자 / 변경구분 / 변경전후 / 사유 |
 
+- **변경이력 자동 기록:** 프로젝트 최초 생성 시 `init_project.py`가 changelog.md에 "최초 생성" 항목을 자동 기록 (일자=시작일, 변경구분=신규). 별도 보강 불필요.
 - **글로벌 히스토리:** `history/` — 전역 환경 변경만 기록 (CLAUDE.md·템플릿·TRIGGERS.md 등)
 - **전체 현황 필요 시:** {hub_assistant}가 GLOBAL + 진행중·운영중 프로젝트 파일 동적으로 읽어 통합 출력
 - **우선순위:** 높음·보통·낮음 / **상태:** 대기·진행중·완료·보류 / **이슈 유형:** 버그·변경요청·리스크

@@ -4,7 +4,7 @@
 
 | 프로젝트명 | 폴더 | 담당 | 시작일 | 요약 |
 |---|---|---|---|---|
-| gmail_cleaner | projects/gmail_cleaner | Jacey | 2026-05-06 | Gmail 광고·프로모션 메일 자동 삭제 도구 (Google Apps Script 기반, clasp로 로컬 관리) |
+| gmail_cleaner | projects/gmail_cleaner | Jacey | 2026-05-06 | Gmail 광고·프로모션 메일 정리 도구 (Python + APScheduler + 자체 MCP 11개 tool, 자동삭제·검토삭제 2-Tier) |
 | daily_briefing | projects/daily_briefing | Jacey | 2026-04-17 | 매일 아침 프로젝트 현황·할일·이슈를 Outlook 메일로 자동 발송하는 일배치 도구 (Microsoft Graph API) |
 | wiki_mbo_builder | projects/wiki_mbo_builder | Jacey | 2026-04-28 | Confluence 위키 페이지를 읽어 2단계(전처리→구조화) 처리로 월별 MBO 페이지 생성, shared/ 공통 모듈 사용 |
 
