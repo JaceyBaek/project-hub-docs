@@ -234,8 +234,24 @@ sidebar_order: 1
 - credentials.json 다운로드 후 `secrets/credentials.json` 배치
 - 최초 브라우저 인증으로 token.json 생성
 
-**남은 작업**
-- gmail_cleaner GitHub repo 생성 (JaceyBaek/gmail_cleaner) → submodule 등록
+**남은 작업 (3차 세션 당시)**
+- ~~gmail_cleaner GitHub repo 생성 (JaceyBaek/gmail_cleaner) → submodule 등록~~ → 완료
 - mcp_server/setup.py 자동 탐색 개선 (프로젝트별 server.py 자동 등록)
 - guides/mcp_server_setup.md A안 패턴 문서화
 - wiki_faq_builder, wiki_mbo_builder 자체 MCP 서버 추가 검토 (현재는 run_project로만 가능)
+
+---
+
+## 2026-05-07 (4차 세션)
+
+### 세션 종료 처리 — 플랫폼 기록 및 푸시
+
+**세라 (플랫폼 레이어)**
+
+1. **gmail_cleaner submodule 포인터 최신화**
+   - 3차 세션에서 등록된 submodule 포인터를 최신 커밋으로 업데이트
+   - `.gitmodules`에 이미 등록 완료: `https://github.com/JaceyBaek/gmail_cleaner.git`
+
+2. **project-hub 커밋·푸시** (`gsr-ax/project-hub` — JaceyBaek-GSRetail 계정)
+
+3. **Google Drive 백업 실행**
