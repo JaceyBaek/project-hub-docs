@@ -1,3 +1,8 @@
+<!--
+sidebar_title: 2026년 5월
+sidebar_order: 1
+-->
+
 # 2026년 05월 작업 히스토리
 
 ---
@@ -136,3 +141,101 @@
 - `google_drive_backup/secrets/` (credentials.json, token.json) → `03.project-hub`로 이관 후 삭제
 - `D:\05.Claude` 전체 삭제 완료
 - G-006 완료 처리 (2026-05-07)
+
+---
+
+## 2026-05-07 (3차 세션)
+
+### MCP 등록 절차 추가 및 비서 통합 논의
+
+**1. CLAUDE.md — MCP 등록 절차 섹션 신규 추가**
+- `진행중 → 운영중` 전환 시 MCP 등록 여부 확인 단계 추가
+- `## MCP 등록 절차` 섹션: 정보 수집(서버명·전송방식·실행 명령·환경변수·노출 tool) → `claude mcp add` 실행 → 프로젝트 CLAUDE.md 기록
+
+**2. TRIGGERS.md — MCP 관련 트리거 3개 추가**
+- `"MCP 등록"` — 등록 절차 전체 실행
+- `"MCP 목록"` — `claude mcp list` 실행
+- `"MCP 삭제"` — 등록 제거
+
+**3. 프로젝트별 관리 문서 일괄 업데이트 (아이다)**
+- google_drive_backup, wiki_faq_builder, wiki_mbo_builder: `_manage/history/202605_history.md` 신규 생성
+- 3개 프로젝트 `_manage/changelog.md`: 2026-05 변경 이력 추가
+- google_drive_backup `_manage/todo.md`: T-001 token.json 재인증 항목 추가
+
+**4. 비서 통합 논의 (결정: 진행 후 착수)**
+- 현행 두 비서(세라/아이다) 구조 장단점 분석
+- **결정:** 단일 비서로 통합 (제안 1+2: CLAUDE.md 절대 규칙 유지 + init_project.py 대화형 가드 추가)
+- 착수 조건: 전체 작업 정리 완료 후 진행
+
+---
+
+### 비서명 변수화 전체 완료 + 변수 사용 원칙 추가 (2차 세션)
+
+**배경**
+- project-hub 플랫폼은 fork 사용자도 동일하게 사용 가능해야 함
+- 관리 파일에 `세라`, `아이다` 등 특정 이름이 하드코딩되어 있으면 다른 비서명 사용 시 충돌 발생
+
+**변경 파일 (세라 담당 — 전역 레이어)**
+- `README.md`: 2번째 발생 `세라(Sera) AI 비서 설정` → `{hub_assistant} AI 비서 설정`
+- `TRIGGERS.md`: "메모리 저장" 트리거 `세라 실행 불가` → `{hub_assistant} 실행 불가`
+- `TODO_GLOBAL.md`: G-016 `아이다 CLAUDE.md 정리` → `{project_assistant} CLAUDE.md 정리`
+- `ENHANCEMENTS.md`: 6곳 (관리자 표기, 비고 헤더×4, E-001·E-006·E-010·E-011 본문)
+- `guides/SETUP.md`: 16곳 (협업 방식, 역할 표, 디렉토리 구조 주석, CLAUDE.md 역할 표, 세션 프로토콜, 히스토리·To-Do·이슈 관리 표 등)
+- `templates/deliverables/DEPLOYMENT.md`: AI 운영 담당란 `아이다 (프로젝트 AI)` → `{project_assistant}`
+- `CLAUDE.md`: 최상단 변수 선언 블록에 **변수 사용 원칙** 추가
+
+**변경 파일 (아이다 담당 — 프로젝트 레이어)**
+- `projects/wiki_mbo_builder/refs/mbo_evaluation_guide.md`: 3곳 (`아이다에게 작업 지시` 섹션 제목 및 본문)
+- `projects/google_drive_backup/source/src/wiki_publisher.py`: 2곳 (HTML 문서 내 아이다 언급)
+
+**유지 항목 (의도적 예외)**
+- `hub_init.py`, `init_project.py`: 코드 fallback 기본값 (`"세라"`, `"아이다"`)
+- `guides/SETUP.md` 226-227행: 코드블록 예시 (hub_init.py 입력 화면)
+- `templates/SETUP.template.md`: 기본값 예시 행
+- `history/` 파일들: 과거 기록 (수정 불가)
+
+**변수 사용 원칙 (CLAUDE.md 추가)**
+- 관리 파일 작성·수정 시 비서명은 반드시 `{hub_assistant}` / `{project_assistant}` / `{user_name}` 변수로 표기
+- 히스토리 파일(`history/`, `_manage/history/`)과 코드 기본값은 변수화 제외
+
+---
+
+### gmail_cleaner Python 전환 + Claude Desktop MCP 통합 (3차 세션)
+
+**세션 범위**
+- 아이다 담당: gmail_cleaner 프로젝트 내부 (Python 전환·MCP 서버 구현)
+- 세라 담당: Claude Desktop 설정·중앙 MCP 서버 갱신·플랫폼 표준 정렬
+
+**세라 (플랫폼 레이어) 변경**
+
+1. **mcp_server/server.py** 주석 갱신
+   - 기존 "gmail_cleaner: Apps Script 기반 직접 실행 불가 (제외)" 문구 제거
+   - 변경: "자체 MCP 서버를 가진 프로젝트는 별도 MCP 서버로 등록되므로 여기서 제외"
+   - PROJECT_RUN_CONFIG에는 추가하지 않음 — gmail_cleaner는 자체 server.py로 11개 tool 노출
+
+2. **Claude Desktop 설정 갱신**
+   - 위치: `C:\Users\Administrator\AppData\Local\Packages\Claude_pzs8sxrjxfjjc\LocalCache\Roaming\Claude\claude_desktop_config.json`
+   - 기존 `project-hub` 항목 유지 + `gmail-cleaner` 별도 등록
+   - 패턴 확정: A안 (프로젝트별 독립 MCP 서버) — 의존성 격리 + 프로젝트 독립성 우선
+   - 잘못 생성한 `~/.claude/mcp.json` 삭제 (Claude Code 기준 위치, Desktop과 무관)
+
+3. **A안 패턴 결정 사항** (앞으로 표준)
+   - 단순 1회 실행만 필요한 프로젝트 → 중앙 `mcp_server/server.py`의 PROJECT_RUN_CONFIG에 등록 (기존 wiki/drive)
+   - 프로젝트 고유 tool이 필요한 프로젝트 → 자체 `source/src/server.py` 작성 후 Claude Desktop에 별도 등록 (gmail_cleaner)
+
+**아이다 (프로젝트 레이어) 변경 — gmail_cleaner**
+- GAS → Python 전면 리팩토링 완료, 자세한 내용은 `projects/gmail_cleaner/_manage/history/202605_history.md` 참조
+- MCP 서버 11개 tool: 브라우징·삭제 6개 + 설정 수정 5개
+- 71 passed (test_cleaner 22 + test_config 26 + test_server 23)
+- 별도 GCP 프로젝트 + OAuth 인증 완료
+
+**Jacey 직접 진행**
+- Google Cloud Project 생성·Gmail API 활성화·OAuth 동의화면 + 테스트 사용자 등록
+- credentials.json 다운로드 후 `secrets/credentials.json` 배치
+- 최초 브라우저 인증으로 token.json 생성
+
+**남은 작업**
+- gmail_cleaner GitHub repo 생성 (JaceyBaek/gmail_cleaner) → submodule 등록
+- mcp_server/setup.py 자동 탐색 개선 (프로젝트별 server.py 자동 등록)
+- guides/mcp_server_setup.md A안 패턴 문서화
+- wiki_faq_builder, wiki_mbo_builder 자체 MCP 서버 추가 검토 (현재는 run_project로만 가능)
