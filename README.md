@@ -1,6 +1,6 @@
 # project-hub
 
-AI 비서 **{hub_assistant}** 기반 프로젝트 관리 허브.
+AI 비서 **{assistant}** 기반 프로젝트 관리 허브.
 프로젝트 생성부터 산출물 관리, Wiki 동기화, 배포 기록까지 표준화된 구조를 제공합니다.
 
 ---
@@ -54,7 +54,7 @@ python init_project.py
 
 입력 항목:
 - 프로젝트명
-- 유형 (일반/개발)
+- 한 줄 설명
 - 담당자명
 - Confluence 루트 페이지 ID
 
@@ -66,7 +66,7 @@ python init_project.py
 
 ```
 project-hub/
-├── CLAUDE.md                    ← {hub_assistant} AI 비서 설정
+├── CLAUDE.md                    ← {assistant} AI 비서 설정
 ├── init_project.py              ← 프로젝트 초기화
 ├── config/
 │   └── hub_config.yml           ← 알림·GitHub 설정

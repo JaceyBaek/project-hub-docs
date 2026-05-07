@@ -47,14 +47,13 @@
 | 작업 디렉토리 | `{HUB_ROOT}` (clone/fork 위치 — 사용자가 지정) |
 | GitHub 저장소 | `gsr-ax/project-hub` (원본 upstream) |
 | 언어 | Python |
-| 협업 방식 | 사용자 + {{HUB_ASSISTANT_KR}}(플랫폼) + {{PROJ_ASSISTANT_KR}}(프로젝트) |
+| 협업 방식 | 사용자 + {{ASSISTANT_KR}} (통합 비서) |
 
 ### AI 비서 역할
 
 | 비서 | 담당 영역 |
 |---|---|
-| **{{HUB_ASSISTANT_KR}} ({{HUB_ASSISTANT_EN}})** | project-hub 플랫폼 관리 — 프로젝트 생성·상태 전환·전역 파일 관리·세션 프로토콜 |
-| **{{PROJ_ASSISTANT_KR}} ({{PROJ_ASSISTANT_EN}})** | 각 프로젝트 내부 협업 — 기능 개발·산출물 작성·이슈·히스토리·운영 |
+| **{{ASSISTANT_KR}} ({{ASSISTANT_EN}})** | project-hub 통합 비서 — 플랫폼 관리(프로젝트 생성·상태 전환·전역 파일·세션 프로토콜) + 프로젝트 내부 협업(기능 개발·산출물·이슈·히스토리·운영) |
 
 ### 구성 원칙
 
@@ -98,8 +97,8 @@ git config --global user.email "이메일@예시.com"
 
 ```
 {HUB_ROOT}\                      ← clone/fork 위치 (사용자가 지정, 예: D:\project-hub)
-├── CLAUDE.md                    ← project-hub 전역 설정 ({{HUB_ASSISTANT_KR}}+{{PROJ_ASSISTANT_KR}})
-├── TRIGGERS.md                  ← {{HUB_ASSISTANT_KR}}/{{PROJ_ASSISTANT_KR}}와 약속된 트리거 목록
+├── CLAUDE.md                    ← project-hub 전역 설정 ({{ASSISTANT_KR}})
+├── TRIGGERS.md                  ← {{ASSISTANT_KR}}와 약속된 트리거 목록
 ├── PROJECTS_GLOBAL.md           ← 전체 프로젝트 현황
 ├── TODO_GLOBAL.md               ← 전역 To-Do (프로젝트 무관 독립 항목)
 ├── ISSUES_GLOBAL.md             ← 전역 이슈 (프로젝트 무관 독립 항목)
@@ -115,7 +114,7 @@ git config --global user.email "이메일@예시.com"
 │   │   └── confluence_client.py
 │   ├── sample\                  ← 프로젝트 폴더 구조 예시
 │   └── {프로젝트명}\
-│       ├── CLAUDE.md            ← 프로젝트별 {{PROJ_ASSISTANT_KR}} 설정
+│       ├── CLAUDE.md            ← 프로젝트별 {{ASSISTANT_KR}} 설정
 │       ├── docs\                ← 산출물 (HTML, 로컬 전용)
 │       ├── refs\                ← 참고자료 (로컬 전용)
 │       ├── archive\             ← 구버전 산출물 보관 (로컬 전용)
@@ -201,8 +200,8 @@ python hub_init.py
 
 | 파일 | 위치 | 역할 |
 |---|---|---|
-| 전역 CLAUDE.md | `~\.claude\CLAUDE.md` | {{PROJ_ASSISTANT_KR}} 전역 설정 (모든 프로젝트에 적용) — hub_init.py로 자동 생성 |
-| project-hub CLAUDE.md | `{HUB_ROOT}\CLAUDE.md` | {{HUB_ASSISTANT_KR}}+{{PROJ_ASSISTANT_KR}} 통합 설정 (project-hub 내 적용) |
+| 전역 CLAUDE.md | `~\.claude\CLAUDE.md` | {{ASSISTANT_KR}} 전역 설정 (모든 프로젝트에 적용) — hub_init.py로 자동 생성 |
+| project-hub CLAUDE.md | `{HUB_ROOT}\CLAUDE.md` | {{ASSISTANT_KR}} 통합 설정 (project-hub 내 적용) |
 
 > 전역 CLAUDE.md는 Claude Code 시작 시 자동 로드됩니다.
 > project-hub VS Code 워크스페이스에서는 project-hub CLAUDE.md가 추가로 로드되어 우선 적용됩니다.
@@ -224,8 +223,7 @@ python hub_init.py
 
 ```markdown
 ## 역할
-- {{HUB_ASSISTANT_KR}}: project-hub 플랫폼 관리 전담
-- {{PROJ_ASSISTANT_KR}}: 각 프로젝트 내부 협업 전담
+- {{ASSISTANT_KR}}: project-hub 통합 비서 — 플랫폼 관리 + 프로젝트 내부 협업
 ```
 
 **응답 규칙** (핵심 항목)
@@ -249,8 +247,8 @@ python hub_init.py
 
 - **세션 시작 프로토콜**: TRIGGERS.md 로드 → TODO_GLOBAL.md 기한 초과 확인 → 히스토리 누락 확인
 - **세션 종료 프로토콜**: 글로벌 히스토리 기록 → 프로젝트 히스토리 기록 → Google Drive 백업
-- **역할 자동 전환 규칙**: 요청 내용으로 {{HUB_ASSISTANT_KR}}/{{PROJ_ASSISTANT_KR}} 자동 판단
-- **새 프로젝트 시작 규칙**: 일반 프로젝트 / 개발 프로젝트 각각 정의
+- **작업 영역 판단**: 작업 대상 경로(`projects/` 하위 vs 그 외)에 따라 적용 규칙 자동 판단
+- **새 프로젝트 시작 규칙**: 대화형 가드 (이름·설명 수집 → 사용자 최종 확인 → `init_project.py` 실행)
 - **프로젝트 상태 전환 절차**: 진행중·보류·운영중·완료 전환 방법
 - **산출물 명명규칙**: `{프로젝트명}_{산출물명}_{YYYYMMDD}.html`
 
@@ -268,7 +266,7 @@ ls {HUB_ROOT}
 
 ### 6-1. PROJECTS_GLOBAL.md
 
-전체 프로젝트 현황. {{HUB_ASSISTANT_KR}}가 통합 관리.
+전체 프로젝트 현황. {{ASSISTANT_KR}}가 통합 관리.
 
 ```markdown
 # 프로젝트 현황
@@ -318,7 +316,7 @@ ls {HUB_ROOT}
 
 ### 6-4. TRIGGERS.md
 
-{{HUB_ASSISTANT_KR}}/{{PROJ_ASSISTANT_KR}}와 약속된 트리거 목록. 새 트리거 추가 시 이 파일에 업데이트.
+{{ASSISTANT_KR}}와 약속된 트리거 목록. 새 트리거 추가 시 이 파일에 업데이트.
 
 ---
 
@@ -345,8 +343,8 @@ ls {HUB_ROOT}
 
 ### 7-2. 템플릿 사용 방식
 
-- **{{PROJ_ASSISTANT_KR}} 제안**: 프로젝트 단계 진입 시 필요한 템플릿 판단 → 사용자 승인 후 `docs/` 폴더에 복사 후 작성
-- **사용자 직접 요청**: "~~작성해줘" → {{PROJ_ASSISTANT_KR}}가 해당 템플릿 복사 후 즉시 작성 시작
+- **{{ASSISTANT_KR}} 제안**: 프로젝트 단계 진입 시 필요한 템플릿 판단 → 사용자 승인 후 `docs/` 폴더에 복사 후 작성
+- **사용자 직접 요청**: "~~작성해줘" → {{ASSISTANT_KR}}가 해당 템플릿 복사 후 즉시 작성 시작
 
 ### 7-3. Confluence 게시
 
@@ -359,9 +357,9 @@ ls {HUB_ROOT}
 
 ## 8. 세션 프로토콜 동작 확인
 
-### 세션 시작 프로토콜 ({{HUB_ASSISTANT_KR}} 자동 실행)
+### 세션 시작 프로토콜 ({{ASSISTANT_KR}} 자동 실행)
 
-VS Code에서 project-hub를 열고 Claude Code 세션을 시작하면 {{HUB_ASSISTANT_KR}}가 자동으로:
+VS Code에서 project-hub를 열고 Claude Code 세션을 시작하면 {{ASSISTANT_KR}}가 자동으로:
 
 1. `TRIGGERS.md` 로드
 2. `TODO_GLOBAL.md` 기한 초과 항목 확인 → 있으면 알림
@@ -369,7 +367,7 @@ VS Code에서 project-hub를 열고 Claude Code 세션을 시작하면 {{HUB_ASS
 
 ### 세션 종료 프로토콜 (마무리 뉘앙스 감지 시 자동 실행)
 
-마무리 표현 감지 시 {{HUB_ASSISTANT_KR}}가:
+마무리 표현 감지 시 {{ASSISTANT_KR}}가:
 
 1. 글로벌 작업 있으면 → 글로벌 히스토리 기록 여부 확인
 2. 프로젝트 작업 있으면 → 해당 프로젝트 히스토리 기록 여부 확인
@@ -787,7 +785,7 @@ pytest tests/ -v             # 테스트 실행
 
 ### 기록 방식
 
-"오늘 작업 정리해줘" 트리거 시 {{HUB_ASSISTANT_KR}}가 자동 판단:
+"오늘 작업 정리해줘" 트리거 시 {{ASSISTANT_KR}}가 자동 판단:
 - 전역 환경 변경만 있으면 → 글로벌 히스토리에만 기록
 - 프로젝트 작업만 있으면 → 해당 프로젝트 히스토리에만 기록
 - 둘 다 있으면 → 글로벌 → 프로젝트 순으로 각각 기록
@@ -820,19 +818,19 @@ pytest tests/ -v             # 테스트 실행
 
 | 위치 | 대상 | 관리자 |
 |---|---|---|
-| `TODO_GLOBAL.md` | 프로젝트 무관 독립 항목 | {{HUB_ASSISTANT_KR}} |
-| `projects\{이름}\_manage\todo.md` | 해당 프로젝트 항목 | {{PROJ_ASSISTANT_KR}} |
+| `TODO_GLOBAL.md` | 프로젝트 무관 독립 항목 | {{ASSISTANT_KR}} |
+| `projects\{이름}\_manage\todo.md` | 해당 프로젝트 항목 | {{ASSISTANT_KR}} |
 
-전체 현황 필요 시: "전체 To-Do 보여줘" → {{HUB_ASSISTANT_KR}}가 TODO_GLOBAL + 진행중·운영중 프로젝트 todo.md 통합 출력.
+전체 현황 필요 시: "전체 To-Do 보여줘" → {{ASSISTANT_KR}}가 TODO_GLOBAL + 진행중·운영중 프로젝트 todo.md 통합 출력.
 
 ### 이슈
 
 | 위치 | 대상 | 관리자 |
 |---|---|---|
-| `ISSUES_GLOBAL.md` | 프로젝트 무관 독립 항목 | {{HUB_ASSISTANT_KR}} |
-| `projects\{이름}\_manage\issues.md` | 해당 프로젝트 항목 | {{PROJ_ASSISTANT_KR}} |
+| `ISSUES_GLOBAL.md` | 프로젝트 무관 독립 항목 | {{ASSISTANT_KR}} |
+| `projects\{이름}\_manage\issues.md` | 해당 프로젝트 항목 | {{ASSISTANT_KR}} |
 
-전체 현황 필요 시: "전체 이슈 보여줘" → {{HUB_ASSISTANT_KR}}가 ISSUES_GLOBAL + 진행중·운영중 프로젝트 issues.md 통합 출력.
+전체 현황 필요 시: "전체 이슈 보여줘" → {{ASSISTANT_KR}}가 ISSUES_GLOBAL + 진행중·운영중 프로젝트 issues.md 통합 출력.
 
 ---
 

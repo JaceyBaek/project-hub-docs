@@ -174,4 +174,4 @@ DOCS-TMPL (Space)
 |---|---|---|
 | 검토/승인 | **hub 관리자** | PR 단독 검토·승인, 템플릿 콘텐츠 오너십 |
 | Confluence 관리자 | (별도 지정) | Space 권한, 매크로 플러그인, 페이지 게시 |
-| AI 운영 | **{project_assistant}** | 가이드 컨텍스트 패키징, `wiki_sync.py` 운영, 챗봇 메타데이터 동기화 |
+| AI 운영 | **{assistant}** | 가이드 컨텍스트 패키징, `wiki_sync.py` 운영, 챗봇 메타데이터 동기화 |

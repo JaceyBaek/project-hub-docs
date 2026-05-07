@@ -244,7 +244,7 @@ sidebar_order: 1
 
 ## 2026-05-07 (4차 세션)
 
-### 세션 종료 처리 — 플랫폼 기록 및 푸시
+### 4-1. 세션 종료 처리 — 플랫폼 기록 및 푸시
 
 **세라 (플랫폼 레이어)**
 
@@ -255,3 +255,74 @@ sidebar_order: 1
 2. **project-hub 커밋·푸시** (`gsr-ax/project-hub` — JaceyBaek-GSRetail 계정)
 
 3. **Google Drive 백업 실행**
+
+4. **사이드바 누락 항목 보완** — `generate_sidebar.py` 재실행으로 google_drive_backup Todo, 5월 히스토리 3건 반영
+
+---
+
+### 4-2. 비서 통합 — 세라·아이다 → 아이다 단일 비서
+
+**배경**
+- 두 비서(세라 플랫폼 / 아이다 프로젝트) 분리 운영의 효용성 재검토
+- 실제 작업 시간의 80%가 프로젝트 내부 작업, 플랫폼 작업은 가끔 발생
+- 역할 전환 선언 절차가 흐름을 끊는 부작용
+- fork 사용자도 동일 구조 유지가 부담일 수 있다는 판단
+
+**결정 사항**
+- 단일 통합 비서: **아이다 (Aida)**
+- 의미 변경: "돕는 자" → **"이익을 주는 자, 보상하는 자" (아랍어 어원)**
+  - 기존 "돕는 자"는 어원적으로 직접 일치하지 않음을 확인 후 어원에 맞게 정정
+- 통합 방식: **제안 1+2** (CLAUDE.md 절대 규칙 유지 + `init_project.py` 대화형 가드 추가)
+
+**부수 결정: 프로젝트 유형 단일화**
+- 기존 `general`(일반/문서) + `dev`(개발) 2종 → **`dev` 단일**로 통일
+- 사유: 현재 5개 프로젝트 모두 `dev` 유형. 일반(문서) 작업은 Confluence가 자연스러운 위치
+- 영향: `init_project.py --type` 인자 제거, 폴더명 자동 부여(`YYYYMM_폴더명`) 로직 제거
+
+**플랫폼 레이어 변경**
+
+1. **`config/personal.yml` 구조 단순화**
+   - `hub_assistant` + `project_assistant` → `assistant` 단일 키
+   - 의미: "이익을 주는 자, 보상하는 자 (아랍어)"
+
+2. **루트 `CLAUDE.md` 재작성**
+   - "역할 전환 규칙" 섹션 전체 제거
+   - "AI 비서" 섹션을 단일 비서로 단순화
+   - "작업 영역" 섹션 추가 — 경로 기반 적용 규칙 (전환 선언 불필요)
+   - "새 프로젝트 시작 규칙": 유형 질문 제거, 이름·설명 2단계로 단순화
+
+3. **변수 일괄 치환** — 6개 플랫폼 파일
+   - `{hub_assistant}` / `{project_assistant}` → `{assistant}`
+   - 대상: `TRIGGERS.md`, `ENHANCEMENTS.md`, `TODO_GLOBAL.md`, `README.md`, `templates/deliverables/DEPLOYMENT.md`, `guides/SETUP.md`
+   - 두 비서 표/문장은 단일 비서 형태로 정리
+
+4. **템플릿 정리**
+   - `templates/CLAUDE_global.template.md`: 단일 비서 구조로 재작성, 플레이스홀더 `{{ASSISTANT_KR}}` 단일화
+   - `templates/SETUP.template.md`: SETUP.md와 동일한 단일 비서 구조 반영
+
+5. **코드 수정**
+   - `hub_init.py`: 입력 단계 4개→3개(사용자 → 비서 → GitHub), `{{HUB_ASSISTANT_*}}`/`{{PROJ_ASSISTANT_*}}` → `{{ASSISTANT_*}}`
+   - `init_project.py`: `--type` 인자 제거, `_compute_project_folder` 함수 제거, `_sync_project_assistant_in_file` 함수 제거, 인터랙티브 가드(`_interactive_collect`) 추가, 단일 `assistant` 키 처리
+
+**서브모듈 변경**
+
+| 서브모듈 | 변경 내용 |
+|---|---|
+| `google_drive_backup` | `source/src/wiki_publisher.py` 정적 HTML 매뉴얼 내 `{project_assistant}` 2곳 → `아이다`. 커밋·푸시(JaceyBaek 계정) |
+| `wiki_mbo_builder` | `refs/mbo_evaluation_guide.md` 정적 가이드 텍스트 내 `{project_assistant}` 4곳 → `아이다`. 커밋·푸시(JaceyBaek 계정) |
+| `daily_briefing`, `gmail_cleaner`, `wiki_faq_builder` | 변수 사용 없음 — 변경 없음 |
+
+**히스토리/changelog 보존**
+- `history/`, `_manage/history/`, `_manage/changelog.md` 내 `{project_assistant}` 변수 표기는 **그대로 유지**
+- 사유: 과거 기록은 작성 시점의 표기를 보존하는 원칙 (CLAUDE.md 변수 사용 원칙)
+
+**버전 영향**
+- MAJOR 버전 변경 (플랫폼 핵심 규칙 변경) → `v1.0.0` 태그
+- 통합 비서로 첫 안정화 시점 = `v1.0.0` 적용
+
+**남은 작업 (4-2 완료 후)**
+- project-hub 전체 커밋·푸시 (`gsr-ax/project-hub`)
+- 서브모듈 포인터 최신화 (google_drive_backup, wiki_mbo_builder)
+- `git tag v1.0.0` 후 push
+- Google Drive 백업
+- TODO_GLOBAL.md G-016 항목 재검토 (통합으로 자연스럽게 해결)
