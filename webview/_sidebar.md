@@ -24,14 +24,3 @@
 - **히스토리**
   - [2026년 4월](history/202604_history.md)
 
-- **프로젝트**
-  - [test](projects/test/CLAUDE.md)
-    - [Todo](projects/test/_manage/todo.md)
-    - [이슈](projects/test/_manage/issues.md)
-    - [의사결정](projects/test/_manage/decisions.md)
-    - [변경이력](projects/test/_manage/changelog.md)
-  - [gmail_cleaner](projects/gmail_cleaner/CLAUDE.md)
-    - [Todo](projects/gmail_cleaner/_manage/todo.md)
-    - [이슈](projects/gmail_cleaner/_manage/issues.md)
-    - [의사결정](projects/gmail_cleaner/_manage/decisions.md)
-    - [변경이력](projects/gmail_cleaner/_manage/changelog.md)
