@@ -821,7 +821,8 @@
               var path = href.replace(/^#\//, '');
               if (!path.endsWith('.md')) path += '.md';
               if (path === '_sidebar.md' || path === 'home.md') return;
-              fetch(path)
+              // basePath가 '../'이므로 fetch URL도 동일하게 보정
+              fetch('../' + path)
                 .then(function(r) { return r.ok ? r.text() : ''; })
                 .then(function(txt) {
                   var headings = dpwsExtract(txt);
