@@ -963,6 +963,12 @@
               var ul = Array.from(li.children).find(function(n) { return n.tagName === 'UL'; });
               if (!ul) return;
               li.classList.add('has-sub-item');
+              // leaf로 먼저 처리됐다가 has-sub-item으로 승급되는 경우 leaf 잔존물 제거
+              if (li.classList.contains('is-leaf')) {
+                li.classList.remove('is-leaf');
+                var oldDot = li.querySelector(':scope > .leaf-dot');
+                if (oldDot) oldDot.remove();
+              }
               var itemHref = a.getAttribute('href');
               // 링크 클릭: 토글 (현재 페이지 여부 무관하게 접기/펼치기)
               a.addEventListener('click', function() {

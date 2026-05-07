@@ -19,3 +19,4 @@
 | G-015 | 개인 | scheduler_monitor 프로젝트 착수 (스케줄러 작업 모니터링 및 이상 감지 알림) | 보통 | 대기 | - | - |
 | G-016 | 개인 | {assistant} CLAUDE.md 정리 — 팀 공용으로 이관된 내용 제거, {assistant} 전용 내용만 유지 | 보통 | 대기 | - | - |
 | G-017 | project-hub | 공용 앱 레이어 설계 및 적용 — plugins/(연결 도구) / projects/(개인 프로젝트) / apps/(팀 공용 앱) 3레이어 구조로 분리, daily_briefing 개발 재개 시 apps/ 구조로 전환 포함 | 높음 | 대기 | - | - |
+| G-018 | project-hub | 비서통합 잔여 정리 — personal.yml.bak 삭제 / personal.yml.example 단일 구조 갱신 / templates/SETUP.template.md·guides/SETUP.md 세라 잔존 정리 | 높음 | 완료 | - | 2026-05-07 |

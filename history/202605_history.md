@@ -326,3 +326,28 @@ sidebar_order: 1
 - `git tag v1.0.0` 후 push
 - Google Drive 백업
 - TODO_GLOBAL.md G-016 항목 재검토 (통합으로 자연스럽게 해결)
+
+---
+
+## 2026-05-07 (5차 세션)
+
+### 5-1. 비서통합 잔여 정리 (G-018)
+
+**배경**
+- v1.0.0 비서통합 후 일부 파일에 옛 구조·표기 잔존 발견
+- 정식 검증 후 최우선 작업으로 등록 (다른 작업 일체 보류)
+
+**잔재 검출 결과**
+- 변수(`hub_assistant`/`project_assistant`/`HUB_ASSISTANT`/`PROJ_ASSISTANT`): `config/personal.yml.bak`, `config/personal.yml.example`
+- 표기(`세라`/`Sera`): `templates/SETUP.template.md`, `guides/SETUP.md`
+- 보존 대상(작성 시점 보존 원칙으로 변경 안 함): `CHANGELOG.md`, `history/`, `_manage/history/`, `_manage/changelog.md`
+
+**처리 내역**
+1. `config/personal.yml.bak` 삭제 (v0.x 옛 구조 백업본)
+2. `config/personal.yml.example` 단일 `assistant:` 구조로 갱신 + `github:` 블록 추가
+3. `templates/SETUP.template.md` hub_init 입력 표 — 6행(플랫폼·프로젝트 비서 각 3행) → 4행(통합 비서 3행 + GitHub 1행)으로 축약, 기본값 "이익을 주는 자, 보상하는 자 (아랍어)"로 정정
+4. `guides/SETUP.md` 동일 표 + 5-2 전역 CLAUDE.md 역할 예시 단일 비서로 정리
+
+**검증**
+- 변수 잔재: 보존 대상(history/changelog) 외 0건
+- 표기 잔재: 보존 대상 외 0건 (TODO_GLOBAL.md G-018 항목 설명 텍스트는 작업명 자체이므로 정상)
