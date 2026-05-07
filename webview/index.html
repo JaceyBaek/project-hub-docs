@@ -745,9 +745,9 @@
         },
         function(hook) {
           function dpwsGet() {
-            try { return JSON.parse(localStorage.getItem('dpws2') || '{}'); } catch(e) { return {}; }
+            try { return JSON.parse(localStorage.getItem('dpws3') || '{}'); } catch(e) { return {}; }
           }
-          function dpwsSet(c) { localStorage.setItem('dpws2', JSON.stringify(c)); }
+          function dpwsSet(c) { localStorage.setItem('dpws3', JSON.stringify(c)); }
           function dpwsSlug(t) {
             return t.toLowerCase()
               .replace(/[^a-z0-9가-힣一-龥]/g, '-')
@@ -823,15 +823,20 @@
               if (path === '_sidebar.md' || path === 'home.md') return;
               // basePath가 '../'이므로 fetch URL도 동일하게 보정
               fetch('../' + path)
-                .then(function(r) { return r.ok ? r.text() : ''; })
+                .then(function(r) {
+                  // 실패는 캐시하지 않음 — 다음 방문에 재시도 가능
+                  if (!r.ok) return null;
+                  return r.text();
+                })
                 .then(function(txt) {
+                  if (txt === null) return;
                   var headings = dpwsExtract(txt);
                   var c = dpwsGet();
                   c[href] = headings.length ? headings : false;
                   dpwsSet(c);
                   if (headings.length) {
                     dpwsInject();
-                    document.dispatchEvent(new Event('dpws2-updated'));
+                    document.dispatchEvent(new Event('dpws3-updated'));
                   }
                 })
                 .catch(function() {});
@@ -913,7 +918,7 @@
           var sections = [];
 
           hook.mounted(function() {
-            document.addEventListener('dpws2-updated', function() { addSubToggles(); });
+            document.addEventListener('dpws3-updated', function() { addSubToggles(); });
           });
 
           hook.doneEach(function() {
