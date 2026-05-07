@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>TRC · 요구사항 추적 매트릭스</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+<style>
+  .trc-chain {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0;
+    border: 1px solid var(--line);
+    background: #fff;
+    font-size: 11.5px;
+  }
+  .trc-chain > .h {
+    background: var(--bg-gray);
+    font-weight: 700;
+    text-align: center;
+    padding: 8px;
+    border-right: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line);
+  }
+  .trc-chain > .h:last-child { border-right: 0; }
+  .trc-chain > .c {
+    border-right: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+    padding: 8px 10px;
+    font-family: ui-monospace, monospace;
+    font-size: 11px;
+  }
+  .trc-chain > .c:nth-child(6n) { border-right: 0; }
+  .cov {
+    display: flex;
+    gap: 10px;
+    font-size: 11.5px;
+    margin: 12px 0;
+  }
+  .cov .pill {
+    border: 1px solid var(--line);
+    padding: 4px 10px;
+    background: #fff;
+  }
+  .cov .pill b { font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>요구사항 추적 매트릭스</b></span>
+  <span class="spacer"></span>
+  <span class="status review">Review</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+  <div class="cf-breadcrumb"><span>Space</span><span>산출물 템플릿</span><span>추적성</span><span>Trace Matrix</span></div>
+  <h1 class="cf-title"><span class="doc-id">TRC</span>요구사항 추적 매트릭스 <span style="font-size:13px; font-weight:400; color:var(--muted);">— Requirements Traceability Matrix</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">담당자</div><div class="v">PMO</div></div>
+    <div class="m"><div class="k">버전</div><div class="v">v0.1</div></div>
+    <div class="m"><div class="k">상태</div><div class="v"><span class="status review">Review</span></div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">자동 생성</div><div class="v">ID 수집 기반</div></div>
+    <div class="m"><div class="k">Confluence</div><div class="v mono small">/DOCS-TMPL/TRC</div></div>
+  </div>
+
+  <div style="margin:0 0 16px;">
+    <span class="tag">#trace</span><span class="tag">#coverage</span>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>목차</h4>
+      <ol>
+        <li>개요 · ID 체계</li>
+        <li>커버리지 요약</li>
+        <li>순방향 추적 (REQ → TEST)</li>
+        <li>역방향 추적 (TEST → REQ)</li>
+        <li>Gap 분석</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>개요 · ID 체계</h2>
+      <p>요구사항부터 단위/통합 테스트까지의 연결을 단일 뷰로 확인한다. 각 셀에는 하위 문서의 ID가 들어가며, Confluence에서는 Smart Link로 실제 페이지로 이동한다.</p>
+
+      <table class="cf">
+        <thead><tr><th>계층</th><th>Prefix</th><th>문서</th></tr></thead>
+        <tbody>
+          <tr><td>요구사항</td><td class="mono">REQ-###</td><td>요구사항정의서</td></tr>
+          <tr><td>프로세스</td><td class="mono">FLW-###</td><td>프로세스흐름도</td></tr>
+          <tr><td>화면</td><td class="mono">SCR-###</td><td>화면정의서</td></tr>
+          <tr><td>기능</td><td class="mono">FUNC-###</td><td>기능정의서</td></tr>
+          <tr><td>단위 테스트</td><td class="mono">UTC-###</td><td>단위테스트케이스</td></tr>
+          <tr><td>통합 테스트</td><td class="mono">ITS-###</td><td>통합테스트시나리오</td></tr>
+          <tr><td>권한</td><td class="mono">ROLE-##</td><td>권한정의서 (Cross-cut)</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">2.</span>커버리지 요약</h2>
+      <div class="cov">
+        <div class="pill"><b>REQ 42</b> / 38 연결 (90%)</div>
+        <div class="pill"><b>FUNC 58</b> / 58 (100%)</div>
+        <div class="pill"><b>UTC 128</b> / 110 자동화 (86%)</div>
+        <div class="pill"><b>ITS 12</b> / 12 계획</div>
+        <div class="pill" style="border-style:dashed;">Orphan REQ 4건 ⚠</div>
+      </div>
+
+      <h2><span class="num">3.</span>순방향 추적 (REQ → TEST)</h2>
+      <div class="trc-chain">
+        <div class="h">REQ</div><div class="h">FLW</div><div class="h">SCR</div><div class="h">FUNC</div><div class="h">UTC</div><div class="h">ITS</div>
+
+        <div class="c">REQ-F01</div><div class="c">FLW-001-1</div><div class="c">SCR-001</div><div class="c">FUNC-001</div><div class="c">UTC-001,002,003</div><div class="c">ITS-001</div>
+
+        <div class="c">REQ-F02</div><div class="c">FLW-001-2</div><div class="c">SCR-002</div><div class="c">FUNC-002</div><div class="c">UTC-010,011</div><div class="c">ITS-001</div>
+
+        <div class="c">REQ-F03</div><div class="c">FLW-001-3</div><div class="c">SCR-003</div><div class="c">FUNC-003,004</div><div class="c">UTC-020,021</div><div class="c">ITS-001,002</div>
+
+        <div class="c">REQ-F05</div><div class="c">FLW-003</div><div class="c">SCR-030</div><div class="c">FUNC-020</div><div class="c">UTC-040</div><div class="c">ITS-004</div>
+
+        <div class="c">REQ-B02</div><div class="c">FLW-002</div><div class="c">SCR-010</div><div class="c">FUNC-030</div><div class="c">UTC-030</div><div class="c">ITS-003</div>
+
+        <div class="c" style="color:var(--muted);">REQ-N01</div><div class="c" style="color:var(--muted);">—</div><div class="c" style="color:var(--muted);">all</div><div class="c" style="color:var(--muted);">all</div><div class="c" style="color:var(--muted);">perf suite</div><div class="c" style="color:var(--muted);">ITS-P01</div>
+
+        <div class="c" style="color:var(--muted);">…</div><div class="c" style="color:var(--muted);">…</div><div class="c" style="color:var(--muted);">…</div><div class="c" style="color:var(--muted);">…</div><div class="c" style="color:var(--muted);">…</div><div class="c" style="color:var(--muted);">…</div>
+      </div>
+
+      <h2><span class="num">4.</span>역방향 추적 (TEST → REQ)</h2>
+      <table class="cf">
+        <thead><tr><th class="id">TC</th><th>검증 대상</th><th>→ FUNC</th><th>→ REQ</th></tr></thead>
+        <tbody>
+          <tr><td class="id">UTC-001</td><td>정상 임시저장</td><td><span class="id-chip">FUNC-001</span></td><td><span class="id-chip muted">REQ-F01</span></td></tr>
+          <tr><td class="id">UTC-020</td><td>승인 라우팅</td><td><span class="id-chip">FUNC-003</span></td><td><span class="id-chip muted">REQ-F03</span></td></tr>
+          <tr><td class="id">ITS-001</td><td>E2E 정상 흐름</td><td><span class="id-chip">FUNC-001,002,003</span></td><td><span class="id-chip muted">REQ-F01~03</span></td></tr>
+          <tr><td class="id">ITS-004</td><td>대결 위임</td><td><span class="id-chip">FUNC-020</span></td><td><span class="id-chip muted">REQ-F05</span></td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">5.</span>Gap 분석</h2>
+      <div class="callout"><div class="t">Warning</div>
+        <b>연결되지 않은 요구사항 4건:</b><br>
+        · REQ-F08 (알림 설정) → FUNC 미지정<br>
+        · REQ-F11 (엑셀 내보내기) → SCR 미지정<br>
+        · REQ-N04 (호환성) → 테스트 매트릭스 미작성<br>
+        · REQ-B05 (성과지표) → 운영 지표 미정의
+      </div>
+      <div class="callout"><div class="t">Info</div>
+        <b>고아 테스트(근거 REQ 없음) 0건</b> — 모든 테스트는 상위 요구사항으로 추적됨.
+      </div>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div><h3>변경 이력</h3>
+      <table class="cf"><tbody><tr><td>v0.1</td><td>2026-04-24</td><td>PMO</td><td>초안</td></tr></tbody></table>
+    </div>
+    <div><h3>관련 페이지</h3>
+      <ul style="margin:0; padding-left:16px; font-size:12px;">
+        <li>REQ · 요구사항정의서</li>
+        <li>FLW · 프로세스흐름도</li>
+        <li>SCR · 화면정의서</li>
+        <li>FUNC · 기능정의서</li>
+        <li>UTC · 단위테스트케이스</li>
+        <li>ITS · 통합테스트시나리오</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>

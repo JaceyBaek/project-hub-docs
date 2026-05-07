@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>FLW · 프로세스흐름도 v2</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+<style>
+  .bpmn {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    padding: 20px 10px;
+    background: #fff;
+    border: 1px solid var(--line);
+  }
+  .bpmn .node {
+    border: 1.5px solid var(--ink-2);
+    background: #fff;
+    padding: 10px 14px;
+    font-size: 12px;
+    text-align: center;
+    min-width: 100px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .bpmn .node.terminal { border-radius: 40px; }
+  .bpmn .node.decision {
+    transform: rotate(45deg);
+    width: 70px;
+    height: 70px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .bpmn .node.decision > span { transform: rotate(-45deg); font-size: 11px; }
+  .bpmn .edge {
+    flex: 0 0 40px;
+    height: 1px;
+    background: var(--ink-2);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .bpmn .edge::after {
+    content: "▶";
+    position: absolute;
+    right: -4px;
+    top: -8px;
+    color: var(--ink-2);
+    font-size: 10px;
+  }
+  .bpmn .node .id-mini {
+    position: absolute;
+    top: -10px;
+    right: -6px;
+    background: var(--ink);
+    color: #fff;
+    font-family: ui-monospace, monospace;
+    font-size: 9px;
+    padding: 1px 4px;
+  }
+  .bpmn .node.decision .id-mini { transform: rotate(-45deg); top: 0; right: -10px; }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>프로세스흐름도</b> / v2 (BPMN 선형)</span>
+  <span class="spacer"></span>
+  <span class="status draft">Draft</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+  <div class="cf-breadcrumb"><span>설계</span><span>프로세스흐름도</span><span>v2 · BPMN Linear</span></div>
+  <h1 class="cf-title"><span class="doc-id">FLW</span>프로세스흐름도 <span style="font-size:13px; font-weight:400; color:var(--muted);">— v2 · BPMN 선형</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">버전</div><div class="v">v2.0</div></div>
+    <div class="m"><div class="k">포맷</div><div class="v">BPMN 선형</div></div>
+    <div class="m"><div class="k">가독성</div><div class="v">회의 투영용</div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">프로세스</div><div class="v">FLW-001</div></div>
+    <div class="m"><div class="k">Variation</div><div class="v"><a href="02-process-flow.html">v1</a> · <a href="02-process-flow-v3.html">v3</a></div></div>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>목차</h4>
+      <ol>
+        <li>BPMN 다이어그램</li>
+        <li>이벤트/게이트웨이 범례</li>
+        <li>세부 조건</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>BPMN 다이어그램 — FLW-001</h2>
+      <div class="bpmn">
+        <div class="node terminal">시작<span class="id-mini">s</span></div>
+        <div class="edge"></div>
+        <div class="node">기안 작성<span class="id-mini">1</span></div>
+        <div class="edge"></div>
+        <div class="node">상신<span class="id-mini">2</span></div>
+        <div class="edge"></div>
+        <div class="node">결재<span class="id-mini">3</span></div>
+        <div class="edge"></div>
+        <div class="node decision"><span>승인?</span><span class="id-mini">4</span></div>
+        <div class="edge"></div>
+        <div class="node">종결<span class="id-mini">5</span></div>
+        <div class="edge"></div>
+        <div class="node terminal">끝<span class="id-mini">e</span></div>
+      </div>
+
+      <h3>분기: 반려 시</h3>
+      <div class="bpmn">
+        <div class="node decision"><span>반려</span></div>
+        <div class="edge"></div>
+        <div class="node">기안자 반환</div>
+        <div class="edge"></div>
+        <div class="node">재상신</div>
+        <div class="edge"></div>
+        <div class="node">결재 (재진입)</div>
+      </div>
+
+      <h2><span class="num">2.</span>이벤트/게이트웨이 범례</h2>
+      <table class="cf">
+        <thead><tr><th>기호</th><th>의미</th><th>예</th></tr></thead>
+        <tbody>
+          <tr><td>○ 원</td><td>시작/끝 이벤트</td><td>상신 / 종결</td></tr>
+          <tr><td>□ 사각형</td><td>Task</td><td>기안 작성</td></tr>
+          <tr><td>◇ 마름모</td><td>분기 게이트웨이</td><td>승인/반려</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">3.</span>세부 조건</h2>
+      <table class="cf">
+        <thead><tr><th>분기점</th><th>조건</th><th>다음</th></tr></thead>
+        <tbody>
+          <tr><td>4. 승인?</td><td>결재자 모두 승인</td><td>→ 5. 종결</td></tr>
+          <tr><td>4. 반려?</td><td>하나라도 반려</td><td>→ 기안자 반환</td></tr>
+          <tr><td>4. 보류?</td><td>결재자 보류</td><td>대기 (24h 후 알림)</td></tr>
+        </tbody>
+      </table>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div><h3>변경 이력</h3>
+      <table class="cf"><tbody><tr><td>v2.0</td><td>2026-04-24</td><td>김기획</td><td>BPMN 선형 변형</td></tr></tbody></table>
+    </div>
+    <div><h3>관련 페이지</h3><ul style="margin:0; padding-left:16px; font-size:12px;"><li>FLW v1 · 스윔레인</li><li>FLW v3 · 시퀀스</li></ul></div>
+  </div>
+</div>
+</body>
+</html>

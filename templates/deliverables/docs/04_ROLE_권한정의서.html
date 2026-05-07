@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>ROLE · 권한정의서</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+<style>
+  .matrix { font-size: 11.5px; }
+  .matrix td.mark { text-align: center; width: 50px; }
+  .matrix .c { color: var(--ink); font-weight: 700; }
+  .matrix .x { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>권한정의서</b></span>
+  <span class="spacer"></span>
+  <span class="status review">Review</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+
+  <div class="cf-breadcrumb"><span>Space</span><span>산출물 템플릿</span><span>설계</span><span>권한정의서</span></div>
+  <h1 class="cf-title"><span class="doc-id">ROLE</span>권한정의서 <span style="font-size:13px; font-weight:400; color:var(--muted);">— Authorization Matrix</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">담당자</div><div class="v">박보안 (Security)</div></div>
+    <div class="m"><div class="k">버전</div><div class="v">v0.1</div></div>
+    <div class="m"><div class="k">상태</div><div class="v"><span class="status review">Review</span></div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">Role 수</div><div class="v">5</div></div>
+    <div class="m"><div class="k">Confluence</div><div class="v mono small">/DOCS-TMPL/ROLE</div></div>
+  </div>
+
+  <div style="margin:0 0 16px;">
+    <span class="tag">#security</span><span class="tag">#rbac</span><span class="tag">#compliance</span>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>목차</h4>
+      <ol>
+        <li>개요</li>
+        <li>Role 정의</li>
+        <li>기능 권한 매트릭스</li>
+        <li>데이터 권한</li>
+        <li>FAQ</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>개요</h2>
+      <p>RBAC(Role Based Access Control) 기반의 권한 체계를 정의한다. 각 Role은 <span class="mono">ROLE-##</span> ID로 관리되며, 화면(SCR)·기능(FUNC)과 연결된다.</p>
+
+      <h2><span class="num">2.</span>Role 정의</h2>
+      <table class="cf">
+        <thead><tr><th class="id">ID</th><th>Role</th><th>대상</th><th>설명</th><th>승인자</th></tr></thead>
+        <tbody>
+          <tr><td class="id">ROLE-01</td><td>일반사용자</td><td>전 임직원</td><td>기안·열람</td><td>자동 부여</td></tr>
+          <tr><td class="id">ROLE-02</td><td>결재자</td><td>팀장 이상</td><td>결재 처리</td><td>HR 동기화</td></tr>
+          <tr><td class="id">ROLE-03</td><td>대결자</td><td>지정 사용자</td><td>전결/대결 위임 처리</td><td>결재자 지정</td></tr>
+          <tr><td class="id">ROLE-04</td><td>관리자</td><td>총무팀</td><td>양식·결재선 관리</td><td>Admin</td></tr>
+          <tr><td class="id">ROLE-05</td><td>시스템관리자</td><td>IT 운영팀</td><td>시스템 설정·로그 열람</td><td>Admin</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">3.</span>기능 권한 매트릭스</h2>
+      <table class="cf matrix">
+        <thead><tr>
+          <th class="id">FUNC ID</th><th>기능</th>
+          <th class="mark">01</th><th class="mark">02</th><th class="mark">03</th><th class="mark">04</th><th class="mark">05</th>
+          <th>비고</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="id">FUNC-001</td><td>기안문 작성</td><td class="mark c">C</td><td class="mark c">C</td><td class="mark x">-</td><td class="mark c">C</td><td class="mark x">-</td><td></td></tr>
+          <tr><td class="id">FUNC-003</td><td>결재 처리</td><td class="mark x">-</td><td class="mark c">U</td><td class="mark c">U</td><td class="mark x">-</td><td class="mark x">-</td><td>대결 시 ROLE-03</td></tr>
+          <tr><td class="id">FUNC-010</td><td>문서함 열람</td><td class="mark c">R</td><td class="mark c">R</td><td class="mark c">R</td><td class="mark c">R</td><td class="mark c">R</td><td>본인 관련만</td></tr>
+          <tr><td class="id">FUNC-020</td><td>양식 관리</td><td class="mark x">-</td><td class="mark x">-</td><td class="mark x">-</td><td class="mark c">CRUD</td><td class="mark x">-</td><td></td></tr>
+          <tr><td class="id">FUNC-090</td><td>시스템 로그</td><td class="mark x">-</td><td class="mark x">-</td><td class="mark x">-</td><td class="mark x">-</td><td class="mark c">R</td><td>보관 1년</td></tr>
+          <tr><td class="muted" colspan="8">C=Create · R=Read · U=Update · D=Delete</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">4.</span>데이터 권한</h2>
+      <table class="cf">
+        <thead><tr><th>데이터</th><th>Scope</th><th>기준</th><th>예외</th></tr></thead>
+        <tbody>
+          <tr><td>문서</td><td>본인 관련(기안/결재/참조)</td><td>user_id 매칭</td><td>관리자 전체 열람</td></tr>
+          <tr><td>조직 정보</td><td>전체</td><td>공개</td><td>급여 정보 제외</td></tr>
+          <tr><td>로그</td><td>제한</td><td>ROLE-05만</td><td>-</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">5.</span>FAQ</h2>
+      <div class="frame"><b>Q. 권한 부여는 어떻게 이뤄지나요?</b><div class="small">A. ROLE-01·02는 HR 연동으로 자동, ROLE-03~05는 관리자 승인 후 수동 부여됩니다.</div></div>
+      <div class="frame"><b>Q. 퇴사 시 권한은?</b><div class="small">A. HR 상태 변경 후 24시간 내 자동 비활성화, 계정 데이터는 규정상 3년 보관.</div></div>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div><h3>변경 이력</h3>
+      <table class="cf"><thead><tr><th>버전</th><th>일자</th><th>작성자</th><th>내용</th></tr></thead>
+      <tbody><tr><td>v0.1</td><td>2026-04-24</td><td>박보안</td><td>초안</td></tr></tbody></table>
+    </div>
+    <div><h3>관련 페이지</h3>
+      <ul style="margin:0; padding-left:16px; font-size:12px;">
+        <li>REQ · 요구사항정의서</li><li>FUNC · 기능정의서</li><li>ARC · 아키텍처 (보안)</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

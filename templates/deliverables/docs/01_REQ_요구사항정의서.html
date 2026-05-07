@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>REQ · 요구사항정의서</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+
+<!-- ============================================================
+  AI 파서용 메타 (HTML <meta>)
+  - md 변환 시 frontmatter로 그대로 매핑됨
+============================================================ -->
+<meta name="doc-id" content="REQ-APPROVAL-2026">
+<meta name="doc-type" content="requirements-specification">
+<meta name="doc-name-ko" content="요구사항정의서">
+<meta name="doc-name-en" content="Requirements Specification">
+<meta name="doc-version" content="v0.1">
+<meta name="doc-status" content="Review">
+<meta name="doc-last-updated" content="2026-04-24">
+<meta name="doc-owner" content="홍길동 (PM)">
+<meta name="doc-epic" content="PRJ-2026-EM">
+<meta name="doc-tags" content="phase:analysis, module:core, domain:hr-approval, lang:ko">
+<meta name="doc-related" content="FLW, SCR, FUNC, ROLE, UTC, ITS, TRC">
+<meta name="doc-chunk-strategy" content="heading-h2">
+<meta name="doc-exclude-from-training" content="false">
+<meta name="doc-embedding-hints" content="사내 전자결재 시스템의 기능/비기능 요구사항. 종이 결재 → 전자결재 전환, 모바일 지원, 감사 로그 보존.">
+<meta name="doc-primary-entities" content="기안문, 결재선, 승인, 반려, 대결, 모바일 결재">
+</head>
+<body>
+
+<!-- AI-SKIP-START: navigation -->
+<div class="nav-bar" data-ai-skip="true">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>요구사항정의서</b></span>
+  <span class="spacer"></span>
+  <span class="status review">Template</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+<!-- AI-SKIP-END -->
+
+<article class="cf-shell" data-doc-id="REQ-APPROVAL-2026" data-doc-type="requirements-specification">
+
+  <!-- AI-SKIP-START: breadcrumb -->
+  <div class="cf-breadcrumb" data-ai-skip="true"><span>Space</span><span>산출물 템플릿</span><span>요구사항</span><span>요구사항정의서</span></div>
+  <!-- AI-SKIP-END -->
+
+  <h1 class="cf-title"><span class="doc-id">REQ</span>요구사항정의서 <span style="font-size:13px; font-weight:400; color:var(--muted);">— Requirements Specification</span></h1>
+
+  <!-- AI-SKIP-START: editor-guide (사람용 작성 안내, 학습 대상 아님) -->
+  <div class="guide-pointer" data-ai-skip="true">
+    <b>이 템플릿은 완성본 프로토타입입니다.</b> 각 필드 옆의 <span class="req-mark">REQ</span> <span class="opt-mark">OPT</span> <span class="cond-mark">COND</span> 마커로 필수/선택/조건부를 구분합니다.
+    AI 작성 가이드는 <span class="mono">guides/REQ-authoring-guide.md</span> 를 참고하세요.
+    <span class="marker-legend">
+      <span><span class="req-mark">REQ</span> 필수</span>
+      <span><span class="opt-mark">OPT</span> 선택</span>
+      <span><span class="cond-mark">COND</span> 조건부</span>
+    </span>
+  </div>
+
+  <div class="sum-checklist" data-ai-skip="true">
+    <div class="hd"><span>작성 점검 체크리스트 (작성 전 · 작성 중)</span><span class="small muted">필수 12 · 선택 5</span></div>
+    <ul>
+      <li>메타바 6개 필드 (담당자 · 버전 · 상태 · 수정일 · 관련 Epic · Confluence 경로)</li>
+      <li>분류 태그 최소 3개 (#phase, #module, #domain)</li>
+      <li>개요 — 목적 / 범위(In&amp;Out) / 성공 기준 3블록</li>
+      <li>용어 정의 최소 5개 (도메인 용어)</li>
+      <li>이해관계자/페르소나 최소 2인</li>
+      <li>비즈니스 요구사항 REQ-B## 최소 3건</li>
+      <li>기능 요구사항 REQ-F## 최소 5건</li>
+      <li>비기능 요구사항 REQ-N## 최소 4건 (성능/가용성/보안/호환성)</li>
+      <li>모든 요구사항에 중요도(H/M/L)</li>
+      <li>모든 요구사항에 Trace(→) 1개 이상 또는 "미연결" 명시</li>
+      <li>제약/가정 각 최소 1건</li>
+      <li>AI 메타데이터 블록 — tags / embedding_hints / exclude_from_training</li>
+    </ul>
+  </div>
+  <!-- AI-SKIP-END -->
+
+  <!-- ▼ 메타데이터 (사람용 표 + AI 학습 대상) -->
+  <section data-section-key="metadata" data-chunk="meta" aria-label="문서 메타">
+    <div class="cf-meta">
+      <div class="m"><div class="k">담당자</div><div class="v">홍길동 (PM)</div></div>
+      <div class="m"><div class="k">버전</div><div class="v">v0.1</div></div>
+      <div class="m"><div class="k">상태</div><div class="v"><span class="status review">Review</span></div></div>
+      <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+      <div class="m"><div class="k">관련 Epic</div><div class="v">PRJ-2026-EM</div></div>
+      <div class="m"><div class="k">Confluence</div><div class="v mono small">/DOCS-TMPL/REQ</div></div>
+    </div>
+    <div style="margin:0 0 16px;" data-tags="phase:analysis,module:core,domain:hr-approval">
+      <span class="tag">#phase:analysis</span>
+      <span class="tag">#module:core</span>
+      <span class="tag">#domain:hr-approval</span>
+      <span class="tag">#ai-train:true</span>
+    </div>
+  </section>
+
+  <div class="cf-body">
+
+    <!-- AI-SKIP-START: toc -->
+    <aside class="cf-toc" data-ai-skip="true">
+      <h4>목차</h4>
+      <ol>
+        <li>개요</li>
+        <li>용어 정의 (Glossary)</li>
+        <li>이해관계자 / 페르소나</li>
+        <li>비즈니스 요구사항 (BR)</li>
+        <li>기능 요구사항 (FR)</li>
+        <li>비기능 요구사항 (NFR)</li>
+        <li>제약 / 가정 사항</li>
+        <li>FAQ</li>
+        <li>AI 학습 메타데이터</li>
+        <li>작성 완료 검증표</li>
+      </ol>
+    </aside>
+    <!-- AI-SKIP-END -->
+
+    <main class="cf-content">
+
+      <!-- ================= 1. 개요 ================= -->
+      <section data-section-key="overview" data-chunk="overview">
+        <h2 id="overview"><span class="num">1.</span>개요</h2>
+
+        <!-- AI-SKIP-START: field-hint -->
+        <div class="field-hint" data-ai-skip="true">목적·범위·성공 기준 3블록은 모두 필수. 각 블록 2~4문장 권장.</div>
+        <!-- AI-SKIP-END -->
+
+        <p>본 문서는 <b>[시스템명]</b>의 비즈니스·기능·비기능 요구사항을 정의한다.
+        모든 요구사항 ID(<span class="mono">REQ-###</span>)는 이후 프로세스흐름도(FLW), 화면정의서(SCR),
+        기능정의서(FUNC), 테스트(UTC/ITS)로 하향 추적된다.</p>
+
+        <div class="grid-3">
+          <div class="frame" data-chunk="overview.purpose">
+            <div class="fhead">목적</div>
+            <div class="small">종이 결재 프로세스를 전자결재로 전환하여 평균 처리시간을 기존 3일 → 1일 이하로 단축한다.</div>
+          </div>
+          <div class="frame" data-chunk="overview.scope">
+            <div class="fhead">범위 (In / Out)</div>
+            <div class="small"><b>In.</b> 기안·결재선·승인/반려·대결·모바일<br><b>Out.</b> 급여계산, 회계 전표, 외부 감사 연계</div>
+          </div>
+          <div class="frame" data-chunk="overview.success">
+            <div class="fhead">성공 기준</div>
+            <div class="small">① 평균 결재 처리시간 ≤ 24h<br>② 모바일 처리 비중 ≥ 40%<br>③ 반려율 ≤ 10%</div>
+          </div>
+        </div>
+
+        <h3 id="business-context">1-1. 비즈니스 배경</h3>
+        <p class="small muted">2018년 사내 결재 프로세스 자동화 TF 운영 이후 재시도. 기존 레거시 그룹웨어는 모바일 미지원.</p>
+      </section>
+
+
+      <!-- ================= 2. 용어 정의 ================= -->
+      <section data-section-key="glossary" data-chunk="glossary">
+        <h2 id="glossary"><span class="num">2.</span>용어 정의 (Glossary)</h2>
+
+        <!-- AI-SKIP-START: field-hint -->
+        <div class="field-hint" data-ai-skip="true">도메인 용어는 최소 5건. 본문에 처음 나올 때 굵게 표기.</div>
+        <!-- AI-SKIP-END -->
+
+        <table class="cf" data-table-key="glossary">
+          <colgroup><col style="width:140px"><col><col style="width:120px"></colgroup>
+          <thead><tr><th>용어</th><th>정의</th><th>영문/약어</th></tr></thead>
+          <tbody>
+            <tr data-chunk="term:결재선"><td>결재선</td><td>결재자가 순차적으로 승인하는 라인 구조</td><td>Approval Line</td></tr>
+            <tr data-chunk="term:전결"><td>전결</td><td>상위 결재자가 하위 결재를 대신 처리하는 권한</td><td>Delegation</td></tr>
+            <tr data-chunk="term:상신"><td>상신</td><td>작성된 문서를 결재자에게 전달하는 행위</td><td>Submit</td></tr>
+            <tr data-chunk="term:합의"><td>합의</td><td>결재 이전 단계에서 관련 부서 의견을 구하는 절차</td><td>Concurrence</td></tr>
+            <tr data-chunk="term:참조"><td>참조</td><td>결재와 무관하게 내용을 공유받는 사용자</td><td>CC</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+
+      <!-- ================= 3. 페르소나 ================= -->
+      <section data-section-key="stakeholders" data-chunk="stakeholders">
+        <h2 id="stakeholders"><span class="num">3.</span>이해관계자 / 페르소나</h2>
+
+        <!-- AI-SKIP-START: field-hint -->
+        <div class="field-hint" data-ai-skip="true">최소 2인. 각 페르소나에 <b>역할 / 목표 / Pain Point</b> 3요소 필수.</div>
+        <!-- AI-SKIP-END -->
+
+        <div class="grid-3">
+          <div class="frame" data-chunk="persona:기안자">
+            <div class="fhead">Persona A — 기안자</div>
+            <div class="small"><b>역할.</b> 일반 직원 (사원~과장)<br><b>목표.</b> 빠르게 결재 올리고 처리 현황 확인<br><b>Pain.</b> 결재선 지정 실수, 반려 사유 불명확</div>
+          </div>
+          <div class="frame" data-chunk="persona:결재자">
+            <div class="fhead">Persona B — 결재자</div>
+            <div class="small"><b>역할.</b> 팀장/임원<br><b>목표.</b> 외근 중에도 결재 지연 없이 처리<br><b>Pain.</b> 첨부 확인 어려움, 모바일 가독성</div>
+          </div>
+          <div class="frame" data-chunk="persona:관리자">
+            <div class="fhead">Persona C — 시스템 관리자</div>
+            <div class="small"><b>역할.</b> IT 운영팀<br><b>목표.</b> 장애 없이 운영, 감사 로그 확보<br><b>Pain.</b> 권한 변경 요청 과다</div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ================= 4. BR ================= -->
+      <section data-section-key="business-requirements" data-chunk="br">
+        <h2 id="br"><span class="num">4.</span>비즈니스 요구사항 (BR)</h2>
+
+        <!-- AI-SKIP-START: field-hint -->
+        <div class="field-hint" data-ai-skip="true">ID 규칙: <span class="mono">REQ-B##</span> · 최소 3건 · 중요도 필수.</div>
+        <!-- AI-SKIP-END -->
+
+        <table class="cf" data-table-key="business-requirements">
+          <colgroup><col style="width:80px"><col style="width:160px"><col><col style="width:70px"><col style="width:140px"></colgroup>
+          <thead><tr><th class="id">ID</th><th>요구사항명</th><th>설명</th><th>중요도</th><th>Trace (→)</th></tr></thead>
+          <tbody>
+            <tr id="REQ-B01" data-chunk="req:REQ-B01" data-req-id="REQ-B01" data-priority="High" data-trace="FLW-001">
+              <td class="id">REQ-B01</td><td>전자결재 페이퍼리스화</td>
+              <td>종이 결재 프로세스를 전자결재로 대체하여 처리 시간 50% 단축.</td>
+              <td>High</td><td><span class="id-chip">FLW-001</span></td>
+            </tr>
+            <tr id="REQ-B02" data-chunk="req:REQ-B02" data-req-id="REQ-B02" data-priority="High" data-trace="FLW-002,SCR-010">
+              <td class="id">REQ-B02</td><td>모바일 결재</td>
+              <td>외근·출장 중에도 결재 처리 가능한 모바일 경험 제공.</td>
+              <td>High</td><td><span class="id-chip">FLW-002</span><span class="id-chip">SCR-010</span></td>
+            </tr>
+            <tr id="REQ-B03" data-chunk="req:REQ-B03" data-req-id="REQ-B03" data-priority="Medium" data-trace="FUNC-030">
+              <td class="id">REQ-B03</td><td>감사 로그 확보</td>
+              <td>결재 이력을 법정 보존기간(5년) 동안 위변조 방지 상태로 보관.</td>
+              <td>Medium</td><td><span class="id-chip">FUNC-030</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+
+      <!-- ================= 5. FR ================= -->
+      <section data-section-key="functional-requirements" data-chunk="fr">
+        <h2 id="fr"><span class="num">5.</span>기능 요구사항 (FR)</h2>
+
+        <!-- AI-SKIP-START: field-hint -->
+        <div class="field-hint" data-ai-skip="true">ID: <span class="mono">REQ-F##</span> · 최소 5건 · 설명은 <b>Given/When/Then</b> 또는 "사용자는 ~할 수 있다" 문형.</div>
+        <!-- AI-SKIP-END -->
+
+        <table class="cf" data-table-key="functional-requirements">
+          <colgroup><col style="width:80px"><col style="width:160px"><col><col style="width:70px"><col style="width:180px"></colgroup>
+          <thead><tr><th class="id">ID</th><th>요구사항명</th><th>설명 (Given/When/Then)</th><th>중요도</th><th>Trace (→)</th></tr></thead>
+          <tbody>
+            <tr id="REQ-F01" data-chunk="req:REQ-F01" data-req-id="REQ-F01" data-priority="High" data-trace="SCR-001,FUNC-001">
+              <td class="id">REQ-F01</td><td>기안문 작성</td>
+              <td>사용자는 양식을 선택해 기안문을 작성·임시저장할 수 있다.</td>
+              <td>High</td><td><span class="id-chip">SCR-001</span><span class="id-chip">FUNC-001</span></td>
+            </tr>
+            <tr id="REQ-F02" data-chunk="req:REQ-F02" data-req-id="REQ-F02" data-priority="High" data-trace="SCR-002,FUNC-002">
+              <td class="id">REQ-F02</td><td>결재선 지정</td>
+              <td>기안자는 결재자·합의자·참조자를 순서대로 지정할 수 있다.</td>
+              <td>High</td><td><span class="id-chip">SCR-002</span><span class="id-chip">FUNC-002</span></td>
+            </tr>
+            <tr id="REQ-F03" data-chunk="req:REQ-F03" data-req-id="REQ-F03" data-priority="High" data-trace="SCR-003,FUNC-003">
+              <td class="id">REQ-F03</td><td>결재 처리</td>
+              <td>결재자는 승인/반려/보류 중 하나를 선택해 의견과 함께 처리할 수 있다.</td>
+              <td>High</td><td><span class="id-chip">SCR-003</span><span class="id-chip">FUNC-003</span></td>
+            </tr>
+            <tr id="REQ-F04" data-chunk="req:REQ-F04" data-req-id="REQ-F04" data-priority="Medium" data-trace="SCR-001,FUNC-004">
+              <td class="id">REQ-F04</td><td>첨부 파일 관리</td>
+              <td>기안자는 20MB 이하 파일을 최대 10개까지 첨부할 수 있다.</td>
+              <td>Medium</td><td><span class="id-chip">SCR-001</span><span class="id-chip">FUNC-004</span></td>
+            </tr>
+            <tr id="REQ-F05" data-chunk="req:REQ-F05" data-req-id="REQ-F05" data-priority="Medium" data-trace="FUNC-020,ROLE-003">
+              <td class="id">REQ-F05</td><td>대결 / 위임</td>
+              <td>부재 결재자는 대결자를 사전 지정할 수 있으며, 대결자는 위임 기간 동안 결재 처리할 수 있다.</td>
+              <td>Medium</td><td><span class="id-chip">FUNC-020</span><span class="id-chip">ROLE-003</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+
+      <!-- ================= 6. NFR ================= -->
+      <section data-section-key="non-functional-requirements" data-chunk="nfr">
+        <h2 id="nfr"><span class="num">6.</span>비기능 요구사항 (NFR)</h2>
+
+        <!-- AI-SKIP-START: field-hint -->
+        <div class="field-hint" data-ai-skip="true">성능·가용성·보안·호환성 4개 카테고리는 <b>최소 1건씩</b> 필수.</div>
+        <!-- AI-SKIP-END -->
+
+        <table class="cf" data-table-key="non-functional-requirements">
+          <colgroup><col style="width:80px"><col style="width:140px"><col><col style="width:120px"></colgroup>
+          <thead><tr><th class="id">ID</th><th>카테고리</th><th>기준</th><th>측정방법</th></tr></thead>
+          <tbody>
+            <tr id="REQ-N01" data-chunk="req:REQ-N01" data-req-id="REQ-N01" data-category="성능"><td class="id">REQ-N01</td><td>성능</td><td>주요 화면 응답 2초 이내 (95th percentile)</td><td>APM (Datadog)</td></tr>
+            <tr id="REQ-N02" data-chunk="req:REQ-N02" data-req-id="REQ-N02" data-category="가용성"><td class="id">REQ-N02</td><td>가용성</td><td>월간 가용성 99.5% 이상</td><td>모니터링 대시보드</td></tr>
+            <tr id="REQ-N03" data-chunk="req:REQ-N03" data-req-id="REQ-N03" data-category="보안"><td class="id">REQ-N03</td><td>보안</td><td>개인정보 AES-256 암호화, 전송구간 TLS 1.2+</td><td>보안 점검 리포트</td></tr>
+            <tr id="REQ-N04" data-chunk="req:REQ-N04" data-req-id="REQ-N04" data-category="호환성"><td class="id">REQ-N04</td><td>호환성</td><td>Chrome/Edge 최신 2버전, iOS/Android 최신 2버전</td><td>QA 매트릭스</td></tr>
+            <tr id="REQ-N05" data-chunk="req:REQ-N05" data-req-id="REQ-N05" data-category="접근성"><td class="id">REQ-N05</td><td>접근성</td><td>WCAG 2.1 AA 준수</td><td>자동 + 수동 감사</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+
+      <!-- ================= 7. 제약/가정 ================= -->
+      <section data-section-key="constraints-assumptions" data-chunk="constraints">
+        <h2 id="constraints"><span class="num">7.</span>제약 / 가정 사항</h2>
+
+        <!-- AI-SKIP-START: field-hint -->
+        <div class="field-hint" data-ai-skip="true">제약(Constraint) 최소 1건, 가정(Assumption) 최소 1건. 리스크는 선택.</div>
+        <!-- AI-SKIP-END -->
+
+        <div class="callout" data-chunk="constraint:sso">
+          <div class="t">Constraint</div>
+          사내 SSO(Okta) 연동 필수. 외부 IdP·소셜 로그인 미지원.
+        </div>
+        <div class="callout" data-chunk="assumption:hr-sync">
+          <div class="t">Assumption</div>
+          조직도·인사정보는 HR 시스템에서 일 1회 동기화된다. 동기화 실패 시 이전 스냅샷 사용.
+        </div>
+        <div class="callout" data-chunk="risk:hr-delay" style="border-left-style:dashed;">
+          <div class="t">Risk</div>
+          HR 시스템 고도화 일정이 지연될 경우 조직 변경 반영 지연. → 수동 재동기화 배치로 완화.
+        </div>
+      </section>
+
+
+      <!-- ================= 8. FAQ ================= -->
+      <section data-section-key="faq" data-chunk="faq">
+        <h2 id="faq"><span class="num">8.</span>FAQ</h2>
+
+        <!-- AI-SKIP-START: field-hint -->
+        <div class="field-hint" data-ai-skip="true">리뷰·이해관계자 인터뷰에서 <b>실제 제기된 질문</b>만.</div>
+        <!-- AI-SKIP-END -->
+
+        <div class="frame" data-chunk="faq:reject-resubmit">
+          <div style="font-weight:700; margin-bottom:4px;">Q. 반려된 문서를 재상신할 수 있나요?</div>
+          <div class="small">A. 반려 사유를 반영해 수정 후 재상신 가능. 이력은 원 문서에 누적. (→ REQ-F03)</div>
+        </div>
+        <div class="frame" data-chunk="faq:approver-absent">
+          <div style="font-weight:700; margin-bottom:4px;">Q. 결재자가 부재중일 때는?</div>
+          <div class="small">A. 전결/대결 설정이 가능합니다. (→ REQ-F05, ROLE-003)</div>
+        </div>
+      </section>
+
+
+      <!-- ================= 9. AI 학습 메타데이터 ================= -->
+      <section data-section-key="ai-metadata" data-chunk="ai-meta">
+        <h2 id="ai-meta"><span class="num">9.</span>AI 학습 메타데이터</h2>
+
+        <div class="ai-meta"><span class="k">doc_id:</span>        REQ-APPROVAL-2026
+<span class="k">version:</span>       v0.1
+<span class="k">last_updated:</span>  2026-04-24
+<span class="k">tags:</span>          ["phase:analysis", "module:core", "domain:hr-approval", "lang:ko"]
+<span class="k">primary_entities:</span> ["기안문", "결재선", "승인", "반려", "대결", "모바일 결재"]
+<span class="k">embedding_hints:</span>
+  - "사내 전자결재 시스템의 기능/비기능 요구사항 정의"
+  - "종이 결재 → 전자결재 전환, 모바일 지원, 감사 로그 보존"
+<span class="k">related_docs:</span>  ["FLW-001..003", "SCR-001..030", "FUNC-001..030", "UTC-*", "ITS-*"]
+<span class="k">exclude_from_training:</span> false
+<span class="k">chunk_strategy:</span> "heading-h2 + table-row"
+</div>
+
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "TechArticle",
+          "headline": "요구사항정의서 — Requirements Specification",
+          "identifier": "REQ-APPROVAL-2026",
+          "version": "v0.1",
+          "dateModified": "2026-04-24",
+          "author": { "@type": "Person", "name": "홍길동" },
+          "keywords": ["phase:analysis", "module:core", "domain:hr-approval"],
+          "about": ["기안문", "결재선", "승인", "반려", "대결", "모바일 결재"]
+        }
+        </script>
+      </section>
+
+
+      <!-- AI-SKIP-START: validation-checklist (편집자용 게이트) -->
+      <section data-section-key="validation-checklist" data-ai-skip="true">
+        <h2 id="validation"><span class="num">10.</span>작성 완료 검증표</h2>
+        <div class="field-hint">문서 승인 요청 전 모든 행 PASS 여부 확인. 한 행이라도 FAIL이면 승인 불가.</div>
+        <table class="cf val-table">
+          <colgroup><col style="width:50px"><col style="width:160px"><col><col style="width:90px"><col style="width:60px"></colgroup>
+          <thead><tr><th>#</th><th>점검 항목</th><th>기대</th><th>구분</th><th>결과</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>메타바</td><td>6개 필드 모두 채움</td><td><span class="req-mark">REQ</span></td><td class="ok">PASS</td></tr>
+            <tr><td>2</td><td>분류 태그</td><td>#phase, #module, #domain</td><td><span class="req-mark">REQ</span></td><td class="ok">PASS</td></tr>
+            <tr><td>3</td><td>개요 3블록</td><td>목적·범위·성공 기준</td><td><span class="req-mark">REQ</span></td><td class="ok">PASS</td></tr>
+            <tr><td>4</td><td>Glossary</td><td>도메인 용어 ≥ 5</td><td><span class="req-mark">REQ</span></td><td class="ok">PASS</td></tr>
+            <tr><td>5</td><td>페르소나</td><td>역할·목표·Pain, ≥ 2인</td><td><span class="req-mark">REQ</span></td><td class="ok">PASS</td></tr>
+            <tr><td>6</td><td>BR</td><td>REQ-B## ≥ 3</td><td><span class="req-mark">REQ</span></td><td class="ok">PASS</td></tr>
+            <tr><td>7</td><td>FR</td><td>REQ-F## ≥ 5</td><td><span class="req-mark">REQ</span></td><td class="ok">PASS</td></tr>
+            <tr><td>8</td><td>NFR</td><td>4 카테고리 각 ≥ 1</td><td><span class="req-mark">REQ</span></td><td class="ok">PASS</td></tr>
+            <tr><td>9</td><td>Trace</td><td>모든 행에 Trace</td><td><span class="cond-mark">COND</span></td><td class="bad">FAIL</td></tr>
+            <tr><td>10</td><td>제약/가정</td><td>각 ≥ 1</td><td><span class="req-mark">REQ</span></td><td class="ok">PASS</td></tr>
+            <tr><td>11</td><td>AI 메타데이터</td><td>tags·hints·exclude</td><td><span class="req-mark">REQ</span></td><td class="ok">PASS</td></tr>
+            <tr><td>12</td><td>ID 규칙</td><td>zero-pad, 중복 없음</td><td><span class="req-mark">REQ</span></td><td class="ok">PASS</td></tr>
+          </tbody>
+        </table>
+      </section>
+      <!-- AI-SKIP-END -->
+
+    </main>
+  </div>
+
+  <!-- AI-SKIP-START: footer -->
+  <div class="cf-footer" data-ai-skip="true">
+    <div>
+      <h3>변경 이력</h3>
+      <table class="cf">
+        <thead><tr><th style="width:80px">버전</th><th style="width:100px">일자</th><th style="width:90px">작성자</th><th>변경내용</th></tr></thead>
+        <tbody>
+          <tr><td>v0.1</td><td>2026-04-24</td><td>홍길동</td><td>초안 작성</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>관련 페이지</h3>
+      <ul style="margin:0; padding-left:16px; font-size:12px;">
+        <li>FLW · 프로세스흐름도</li>
+        <li>SCR · 화면정의서</li>
+        <li>FUNC · 기능정의서</li>
+        <li>TRC · 요구사항 추적 매트릭스</li>
+      </ul>
+    </div>
+  </div>
+  <!-- AI-SKIP-END -->
+
+</article>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CFG · 설정가이드 v3</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+<style>
+  .wizard-step {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    gap: 14px;
+    margin: 14px 0;
+    align-items: start;
+  }
+  .wizard-step .n {
+    border: 2px solid var(--ink);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    background: #fff;
+  }
+  .wizard-step .body {
+    border: 1px solid var(--line);
+    background: #fff;
+    padding: 12px 14px;
+  }
+  .wizard-step .body h4 {
+    margin: 0 0 4px;
+    font-size: 14px;
+  }
+  .wizard-step .cmd {
+    font-family: ui-monospace, monospace;
+    font-size: 11.5px;
+    background: var(--bg-gray);
+    border: 1px solid var(--line-2);
+    padding: 8px 10px;
+    margin: 6px 0;
+    white-space: pre-wrap;
+  }
+  .check-list li { margin: 4px 0; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>설정가이드</b> / v3 (설치 위저드)</span>
+  <span class="spacer"></span>
+  <span class="status draft">Draft</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+  <div class="cf-breadcrumb"><span>운영</span><span>설정가이드</span><span>v3 · Install Wizard</span></div>
+  <h1 class="cf-title"><span class="doc-id">CFG</span>설정가이드 <span style="font-size:13px; font-weight:400; color:var(--muted);">— v3 · 설치 위저드형</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">버전</div><div class="v">v3.0</div></div>
+    <div class="m"><div class="k">포맷</div><div class="v">Step-by-Step</div></div>
+    <div class="m"><div class="k">대상</div><div class="v">신규 설치/이관</div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">Step</div><div class="v">5</div></div>
+    <div class="m"><div class="k">Variation</div><div class="v"><a href="11-config-guide.html">v1</a> · <a href="11-config-guide-v2.html">v2</a></div></div>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>목차</h4>
+      <ol>
+        <li>사전 요구사항</li>
+        <li>설치 단계</li>
+        <li>설치 후 검증</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>사전 요구사항</h2>
+      <ul class="check-list">
+        <li>☐ Kubernetes 1.28+ · Helm 3.14+</li>
+        <li>☐ PostgreSQL 15 · Redis 7 접근 가능</li>
+        <li>☐ S3 버킷 및 IAM Role</li>
+        <li>☐ Okta Application 등록 완료</li>
+        <li>☐ HR API 액세스 키 발급 완료</li>
+      </ul>
+
+      <h2><span class="num">2.</span>설치 단계</h2>
+
+      <div class="wizard-step">
+        <div class="n">1</div>
+        <div class="body">
+          <h4>네임스페이스와 Secret 준비</h4>
+          <div class="small">DB/Redis/SSO/HR 자격 증명을 Secret으로 등록합니다.</div>
+          <div class="cmd">kubectl create namespace approval-prd
+kubectl -n approval-prd create secret generic db --from-literal=url=$DB_URL
+kubectl -n approval-prd create secret generic sso --from-literal=client_id=$OKTA_ID</div>
+        </div>
+      </div>
+
+      <div class="wizard-step">
+        <div class="n">2</div>
+        <div class="body">
+          <h4>values 파일 작성</h4>
+          <div class="small">환경에 맞는 values.prd.yaml 준비. (CFG v2 환경 대조표 참조)</div>
+          <div class="cmd">image:
+  tag: 2026.04.0
+ingress:
+  host: work.company.com
+env:
+  MAX_UPLOAD_MB: 10
+  LOG_LEVEL: WARN</div>
+        </div>
+      </div>
+
+      <div class="wizard-step">
+        <div class="n">3</div>
+        <div class="body">
+          <h4>Helm 배포</h4>
+          <div class="cmd">helm upgrade --install approval ./charts/approval \
+  -f values.prd.yaml -n approval-prd --wait</div>
+        </div>
+      </div>
+
+      <div class="wizard-step">
+        <div class="n">4</div>
+        <div class="body">
+          <h4>DB 마이그레이션</h4>
+          <div class="cmd">kubectl -n approval-prd exec deploy/api -- ./app migrate</div>
+        </div>
+      </div>
+
+      <div class="wizard-step">
+        <div class="n">5</div>
+        <div class="body">
+          <h4>첫 HR 동기화</h4>
+          <div class="cmd">kubectl -n approval-prd create job --from=cronjob/sync-hr sync-hr-init</div>
+        </div>
+      </div>
+
+      <h2><span class="num">3.</span>설치 후 검증 체크리스트</h2>
+      <ul class="check-list">
+        <li>☐ /healthz 200 OK (db · redis · sso · s3 모두 "ok")</li>
+        <li>☐ SSO 로그인으로 관리자 계정 접속 확인</li>
+        <li>☐ 기안문 1건 작성 → 상신 → 결재 시나리오 E2E</li>
+        <li>☐ 첨부 10MB 업로드 성공</li>
+        <li>☐ Grafana Alert 테스트 → Slack 수신</li>
+        <li>☐ 백업 작업 수동 1회 실행 → 복구 검증</li>
+      </ul>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div><h3>변경 이력</h3>
+      <table class="cf"><tbody><tr><td>v3.0</td><td>2026-04-24</td><td>SRE팀</td><td>설치 위저드 변형</td></tr></tbody></table>
+    </div>
+    <div><h3>관련 페이지</h3><ul style="margin:0; padding-left:16px; font-size:12px;"><li>CFG v1 · v2</li><li>OPM · 운영자매뉴얼</li></ul></div>
+  </div>
+</div>
+</body>
+</html>

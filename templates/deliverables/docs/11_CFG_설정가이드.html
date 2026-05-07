@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CFG · 설정가이드 v1</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>설정가이드</b> / v1</span>
+  <span class="spacer"></span>
+  <span class="status draft">Draft</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+  <div class="cf-breadcrumb"><span>Space</span><span>산출물 템플릿</span><span>운영</span><span>설정가이드</span><span>v1 · Reference</span></div>
+  <h1 class="cf-title"><span class="doc-id">CFG</span>설정가이드 <span style="font-size:13px; font-weight:400; color:var(--muted);">— Configuration Guide (v1 · Reference)</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">담당자</div><div class="v">SRE팀</div></div>
+    <div class="m"><div class="k">버전</div><div class="v">v1.0</div></div>
+    <div class="m"><div class="k">상태</div><div class="v"><span class="status draft">Draft</span></div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">환경</div><div class="v">DEV · STG · PRD</div></div>
+    <div class="m"><div class="k">버전 Variation</div><div class="v"><a href="11-config-guide-v2.html">v2</a> · <a href="11-config-guide-v3.html">v3</a></div></div>
+  </div>
+
+  <div style="margin:0 0 16px;">
+    <span class="tag">#config</span><span class="tag">#environment</span>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>목차</h4>
+      <ol>
+        <li>개요 · 환경</li>
+        <li>환경변수</li>
+        <li>시스템 파라미터</li>
+        <li>외부 연계 설정</li>
+        <li>설치/초기 세팅</li>
+        <li>체크리스트</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>개요 · 환경</h2>
+      <table class="cf">
+        <thead><tr><th>환경</th><th>URL</th><th>용도</th><th>Data</th></tr></thead>
+        <tbody>
+          <tr><td>DEV</td><td class="mono small">dev.company.local</td><td>개발</td><td>Mock</td></tr>
+          <tr><td>STG</td><td class="mono small">stg.company.local</td><td>QA/UAT</td><td>익명화</td></tr>
+          <tr><td>PRD</td><td class="mono small">work.company.com</td><td>운영</td><td>실데이터</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">2.</span>환경변수</h2>
+      <table class="cf">
+        <thead><tr><th>Key</th><th>타입</th><th>기본값</th><th>설명</th><th>변경 영향</th></tr></thead>
+        <tbody>
+          <tr><td class="mono small">DB_URL</td><td>string</td><td>-</td><td>PostgreSQL 접속 URL</td><td>재기동</td></tr>
+          <tr><td class="mono small">REDIS_URL</td><td>string</td><td>-</td><td>세션/캐시</td><td>재기동</td></tr>
+          <tr><td class="mono small">SSO_ISSUER</td><td>string</td><td>-</td><td>Okta OIDC Issuer</td><td>재기동</td></tr>
+          <tr><td class="mono small">MAX_UPLOAD_MB</td><td>int</td><td>10</td><td>첨부 최대 용량</td><td>Hot-reload</td></tr>
+          <tr><td class="mono small">FEATURE_MOBILE_PUSH</td><td>bool</td><td>true</td><td>모바일 푸시 토글</td><td>Hot-reload</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">3.</span>시스템 파라미터</h2>
+      <table class="cf">
+        <thead><tr><th>Key</th><th>값</th><th>의미</th><th>Trace</th></tr></thead>
+        <tbody>
+          <tr><td class="mono small">approval.line.max</td><td>10</td><td>결재선 최대 인원</td><td><span class="id-chip muted">REQ-F02</span></td></tr>
+          <tr><td class="mono small">draft.retention.days</td><td>30</td><td>임시저장 보존 기간</td><td><span class="id-chip muted">FUNC-001</span></td></tr>
+          <tr><td class="mono small">absence.autodelegate.days</td><td>3</td><td>부재 자동 대결 기준</td><td><span class="id-chip muted">FLW-003</span></td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">4.</span>외부 연계 설정</h2>
+      <div class="grid-2">
+        <div class="frame">
+          <div class="fhead">SSO (Okta)</div>
+          <table class="cf">
+            <tbody>
+              <tr><th style="width:100px">Issuer</th><td class="mono small">https://company.okta.com</td></tr>
+              <tr><th>Client ID</th><td>ENV: <span class="mono small">SSO_CLIENT_ID</span></td></tr>
+              <tr><th>Redirect</th><td class="mono small">/auth/callback</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="frame">
+          <div class="fhead">HR System</div>
+          <table class="cf">
+            <tbody>
+              <tr><th style="width:100px">Endpoint</th><td class="mono small">https://hr.company.local/api</td></tr>
+              <tr><th>인증</th><td>API Key · IP Allowlist</td></tr>
+              <tr><th>주기</th><td>매일 01:00 (batch: sync-hr)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h2><span class="num">5.</span>설치/초기 세팅</h2>
+      <div class="frame">
+        <pre class="small mono" style="white-space:pre-wrap; margin:0;">
+# 1. 네임스페이스 생성
+kubectl create namespace approval-prd
+
+# 2. Secret 등록
+kubectl -n approval-prd create secret generic db \
+  --from-literal=url=$DB_URL
+
+# 3. Helm 배포
+helm upgrade --install approval ./charts/approval \
+  -f values.prd.yaml --namespace approval-prd
+        </pre>
+      </div>
+
+      <h2><span class="num">6.</span>체크리스트</h2>
+      <table class="cf">
+        <thead><tr><th style="width:30px">☐</th><th>항목</th><th>확인 방법</th></tr></thead>
+        <tbody>
+          <tr><td>☐</td><td>DB 커넥션 성공</td><td>/healthz → "db":"ok"</td></tr>
+          <tr><td>☐</td><td>SSO 로그인</td><td>테스트 계정으로 로그인</td></tr>
+          <tr><td>☐</td><td>HR 동기화 1회 실행</td><td>batch sync-hr 로그</td></tr>
+          <tr><td>☐</td><td>첨부 업로드 테스트</td><td>10MB 파일 1건</td></tr>
+          <tr><td>☐</td><td>모바일 Push 1건</td><td>테스트 발송</td></tr>
+          <tr><td>☐</td><td>Grafana Alert 연결</td><td>Slack 테스트 알림</td></tr>
+        </tbody>
+      </table>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div><h3>변경 이력</h3>
+      <table class="cf"><thead><tr><th>버전</th><th>일자</th><th>작성자</th><th>내용</th></tr></thead>
+      <tbody><tr><td>v1.0</td><td>2026-04-24</td><td>SRE팀</td><td>초안</td></tr></tbody></table>
+    </div>
+    <div><h3>관련 페이지</h3>
+      <ul style="margin:0; padding-left:16px; font-size:12px;">
+        <li>ARC · 아키텍처</li><li>OPM · 운영자매뉴얼</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>

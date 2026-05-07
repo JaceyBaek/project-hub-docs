@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>FLW · 프로세스흐름도 v3</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+<style>
+  .seq {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    background: #fff;
+    border: 1px solid var(--line);
+    position: relative;
+    padding: 20px 0 40px;
+  }
+  .seq .lane {
+    text-align: center;
+    position: relative;
+  }
+  .seq .lane-head {
+    font-weight: 700;
+    font-size: 12px;
+    border: 1.5px solid var(--ink-2);
+    background: #fff;
+    padding: 8px 4px;
+    margin: 0 20px 30px;
+  }
+  .seq .life {
+    width: 1px;
+    background: var(--line);
+    position: absolute;
+    left: 50%;
+    top: 56px;
+    bottom: 10px;
+  }
+  .seq-msgs {
+    grid-column: 1 / -1;
+    position: relative;
+    height: 300px;
+    margin: 0 20px;
+  }
+  .seq-msg {
+    position: absolute;
+    height: 1px;
+    background: var(--ink-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .seq-msg .label {
+    background: #fff;
+    border: 1px solid var(--line);
+    padding: 2px 8px;
+    font-size: 11px;
+    position: absolute;
+    top: -11px;
+    white-space: nowrap;
+  }
+  .seq-msg::after {
+    content: "▶";
+    position: absolute;
+    right: -4px;
+    top: -7px;
+    font-size: 10px;
+    color: var(--ink-2);
+  }
+  .seq-msg.rev::after { content: "◀"; left: -4px; right: auto; }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>프로세스흐름도</b> / v3 (시퀀스)</span>
+  <span class="spacer"></span>
+  <span class="status draft">Draft</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+  <div class="cf-breadcrumb"><span>설계</span><span>프로세스흐름도</span><span>v3 · Sequence</span></div>
+  <h1 class="cf-title"><span class="doc-id">FLW</span>프로세스흐름도 <span style="font-size:13px; font-weight:400; color:var(--muted);">— v3 · 시퀀스 다이어그램</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">버전</div><div class="v">v3.0</div></div>
+    <div class="m"><div class="k">포맷</div><div class="v">Sequence</div></div>
+    <div class="m"><div class="k">관점</div><div class="v">Actor × 시간축</div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">Actor</div><div class="v">4</div></div>
+    <div class="m"><div class="k">Variation</div><div class="v"><a href="02-process-flow.html">v1</a> · <a href="02-process-flow-v2.html">v2</a></div></div>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>목차</h4>
+      <ol>
+        <li>시퀀스 다이어그램</li>
+        <li>상호작용 메시지</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>시퀀스 다이어그램 — FLW-001</h2>
+      <div class="seq">
+        <div class="lane"><div class="lane-head">기안자</div><div class="life"></div></div>
+        <div class="lane"><div class="lane-head">시스템</div><div class="life"></div></div>
+        <div class="lane"><div class="lane-head">결재자</div><div class="life"></div></div>
+        <div class="lane"><div class="lane-head">알림</div><div class="life"></div></div>
+
+        <div class="seq-msgs">
+          <div class="seq-msg" style="top:10px; left:12.5%; width:25%;"><span class="label">1. 기안 저장</span></div>
+          <div class="seq-msg" style="top:60px; left:12.5%; width:25%;"><span class="label">2. 상신 요청</span></div>
+          <div class="seq-msg" style="top:110px; left:37.5%; width:50%;"><span class="label">3. 결재 알림 전송</span></div>
+          <div class="seq-msg" style="top:160px; left:62.5%; width:25%;"><span class="label">4. 승인/반려</span></div>
+          <div class="seq-msg rev" style="top:210px; left:12.5%; width:50%;"><span class="label">5. 결과 통지</span></div>
+          <div class="seq-msg rev" style="top:260px; left:12.5%; width:75%;"><span class="label">6. Push 발송</span></div>
+        </div>
+      </div>
+
+      <h2><span class="num">2.</span>상호작용 메시지</h2>
+      <table class="cf">
+        <thead><tr><th>#</th><th>From</th><th>To</th><th>메시지</th><th>API</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>기안자</td><td>시스템</td><td>기안 저장</td><td class="mono small">POST /drafts</td></tr>
+          <tr><td>2</td><td>기안자</td><td>시스템</td><td>상신 요청</td><td class="mono small">POST /approvals</td></tr>
+          <tr><td>3</td><td>시스템</td><td>결재자</td><td>결재 대기 알림</td><td class="mono small">(Notification)</td></tr>
+          <tr><td>4</td><td>결재자</td><td>시스템</td><td>승인/반려</td><td class="mono small">PATCH /approvals/:id</td></tr>
+          <tr><td>5</td><td>시스템</td><td>기안자</td><td>결과 통지</td><td>Email · Push</td></tr>
+        </tbody>
+      </table>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div><h3>변경 이력</h3>
+      <table class="cf"><tbody><tr><td>v3.0</td><td>2026-04-24</td><td>김기획</td><td>시퀀스 변형</td></tr></tbody></table>
+    </div>
+    <div><h3>관련 페이지</h3><ul style="margin:0; padding-left:16px; font-size:12px;"><li>FLW v1 · v2</li><li>FUNC · 기능정의서</li></ul></div>
+  </div>
+</div>
+</body>
+</html>

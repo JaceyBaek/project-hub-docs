@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>REQ · 요구사항정의서</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>요구사항정의서</b></span>
+  <span class="spacer"></span>
+  <span class="status review">Review</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+
+  <div class="cf-breadcrumb"><span>Space</span><span>산출물 템플릿</span><span>요구사항</span><span>요구사항정의서</span></div>
+  <h1 class="cf-title"><span class="doc-id">REQ</span>요구사항정의서 <span style="font-size:13px; font-weight:400; color:var(--muted);">— Requirements Specification</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">담당자</div><div class="v">홍길동 (PM)</div></div>
+    <div class="m"><div class="k">버전</div><div class="v">v0.1</div></div>
+    <div class="m"><div class="k">상태</div><div class="v"><span class="status review">Review</span></div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">관련 Epic</div><div class="v">PRJ-2026-EM</div></div>
+    <div class="m"><div class="k">Confluence</div><div class="v mono small">/DOCS-TMPL/REQ</div></div>
+  </div>
+
+  <div style="margin:0 0 16px;">
+    <span class="tag">#phase:analysis</span>
+    <span class="tag">#module:core</span>
+    <span class="tag">#domain:hr</span>
+    <span class="tag">#ai-train:true</span>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>목차</h4>
+      <ol>
+        <li>개요</li>
+        <li>용어 정의 (Glossary)</li>
+        <li>이해관계자 / 페르소나</li>
+        <li>비즈니스 요구사항 (BR)</li>
+        <li>기능 요구사항 (FR)</li>
+        <li>비기능 요구사항 (NFR)</li>
+        <li>제약/가정 사항</li>
+        <li>FAQ</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>개요</h2>
+      <p>본 문서는 <b>[시스템명]</b>의 비즈니스·기능·비기능 요구사항을 정의한다.
+      본 문서의 모든 요구사항 ID(<span class="mono">REQ-###</span>)는 이후 프로세스흐름도(FLW), 화면정의서(SCR),
+      기능정의서(FUNC), 테스트(UTC/ITS)로 하향 추적된다.</p>
+
+      <div class="grid-3">
+        <div class="frame"><div class="fhead">목적</div><div class="ph-line w-90"></div><div class="ph-line w-70"></div></div>
+        <div class="frame"><div class="fhead">범위 (In/Out)</div><div class="ph-line w-80"></div><div class="ph-line w-60"></div></div>
+        <div class="frame"><div class="fhead">성공 기준</div><div class="ph-line w-90"></div><div class="ph-line w-50"></div></div>
+      </div>
+
+      <h2><span class="num">2.</span>용어 정의 (Glossary)</h2>
+      <table class="cf">
+        <colgroup><col style="width:140px"><col><col style="width:120px"></colgroup>
+        <thead><tr><th>용어</th><th>정의</th><th>영문/약어</th></tr></thead>
+        <tbody>
+          <tr><td>결재선</td><td>결재자가 순차적으로 승인하는 라인 구조</td><td>Approval Line</td></tr>
+          <tr><td>전결</td><td>상위 결재자가 하위 결재를 대신 처리하는 권한</td><td>Delegation</td></tr>
+          <tr><td>상신</td><td>작성된 문서를 결재자에게 전달하는 행위</td><td>Submit</td></tr>
+          <tr><td class="muted" colspan="3">… 용어 추가</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">3.</span>이해관계자 / 페르소나</h2>
+      <div class="grid-3">
+        <div class="frame"><div class="fhead">Persona A</div><div class="ph-line w-80"></div><div class="ph-line w-60"></div><div class="ph-line w-70"></div><div class="small muted">역할 · 목표 · Pain Point</div></div>
+        <div class="frame"><div class="fhead">Persona B</div><div class="ph-line w-80"></div><div class="ph-line w-60"></div><div class="ph-line w-70"></div></div>
+        <div class="frame"><div class="fhead">Persona C</div><div class="ph-line w-80"></div><div class="ph-line w-60"></div><div class="ph-line w-70"></div></div>
+      </div>
+
+      <h2><span class="num">4.</span>비즈니스 요구사항 (BR)</h2>
+      <table class="cf">
+        <colgroup><col style="width:80px"><col style="width:160px"><col><col style="width:70px"><col style="width:140px"></colgroup>
+        <thead><tr><th class="id">ID</th><th>요구사항명</th><th>설명</th><th>중요도</th><th>Trace (→)</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="id">REQ-B01</td>
+            <td>전자결재 페이퍼리스화</td>
+            <td>종이 결재 프로세스를 전자결재로 대체하여 처리 시간 50% 단축</td>
+            <td>High</td>
+            <td><span class="id-chip">FLW-001</span></td>
+          </tr>
+          <tr>
+            <td class="id">REQ-B02</td>
+            <td>모바일 결재</td>
+            <td>외근·출장 중에도 결재 처리 가능</td>
+            <td>High</td>
+            <td><span class="id-chip">FLW-002</span><span class="id-chip">SCR-010</span></td>
+          </tr>
+          <tr><td class="muted" colspan="5">… 행 추가</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">5.</span>기능 요구사항 (FR)</h2>
+      <table class="cf">
+        <colgroup><col style="width:80px"><col style="width:160px"><col><col style="width:70px"><col style="width:180px"></colgroup>
+        <thead><tr><th class="id">ID</th><th>요구사항명</th><th>설명 (Given/When/Then)</th><th>중요도</th><th>Trace (→)</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="id">REQ-F01</td>
+            <td>기안문 작성</td>
+            <td>사용자는 양식을 선택해 기안문을 작성/임시저장할 수 있다.</td>
+            <td>High</td>
+            <td><span class="id-chip">SCR-001</span><span class="id-chip">FUNC-001</span></td>
+          </tr>
+          <tr>
+            <td class="id">REQ-F02</td>
+            <td>결재선 지정</td>
+            <td>기안자는 결재자·합의자·참조자를 순서대로 지정할 수 있다.</td>
+            <td>High</td>
+            <td><span class="id-chip">SCR-002</span><span class="id-chip">FUNC-002</span></td>
+          </tr>
+          <tr>
+            <td class="id">REQ-F03</td>
+            <td>결재 처리</td>
+            <td>결재자는 승인/반려/보류 중 하나를 선택해 의견과 함께 처리할 수 있다.</td>
+            <td>High</td>
+            <td><span class="id-chip">SCR-003</span><span class="id-chip">FUNC-003</span></td>
+          </tr>
+          <tr><td class="muted" colspan="5">… 행 추가</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">6.</span>비기능 요구사항 (NFR)</h2>
+      <table class="cf">
+        <colgroup><col style="width:80px"><col style="width:140px"><col><col style="width:120px"></colgroup>
+        <thead><tr><th class="id">ID</th><th>카테고리</th><th>기준</th><th>측정방법</th></tr></thead>
+        <tbody>
+          <tr><td class="id">REQ-N01</td><td>성능</td><td>주요 화면 응답 2초 이내 (95th)</td><td>APM</td></tr>
+          <tr><td class="id">REQ-N02</td><td>가용성</td><td>월간 가용성 99.5%</td><td>모니터링</td></tr>
+          <tr><td class="id">REQ-N03</td><td>보안</td><td>개인정보 암호화 (AES-256)</td><td>보안 점검</td></tr>
+          <tr><td class="id">REQ-N04</td><td>호환성</td><td>Chrome/Edge 최신 2버전, iOS/Android 최신 2버전</td><td>QA 매트릭스</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">7.</span>제약/가정 사항</h2>
+      <div class="callout"><div class="t">Constraint</div>사내 SSO(Okta) 연동 필수. 외부 인증 미지원.</div>
+      <div class="callout"><div class="t">Assumption</div>조직도·인사정보는 HR 시스템에서 일 1회 동기화된다.</div>
+
+      <h2><span class="num">8.</span>FAQ</h2>
+      <div class="frame"><div style="font-weight:700; margin-bottom:4px;">Q. 반려된 문서를 재상신할 수 있나요?</div><div class="small">A. 반려 사유를 반영해 수정 후 재상신 가능. 이력은 원 문서에 누적됩니다. (→ REQ-F03)</div></div>
+      <div class="frame"><div style="font-weight:700; margin-bottom:4px;">Q. 결재자가 부재중일 때는?</div><div class="small">A. 전결/대결 설정이 가능합니다. (→ REQ-F05, ROLE-003)</div></div>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div>
+      <h3>변경 이력</h3>
+      <table class="cf">
+        <thead><tr><th style="width:80px">버전</th><th style="width:100px">일자</th><th style="width:90px">작성자</th><th>변경내용</th></tr></thead>
+        <tbody>
+          <tr><td>v0.1</td><td>2026-04-24</td><td>홍길동</td><td>초안 작성</td></tr>
+          <tr><td class="muted" colspan="4">…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>관련 페이지</h3>
+      <ul style="margin:0; padding-left:16px; font-size:12px;">
+        <li>FLW · 프로세스흐름도</li>
+        <li>SCR · 화면정의서</li>
+        <li>FUNC · 기능정의서</li>
+        <li>TRC · 요구사항 추적 매트릭스</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

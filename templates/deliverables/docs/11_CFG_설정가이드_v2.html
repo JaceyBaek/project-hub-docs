@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CFG · 설정가이드 v2</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+<style>
+  .env-col { display:grid; grid-template-columns: 200px repeat(3, 1fr); gap: 0; border: 1px solid var(--line); background:#fff; font-size: 12px; }
+  .env-col > div { border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); padding: 8px 10px; }
+  .env-col > div:nth-child(4n) { border-right: 0; }
+  .env-col .head { background: var(--bg-gray); font-weight: 700; font-size: 11px; letter-spacing: 0.04em; }
+  .env-col .key { font-family: ui-monospace, monospace; font-size: 11.5px; background: #fafafa; }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>설정가이드</b> / v2 (환경 대조형)</span>
+  <span class="spacer"></span>
+  <span class="status draft">Draft</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+  <div class="cf-breadcrumb"><span>운영</span><span>설정가이드</span><span>v2 · Env Comparison</span></div>
+  <h1 class="cf-title"><span class="doc-id">CFG</span>설정가이드 <span style="font-size:13px; font-weight:400; color:var(--muted);">— v2 · 환경 대조형</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">버전</div><div class="v">v2.0</div></div>
+    <div class="m"><div class="k">포맷</div><div class="v">DEV / STG / PRD 대조</div></div>
+    <div class="m"><div class="k">대상</div><div class="v">SRE · DevOps</div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">비교 항목</div><div class="v">3 환경</div></div>
+    <div class="m"><div class="k">Variation</div><div class="v"><a href="11-config-guide.html">v1</a> · <a href="11-config-guide-v3.html">v3</a></div></div>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>목차</h4>
+      <ol>
+        <li>환경별 환경변수</li>
+        <li>환경별 파라미터</li>
+        <li>환경별 외부 연계</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>환경별 환경변수 대조</h2>
+      <div class="env-col">
+        <div class="head">Key</div><div class="head">DEV</div><div class="head">STG</div><div class="head">PRD</div>
+
+        <div class="key">DB_URL</div>
+        <div>dev-db:5432/app</div>
+        <div>stg-db:5432/app</div>
+        <div>prd-cluster:5432/app</div>
+
+        <div class="key">REDIS_URL</div>
+        <div>dev-redis:6379</div>
+        <div>stg-redis:6379</div>
+        <div>prd-redis-cluster:6379</div>
+
+        <div class="key">SSO_ISSUER</div>
+        <div>okta-dev.company</div>
+        <div>okta-stg.company</div>
+        <div>okta.company</div>
+
+        <div class="key">MAX_UPLOAD_MB</div>
+        <div>50</div>
+        <div>20</div>
+        <div>10</div>
+
+        <div class="key">FEATURE_MOBILE_PUSH</div>
+        <div>false</div>
+        <div>true</div>
+        <div>true</div>
+
+        <div class="key">LOG_LEVEL</div>
+        <div>DEBUG</div>
+        <div>INFO</div>
+        <div>WARN</div>
+      </div>
+
+      <h2><span class="num">2.</span>환경별 시스템 파라미터</h2>
+      <div class="env-col">
+        <div class="head">Key</div><div class="head">DEV</div><div class="head">STG</div><div class="head">PRD</div>
+
+        <div class="key">approval.line.max</div>
+        <div>10</div><div>10</div><div>10</div>
+
+        <div class="key">draft.retention.days</div>
+        <div>7</div><div>30</div><div>30</div>
+
+        <div class="key">absence.autodelegate.days</div>
+        <div>1</div><div>3</div><div>3</div>
+      </div>
+
+      <h2><span class="num">3.</span>환경별 외부 연계</h2>
+      <table class="cf">
+        <thead><tr><th>연계</th><th>DEV</th><th>STG</th><th>PRD</th></tr></thead>
+        <tbody>
+          <tr><td>HR System</td><td>Mock</td><td>실데이터(복제)</td><td>실시간</td></tr>
+          <tr><td>Mail GW</td><td>Catch-all</td><td>제한 도메인</td><td>전체</td></tr>
+          <tr><td>Push</td><td>Disabled</td><td>Sandbox</td><td>Production</td></tr>
+        </tbody>
+      </table>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div><h3>변경 이력</h3>
+      <table class="cf"><tbody><tr><td>v2.0</td><td>2026-04-24</td><td>SRE팀</td><td>환경 대조 변형</td></tr></tbody></table>
+    </div>
+    <div><h3>관련 페이지</h3><ul style="margin:0; padding-left:16px; font-size:12px;"><li>CFG v1 · v3</li></ul></div>
+  </div>
+</div>
+</body>
+</html>

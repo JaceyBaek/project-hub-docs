@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>OPM · 운영자매뉴얼 v3</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+<style>
+  .timeline {
+    position: relative;
+    padding-left: 140px;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 120px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--line);
+  }
+  .tl-item { position: relative; margin-bottom: 16px; }
+  .tl-item .tl-time {
+    position: absolute;
+    left: -140px;
+    top: 0;
+    width: 110px;
+    text-align: right;
+    font-size: 11px;
+    color: var(--ink-3);
+    font-family: ui-monospace, monospace;
+  }
+  .tl-item::before {
+    content: "";
+    position: absolute;
+    left: -22px;
+    top: 6px;
+    width: 8px; height: 8px;
+    border: 1.5px solid var(--ink);
+    background: #fff;
+    border-radius: 50%;
+  }
+  .tl-item .tl-body {
+    border: 1px solid var(--line);
+    background: #fff;
+    padding: 10px 12px;
+  }
+  .tl-item .tl-head {
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>운영자매뉴얼</b> / v3 (일과 타임라인형)</span>
+  <span class="spacer"></span>
+  <span class="status draft">Draft</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+  <div class="cf-breadcrumb"><span>운영</span><span>운영자매뉴얼</span><span>v3 · Day-in-the-Life</span></div>
+  <h1 class="cf-title"><span class="doc-id">OPM</span>운영자매뉴얼 <span style="font-size:13px; font-weight:400; color:var(--muted);">— v3 · 일과 타임라인형</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">버전</div><div class="v">v3.0</div></div>
+    <div class="m"><div class="k">포맷</div><div class="v">Day Timeline</div></div>
+    <div class="m"><div class="k">대상</div><div class="v">신규 운영자 교육</div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">일과 수</div><div class="v">8 포인트</div></div>
+    <div class="m"><div class="k">Variation</div><div class="v"><a href="09-operator-manual.html">v1</a> · <a href="09-operator-manual-v2.html">v2</a></div></div>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>목차</h4>
+      <ol>
+        <li>하루의 흐름</li>
+        <li>주간 정기 업무</li>
+        <li>월간 정기 업무</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>하루의 흐름</h2>
+      <div class="timeline">
+
+        <div class="tl-item">
+          <div class="tl-time">09:00</div>
+          <div class="tl-body">
+            <div class="tl-head"><span>출근 · 야간 배치 점검</span><span class="small muted">15분</span></div>
+            <div class="small">배치 대시보드에서 전날 21:00~08:00 결과를 확인한다. SUCCESS 외 항목은 즉시 티켓 생성.</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">09:15</div>
+          <div class="tl-body">
+            <div class="tl-head"><span>SLO 대시보드 확인</span><span class="small muted">10분</span></div>
+            <div class="small">가용성/응답시간/에러율이 SLO 범위 내인지 확인. Burn-rate 알림을 우선 처리한다.</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">09:30</div>
+          <div class="tl-body">
+            <div class="tl-head"><span>CS 티켓 Triage</span><span class="small muted">30분</span></div>
+            <div class="small">신규 티켓을 P1/P2/P3로 분류하고 담당을 배정한다.</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">10:00</div>
+          <div class="tl-body">
+            <div class="tl-head"><span>Stand-up 공유</span><span class="small muted">15분</span></div>
+            <div class="small">진행 중인 이슈, 예정된 배포/점검, 블로커를 공유한다.</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">수시</div>
+          <div class="tl-body">
+            <div class="tl-head"><span>알림 ACK · 대응</span><span class="small muted">SLA 준수</span></div>
+            <div class="small">P1 5분 · P2 30분 내 ACK. Playbook(v2) 카드 번호대로 대응.</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">14:00</div>
+          <div class="tl-body">
+            <div class="tl-head"><span>배포/변경 리뷰</span><span class="small muted">30분</span></div>
+            <div class="small">당일 배포 예정 PR을 검토, Change Advisory Board 승인 여부를 확인한다.</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">17:30</div>
+          <div class="tl-body">
+            <div class="tl-head"><span>일 점검 요약</span><span class="small muted">10분</span></div>
+            <div class="small">#ops-daily 채널에 당일 주요 이슈·메트릭·예정사항을 1개 메시지로 게시한다.</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">18:00</div>
+          <div class="tl-body">
+            <div class="tl-head"><span>On-call 인수인계</span><span class="small muted">필요 시</span></div>
+            <div class="small">진행 중 이슈/대응 현황을 PagerDuty handoff 노트에 작성한다.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <h2><span class="num">2.</span>주간 정기 업무</h2>
+      <table class="cf">
+        <thead><tr><th>요일</th><th>업무</th><th>소요</th></tr></thead>
+        <tbody>
+          <tr><td>월</td><td>주간 SLO 리포트 작성</td><td>30분</td></tr>
+          <tr><td>수</td><td>보안 패치 적용 여부 확인</td><td>20분</td></tr>
+          <tr><td>금</td><td>용량 트렌드 리뷰</td><td>30분</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">3.</span>월간 정기 업무</h2>
+      <table class="cf">
+        <thead><tr><th>일자</th><th>업무</th></tr></thead>
+        <tbody>
+          <tr><td>1일</td><td>전월 장애 요약 · Post-mortem 취합</td></tr>
+          <tr><td>15일</td><td>백업 복구 훈련 (DR Drill)</td></tr>
+          <tr><td>말일</td><td>권한 재검증 (ROLE-03~05)</td></tr>
+        </tbody>
+      </table>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div><h3>변경 이력</h3>
+      <table class="cf"><tbody><tr><td>v3.0</td><td>2026-04-24</td><td>운영팀</td><td>타임라인형 변형</td></tr></tbody></table>
+    </div>
+    <div><h3>관련 페이지</h3><ul style="margin:0; padding-left:16px; font-size:12px;"><li>OPM v1 · v2</li></ul></div>
+  </div>
+</div>
+</body>
+</html>

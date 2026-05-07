@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>ITS · 통합테스트시나리오</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>통합테스트시나리오</b></span>
+  <span class="spacer"></span>
+  <span class="status draft">Draft</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+  <div class="cf-breadcrumb"><span>Space</span><span>산출물 템플릿</span><span>품질</span><span>통합테스트시나리오</span></div>
+  <h1 class="cf-title"><span class="doc-id">ITS</span>통합테스트시나리오 <span style="font-size:13px; font-weight:400; color:var(--muted);">— Integration Test Scenarios</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">담당자</div><div class="v">정큐에이 (QA)</div></div>
+    <div class="m"><div class="k">버전</div><div class="v">v0.1</div></div>
+    <div class="m"><div class="k">상태</div><div class="v"><span class="status draft">Draft</span></div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">시나리오 수</div><div class="v">12</div></div>
+    <div class="m"><div class="k">Confluence</div><div class="v mono small">/DOCS-TMPL/ITS</div></div>
+  </div>
+
+  <div style="margin:0 0 16px;">
+    <span class="tag">#phase:test</span><span class="tag">#level:e2e</span>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>목차</h4>
+      <ol>
+        <li>개요</li>
+        <li>테스트 환경</li>
+        <li>시나리오 목록</li>
+        <li>시나리오 상세 — ITS-001</li>
+        <li>데이터 전제</li>
+        <li>진입/완료 기준</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>개요</h2>
+      <p>사용자 여정(User Journey) 기반의 End-to-End 시나리오를 정의한다. 프로세스(FLW)와 단위테스트(UTC)를 합성해 실제 업무 흐름을 검증한다.</p>
+
+      <h2><span class="num">2.</span>테스트 환경</h2>
+      <div class="grid-3">
+        <div class="frame"><div class="fhead">서버</div><div class="small">staging.company.local · k8s-stg</div></div>
+        <div class="frame"><div class="fhead">브라우저</div><div class="small">Chrome · Edge · Safari (iOS)</div></div>
+        <div class="frame"><div class="fhead">데이터</div><div class="small">test-org · user fixtures · reset per run</div></div>
+      </div>
+
+      <h2><span class="num">3.</span>시나리오 목록</h2>
+      <table class="cf">
+        <thead><tr><th class="id">ID</th><th>시나리오</th><th>관련 FLW</th><th>관련 UTC</th><th>예상 소요</th></tr></thead>
+        <tbody>
+          <tr><td class="id">ITS-001</td><td>기안 → 결재 → 종결 (정상)</td><td><span class="id-chip">FLW-001</span></td><td><span class="id-chip muted">UTC-001,020</span></td><td>12분</td></tr>
+          <tr><td class="id">ITS-002</td><td>기안 → 반려 → 재상신</td><td><span class="id-chip">FLW-001</span></td><td><span class="id-chip muted">UTC-021</span></td><td>10분</td></tr>
+          <tr><td class="id">ITS-003</td><td>모바일 결재 Push 처리</td><td><span class="id-chip">FLW-002</span></td><td><span class="id-chip muted">UTC-030</span></td><td>8분</td></tr>
+          <tr><td class="id">ITS-004</td><td>결재자 부재 → 대결 처리</td><td><span class="id-chip">FLW-003</span></td><td><span class="id-chip muted">UTC-040</span></td><td>15분</td></tr>
+          <tr><td class="muted" colspan="5">…</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">4.</span>시나리오 상세 — <span class="mono">ITS-001</span></h2>
+      <div class="frame">
+        <div class="fhead">
+          <span>ITS-001 · 기안부터 최종 결재까지의 정상 흐름</span>
+          <span class="trace">
+            <span class="id-chip muted">FLW-001</span>
+            <span class="arrow">→</span>
+            <span class="id-chip solid">ITS-001</span>
+          </span>
+        </div>
+        <table class="cf">
+          <thead><tr><th style="width:40px">Step</th><th>Actor</th><th>행동</th><th>기대 결과</th><th>연결</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>기안자</td><td>기안문 작성 후 임시저장</td><td>DRAFT 상태로 문서함에 저장</td><td><span class="id-chip">SCR-001</span></td></tr>
+            <tr><td>2</td><td>기안자</td><td>결재자 1명 + 합의자 1명 지정 후 상신</td><td>PENDING 상태, 결재자에 알림</td><td><span class="id-chip">SCR-002</span></td></tr>
+            <tr><td>3</td><td>결재자 A</td><td>승인</td><td>다음 결재자에게 라우팅</td><td><span class="id-chip">SCR-003</span></td></tr>
+            <tr><td>4</td><td>결재자 B</td><td>승인</td><td>APPROVED 전환, 기안자에 알림</td><td><span class="id-chip">SCR-003</span></td></tr>
+            <tr><td>5</td><td>기안자</td><td>결과 확인</td><td>종결 문서 열람 가능</td><td><span class="id-chip">SCR-004</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2><span class="num">5.</span>데이터 전제</h2>
+      <table class="cf">
+        <thead><tr><th>이름</th><th>Role</th><th>조직</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td>홍길동</td><td>ROLE-01</td><td>기획팀</td><td>기안자</td></tr>
+          <tr><td>김결재</td><td>ROLE-02</td><td>기획팀장</td><td>1차 결재</td></tr>
+          <tr><td>이본부</td><td>ROLE-02</td><td>본부장</td><td>2차 결재</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">6.</span>진입/완료 기준</h2>
+      <div class="callout"><div class="t">Entry</div>모든 관련 UTC가 Pass, 테스트 데이터 준비 완료</div>
+      <div class="callout"><div class="t">Exit</div>P1 시나리오 100% Pass, P2 시나리오 95% Pass, Critical 결함 0</div>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div><h3>변경 이력</h3>
+      <table class="cf"><thead><tr><th>버전</th><th>일자</th><th>작성자</th><th>내용</th></tr></thead>
+      <tbody><tr><td>v0.1</td><td>2026-04-24</td><td>정큐에이</td><td>초안</td></tr></tbody></table>
+    </div>
+    <div><h3>관련 페이지</h3>
+      <ul style="margin:0; padding-left:16px; font-size:12px;">
+        <li>FLW · 프로세스흐름도</li><li>UTC · 단위테스트케이스</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

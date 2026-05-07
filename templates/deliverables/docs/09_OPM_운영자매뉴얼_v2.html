@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>OPM · 운영자매뉴얼 v2</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+<style>
+  .playbook-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .pb-card {
+    border: 1.5px solid var(--ink-2);
+    background: #fff;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .pb-card .pb-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed var(--line-2);
+    padding-bottom: 6px;
+  }
+  .pb-card .pb-id {
+    font-family: ui-monospace, monospace;
+    font-size: 10.5px;
+    background: var(--ink);
+    color: #fff;
+    padding: 2px 6px;
+  }
+  .pb-card .sev { font-size: 10.5px; color: var(--ink-2); letter-spacing: 0.06em; }
+  .pb-card h4 { margin: 0; font-size: 14px; }
+  .severity-p1 { border-left: 4px solid var(--ink); }
+  .severity-p2 { border-left: 4px dashed var(--ink-2); }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>운영자매뉴얼</b> / v2 (Playbook 카드형)</span>
+  <span class="spacer"></span>
+  <span class="status draft">Draft</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+  <div class="cf-breadcrumb"><span>운영</span><span>운영자매뉴얼</span><span>v2 · Incident Playbook</span></div>
+  <h1 class="cf-title"><span class="doc-id">OPM</span>운영자매뉴얼 <span style="font-size:13px; font-weight:400; color:var(--muted);">— v2 · Playbook 카드형</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">버전</div><div class="v">v2.0</div></div>
+    <div class="m"><div class="k">포맷</div><div class="v">Playbook 카드</div></div>
+    <div class="m"><div class="k">대상</div><div class="v">On-call 운영자</div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">장애 시나리오</div><div class="v">12</div></div>
+    <div class="m"><div class="k">Variation</div><div class="v"><a href="09-operator-manual.html">v1</a> · <a href="09-operator-manual-v3.html">v3</a></div></div>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>목차</h4>
+      <ol>
+        <li>대응 원칙</li>
+        <li>Severity 정의</li>
+        <li>Playbook 카드</li>
+        <li>Escalation 사다리</li>
+        <li>Post-mortem 양식</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>대응 원칙</h2>
+      <div class="grid-3">
+        <div class="frame"><div class="fhead">1. Detect</div><div class="small">알림 수신 → 5분 내 ACK</div></div>
+        <div class="frame"><div class="fhead">2. Mitigate</div><div class="small">서비스 영향 완화 우선</div></div>
+        <div class="frame"><div class="fhead">3. Resolve</div><div class="small">근본 원인 해결 · 기록</div></div>
+      </div>
+
+      <h2><span class="num">2.</span>Severity 정의</h2>
+      <table class="cf">
+        <thead><tr><th>SEV</th><th>기준</th><th>응답 SLA</th><th>알림</th></tr></thead>
+        <tbody>
+          <tr><td><b>P1</b></td><td>전사 서비스 중단</td><td>5분</td><td>PagerDuty · 전화</td></tr>
+          <tr><td><b>P2</b></td><td>일부 기능 장애</td><td>30분</td><td>Slack #alert-p2</td></tr>
+          <tr><td><b>P3</b></td><td>성능 저하 · 우회 가능</td><td>4시간</td><td>JIRA</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">3.</span>Playbook 카드</h2>
+      <div class="playbook-grid">
+
+        <div class="pb-card severity-p1">
+          <div class="pb-head">
+            <span class="pb-id">PB-001</span><span class="sev">P1 · 5분 SLA</span>
+          </div>
+          <h4>API 전체 5xx 급증</h4>
+          <div class="small"><b>증상</b> 5xx rate &gt; 5% / 1min</div>
+          <div class="small"><b>1차</b> 최근 배포 확인 → Rollback</div>
+          <div class="small"><b>2차</b> DB / Redis / SSO 순서로 점검</div>
+          <div class="small"><b>Escalation</b> 10분 내 미해결 → SRE On-call</div>
+        </div>
+
+        <div class="pb-card severity-p1">
+          <div class="pb-head">
+            <span class="pb-id">PB-002</span><span class="sev">P1 · 5분 SLA</span>
+          </div>
+          <h4>SSO 인증 전면 불가</h4>
+          <div class="small"><b>증상</b> 로그인 성공률 &lt; 50%</div>
+          <div class="small"><b>1차</b> Okta 상태 페이지 확인</div>
+          <div class="small"><b>2차</b> 비상용 로컬 인증 플래그 ON (FEATURE_LOCAL_AUTH=true)</div>
+        </div>
+
+        <div class="pb-card severity-p2">
+          <div class="pb-head">
+            <span class="pb-id">PB-010</span><span class="sev">P2 · 30분 SLA</span>
+          </div>
+          <h4>첨부 업로드 실패</h4>
+          <div class="small"><b>증상</b> S3 4xx/5xx 증가</div>
+          <div class="small"><b>1차</b> IAM 자격 증명 만료 여부 확인</div>
+        </div>
+
+        <div class="pb-card severity-p2">
+          <div class="pb-head">
+            <span class="pb-id">PB-011</span><span class="sev">P2 · 30분 SLA</span>
+          </div>
+          <h4>배치 sync-hr 실패</h4>
+          <div class="small"><b>증상</b> 01:00 배치 FAILED</div>
+          <div class="small"><b>1차</b> HR API 응답 확인 → 수동 재실행</div>
+          <div class="small"><b>수동 재실행</b> <span class="mono small">kubectl create job --from=cronjob/sync-hr …</span></div>
+        </div>
+
+        <div class="pb-card severity-p2">
+          <div class="pb-head">
+            <span class="pb-id">PB-012</span><span class="sev">P2 · 30분 SLA</span>
+          </div>
+          <h4>결재 라우팅 지연</h4>
+          <div class="small"><b>증상</b> 큐 depth &gt; 1000</div>
+          <div class="small"><b>대응</b> Consumer Pod 2배 증설 → 해소 후 원복</div>
+        </div>
+
+        <div class="pb-card severity-p2">
+          <div class="pb-head">
+            <span class="pb-id">PB-013</span><span class="sev">P2 · 30분 SLA</span>
+          </div>
+          <h4>모바일 Push 미수신</h4>
+          <div class="small"><b>1차</b> FCM/APNs 키 만료 확인 (→ CFG)</div>
+        </div>
+
+      </div>
+
+      <h2><span class="num">4.</span>Escalation 사다리</h2>
+      <table class="cf">
+        <thead><tr><th>단계</th><th>대상</th><th>조건</th></tr></thead>
+        <tbody>
+          <tr><td>L1</td><td>운영 On-call</td><td>초기 응답</td></tr>
+          <tr><td>L2</td><td>SRE</td><td>P1 10분 내 미해결</td></tr>
+          <tr><td>L3</td><td>Tech Lead + CTO</td><td>P1 30분 내 미해결</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">5.</span>Post-mortem 양식</h2>
+      <div class="callout"><div class="t">Template</div>
+        Summary · Timeline · Impact · Root Cause · Action Items · Lessons Learned
+      </div>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div><h3>변경 이력</h3>
+      <table class="cf"><tbody><tr><td>v2.0</td><td>2026-04-24</td><td>SRE팀</td><td>Playbook 카드 변형</td></tr></tbody></table>
+    </div>
+    <div><h3>관련 페이지</h3>
+      <ul style="margin:0; padding-left:16px; font-size:12px;">
+        <li>OPM v1 · Runbook</li><li>ARC · 아키텍처</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>

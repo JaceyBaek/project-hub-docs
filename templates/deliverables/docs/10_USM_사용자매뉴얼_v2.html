@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>USM · 사용자매뉴얼 v2</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+<style>
+  .qa-block {
+    border: 1px solid var(--line);
+    background: #fff;
+    margin: 8px 0;
+  }
+  .qa-block .q {
+    background: var(--bg-gray);
+    padding: 10px 12px;
+    font-weight: 700;
+    font-size: 13px;
+    border-bottom: 1px solid var(--line);
+  }
+  .qa-block .a {
+    padding: 10px 12px;
+    font-size: 12.5px;
+    color: var(--ink-2);
+  }
+  .qa-block .q::before {
+    content: "Q.";
+    font-family: ui-monospace, monospace;
+    color: var(--ink);
+    margin-right: 6px;
+  }
+  .qa-block .a::before {
+    content: "A.";
+    font-family: ui-monospace, monospace;
+    color: var(--muted);
+    margin-right: 6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>사용자매뉴얼</b> / v2 (FAQ 중심)</span>
+  <span class="spacer"></span>
+  <span class="status draft">Draft</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+  <div class="cf-breadcrumb"><span>사용자</span><span>사용자매뉴얼</span><span>v2 · FAQ Knowledge Base</span></div>
+  <h1 class="cf-title"><span class="doc-id">USM</span>사용자매뉴얼 <span style="font-size:13px; font-weight:400; color:var(--muted);">— v2 · FAQ / Q&amp;A (AI 챗봇 학습 최적화)</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">버전</div><div class="v">v2.0</div></div>
+    <div class="m"><div class="k">포맷</div><div class="v">Q&amp;A</div></div>
+    <div class="m"><div class="k">AI 학습</div><div class="v">Ready</div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">Q&amp;A 수</div><div class="v">8 (샘플)</div></div>
+    <div class="m"><div class="k">Variation</div><div class="v"><a href="10-user-manual.html">v1</a> · <a href="10-user-manual-v3.html">v3</a></div></div>
+  </div>
+
+  <div style="margin:0 0 16px;">
+    <span class="tag">#audience:enduser</span><span class="tag">#ai-train:priority</span><span class="tag">#format:qa</span>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>카테고리</h4>
+      <ol>
+        <li>계정/로그인</li>
+        <li>기안 작성</li>
+        <li>결재 처리</li>
+        <li>모바일</li>
+        <li>알림/메일</li>
+        <li>용어집</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>계정/로그인</h2>
+
+      <div class="qa-block">
+        <div class="q">SSO 로그인이 안 될 때 어떻게 하나요?</div>
+        <div class="a">사내 포털에서 로그아웃 후 재로그인한 뒤, 결재 시스템에 다시 접속하세요. 10분 이상 지속되면 SSO 세션 이슈이니 보안팀(#security)에 문의합니다. <span class="id-chip muted">SCR-login</span></div>
+      </div>
+
+      <div class="qa-block">
+        <div class="q">비밀번호는 어디서 바꾸나요?</div>
+        <div class="a">사내 SSO(Okta) 포털에서 변경합니다. 본 시스템은 자체 비밀번호가 없습니다.</div>
+      </div>
+
+      <h2><span class="num">2.</span>기안 작성</h2>
+
+      <div class="qa-block">
+        <div class="q">작성 중 실수로 창을 닫았어요. 복구할 수 있나요?</div>
+        <div class="a">30초마다 자동 저장되므로 [임시보관함]에서 최근 저장본을 불러올 수 있습니다. 임시보관은 30일간 유지됩니다. <span class="id-chip muted">FUNC-001</span></div>
+      </div>
+
+      <div class="qa-block">
+        <div class="q">첨부 파일 용량 제한은요?</div>
+        <div class="a">파일 1개당 최대 10MB, 문서당 최대 5개까지 첨부할 수 있습니다. 초과 시 외부 클라우드 스토리지 링크를 본문에 기재해 주세요. <span class="id-chip muted">CFG-MAX_UPLOAD_MB</span></div>
+      </div>
+
+      <h2><span class="num">3.</span>결재 처리</h2>
+
+      <div class="qa-block">
+        <div class="q">결재자가 부재중일 때는?</div>
+        <div class="a">본인이 대결자를 미리 지정해 두었으면 자동 전달됩니다. 3일 이상 처리가 없으면 시스템이 자동으로 대결자에게 알림을 보냅니다. <span class="id-chip muted">FLW-003</span></div>
+      </div>
+
+      <div class="qa-block">
+        <div class="q">반려된 문서는 어떻게 되나요?</div>
+        <div class="a">기안자에게 사유와 함께 반환되며, 수정 후 재상신할 수 있습니다. 모든 이력은 원 문서에 누적 보관됩니다.</div>
+      </div>
+
+      <h2><span class="num">4.</span>모바일</h2>
+
+      <div class="qa-block">
+        <div class="q">모바일에서는 어떤 기능을 쓸 수 있나요?</div>
+        <div class="a">받은 문서 확인, 승인/반려/보류 처리, Push 알림 수신이 가능합니다. 기안문 신규 작성은 PC를 권장합니다.</div>
+      </div>
+
+      <h2><span class="num">5.</span>알림/메일</h2>
+
+      <div class="qa-block">
+        <div class="q">알림을 받지 못했어요.</div>
+        <div class="a">[설정 → 알림]에서 채널(Push/메일)별 수신 여부를 확인하세요. 회사 메일 도메인 외부 포워딩은 차단됩니다.</div>
+      </div>
+
+      <h2><span class="num">6.</span>용어집 (Glossary)</h2>
+      <table class="cf">
+        <thead><tr><th>용어</th><th>정의</th><th>연관 기능</th></tr></thead>
+        <tbody>
+          <tr><td>기안</td><td>결재 요청을 위한 문서 작성 행위</td><td><span class="id-chip muted">FUNC-001</span></td></tr>
+          <tr><td>상신</td><td>작성된 문서를 결재자에게 전달하는 행위</td><td><span class="id-chip muted">FUNC-002</span></td></tr>
+          <tr><td>전결</td><td>상위 결재자가 하위 결재를 대신 처리하는 권한</td><td><span class="id-chip muted">ROLE-03</span></td></tr>
+          <tr><td>대결</td><td>결재자 부재 시 지정된 자가 대신 결재</td><td><span class="id-chip muted">FLW-003</span></td></tr>
+          <tr><td>합의</td><td>결재 전 내용에 동의 의견을 표시하는 단계</td><td><span class="id-chip muted">FUNC-002</span></td></tr>
+        </tbody>
+      </table>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div><h3>변경 이력</h3>
+      <table class="cf"><tbody><tr><td>v2.0</td><td>2026-04-24</td><td>교육팀</td><td>Q&amp;A 포맷 변형</td></tr></tbody></table>
+    </div>
+    <div><h3>관련 페이지</h3><ul style="margin:0; padding-left:16px; font-size:12px;"><li>USM v1 · Step-by-Step</li><li>USM v3 · 화면 기준</li></ul></div>
+  </div>
+</div>
+</body>
+</html>
