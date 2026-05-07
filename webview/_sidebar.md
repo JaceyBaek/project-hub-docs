@@ -17,6 +17,7 @@
   - [셋업 가이드](guides/SETUP.md)
   - [MCP Server 설정](guides/mcp_server_setup.md)
   - [산출물 배포](templates/deliverables/DEPLOYMENT.md)
+  - [Claude Code 자동 승인](guides/auto_approve.md)
 
 - **아키텍처**
   - [Atlassian & Miso 연동](guides/architecture.md)

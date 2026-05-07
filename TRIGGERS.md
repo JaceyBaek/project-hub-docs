@@ -21,6 +21,7 @@
 | "compact", "컴팩트" | ① 이번 세션 작업 내용 기반 memory 파일 업데이트 (user/feedback/project/reference) → ② 글로벌·프로젝트 히스토리 기록 (미기록 시) → ③ 미완료 작업 있으면 목록 안내 → ④ 모두 완료 후 "이제 `/compact`를 입력해 주세요." 안내 |
 | "사이드바 캐시 초기화", "캐시 초기화", "dpws 초기화" | 웹뷰어 사이드바 하위 메뉴 캐시(dpws3) 초기화 안내: 브라우저 개발자 도구(F12) → 콘솔 탭에서 `localStorage.removeItem('dpws3')` 입력 후 F5 새로고침 |
 | "사이드바 동기화", "sidebar sync", "사이드바 갱신" | `python scripts/sync_sidebar.py` 실행 → projects/ 폴더 스캔 후 webview/_sidebar.md 프로젝트 섹션 1회 동기화 |
+| 가이드·문서 .md 파일 신규 생성 시 (guides/, history/, templates/deliverables/ 등 사이드바 노출 대상) | ① 파일 상단에 메타데이터 자동 추가 `<!-- sidebar_title: {표시명}\nsidebar_order: {순서}\n-->` (가이드면 가이드 섹션 마지막 order, 히스토리면 최신 1번) → ② `python scripts/generate_sidebar.py` 실행 → ③ 사이드바 반영 확인 (`grep` 등으로) → ④ 사용자에게 반영 결과 보고 |
 | "사이드바 감시 시작", "sidebar watch", "자동 동기화 시작" | 백그라운드로 `python scripts/sync_sidebar.py --watch` 실행 → projects/ 폴더 감시 시작, md 파일 추가·삭제 시 _sidebar.md 자동 갱신 (watchdog 필요: `pip install watchdog`) |
 | "MCP 등록", "mcp 등록", "MCP 서버 등록" 뉘앙스 | {assistant}가 MCP 등록 절차 실행 → 서버 이름·전송 방식·실행 명령·환경변수 순서대로 수집 → `claude mcp add` 실행 → `claude mcp list` 확인 → 프로젝트 CLAUDE.md에 등록 정보 기록 |
 | "MCP 목록", "MCP 확인", "등록된 MCP" 뉘앙스 | `claude mcp list` 실행 후 결과 출력 |
