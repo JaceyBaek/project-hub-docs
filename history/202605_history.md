@@ -351,3 +351,29 @@ sidebar_order: 1
 **검증**
 - 변수 잔재: 보존 대상(history/changelog) 외 0건
 - 표기 잔재: 보존 대상 외 0건 (TODO_GLOBAL.md G-018 항목 설명 텍스트는 작업명 자체이므로 정상)
+
+---
+
+## 2026-05-08
+
+### 프로젝트 생성 흐름 테스트 + `init_project.py` --delete 옵션 추가
+
+**테스트 목적**
+- 비서 통합 완료 후 프로젝트 생성 전체 흐름 검증
+- personal.yml 없는 조건, github 정보 없는 조건 각각 시나리오 테스트
+
+**테스트 결과**
+1. **personal.yml 없는 조건** — "안녕하세요!" 폴백 정상, 사전 설정(사용자명·비서명) 수집 → personal.yml 저장 확인
+2. **github 정보 없는 조건** — 프로젝트 생성 후 GitHub 자동화 스킵 + 경고 출력 확인. 이후 github 정보 수집 → personal.yml 저장 → git init·커밋·푸시 순차 진행 확인
+
+**`init_project.py` --delete 옵션 추가**
+- 배경: 프로젝트 삭제 시 `webview/_sidebar.md` 잔존 항목을 수동으로 제거해야 하는 번거로움 발견
+- 추가 함수: `unregister_from_sidebar()`, `unregister_from_projects_global()`
+- 추가 옵션: `--delete` / `-d` — sidebar + PROJECTS_GLOBAL.md + 로컬 폴더 일괄 삭제
+- Windows `.git` 읽기 전용 파일 삭제 시 PermissionError → `onerror` 핸들러(`stat.S_IWRITE` + chmod) 추가
+- GitHub 저장소는 `gh repo delete`로 별도 처리 (안내 메시지 포함)
+
+**사용법**
+```bash
+python init_project.py --delete {프로젝트명} --yes
+```

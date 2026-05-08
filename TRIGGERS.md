@@ -18,7 +18,8 @@
 | "로컬 서버", "로컬 웹뷰" 뉘앙스 | 백그라운드로 `python -m http.server 3000` 실행 → 1초 대기 → PowerShell `Start-Process "http://localhost:3000/webview/"` 으로 브라우저 자동 오픈 |
 | "로컬 서버 종료", "서버 종료" 뉘앙스 | 종료할 포트 번호 확인 (기본 3000) → PowerShell `Get-NetTCPConnection -LocalPort {포트} | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }` 실행 |
 | "메모리 저장" | 미완료·진행 중 작업 여부 확인 → 없으면 memory 파일 업데이트 → `/compact`는 사용자가 직접 입력 필요 ({assistant} 실행 불가) → 있으면 목록 안내 후 사용자 판단 |
-| "compact", "컴팩트" | ① 이번 세션 작업 내용 기반 memory 파일 업데이트 (user/feedback/project/reference) → ② 글로벌·프로젝트 히스토리 기록 (미기록 시) → ③ 미완료 작업 있으면 목록 안내 → ④ 모두 완료 후 "이제 `/compact`를 입력해 주세요." 안내 |
+| "compact", "컴팩트" | **기록 최우선:** ① 글로벌·프로젝트 히스토리 기록 (미기록 시 즉시) → ② memory 파일 업데이트 (user/feedback/project/reference) → ③ 미완료 작업 있으면 목록 안내 → ④ 모두 완료 후 "이제 `/compact`를 입력해 주세요." 안내 — GitHub·Google Drive 백업 미실행 (수동) |
+| "clear", "/clear", "클리어", "세션 종료 전 기록" 뉘앙스 | **기록 최우선:** ① 글로벌·프로젝트 히스토리 기록 (미기록 시 즉시) → ② memory 파일 업데이트 (user/feedback/project/reference) → ③ 미완료 작업 있으면 목록 안내 → ④ 완료 후 "이제 `/clear`를 입력해 주세요." 안내 — GitHub·Google Drive 백업 미실행 (수동) |
 | "사이드바 캐시 초기화", "캐시 초기화", "dpws 초기화" | 웹뷰어 사이드바 하위 메뉴 캐시(dpws3) 초기화 안내: 브라우저 개발자 도구(F12) → 콘솔 탭에서 `localStorage.removeItem('dpws3')` 입력 후 F5 새로고침 |
 | "사이드바 동기화", "sidebar sync", "사이드바 갱신" | `python scripts/sync_sidebar.py` 실행 → projects/ 폴더 스캔 후 webview/_sidebar.md 프로젝트 섹션 1회 동기화 |
 | 가이드·문서 .md 파일 신규 생성 시 (guides/, history/, templates/deliverables/ 등 사이드바 노출 대상) | ① 파일 상단에 메타데이터 자동 추가 `<!-- sidebar_title: {표시명}\nsidebar_order: {순서}\n-->` (가이드면 가이드 섹션 마지막 order, 히스토리면 최신 1번) → ② `python scripts/generate_sidebar.py` 실행 → ③ 사이드바 반영 확인 (`grep` 등으로) → ④ 사용자에게 반영 결과 보고 |
