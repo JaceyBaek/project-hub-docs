@@ -25,4 +25,5 @@
 - **히스토리**
   - [2026년 5월](history/202605_history.md)
   - [2026년 4월](history/202604_history.md)
+  - [2025년 5월](history/202505_history.md)
 
