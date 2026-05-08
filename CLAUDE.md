@@ -1,6 +1,6 @@
 # project-hub
 
-> 비서명: `{assistant}` → assistant.name_kr / `{user_name}` → user_name (`config/personal.yml` 참조, 없으면 `hub_init.py` 먼저 실행)
+> 비서명: `{assistant}` → assistant.name_kr / `{user_name}` → user_name (`config/personal.yml` 참조, 없으면 `core/hub_init.py` 먼저 실행)
 > 히스토리 파일·코드 기본값은 변수화 대상 제외
 
 ## AI 비서
@@ -12,7 +12,7 @@
 
 ## 세션 시작 프로토콜
 
-1. `TRIGGERS.md` 로드 → 트리거 목록 출력
+1. `core/TRIGGERS.md` 로드 → 트리거 목록 출력
 2. `TODO_GLOBAL.md` 체크 → 기한 초과 항목 알림
 3. `history/YYYYMM_history.md` 최근 날짜 확인 → 오늘 이전이면 "마지막 작업 요약이 YYYY-MM-DD입니다. 지금 작성할까요?" 알림
 
@@ -25,8 +25,8 @@
 
 ## 트리거 관리
 
-- 목록: `TRIGGERS.md` / "도움말", "help", "트리거 목록 보여줘" 감지 시 출력
-- 새 트리거 추가 시 TRIGGERS.md 자동 업데이트
+- 목록: `core/TRIGGERS.md` / "도움말", "help", "트리거 목록 보여줘" 감지 시 출력
+- 새 트리거 추가 시 core/TRIGGERS.md 자동 업데이트
 
 ---
 
@@ -43,7 +43,7 @@
 
 ## 작업 디렉토리
 
-- 프로젝트: `projects/` / 스크립트: `scripts/` / 플러그인: `plugins/` (`PLUGINS_PATH=D:\03.project-hub\plugins`, pip install -e)
+- 프로젝트: `projects/` / 스크립트: `scripts/` / 플러그인: `plugins/` (`PLUGINS_PATH` = `config/personal.yml` → `paths.plugins`, pip install -e)
 
 ---
 
@@ -54,13 +54,13 @@
 - 단위 관리: `_manage/` — `history/YYYYMM.md` / `todo.md` / `issues.md` / `meetings/` / `decisions.md` / `changelog.md`
 - 우선순위: 높음·보통·낮음 / 상태: 대기·진행중·완료·보류 / 이슈유형: 버그·변경요청·리스크
 
-**필요 시 로드할 상세 가이드:**
-- 상태 전환·서비스종료 절차 → `guides/project_lifecycle.md`
-- 새 프로젝트 생성 절차 → `guides/project_creation.md`
-- 연결 설정(Confluence/Miso) → `guides/connection_setup.md`
-- MCP 등록 → `guides/mcp_registration.md`
-- 산출물 규칙·단계별 표 → `guides/deliverables_guide.md`
-- 버전 관리 → `guides/versioning.md`
+**필요 시 로드할 상세 지침:**
+- 상태 전환·서비스종료 절차 → `core/project_lifecycle.md`
+- 새 프로젝트 생성 절차 → `core/project_creation.md`
+- 연결 설정(Confluence/Miso) → `core/connection_setup.md`
+- MCP 등록 → `core/mcp_registration.md`
+- 산출물 규칙·단계별 표 → `core/deliverables_guide.md`
+- 버전 관리 → `core/versioning.md`
 
 ---
 

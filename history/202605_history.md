@@ -377,3 +377,30 @@ sidebar_order: 1
 ```bash
 python init_project.py --delete {프로젝트명} --yes
 ```
+
+---
+
+### settings.json 정리 + 컨텍스트 상태 표시줄 설정
+
+**1. 컨텍스트 사용량 상태 표시줄 설정**
+- `C:\Users\Administrator\.claude\statusline.py` 신규 생성
+  - 모델명 + 진행 바(▓░) + 컨텍스트 % 출력
+  - JSON stdin 파싱 (Python 기본 라이브러리만 사용)
+- `settings.json`에 `statusLine` 항목 추가
+  - `type: command`, `python C:\...\statusline.py` 실행
+  - 어시스턴트 응답마다 터미널 하단 자동 갱신
+
+**2. settings.json allow 목록 대규모 정리 (350개 → 58개)**
+
+| 제거 유형 | 내용 |
+|---|---|
+| 구 경로 | `D:\05.Claude` 참조 항목 전체 (이전 완료) |
+| PowerShell 중복 | 개별 `PowerShell(...)` 항목 전체 — 상단 `"PowerShell"` 와일드카드로 커버 |
+| Read 중복 | `Read(//d/05.Claude/**)` 등 — `Read(//d/**)` 커버 |
+| 일회성 완료 | 디렉토리 삭제, 마이그레이션, 특정 PR/Run ID, 환경변수 setx, PID 지정 등 |
+| 보안 위험 | gh auth login 토큰 하드코딩 항목 |
+| Bash+PS 혼용 | `Bash(Get-ChildItem ...)` 등 Bash 컨텍스트에서 동작 불가 항목 |
+
+**3. additionalDirectories 정리 (11개 → 6개)**
+- 제거: `D:\05.Claude` 관련 4개, `D:\03.Lab` (임시 마이그레이션 목적지)
+- 유지: `C:\Users\Administrator\.claude`, `AppData\Local\Temp`, `D:\`, `AppData\Roaming`, `.vscode`, Claude Desktop 설정 경로

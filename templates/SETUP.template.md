@@ -164,7 +164,7 @@ clone 또는 fork 직후 **1회만** 실행합니다. 이후에는 불필요합�
 
 ```bash
 cd {HUB_ROOT}
-python hub_init.py
+python core/hub_init.py
 ```
 
 입력 항목:
@@ -644,7 +644,7 @@ Teams Webhook URL은 GitHub Secrets에 저장해야 합니다.
 
 ```bash
 cd {HUB_ROOT}
-python init_project.py
+python core/init_project.py
 ```
 
 입력 항목:

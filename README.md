@@ -49,7 +49,7 @@ Teams 알림 사용 시 GitHub Secrets에 `TEAMS_WEBHOOK_URL` 등록.
 ### 3단계 — 프로젝트 생성
 
 ```bash
-python init_project.py
+python core/init_project.py
 ```
 
 입력 항목:
@@ -67,7 +67,7 @@ python init_project.py
 ```
 project-hub/
 ├── CLAUDE.md                    ← {assistant} AI 비서 설정
-├── init_project.py              ← 프로젝트 초기화
+├── core/                        ← 플랫폼 코어 (지침·스크립트)
 ├── config/
 │   └── hub_config.yml           ← 알림·GitHub 설정
 ├── templates/
@@ -87,7 +87,7 @@ project-hub/
 
 ## 프로젝트 구조
 
-`init_project.py` 실행 시 아래 구조가 자동 생성됩니다:
+`core/init_project.py` 실행 시 아래 구조가 자동 생성됩니다:
 
 ```
 projects/{프로젝트명}/
@@ -142,5 +142,5 @@ git merge upstream/main
 ## 주의사항
 
 **hub 영역 파일은 직접 수정하지 마세요.**
-`CLAUDE.md`, `config/`, `templates/`, `guides/`, `init_project.py`, `.github/`
+`CLAUDE.md`, `core/`, `config/`, `templates/`, `guides/`, `.github/`
 변경이 필요하면 원본 hub 관리자에게 요청하거나 PR을 제출하세요.

@@ -166,7 +166,7 @@ pip install -e %PLUGINS_PATH%\atlassian_client
 pip install -e %PLUGINS_PATH%\miso_client
 ```
 
-> `PLUGINS_PATH=D:\03.project-hub\plugins` — 시스템 환경변수 또는 `.env` 에 설정
+> `PLUGINS_PATH` = `config/personal.yml`의 `paths.plugins` 값 — 시스템 환경변수 또는 `.env` 에 설정
 
 ---
 
