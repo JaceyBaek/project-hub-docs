@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SCR · 화면정의서</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>화면정의서</b></span>
+  <span class="spacer"></span>
+  <span class="status draft">Draft</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+
+  <div class="cf-breadcrumb"><span>Space</span><span>산출물 템플릿</span><span>설계</span><span>화면정의서</span></div>
+  <h1 class="cf-title"><span class="doc-id">SCR</span>화면정의서 <span style="font-size:13px; font-weight:400; color:var(--muted);">— Screen Specification</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">담당자</div><div class="v">이화면 (BA)</div></div>
+    <div class="m"><div class="k">버전</div><div class="v">v0.1</div></div>
+    <div class="m"><div class="k">상태</div><div class="v"><span class="status draft">Draft</span></div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">화면 수</div><div class="v">24</div></div>
+    <div class="m"><div class="k">Confluence</div><div class="v mono small">/DOCS-TMPL/SCR</div></div>
+  </div>
+
+  <div style="margin:0 0 16px;">
+    <span class="tag">#phase:design</span>
+    <span class="tag">#layer:ui</span>
+    <span class="tag">#module:approval</span>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>목차</h4>
+      <ol>
+        <li>개요 / 공통 규약</li>
+        <li>화면 목록</li>
+        <li>IA (정보구조)</li>
+        <li>화면 상세 — SCR-001</li>
+        <li>컴포넌트/이벤트</li>
+        <li>유효성 규칙</li>
+        <li>상태/에러 메시지</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>개요 / 공통 규약</h2>
+      <div class="grid-3">
+        <div class="frame"><div class="fhead">해상도</div><div class="small">1440 × 900 기준, 반응형 breakpoint 3단</div></div>
+        <div class="frame"><div class="fhead">그리드</div><div class="small">12 col · gutter 24</div></div>
+        <div class="frame"><div class="fhead">접근성</div><div class="small">WCAG 2.1 AA 준수</div></div>
+      </div>
+
+      <h2><span class="num">2.</span>화면 목록</h2>
+      <table class="cf">
+        <thead><tr><th class="id">ID</th><th>화면명</th><th>URL</th><th>권한</th><th>Trace</th></tr></thead>
+        <tbody>
+          <tr><td class="id">SCR-001</td><td>기안문 작성</td><td class="mono small">/approval/new</td><td><span class="id-chip muted">ROLE-01</span></td><td><span class="id-chip">REQ-F01</span><span class="id-chip">FUNC-001</span></td></tr>
+          <tr><td class="id">SCR-002</td><td>결재선 지정</td><td class="mono small">/approval/line</td><td><span class="id-chip muted">ROLE-01</span></td><td><span class="id-chip">REQ-F02</span><span class="id-chip">FUNC-002</span></td></tr>
+          <tr><td class="id">SCR-003</td><td>결재 처리</td><td class="mono small">/approval/:id</td><td><span class="id-chip muted">ROLE-02</span></td><td><span class="id-chip">REQ-F03</span><span class="id-chip">FUNC-003</span></td></tr>
+          <tr><td class="id">SCR-004</td><td>문서함</td><td class="mono small">/approval/inbox</td><td><span class="id-chip muted">ROLE-01,02</span></td><td><span class="id-chip">FUNC-010</span></td></tr>
+          <tr><td class="muted" colspan="5">…</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">3.</span>IA (정보구조)</h2>
+      <div class="frame">
+        <div class="fhead">사이트맵</div>
+        <div class="grid-4" style="gap:6px;">
+          <div class="frame dashed" style="padding:8px;"><b>Home</b></div>
+          <div class="frame dashed" style="padding:8px;"><b>결재함</b><div class="small muted">받은/보낸/진행/완료</div></div>
+          <div class="frame dashed" style="padding:8px;"><b>기안</b><div class="small muted">작성/임시보관</div></div>
+          <div class="frame dashed" style="padding:8px;"><b>관리</b><div class="small muted">양식/결재선/권한</div></div>
+        </div>
+      </div>
+
+      <h2><span class="num">4.</span>화면 상세 — <span class="mono">SCR-001</span> 기안문 작성</h2>
+
+      <div class="grid-2">
+        <!-- Mock -->
+        <div class="screen-mock">
+          <div class="sm-tag">SCR-001</div>
+          <div class="sm-top"><span>☰ 메뉴 &nbsp;›&nbsp; 기안 &nbsp;›&nbsp; 신규</span><span>홍길동</span></div>
+          <div class="sm-body">
+            <div style="border:1px solid var(--line); padding:8px; margin-bottom:10px;">
+              <div class="small muted">[A] 양식 선택</div>
+              <div class="ph-line w-60"></div>
+            </div>
+            <div style="border:1px solid var(--line); padding:8px; margin-bottom:10px;">
+              <div class="small muted">[B] 제목</div>
+              <div class="ph-line w-80"></div>
+            </div>
+            <div style="border:1px solid var(--line); padding:8px; margin-bottom:10px; min-height:80px;">
+              <div class="small muted">[C] 본문 에디터</div>
+              <div class="ph-line w-90"></div>
+              <div class="ph-line w-80"></div>
+              <div class="ph-line w-60"></div>
+            </div>
+            <div style="border:1px dashed var(--line); padding:8px; margin-bottom:10px;">
+              <div class="small muted">[D] 첨부파일 Drop</div>
+            </div>
+            <div style="text-align:right;">
+              <span class="tag">[E] 임시저장</span>
+              <span class="tag solid">[F] 상신 →</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Components -->
+        <div class="frame">
+          <div class="fhead">컴포넌트 / 이벤트</div>
+          <table class="cf">
+            <thead><tr><th style="width:30px">#</th><th>컴포넌트</th><th>이벤트</th><th>연결</th></tr></thead>
+            <tbody>
+              <tr><td>A</td><td>양식 Select</td><td>onChange → 본문 템플릿 로드</td><td><span class="id-chip">FUNC-001.1</span></td></tr>
+              <tr><td>B</td><td>제목 Input</td><td>blur 시 유효성 검사</td><td></td></tr>
+              <tr><td>C</td><td>Rich Editor</td><td>autoSave 30s</td><td><span class="id-chip">FUNC-001.2</span></td></tr>
+              <tr><td>D</td><td>파일 Drop</td><td>최대 10MB × 5</td><td><span class="id-chip">FUNC-001.3</span></td></tr>
+              <tr><td>E</td><td>임시저장 Btn</td><td>click → POST /drafts</td><td><span class="id-chip">FUNC-001.4</span></td></tr>
+              <tr><td>F</td><td>상신 Btn</td><td>click → SCR-002 이동</td><td><span class="id-chip">SCR-002</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h2><span class="num">5.</span>유효성 규칙</h2>
+      <table class="cf">
+        <thead><tr><th>필드</th><th>필수</th><th>규칙</th><th>에러 메시지</th></tr></thead>
+        <tbody>
+          <tr><td>제목</td><td>Y</td><td>1~80자</td><td>"제목을 입력해 주세요."</td></tr>
+          <tr><td>본문</td><td>Y</td><td>최소 10자</td><td>"본문은 10자 이상 작성해 주세요."</td></tr>
+          <tr><td>첨부</td><td>N</td><td>10MB, 5개</td><td>"첨부 용량/개수를 초과했습니다."</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">6.</span>상태/에러 메시지</h2>
+      <div class="grid-3">
+        <div class="frame"><div class="fhead">Empty</div><div class="small muted">"작성 중인 문서가 없습니다."</div></div>
+        <div class="frame"><div class="fhead">Loading</div><div class="small muted">스켈레톤 3행</div></div>
+        <div class="frame"><div class="fhead">Error</div><div class="small muted">"저장에 실패했습니다. 잠시 후 다시 시도해 주세요."</div></div>
+      </div>
+
+      <h2><span class="num">7.</span>FAQ</h2>
+      <div class="frame"><b>Q. 모바일에서는 어떻게 노출되나요?</b><div class="small">A. 767px 이하에서 단일 컬럼, 에디터 툴바는 축약 표시. (→ SCR-010)</div></div>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div><h3>변경 이력</h3>
+      <table class="cf"><thead><tr><th>버전</th><th>일자</th><th>작성자</th><th>내용</th></tr></thead>
+      <tbody><tr><td>v0.1</td><td>2026-04-24</td><td>이화면</td><td>초안</td></tr></tbody></table>
+    </div>
+    <div><h3>관련 페이지</h3>
+      <ul style="margin:0; padding-left:16px; font-size:12px;">
+        <li>REQ · 요구사항정의서</li><li>FLW · 프로세스흐름도</li><li>FUNC · 기능정의서</li><li>USM · 사용자매뉴얼</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

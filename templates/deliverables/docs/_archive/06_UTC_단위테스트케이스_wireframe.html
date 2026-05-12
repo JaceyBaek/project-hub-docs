@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>UTC · 단위테스트케이스</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>단위테스트케이스</b></span>
+  <span class="spacer"></span>
+  <span class="status draft">Draft</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+  <div class="cf-breadcrumb"><span>Space</span><span>산출물 템플릿</span><span>품질</span><span>단위테스트케이스</span></div>
+  <h1 class="cf-title"><span class="doc-id">UTC</span>단위테스트케이스 <span style="font-size:13px; font-weight:400; color:var(--muted);">— Unit Test Cases</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">담당자</div><div class="v">정큐에이 (QA)</div></div>
+    <div class="m"><div class="k">버전</div><div class="v">v0.1</div></div>
+    <div class="m"><div class="k">상태</div><div class="v"><span class="status draft">Draft</span></div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">TC 수</div><div class="v">128</div></div>
+    <div class="m"><div class="k">Confluence</div><div class="v mono small">/DOCS-TMPL/UTC</div></div>
+  </div>
+
+  <div style="margin:0 0 16px;">
+    <span class="tag">#phase:test</span><span class="tag">#level:unit</span>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>목차</h4>
+      <ol>
+        <li>개요 / 규약</li>
+        <li>테스트 커버리지</li>
+        <li>TC 목록</li>
+        <li>TC 상세 — UTC-001</li>
+        <li>결과 리포트</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>개요 / 규약</h2>
+      <div class="grid-3">
+        <div class="frame"><div class="fhead">테스트 레벨</div><div class="small">기능(FUNC) 단위 · 외부 의존성 Mock 처리</div></div>
+        <div class="frame"><div class="fhead">기록 형식</div><div class="small">Given / When / Then</div></div>
+        <div class="frame"><div class="fhead">자동화</div><div class="small">Jest · PyTest · CI 게이트</div></div>
+      </div>
+
+      <h2><span class="num">2.</span>테스트 커버리지</h2>
+      <table class="cf">
+        <thead><tr><th>FUNC</th><th>정상</th><th>경계</th><th>예외</th><th>커버리지 목표</th></tr></thead>
+        <tbody>
+          <tr><td><span class="id-chip">FUNC-001</span></td><td>5</td><td>3</td><td>4</td><td>80%</td></tr>
+          <tr><td><span class="id-chip">FUNC-002</span></td><td>4</td><td>2</td><td>3</td><td>80%</td></tr>
+          <tr><td><span class="id-chip">FUNC-003</span></td><td>6</td><td>2</td><td>5</td><td>90%</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">3.</span>TC 목록</h2>
+      <table class="cf">
+        <thead><tr><th class="id">TC ID</th><th>제목</th><th>유형</th><th>대상 FUNC</th><th>우선순위</th><th>자동화</th></tr></thead>
+        <tbody>
+          <tr><td class="id">UTC-001</td><td>정상 임시저장</td><td>정상</td><td><span class="id-chip">FUNC-001</span></td><td>P1</td><td>✔</td></tr>
+          <tr><td class="id">UTC-002</td><td>제목 80자 초과 거부</td><td>경계</td><td><span class="id-chip">FUNC-001</span></td><td>P1</td><td>✔</td></tr>
+          <tr><td class="id">UTC-003</td><td>본문 미입력 거부</td><td>예외</td><td><span class="id-chip">FUNC-001</span></td><td>P1</td><td>✔</td></tr>
+          <tr><td class="id">UTC-010</td><td>결재선 중복 거부</td><td>예외</td><td><span class="id-chip">FUNC-002</span></td><td>P2</td><td>✔</td></tr>
+          <tr><td class="id">UTC-020</td><td>승인 처리 시 라우팅</td><td>정상</td><td><span class="id-chip">FUNC-003</span></td><td>P1</td><td>✔</td></tr>
+          <tr><td class="muted" colspan="6">…</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">4.</span>TC 상세 — <span class="mono">UTC-001</span></h2>
+      <div class="frame">
+        <div class="fhead">
+          <span>UTC-001 · 정상 임시저장</span>
+          <span class="trace"><span class="trace-label">TRACE</span>
+            <span class="id-chip muted">REQ-F01</span><span class="arrow">→</span>
+            <span class="id-chip muted">SCR-001</span><span class="arrow">→</span>
+            <span class="id-chip solid">FUNC-001</span><span class="arrow">→</span>
+            <span class="id-chip">UTC-001</span>
+          </span>
+        </div>
+        <table class="cf">
+          <tbody>
+            <tr><th style="width:110px">전제 (Given)</th><td>로그인 사용자(ROLE-01), 기본 양식 "일반기안" 선택</td></tr>
+            <tr><th>절차 (When)</th><td>
+              1) 제목 "회의록 2026-04-24" 입력<br>
+              2) 본문 15자 입력<br>
+              3) [임시저장] 클릭
+            </td></tr>
+            <tr><th>기대결과 (Then)</th><td>
+              · 응답 201, body.status = "DRAFT"<br>
+              · 목록에 신규 문서 표시 (updatedAt ≈ now)<br>
+              · audit_log에 DRAFT_CREATED 기록
+            </td></tr>
+            <tr><th>테스트 데이터</th><td class="mono small">fixtures/approval/draft-normal.json</td></tr>
+            <tr><th>환경</th><td>staging · Chrome 124 · viewport 1440</td></tr>
+            <tr><th>결과</th><td><span class="status review">Not Run</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2><span class="num">5.</span>결과 리포트</h2>
+      <div class="grid-4">
+        <div class="frame"><div class="fhead">Total</div><div style="font-size:22px; font-weight:700;">128</div></div>
+        <div class="frame"><div class="fhead">Pass</div><div style="font-size:22px; font-weight:700;">—</div></div>
+        <div class="frame"><div class="fhead">Fail</div><div style="font-size:22px; font-weight:700;">—</div></div>
+        <div class="frame"><div class="fhead">Blocked</div><div style="font-size:22px; font-weight:700;">—</div></div>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div><h3>변경 이력</h3>
+      <table class="cf"><thead><tr><th>버전</th><th>일자</th><th>작성자</th><th>내용</th></tr></thead>
+      <tbody><tr><td>v0.1</td><td>2026-04-24</td><td>정큐에이</td><td>초안</td></tr></tbody></table>
+    </div>
+    <div><h3>관련 페이지</h3>
+      <ul style="margin:0; padding-left:16px; font-size:12px;">
+        <li>FUNC · 기능정의서</li><li>ITS · 통합테스트시나리오</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

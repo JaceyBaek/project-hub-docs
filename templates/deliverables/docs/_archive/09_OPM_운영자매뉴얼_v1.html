@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>OPM · 운영자매뉴얼 v1</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>운영자매뉴얼</b> / v1</span>
+  <span class="spacer"></span>
+  <span class="status draft">Draft</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+  <div class="cf-breadcrumb"><span>Space</span><span>산출물 템플릿</span><span>운영</span><span>운영자매뉴얼</span><span>v1 · Runbook</span></div>
+  <h1 class="cf-title"><span class="doc-id">OPM</span>운영자매뉴얼 <span style="font-size:13px; font-weight:400; color:var(--muted);">— Operator Manual (v1 · Runbook)</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">담당자</div><div class="v">운영1팀</div></div>
+    <div class="m"><div class="k">버전</div><div class="v">v1.0</div></div>
+    <div class="m"><div class="k">상태</div><div class="v"><span class="status draft">Draft</span></div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">대상</div><div class="v">운영자/CS</div></div>
+    <div class="m"><div class="k">버전 Variation</div><div class="v"><a href="09-operator-manual-v2.html">v2</a> · <a href="09-operator-manual-v3.html">v3</a></div></div>
+  </div>
+
+  <div style="margin:0 0 16px;">
+    <span class="tag">#phase:operate</span><span class="tag">#audience:ops</span>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>목차</h4>
+      <ol>
+        <li>개요 / 연락망</li>
+        <li>일상 운영 체크리스트</li>
+        <li>계정/권한 관리</li>
+        <li>배치 운영</li>
+        <li>장애 대응 Runbook</li>
+        <li>모니터링/알림</li>
+        <li>백업·복구</li>
+        <li>FAQ</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>개요 / 연락망</h2>
+      <table class="cf">
+        <thead><tr><th>구분</th><th>담당</th><th>연락처</th><th>백업 담당</th></tr></thead>
+        <tbody>
+          <tr><td>1차 장애 대응</td><td>운영1팀 On-call</td><td>#oncall-l1</td><td>운영2팀</td></tr>
+          <tr><td>인프라</td><td>SRE팀</td><td>#sre</td><td>CloudOps</td></tr>
+          <tr><td>보안</td><td>보안팀</td><td>#security</td><td>CISO</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">2.</span>일상 운영 체크리스트</h2>
+      <table class="cf">
+        <thead><tr><th style="width:60px">시간대</th><th>항목</th><th>기준</th><th>대응</th></tr></thead>
+        <tbody>
+          <tr><td>09:00</td><td>야간 배치 결과 확인</td><td>전부 SUCCESS</td><td>실패 시 § 4</td></tr>
+          <tr><td>09:30</td><td>대시보드 헬스체크</td><td>Error rate &lt; 0.5%</td><td>초과 시 § 5</td></tr>
+          <tr><td>수시</td><td>CS 티켓 큐</td><td>P1 5분 · P2 30분</td><td>SLA 준수</td></tr>
+          <tr><td>18:00</td><td>일 점검 요약 기록</td><td>#ops-daily 게시</td><td>-</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">3.</span>계정/권한 관리</h2>
+      <div class="callout"><div class="t">Policy</div>ROLE-03~05는 승인 요청서(JIRA OPS-xxxx) 기반으로만 부여. (→ ROLE-04,05)</div>
+      <table class="cf">
+        <thead><tr><th>작업</th><th>절차</th><th>소요</th></tr></thead>
+        <tbody>
+          <tr><td>대결자 지정 요청</td><td>JIRA 티켓 → 관리자 화면(SCR-030) → 승인</td><td>10분</td></tr>
+          <tr><td>퇴사 계정 비활성</td><td>HR 상태 동기화 배치 확인 → 잔여 토큰 Revoke</td><td>자동</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">4.</span>배치 운영</h2>
+      <table class="cf">
+        <thead><tr><th>Batch</th><th>스케줄</th><th>용도</th><th>실패 시 조치</th></tr></thead>
+        <tbody>
+          <tr><td class="mono small">sync-hr</td><td>매일 01:00</td><td>조직·사용자 동기화</td><td>수동 재실행 (§ 4.1)</td></tr>
+          <tr><td class="mono small">purge-tmp</td><td>매일 03:00</td><td>임시파일 정리</td><td>재시도 1회</td></tr>
+          <tr><td class="mono small">audit-archive</td><td>매주 일요일</td><td>감사로그 아카이브</td><td>SRE 협의</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">5.</span>장애 대응 Runbook</h2>
+      <div class="frame">
+        <div class="fhead">RB-001 · API 5xx 증가</div>
+        <table class="cf">
+          <tbody>
+            <tr><th style="width:100px">증상</th><td>5xx rate &gt; 2% / 5m</td></tr>
+            <tr><th>1차 확인</th><td>Grafana "API Overview" → 에러 상위 엔드포인트 식별</td></tr>
+            <tr><th>대응</th><td>1) 최근 배포 Rollback 검토<br>2) DB 커넥션 풀 상태 확인<br>3) Redis latency 확인</td></tr>
+            <tr><th>Escalation</th><td>15분 내 미해결 시 SRE 호출</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="frame">
+        <div class="fhead">RB-002 · SSO 인증 실패 급증</div>
+        <div class="small muted">절차 생략 — 템플릿</div>
+      </div>
+
+      <h2><span class="num">6.</span>모니터링/알림</h2>
+      <div class="grid-3">
+        <div class="frame"><div class="fhead">Dashboard</div><div class="small">Grafana · Datadog APM</div></div>
+        <div class="frame"><div class="fhead">Alert 채널</div><div class="small">#alert-p1 · PagerDuty</div></div>
+        <div class="frame"><div class="fhead">SLO</div><div class="small">가용성 99.5% · p95 2s</div></div>
+      </div>
+
+      <h2><span class="num">7.</span>백업·복구</h2>
+      <table class="cf">
+        <thead><tr><th>대상</th><th>주기</th><th>RPO</th><th>RTO</th></tr></thead>
+        <tbody>
+          <tr><td>PostgreSQL</td><td>일 1 + PITR</td><td>15분</td><td>2시간</td></tr>
+          <tr><td>S3 첨부</td><td>CRR 실시간</td><td>≤ 1분</td><td>30분</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">8.</span>FAQ</h2>
+      <div class="frame"><b>Q. 배치 실패 시 어디에 알림이 오나요?</b><div class="small">A. #ops-batch 채널 + On-call PagerDuty. RB-010 절차 참조.</div></div>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div><h3>변경 이력</h3>
+      <table class="cf"><thead><tr><th>버전</th><th>일자</th><th>작성자</th><th>내용</th></tr></thead>
+      <tbody><tr><td>v1.0</td><td>2026-04-24</td><td>운영1팀</td><td>초안</td></tr></tbody></table>
+    </div>
+    <div><h3>관련 페이지</h3>
+      <ul style="margin:0; padding-left:16px; font-size:12px;">
+        <li>ARC · 아키텍처</li><li>CFG · 설정가이드</li><li>ROLE · 권한정의서</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>

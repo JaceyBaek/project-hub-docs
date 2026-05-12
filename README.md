@@ -23,7 +23,7 @@ cd project-hub
    git clone https://github.com/{본인계정}/project-hub.git
    cd project-hub
    ```
-3. `config/hub_config.yml` 에서 `owner`, `repo` 입력
+3. `platform/config/hub_config.yml` 에서 `owner`, `repo` 입력
 4. 원본 hub 업데이트를 받으려면 upstream 등록 (최초 1회)
    ```bash
    git remote add upstream https://github.com/gsr-ax/project-hub.git
@@ -33,7 +33,7 @@ cd project-hub
 
 ### 2단계 — 환경 설정
 
-`config/hub_config.yml` 에서 알림 채널 설정:
+`platform/config/hub_config.yml` 에서 알림 채널 설정:
 ```yaml
 notifications:
   email:
@@ -49,7 +49,7 @@ Teams 알림 사용 시 GitHub Secrets에 `TEAMS_WEBHOOK_URL` 등록.
 ### 3단계 — 프로젝트 생성
 
 ```bash
-python core/init_project.py
+python platform/init_project.py
 ```
 
 입력 항목:
@@ -67,27 +67,35 @@ python core/init_project.py
 ```
 project-hub/
 ├── CLAUDE.md                    ← {assistant} AI 비서 설정
-├── core/                        ← 플랫폼 코어 (지침·스크립트)
-├── config/
-│   └── hub_config.yml           ← 알림·GitHub 설정
-├── templates/
-│   ├── deliverables/            ← 산출물 템플릿
-│   └── manage/                  ← 관리 파일 템플릿
-├── guides/
-│   └── scripts/                 ← 유틸리티 스크립트
-├── .github/
-│   ├── CODEOWNERS               ← hub 영역 보호
-│   └── workflows/
-│       └── notify_update.yml    ← 업데이트 알림
-└── projects/                    ← 실제 프로젝트
-    └── sample/                  ← 샘플 프로젝트
+├── projects/                    ← 개인 프로젝트
+├── apps/                        ← 팀 공용 앱
+├── platform/                    ← 플랫폼 엔진 전체
+│   ├── config/                  ← 알림·GitHub 설정
+│   ├── plugins/                 ← 연결 도구 (atlassian_client, miso_client)
+│   ├── templates/               ← 산출물·관리 파일 템플릿
+│   ├── tools/                   ← RAG 빌더 등
+│   ├── scripts/                 ← 유틸리티 스크립트
+│   │   ├── webview/             ← 웹뷰 생성·동기화
+│   │   └── manage/              ← 위키 동기화·배포 기록
+│   ├── project/                 ← 프로젝트 관리 지침
+│   ├── setup/                   ← 플랫폼 설정·연결 지침
+│   ├── guides/                  ← 설정 가이드
+│   ├── history/                 ← 글로벌 히스토리
+│   ├── services/
+│   │   ├── mcp/                 ← 중앙 MCP 서버
+│   │   └── webview/             ← Docsify 웹뷰
+│   ├── hub_init.py              ← 플랫폼 초기화
+│   └── init_project.py          ← 프로젝트 생성·삭제
+└── .github/
+    └── workflows/
+        └── notify_update.yml    ← 업데이트 알림
 ```
 
 ---
 
 ## 프로젝트 구조
 
-`core/init_project.py` 실행 시 아래 구조가 자동 생성됩니다:
+`platform/init_project.py` 실행 시 아래 구조가 자동 생성됩니다:
 
 ```
 projects/{프로젝트명}/
@@ -134,13 +142,14 @@ git merge upstream/main
 
 | 스크립트 | 용도 |
 |---|---|
-| `guides/scripts/wiki_sync.py` | `_manage/` md 파일 → Confluence 동기화 |
-| `guides/scripts/deploy_record.py` | 배포 내역 기록 |
+| `platform/scripts/manage/wiki_sync.py` | `_manage/` md 파일 → Confluence 동기화 |
+| `platform/scripts/manage/deploy_record.py` | 배포 내역 기록 |
+| `platform/scripts/install_app.py` | apps/catalog.yml 기반 팀 공용 앱 설치·등록 |
 
 ---
 
 ## 주의사항
 
 **hub 영역 파일은 직접 수정하지 마세요.**
-`CLAUDE.md`, `core/`, `config/`, `templates/`, `guides/`, `.github/`
+`CLAUDE.md`, `platform/`, `.github/`
 변경이 필요하면 원본 hub 관리자에게 요청하거나 PR을 제출하세요.

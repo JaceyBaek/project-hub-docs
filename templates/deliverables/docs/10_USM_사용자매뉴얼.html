@@ -2,189 +2,161 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>USM · 사용자매뉴얼 v1</title>
+<title>USM · 사용자매뉴얼</title>
 <link rel="stylesheet" href="../assets/wireframe.css">
-<style>
-  .step-card {
-    border: 1px solid var(--line);
-    background: #fff;
-    padding: 14px;
-    margin: 10px 0;
-    display: grid;
-    grid-template-columns: 40px 1fr 200px;
-    gap: 14px;
-    align-items: start;
-  }
-  .step-card .num-big {
-    border: 1.5px solid var(--ink);
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-  }
-  .step-card .shot {
-    border: 1px dashed var(--line);
-    min-height: 110px;
-    background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(0,0,0,0.025) 8px 9px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--muted);
-    font-size: 10.5px;
-  }
-  .step-card h4 { margin: 0 0 4px; font-size: 13px; }
-  .step-card p { margin: 0 0 6px; font-size: 12px; color: var(--ink-2); }
-</style>
-</head>
-<body>
+<script src="../assets/doc-validator.js" defer></script>
 
-<div class="nav-bar">
+<meta name="project-id" content="EM2026">
+<meta name="doc-id" content="EM2026-USM-2026">
+<meta name="doc-type" content="user-manual">
+<meta name="doc-name-ko" content="사용자매뉴얼">
+<meta name="doc-name-en" content="User Manual">
+<meta name="doc-version" content="v0.1">
+<meta name="doc-status" content="Draft">
+<meta name="doc-last-updated" content="2026-04-24">
+<meta name="doc-owner" content="홍길동 (CS)">
+<meta name="doc-epic" content="PRJ-2026-EM">
+<meta name="doc-tags" content="phase:operate, module:core, domain:hr-approval, lang:ko">
+<meta name="doc-related" content="SCR, FLW">
+<meta name="doc-chunk-strategy" content="task-card + faq-item">
+<meta name="doc-exclude-from-training" content="false">
+<meta name="doc-embedding-hints" content="최종 사용자가 시스템을 사용하는 단계별 안내. 자주 묻는 질문.">
+<meta name="doc-primary-entities" content="로그인, 기안, 결재, 위임, 알림 설정">
+</head>
+<body data-min-chunks="3">
+
+<div class="nav-bar" data-ai-skip="true">
   <span class="brand">WIREFRAME</span>
-  <span class="crumbs">산출물 템플릿 / <b>사용자매뉴얼</b> / v1</span>
-  <span class="spacer"></span>
-  <span class="status draft">Draft</span>
+  <span class="crumbs">산출물 템플릿 / <b>사용자매뉴얼</b></span>
+  <span class="spacer"></span><span class="status draft">Template</span>
   <a class="back" href="../index.html">← Index</a>
 </div>
 
-<div class="cf-shell">
-  <div class="cf-breadcrumb"><span>Space</span><span>산출물 템플릿</span><span>사용자</span><span>사용자매뉴얼</span><span>v1 · Step-by-Step</span></div>
-  <h1 class="cf-title"><span class="doc-id">USM</span>사용자매뉴얼 <span style="font-size:13px; font-weight:400; color:var(--muted);">— User Manual (v1 · Step-by-Step)</span></h1>
+<article class="cf-shell" data-project-id="EM2026" data-doc-id="EM2026-USM-2026" data-doc-type="user-manual">
 
-  <div class="cf-meta">
-    <div class="m"><div class="k">담당자</div><div class="v">교육팀</div></div>
-    <div class="m"><div class="k">버전</div><div class="v">v1.0</div></div>
-    <div class="m"><div class="k">상태</div><div class="v"><span class="status draft">Draft</span></div></div>
-    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
-    <div class="m"><div class="k">대상</div><div class="v">전 임직원</div></div>
-    <div class="m"><div class="k">버전 Variation</div><div class="v"><a href="10-user-manual-v2.html">v2</a> · <a href="10-user-manual-v3.html">v3</a></div></div>
+  <div class="cf-breadcrumb" data-ai-skip="true"><span>Space</span><span>산출물 템플릿</span><span>운영</span><span>사용자매뉴얼</span></div>
+  <h1 class="cf-title"><span class="doc-id">USM</span>사용자매뉴얼 <span style="font-size:13px; font-weight:400; color:var(--muted);">— User Manual</span></h1>
+
+  <div class="guide-pointer" data-ai-skip="true"><b>작업 카드 단위 청크</b>(<span class="mono">task:###</span>) <b>+ FAQ 항목 단위 청크</b>(<span class="mono">faq:###</span>). 사용자 질문에 정확히 한 청크가 매칭되도록 작성한다.</div>
+
+  <div class="sum-checklist" data-ai-skip="true">
+    <div class="hd"><span>작성 점검 체크리스트</span><span class="small muted">필수 7</span></div>
+    <ul><li>메타바 6개</li><li>분류 태그 3개</li><li>주요 작업 카드 ≥ 3건</li><li>각 작업 단계별 스크린샷 placeholder</li><li>FAQ ≥ 3건</li><li>오류 메시지 사전 안내</li><li>AI 메타데이터</li></ul>
   </div>
 
-  <div style="margin:0 0 16px;">
-    <span class="tag">#audience:enduser</span><span class="tag">#how-to</span>
-  </div>
+  <section data-section-key="metadata" data-chunk="meta">
+    <div class="cf-meta">
+      <div class="m"><div class="k">담당자</div><div class="v">홍길동 (CS)</div></div>
+      <div class="m"><div class="k">버전</div><div class="v">v0.1</div></div>
+      <div class="m"><div class="k">상태</div><div class="v"><span class="status draft">Draft</span></div></div>
+      <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+      <div class="m"><div class="k">관련 Epic</div><div class="v">PRJ-2026-EM</div></div>
+      <div class="m"><div class="k">Confluence</div><div class="v mono small">/DOCS-TMPL/USM</div></div>
+    </div>
+    <div style="margin:0 0 16px;" data-tags="phase:operate,module:core,domain:hr-approval">
+      <span class="tag">#phase:operate</span><span class="tag">#module:core</span><span class="tag">#domain:hr-approval</span>
+    </div>
+  </section>
 
   <div class="cf-body">
-    <aside class="cf-toc">
-      <h4>목차</h4>
-      <ol>
-        <li>시작하기</li>
-        <li>기안문 작성하기</li>
-        <li>결재 처리하기</li>
-        <li>모바일에서 사용하기</li>
-        <li>문제해결</li>
-        <li>FAQ · Glossary</li>
-      </ol>
-    </aside>
+    <aside class="cf-toc" data-ai-skip="true"><h4>목차</h4><ol><li>시작하기</li><li>주요 작업</li><li>FAQ</li><li>오류 안내</li><li>AI 메타데이터</li><li>검증표</li></ol></aside>
 
     <main class="cf-content">
+      <section data-section-key="getting-started" data-chunk="getting-started">
+        <h2 id="start"><span class="num">1.</span>시작하기</h2>
+        <ol><li>사내 포털(<code>portal.example.intra</code>) 접속 후 SSO 로그인</li><li>좌측 메뉴에서 <b>전자결재</b> 선택</li><li>홈 화면에서 결재 대기/내가 기안한 문서/완료 함을 확인할 수 있음</li></ol>
+      </section>
 
-      <h2><span class="num">1.</span>시작하기</h2>
-      <div class="callout"><div class="t">전제</div>사내 SSO 계정으로 로그인할 수 있어야 합니다.</div>
+      <section data-section-key="tasks" data-chunk="tasks">
+        <h2 id="tasks"><span class="num">2.</span>주요 작업</h2>
 
-      <h2><span class="num">2.</span>기안문 작성하기</h2>
-
-      <div class="step-card">
-        <div class="num-big">1</div>
-        <div>
-          <h4>양식 선택하기</h4>
-          <p>상단 메뉴 [기안] → [신규] 을 누르고 사용할 양식을 선택합니다.</p>
-          <p class="small muted">※ 양식이 보이지 않으면 관리자에게 문의해 주세요.</p>
+        <div class="frame" data-chunk="task:EM2026-USM-T01" data-item-id="EM2026-USM-T01" data-trace-up="EM2026-SCR-001,EM2026-SCR-002">
+          <div class="fhead">기안문 작성하기</div>
+          <ol class="step-list">
+            <li data-step="step"><b>1)</b> [기안 작성] → 양식 선택 (예: 휴가 신청)</li>
+            <li data-step="step"><b>2)</b> 제목·본문 입력, 필요 시 첨부파일 추가 (최대 20MB)</li>
+            <li data-step="step"><b>3)</b> 결재선 지정 (1차 결재자 / 2차 결재자)</li>
+            <li data-step="step"><b>4)</b> [상신] 버튼 클릭. 임시저장은 우상단 [임시저장]</li>
+          </ol>
+          <div class="diagram" data-alt="기안 작성 화면 스크린샷">[Screenshot Placeholder]</div>
         </div>
-        <div class="shot">[스크린샷 · 양식 선택]</div>
-      </div>
 
-      <div class="step-card">
-        <div class="num-big">2</div>
-        <div>
-          <h4>제목과 본문 작성</h4>
-          <p>제목은 80자 이내, 본문은 10자 이상 입력해 주세요. 30초마다 자동 저장됩니다.</p>
+        <div class="frame" data-chunk="task:EM2026-USM-T02" data-item-id="EM2026-USM-T02" data-trace-up="EM2026-SCR-003">
+          <div class="fhead">결재 처리하기</div>
+          <ol class="step-list">
+            <li data-step="step"><b>1)</b> 홈 → 결재 대기함에서 문서 클릭</li>
+            <li data-step="step"><b>2)</b> 본문/첨부 확인</li>
+            <li data-step="step"><b>3)</b> [승인] / [반려] / [보류] 중 선택. 반려 시 의견 필수</li>
+          </ol>
         </div>
-        <div class="shot">[스크린샷 · 에디터]</div>
-      </div>
 
-      <div class="step-card">
-        <div class="num-big">3</div>
-        <div>
-          <h4>첨부파일 추가 (선택)</h4>
-          <p>파일을 드래그하거나 [+첨부] 버튼을 누릅니다. 최대 10MB, 5개까지 가능합니다.</p>
+        <div class="frame" data-chunk="task:EM2026-USM-T03" data-item-id="EM2026-USM-T03" data-trace-up="EM2026-REQ-F05">
+          <div class="fhead">위임(대결) 등록하기</div>
+          <ol class="step-list">
+            <li data-step="step"><b>1)</b> [설정] → [위임 관리] → [신규]</li>
+            <li data-step="step"><b>2)</b> 위임 받을 사람, 시작/종료일(최대 30일) 입력</li>
+            <li data-step="step"><b>3)</b> 제외 카테고리 확인 후 저장</li>
+          </ol>
         </div>
-        <div class="shot">[스크린샷 · 첨부]</div>
-      </div>
+      </section>
 
-      <div class="step-card">
-        <div class="num-big">4</div>
-        <div>
-          <h4>결재선 지정 후 상신</h4>
-          <p>[상신]을 누르고 결재자·합의자·참조자를 순서대로 선택합니다.</p>
-        </div>
-        <div class="shot">[스크린샷 · 결재선]</div>
-      </div>
+      <section data-section-key="faq" data-chunk="faq">
+        <h2 id="faq"><span class="num">3.</span>자주 묻는 질문</h2>
+        <div class="frame" data-chunk="faq:EM2026-FAQ-001" data-item-id="EM2026-FAQ-001"><div class="fhead">Q. 첨부파일이 업로드되지 않아요</div><p>A. 한 파일 최대 20MB입니다. 확장자가 .exe/.bat 등 금지 형식인지 확인하세요.</p></div>
+        <div class="frame" data-chunk="faq:EM2026-FAQ-002" data-item-id="EM2026-FAQ-002"><div class="fhead">Q. 결재선을 잘못 지정했어요</div><p>A. 아직 결재가 시작되지 않았다면 [회수] 후 결재선을 수정해 재상신하세요.</p></div>
+        <div class="frame" data-chunk="faq:EM2026-FAQ-003" data-item-id="EM2026-FAQ-003"><div class="fhead">Q. 위임 중인데 일부 문서는 직접 결재해야 한다는데요?</div><p>A. 인사·기밀 등 제외 카테고리는 위임이 적용되지 않습니다. 시스템 관리자가 정한 정책을 따릅니다.</p></div>
+        <div class="frame" data-chunk="faq:EM2026-FAQ-004" data-item-id="EM2026-FAQ-004"><div class="fhead">Q. 알림 메일을 받지 못해요</div><p>A. [설정] → [알림]에서 메일 수신이 켜져 있는지 확인하세요. 사내 메일 규칙에 의해 스팸으로 분류될 수도 있습니다.</p></div>
+      </section>
 
-      <h2><span class="num">3.</span>결재 처리하기</h2>
-      <div class="step-card">
-        <div class="num-big">1</div>
-        <div>
-          <h4>받은 문서함 열기</h4>
-          <p>[결재함 → 받은 문서]에서 처리 대기 문서를 확인합니다.</p>
-        </div>
-        <div class="shot">[스크린샷 · 문서함]</div>
-      </div>
-      <div class="step-card">
-        <div class="num-big">2</div>
-        <div>
-          <h4>의견과 함께 처리</h4>
-          <p>[승인] / [반려] / [보류] 중 하나를 선택하고 의견을 남깁니다. (의견 미입력 시 "승인합니다." 자동 기입)</p>
-        </div>
-        <div class="shot">[스크린샷 · 결재 처리]</div>
-      </div>
+      <section data-section-key="errors" data-chunk="errors">
+        <h2 id="errors"><span class="num">4.</span>오류 메시지 안내</h2>
+        <table class="cf">
+          <colgroup><col style="width:200px"><col></colgroup>
+          <thead><tr><th>메시지</th><th>조치</th></tr></thead>
+          <tbody>
+            <tr><td>본문이 너무 큽니다 (50KB)</td><td>본문을 줄이거나 첨부로 분리</td></tr>
+            <tr><td>현재 결재자가 아닙니다</td><td>결재선상의 사용자만 처리 가능</td></tr>
+            <tr><td>위임 기간이 만료되었습니다</td><td>위임 만료. 원 결재자에게 자동 전환</td></tr>
+          </tbody>
+        </table>
+      </section>
 
-      <h2><span class="num">4.</span>모바일에서 사용하기</h2>
-      <div class="grid-2">
-        <div class="frame"><div class="fhead">iOS</div><div class="small">App Store "CompanyWork" 검색 → 설치 → SSO 로그인</div></div>
-        <div class="frame"><div class="fhead">Android</div><div class="small">Play Store 동일 방식</div></div>
-      </div>
+      <section data-section-key="ai-metadata" data-chunk="ai-meta">
+        <h2 id="ai-meta"><span class="num">5.</span>AI 학습 메타데이터</h2>
+        <div class="ai-meta"><span class="k">project_id:</span>    EM2026
+<span class="k">doc_id:</span>        EM2026-USM-2026
+<span class="k">tags:</span>          ["phase:operate", "module:core", "domain:hr-approval"]
+<span class="k">primary_entities:</span> ["로그인", "기안", "결재", "위임", "알림"]
+<span class="k">embedding_hints:</span>
+  - "사용자 작업 절차 + FAQ"
+<span class="k">related_docs:</span>  ["SCR", "FLW"]
+<span class="k">chunk_strategy:</span> "task-card + faq-item"
+</div>
+      </section>
 
-      <h2><span class="num">5.</span>문제해결</h2>
-      <table class="cf">
-        <thead><tr><th>증상</th><th>원인/해결</th></tr></thead>
-        <tbody>
-          <tr><td>로그인이 안 됩니다</td><td>SSO 세션 만료. 사내 포털에서 재로그인 후 재접속.</td></tr>
-          <tr><td>임시저장이 사라졌어요</td><td>30일 경과 시 자동 삭제됩니다. [휴지통]에서 복원 가능.</td></tr>
-          <tr><td>결재자가 목록에 없어요</td><td>HR 동기화 지연 (최대 24h). 총무팀 문의.</td></tr>
-        </tbody>
-      </table>
-
-      <h2><span class="num">6.</span>FAQ · Glossary</h2>
-      <div class="frame"><b>Q. 반려된 문서를 수정해서 다시 보낼 수 있나요?</b><div class="small">A. 네, [재상신] 버튼으로 사유와 함께 수정 후 상신할 수 있습니다.</div></div>
-      <div class="frame"><b>Q. 전결이 뭔가요?</b><div class="small">A. 상위 결재자가 하위 결재를 대신 처리하는 권한입니다. (→ Glossary)</div></div>
-
-      <h3>Glossary</h3>
-      <table class="cf">
-        <thead><tr><th>용어</th><th>설명</th></tr></thead>
-        <tbody>
-          <tr><td>기안</td><td>문서를 작성하여 결재를 요청하는 행위</td></tr>
-          <tr><td>상신</td><td>작성된 문서를 결재자에게 전달하는 행위</td></tr>
-          <tr><td>전결</td><td>상위 결재자가 하위 결재를 대신 처리</td></tr>
-        </tbody>
-      </table>
-
+      <section data-section-key="validation-checklist" data-ai-skip="true">
+        <h2 id="validation"><span class="num">6.</span>작성 완료 검증표 <span data-validate-summary class="small" style="font-weight:400; margin-left:8px;">계산 중…</span></h2>
+        <table class="cf val-table">
+          <colgroup><col style="width:50px"><col style="width:160px"><col><col style="width:90px"><col style="width:140px"></colgroup>
+          <thead><tr><th>#</th><th>점검</th><th>기대</th><th>구분</th><th>결과</th></tr></thead>
+          <tbody>
+            <tr data-validate-rule="meta-bar"><td>1</td><td>메타바</td><td>6개</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="tags"><td>2</td><td>태그</td><td>3개</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="usm-task-min"><td>3</td><td>작업</td><td>task:* ≥ 3</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="usm-faq-min"><td>4</td><td>FAQ</td><td>faq:* ≥ 3</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="ai-metadata"><td>5</td><td>AI 메타</td><td>3필드</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="id-format"><td>6</td><td>ID 규칙</td><td>중복 없음</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="project-id-prefix"><td>7</td><td>Project prefix</td><td>{PROJECT}-</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+          </tbody>
+        </table>
+      </section>
     </main>
   </div>
 
-  <div class="cf-footer">
-    <div><h3>변경 이력</h3>
-      <table class="cf"><thead><tr><th>버전</th><th>일자</th><th>작성자</th><th>내용</th></tr></thead>
-      <tbody><tr><td>v1.0</td><td>2026-04-24</td><td>교육팀</td><td>초안</td></tr></tbody></table>
-    </div>
-    <div><h3>관련 페이지</h3>
-      <ul style="margin:0; padding-left:16px; font-size:12px;">
-        <li>SCR · 화면정의서</li><li>FUNC · 기능정의서</li>
-      </ul>
-    </div>
+  <div class="cf-footer" data-ai-skip="true">
+    <div><h3>변경 이력</h3><table class="cf"><thead><tr><th style="width:80px">버전</th><th style="width:100px">일자</th><th style="width:90px">작성자</th><th>변경내용</th></tr></thead><tbody><tr><td>v0.1</td><td>2026-04-24</td><td>홍길동</td><td>초안</td></tr></tbody></table></div>
+    <div><h3>관련 페이지</h3><ul style="margin:0; padding-left:16px; font-size:12px;"><li>SCR</li><li>FLW</li></ul></div>
   </div>
-</div>
+</article>
 </body>
 </html>

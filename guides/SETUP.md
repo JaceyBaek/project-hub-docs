@@ -105,26 +105,38 @@ git config --global user.email "이메일@예시.com"
 ```
 {HUB_ROOT}\                      ← clone/fork 위치 (사용자가 지정, 예: D:\project-hub)
 ├── CLAUDE.md                    ← project-hub 전역 설정 ({assistant})
-├── TRIGGERS.md                  ← {assistant}와 약속된 트리거 목록
 ├── PROJECTS_GLOBAL.md           ← 전체 프로젝트 현황
 ├── TODO_GLOBAL.md               ← 전역 To-Do (프로젝트 무관 독립 항목)
 ├── ISSUES_GLOBAL.md             ← 전역 이슈 (프로젝트 무관 독립 항목)
 ├── README.md                    ← 저장소 소개
-├── init_project.py              ← 프로젝트 폴더 초기화 스크립트
 ├── .gitignore
 │
-├── history\                     ← 전역 작업 히스토리
-│   └── YYYYMM_history.md        ← 월 단위, 날짜별 append
+├── platform\                    ← 플랫폼 엔진 전체
+│   ├── hub_init.py              ← hub 최초 개인화 스크립트 (clone/fork 후 1회 실행)
+│   ├── init_project.py          ← 프로젝트 폴더 초기화 스크립트
+│   ├── TRIGGERS.md              ← {assistant}와 약속된 트리거 목록
+│   ├── config\
+│   │   ├── hub_config.yml       ← hub 설정 (GitHub, 알림 등)
+│   │   ├── personal.yml         ← 개인 설정 (hub_init.py 생성, gitignored)
+│   │   └── personal.yml.example ← 개인 설정 예시
+│   ├── guides\
+│   │   └── SETUP.md             ← 이 파일
+│   ├── history\                 ← 전역 작업 히스토리
+│   │   └── YYYYMM_history.md    ← 월 단위, 날짜별 append
+│   ├── templates\
+│   │   ├── manage\              ← 관리 파일 초기 템플릿 (issues.md 등)
+│   │   └── deliverables\        ← 산출물 템플릿 (HTML)
+│   │       ├── docs\            ← 단계별 HTML 템플릿
+│   │       ├── guides\          ← 템플릿 작성 가이드
+│   │       ├── assets\          ← CSS 등 공통 리소스
+│   │       └── DEPLOYMENT.md    ← Confluence 게시 절차
+│   └── plugins\                 ← 연결 도구 라이브러리
 │
 ├── projects\                    ← 모든 프로젝트
-│   ├── shared\                  ← 프로젝트 간 공유 유틸 모듈
-│   │   └── confluence_client.py
-│   ├── sample\                  ← 프로젝트 폴더 구조 예시
 │   └── {프로젝트명}\
 │       ├── CLAUDE.md            ← 프로젝트별 {assistant} 설정
 │       ├── docs\                ← 산출물 (HTML, 로컬 전용)
 │       ├── refs\                ← 참고자료 (로컬 전용)
-│       ├── archive\             ← 구버전 산출물 보관 (로컬 전용)
 │       ├── source\              ← 개발 프로젝트만 생성
 │       │   ├── src\
 │       │   ├── tests\
@@ -141,26 +153,7 @@ git config --global user.email "이메일@예시.com"
 │           ├── decisions.md
 │           └── changelog.md
 │
-├── scripts\                     ← 전역 보조 스크립트 (독립 프로젝트 규모 미만)
-│
-├── templates\
-│   ├── manage\                  ← 관리 파일 초기 템플릿 (issues.md 등)
-│   └── deliverables\            ← 산출물 템플릿 (HTML)
-│       ├── docs\                ← 단계별 HTML 템플릿
-│       ├── guides\              ← 템플릿 작성 가이드
-│       ├── assets\              ← CSS 등 공통 리소스
-│       ├── index.html           ← 템플릿 목록 인덱스
-│       └── DEPLOYMENT.md        ← Confluence 게시 절차
-│
-├── config\
-│   ├── hub_config.yml           ← hub 설정 (GitHub, 알림 등)
-│   ├── personal.yml             ← 개인 설정 (hub_init.py 생성, gitignored)
-│   └── personal.yml.example     ← 개인 설정 예시
-│
-├── hub_init.py                  ← hub 최초 개인화 스크립트 (clone/fork 후 1회 실행)
-│
-└── guides\
-    └── SETUP.md                 ← 이 파일
+└── apps\                        ← 팀 공용 앱
 ```
 
 ---
@@ -171,7 +164,7 @@ clone 또는 fork 직후 **1회만** 실행합니다. 이후에는 불필요합�
 
 ```bash
 cd {HUB_ROOT}
-python hub_init.py
+python platform/hub_init.py
 ```
 
 입력 항목:
@@ -185,13 +178,13 @@ python hub_init.py
 | [3/3] | GitHub 사용자명 | 개발 프로젝트용 GitHub 계정 | 없음 (선택) |
 
 **실행 결과:**
-- `config/personal.yml` 저장 (gitignored — 커밋되지 않음)
+- `platform/config/personal.yml` 저장 (gitignored — 커밋되지 않음)
 - `C:\Users\{사용자명}\.claude\CLAUDE.md` 자동 생성 (전역 개인화 설정)
 
 > **기본값 유지:** 이름을 변경하지 않으려면 각 항목에서 Enter만 누르면 됩니다.
 
-> **재실행:** upstream 업데이트 후 `templates/CLAUDE_global.template.md`가 변경된 경우
-> hub_init.py를 재실행하여 전역 CLAUDE.md를 재생성하세요.
+> **재실행:** upstream 업데이트 후 `platform/templates/CLAUDE_global.template.md`가 변경된 경우
+> `python platform/hub_init.py`를 재실행하여 전역 CLAUDE.md를 재생성하세요.
 
 ---
 
@@ -199,7 +192,7 @@ python hub_init.py
 
 ### 5-1. CLAUDE.md 파일 위치 및 역할
 
-> **참고:** 전역 CLAUDE.md는 `hub_init.py` 실행 시 `templates/CLAUDE_global.template.md`를 기반으로 자동 생성됩니다.
+> **참고:** 전역 CLAUDE.md는 `platform/hub_init.py` 실행 시 `platform/templates/CLAUDE_global.template.md`를 기반으로 자동 생성됩니다.
 > 직접 작성할 경우 아래 항목을 포함해야 합니다.
 
 | 파일 | 위치 | 역할 |
@@ -213,7 +206,7 @@ python hub_init.py
 ### 5-2. 전역 CLAUDE.md 핵심 설정 항목
 
 `~\.claude\CLAUDE.md`에는 아래 섹션이 포함되어야 합니다.
-`hub_init.py` 실행 시 `templates/CLAUDE_global.template.md` 기반으로 자동 생성되므로 직접 작성 불필요.
+`platform/hub_init.py` 실행 시 `platform/templates/CLAUDE_global.template.md` 기반으로 자동 생성되므로 직접 작성 불필요.
 
 **호칭**
 
@@ -250,10 +243,10 @@ python hub_init.py
 `{HUB_ROOT}\CLAUDE.md`에는 아래 섹션이 포함됩니다.
 
 - **세션 시작 프로토콜**: TRIGGERS.md 로드 → TODO_GLOBAL.md 기한 초과 확인 → 히스토리 누락 확인
-- **세션 종료 프로토콜**: 글로벌 히스토리 기록 → 프로젝트 히스토리 기록 → Google Drive 백업
+- **세션 종료 프로토콜**: 글로벌 히스토리 기록 → 프로젝트 히스토리 기록
 - **작업 영역 판단**: 작업 대상 경로(`projects/` 하위 vs 그 외)에 따라 적용 규칙 자동 판단
-- **새 프로젝트 시작 규칙**: 대화형 가드 (이름·설명 수집 → 사용자 최종 확인 → `init_project.py` 실행)
-- **프로젝트 상태 전환 절차**: 진행중·보류·운영중·완료 전환 방법
+- **새 프로젝트 시작 규칙**: 대화형 가드 (이름·설명 수집 → 사용자 최종 확인 → `platform/init_project.py` 실행)
+- **프로젝트 상태 전환 절차**: 진행중·보류·활성·완료 전환 방법
 - **산출물 명명규칙**: `{프로젝트명}_{산출물명}_{YYYYMMDD}.html`
 
 ---
@@ -283,7 +276,7 @@ ls {HUB_ROOT}
 | 프로젝트명 | 폴더 | 담당 | 시작일 | 요약 |
 |---|---|---|---|---|
 
-## 운영중
+## 활성
 | 프로젝트명 | 폴더 | 담당 | 시작일 | 요약 |
 |---|---|---|---|---|
 
@@ -326,7 +319,7 @@ ls {HUB_ROOT}
 
 ## 7. 템플릿 구성
 
-### 7-1. 산출물 템플릿 (`templates/deliverables/docs/`)
+### 7-1. 산출물 템플릿 (`platform/templates/deliverables/docs/`)
 
 | 파일명 | 산출물 | 단계 |
 |---|---|---|
@@ -352,7 +345,7 @@ ls {HUB_ROOT}
 
 ### 7-3. Confluence 게시
 
-산출물 작성 완료 후 `templates/deliverables/DEPLOYMENT.md` §4 참조하여 게시.
+산출물 작성 완료 후 `platform/templates/deliverables/DEPLOYMENT.md` §4 참조하여 게시.
 
 - 산출물 페이지 부모: `423870940`
 - 위키 게시 시 최신 버전만 유지
@@ -367,7 +360,7 @@ VS Code에서 project-hub를 열고 Claude Code 세션을 시작하면 {assistan
 
 1. `TRIGGERS.md` 로드
 2. `TODO_GLOBAL.md` 기한 초과 항목 확인 → 있으면 알림
-3. `history/YYYYMM_history.md` 최근 날짜 확인 → 누락 시 알림
+3. `platform/history/YYYYMM_history.md` 최근 날짜 확인 → 누락 시 알림
 
 ### 세션 종료 프로토콜 (마무리 뉘앙스 감지 시 자동 실행)
 
@@ -375,7 +368,6 @@ VS Code에서 project-hub를 열고 Claude Code 세션을 시작하면 {assistan
 
 1. 글로벌 작업 있으면 → 글로벌 히스토리 기록 여부 확인
 2. 프로젝트 작업 있으면 → 해당 프로젝트 히스토리 기록 여부 확인
-3. 히스토리 기록 완료 → Google Drive 백업 실행
 
 ---
 
@@ -415,7 +407,7 @@ git remote -v
 git pull origin main
 ```
 
-> **주의:** `CLAUDE.md` / `config/` / `templates/` / `guides/` / `init_project.py` / `.github/` 은 hub 관리 영역입니다. 직접 수정하지 말고 변경이 필요하면 hub 관리자에게 요청하세요.
+> **주의:** `CLAUDE.md` / `platform/config/` / `platform/templates/` / `platform/guides/` / `platform/init_project.py` / `.github/` 은 hub 관리 영역입니다. 직접 수정하지 말고 변경이 필요하면 hub 관리자에게 요청하세요.
 
 ---
 
@@ -612,7 +604,7 @@ jobs:
 
 ## 14. 알림 설정
 
-알림 설정은 `config/hub_config.yml`에서 관리합니다.
+알림 설정은 `platform/config/hub_config.yml`에서 관리합니다.
 
 ### 13-1. GitHub 이메일 알림
 
@@ -646,11 +638,11 @@ Teams Webhook URL은 GitHub Secrets에 저장해야 합니다.
 
 ### 14-1. init_project.py 실행 (공통 — 일반·개발 프로젝트 모두)
 
-`init_project.py`는 프로젝트 폴더 구조, 관리 파일, CLAUDE.md, PROJECTS_GLOBAL.md 등록을 자동 처리합니다.
+`platform/init_project.py`는 프로젝트 폴더 구조, 관리 파일, CLAUDE.md, PROJECTS_GLOBAL.md 등록을 자동 처리합니다.
 
 ```bash
 cd {HUB_ROOT}
-python init_project.py
+python platform/init_project.py
 ```
 
 입력 항목:
@@ -825,7 +817,7 @@ pytest tests/ -v             # 테스트 실행
 | `TODO_GLOBAL.md` | 프로젝트 무관 독립 항목 | {assistant} |
 | `projects\{이름}\_manage\todo.md` | 해당 프로젝트 항목 | {assistant} |
 
-전체 현황 필요 시: "전체 To-Do 보여줘" → {assistant}가 TODO_GLOBAL + 진행중·운영중 프로젝트 todo.md 통합 출력.
+전체 현황 필요 시: "전체 To-Do 보여줘" → {assistant}가 TODO_GLOBAL + 진행중·활성 프로젝트 todo.md 통합 출력.
 
 ### 이슈
 
@@ -834,7 +826,7 @@ pytest tests/ -v             # 테스트 실행
 | `ISSUES_GLOBAL.md` | 프로젝트 무관 독립 항목 | {assistant} |
 | `projects\{이름}\_manage\issues.md` | 해당 프로젝트 항목 | {assistant} |
 
-전체 현황 필요 시: "전체 이슈 보여줘" → {assistant}가 ISSUES_GLOBAL + 진행중·운영중 프로젝트 issues.md 통합 출력.
+전체 현황 필요 시: "전체 이슈 보여줘" → {assistant}가 ISSUES_GLOBAL + 진행중·활성 프로젝트 issues.md 통합 출력.
 
 ---
 

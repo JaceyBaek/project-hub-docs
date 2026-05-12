@@ -38,16 +38,14 @@
 
 ## 3. AI-SKIP 영역 (학습 제외)
 
-### 마커 방식 (이중 안전망)
+### 마커 방식
 
 ```html
-<!-- AI-SKIP-START: navigation -->
 <div class="nav-bar" data-ai-skip="true">...</div>
-<!-- AI-SKIP-END -->
 ```
 
-- HTML 주석 `<!-- AI-SKIP-START -->` ~ `<!-- AI-SKIP-END -->` 로 블록 감싸기
-- 동시에 루트 요소에 `data-ai-skip="true"` 속성 부여
+- 학습 제외 요소에 `data-ai-skip="true"` 속성만 사용
+- HTML 주석 마커(`<!-- AI-SKIP-START -->`) 사용 금지 — `build-rag.mjs`가 인식하지 않음
 
 ### 제외 대상
 
@@ -60,17 +58,12 @@
 | `.val-table` (검증표) | 작성 게이트, 본문 아님 |
 | `.cf-footer` (변경이력·관련페이지) | 운영 메타 |
 
-### 변환 스크립트 의사 코드
+### 변환 스크립트 동작 (`build-rag.mjs`)
 
-```python
-def strip_ai_skip(html):
-    # 1. <!-- AI-SKIP-START --> ... <!-- AI-SKIP-END --> 제거
-    html = re.sub(r'<!-- AI-SKIP-START.*?-->.*?<!-- AI-SKIP-END -->', '', html, flags=re.S)
-    # 2. data-ai-skip="true" 요소 제거
-    soup = BeautifulSoup(html, 'lxml')
-    for el in soup.select('[data-ai-skip="true"]'):
-        el.decompose()
-    return str(soup)
+```js
+function stripAiSkip(document) {
+  document.querySelectorAll('[data-ai-skip="true"]').forEach((el) => el.remove());
+}
 ```
 
 ---
@@ -119,5 +112,6 @@ HTML `<meta>` → YAML frontmatter 자동 매핑.
 ## 7. 산출물
 
 - 입력: `docs/{번호}_{ID}_{한글명}.html`
-- 출력: `docs/{번호}_{ID}_{한글명}.md` (동일 파일명, 확장자만 `.md`)
-- 메타: `chunks.jsonl` (요구사항 행 단위 청크 + frontmatter, 벡터 DB 인덱싱용)
+- 출력: `dist/md/{번호}_{ID}_{한글명}.md`
+- 메타: `dist/chunks.jsonl` (요구사항 행 단위 청크 + frontmatter, 벡터 DB 인덱싱용)
+- 추적: `dist/traceability.json` (양방향 trace 그래프)

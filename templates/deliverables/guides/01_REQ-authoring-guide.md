@@ -7,7 +7,7 @@
 
 ## 0. 작성 절차 (반드시 이 순서)
 
-1. 템플릿 파일 복사 → `docs/REQ-{프로젝트명}-{YYYYMMDD}.html`
+1. 템플릿 파일 복사 → `projects/<프로젝트>/docs/01_REQ_<프로젝트명>_요구사항정의서.html`
 2. **head 의 `<title>` 변경** — `REQ · {시스템명} 요구사항정의서`
 3. **메타바 6칸 채움** (담당자 / 버전 / 상태 / 수정일 / Epic / Confluence 경로)
 4. **분류 태그 ≥ 3개** 채움 (#phase, #module, #domain 필수)

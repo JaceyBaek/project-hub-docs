@@ -7,6 +7,236 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-12 (3)
+
+### 플랫폼 — 폴더 구조 대개편 전수 검사 (보완)
+
+**목적:** `core/ → platform/` 구조 변경 후 누락된 경로 참조 전수 검사 — 파일 단위 1차 grep + 2차 파일별 정밀 검토
+
+**기능 영향 있는 수정 (critical)**
+
+| 파일 | 내용 |
+|---|---|
+| `platform/scripts/install_app.py:94` | `HUB_ROOT / "plugins"` → `HUB_ROOT / "platform" / "plugins"` (실제 코드 — 앱 설치 시 plugin 경로 해결 실패 버그) |
+| `platform/scripts/sync_design.ps1` | `$PathMappings`의 `To = "core/tools/rag/"`, `"templates/deliverables/"` → `platform/` prefix (실제 코드) |
+| `projects/wiki_faq_builder/.github/workflows/ci.yml` | sparse-checkout · pip install 경로 `plugins/atlassian_client`·`plugins/miso_client` → `platform/plugins/...` (CI silent fail 방지) |
+| `projects/wiki_mbo_builder/.github/workflows/ci.yml` | 동일 |
+| `platform/templates/deliverables/CLAUDE.md` | guides 참조를 워크스페이스 루트 기준으로 명시 (`guides/chunk-strategy-matrix.md` → `platform/templates/deliverables/guides/...`) — Claude Code 경로 해결 실패 방지 |
+| `platform/templates/CLAUDE_global.template.md` | `templates/deliverables/` → `platform/templates/deliverables/` (hub_init.py 재실행 시 생성될 전역 CLAUDE.md에 반영) |
+
+**문서·docstring·주석 수정**
+
+| 파일 | 내용 |
+|---|---|
+| `.github/workflows/notify_update.yml` | trigger paths `platform/` prefix 반영 |
+| `platform/ENHANCEMENTS.md` | `guides/SETUP.md`, `guides/scripts/wiki_sync.py` 경로 갱신 |
+| `platform/templates/SETUP.template.md` · `platform/guides/SETUP.md` | history·templates/deliverables 경로 갱신 |
+| `platform/project/project_lifecycle.md` | `guides/mcp_registration.md` → `platform/setup/mcp_registration.md` |
+| `platform/project/deliverables_guide.md` | `templates/deliverables/` 6건 일괄 갱신 |
+| `platform/tools/rag/build-rag.mjs` | docstring · synonyms 경로 갱신 |
+| `platform/scripts/manage/wiki_sync.py` · `deploy_record.py` | docstring 사용 경로 갱신 |
+| `platform/scripts/webview/generate_sidebar.py` · `sync_sidebar.py` | docstring · 매핑 경로 갱신 |
+| `platform/scripts/webview/serve.py` | docstring URL `http://localhost:3000/webview/` → `/platform/services/webview/` |
+| `platform/scripts/credentials/set_credential.ps1` · `.sh` | 사용법 주석 · `.venv` 위치 안내 갱신 |
+| `platform/plugins/catalog.yml` · `apps/catalog.yml` | 주석 헤더 갱신 |
+| `platform/templates/deliverables/DEPLOYMENT.md` · `README.md` | `templates/deliverables/` → `platform/templates/deliverables/` 일괄 |
+| `platform/templates/deliverables/guides/ID-namespace.md` · `chunk-strategy-matrix.md` | `tools/build-rag.mjs` → `platform/tools/rag/build-rag.mjs` |
+| `platform/hub_init.py` · `init_project.py` | 실행 명령 docstring 갱신 |
+| `TODO_GLOBAL.md` (G-010) | `templates/deliverables/` 경로 갱신 |
+
+**프로젝트 레이어**
+
+| 파일 | 내용 |
+|---|---|
+| `projects/eacct_mcp/source/db.py` | 오류 메시지 `core/scripts/credentials/` → `platform/scripts/credentials/` (서브모듈) |
+| `projects/eacct_mcp/.env.example` | 자격증명 등록 안내 주석 경로 갱신 (서브모듈) |
+| `projects/eacct_mcp/docs/02_FLW_eacct_mcp_프로세스흐름도.html:215` | `core/.venv`, `core/scripts/credentials/` → `platform/` prefix (서브모듈) |
+
+**검증 결과**
+- `platform/plugins/` 내 모든 Python 소스 (atlassian_client·mcp_platform·miso_client) — 경로 참조 없음
+- `platform/templates/manage/*.md` 7종 · `deliverables/guides/` 15종 — clean
+- 글로벌 파일(`PROJECTS_GLOBAL.md`·`ISSUES_GLOBAL.md`·`hub_config.yml`·`PULL_REQUEST_TEMPLATE.md`·`sync-docs.yml`) — clean
+- 프로젝트별 `_manage/*.md` · `CLAUDE.md` — clean
+
+**특이사항**
+- `history/202505_history.md` 의도적 삭제 (사용자 확인)
+- `eacct_mcp` 서브모듈 변경 → 별도 커밋 처리
+- `eacct_mcp/.venv/.../mcp_platform-0.1.0.dist-info/direct_url.json` 의 구 경로 → `pip install -e ../../platform/plugins/mcp_platform` 재실행으로 갱신
+- TODO_GLOBAL.md G-017·G-020·G-023, CHANGELOG.md, `_manage/history/*` 등 완료·이력 기록은 당시 맥락 보존을 위해 그대로 유지
+
+---
+
+## 2026-05-12 (2)
+
+### 플랫폼 — 폴더 구조 대개편 (core/ → platform/ 통합)
+
+**목적:** 루트 레벨 폴더 수 최소화 + 플랫폼 성격을 이름에 반영
+
+**구조 변경 요약**
+
+| 이전 | 이후 | 비고 |
+|---|---|---|
+| `core/` | `platform/` | 명칭 변경 + 플랫폼 전체 통합 |
+| `guides/` | `platform/guides/` | |
+| `history/` | `platform/history/` | |
+| `mcp_server/` | `platform/services/mcp/` | |
+| `plugins/` | `platform/plugins/` | |
+| `scripts/` | `platform/scripts/` (일부) | `webview/`, `manage/`, `credentials/`, `install_app.py` |
+| `templates/` | `platform/templates/` | |
+| `tools/` | `platform/tools/` | |
+| `webview/` | `platform/services/webview/` | |
+
+**변경 파일 (경로·참조 업데이트)**
+
+| 파일 | 내용 |
+|---|---|
+| `platform/hub_init.py` | 경로 상수 전체 `platform/` 반영 |
+| `platform/init_project.py` | 경로 상수 전체 `platform/` 반영 |
+| `platform/services/mcp/server.py` | `HUB_ROOT` depth 4단계 수정 |
+| `platform/scripts/webview/generate_sidebar.py` | `HUB_ROOT`, `SIDEBAR_FILE`, `FOLDER_TO_SECTION` prefix 기반 변경, `FIXED_SECTIONS`, `INIT_META_MAP` 전체 갱신 |
+| `platform/scripts/webview/sync_sidebar.py` | `HUB_ROOT` 버그 수정 (2→4단계), `SIDEBAR_PATH` 갱신 |
+| `platform/scripts/webview/serve.py` | URL 출력 경로 갱신 |
+| `platform/scripts/install_app.py` | docstring 경로 갱신 |
+| `platform/scripts/credentials/set_credential.py` | docstring 경로 갱신 |
+| `platform/setup/secrets_guide.md` | 스크립트 경로 전체 갱신 |
+| `platform/TRIGGERS.md` | 스크립트·파일 경로 전체 갱신 |
+| `platform/project/project_creation.md` | `init_project.py`, `personal.yml` 경로 갱신 |
+| `platform/project/app_registration.md` | `plugins/` → `platform/plugins/` |
+| `platform/templates/deliverables/guides/ID-namespace.md` | `init_project.py` 경로 갱신 |
+| `platform/services/webview/_sidebar.md` | 전체 경로 `platform/` prefix 반영 |
+| `CLAUDE.md` | `core/` → `platform/` 전체 반영 |
+| `README.md` | 폴더 구조도 + 스크립트 경로 전면 갱신 |
+| `apps/README.md` | `install_app.py`, `app_registration.md` 경로 갱신 |
+| `projects/eacct_mcp/setup.py` | `MCP_PLATFORM_DIR` `platform/plugins/` 반영 |
+| `projects/eacct_mcp/CLAUDE.md` | `pip install` 경로 갱신 |
+| `projects/eacct_mcp/docs/miso_api_spec.md` | `miso_integration_guide.md` 경로 갱신 |
+
+**특이사항**
+- `core/.venv` 잔존: gitignored, 하드코딩 경로로 이동 불가 → 필요 시 수동 재생성
+- `eacct_mcp` 서브모듈 수정 → 별도 서브모듈 커밋 필요
+- `git mv` 시 staged-deleted 파일(`202505_history.md`, `01_REQ_요구사항정의서.md`) 충돌 → `git rm --cached` 로 해결
+
+---
+
+## 2026-05-12
+
+### 플랫폼 — 프로젝트 코드 형식 변경 + 산출물 ID prefix 통합
+
+**결정 사항**
+- **프로젝트 코드 형식 변경**: `P{YYYYMMDD}{NN}` (11자) → `P{YYMMDD}{N}` (8자)
+  - 연도 앞 20 제거(6자리), 시퀀스 1자리 단축 → 8자 고정, `ID-namespace.md` 제한 내 맞춤
+  - 예: `P2026050801` → `P2605081`
+- **산출물 ID prefix = 프로젝트 코드 직접 사용** — 별도 prefix 테이블·매핑 관리 불필요
+  - `P2605081-REQ-F01`, `P2605081-FLW-001` 형태로 일원화
+
+**변경 파일 (일괄)**
+
+| 파일 | 내용 |
+|---|---|
+| `core/init_project.py` | `_get_next_project_code` 함수 형식 변경 (YYYYMMDD+NN → YYMMDD+N) |
+| `PROJECTS_GLOBAL.md` | 4개 프로젝트 코드 갱신 |
+| `projects/*/CLAUDE.md` | 각 프로젝트 코드 2곳씩 갱신 (4개 파일) |
+| `templates/deliverables/guides/ID-namespace.md` | 형식 정의·예시 전면 교체 |
+| `templates/deliverables/CLAUDE.md` | PROJECT_CODE 확인 절차·예시 업데이트 |
+
+**갱신된 프로젝트 코드**
+
+| 프로젝트 | 구 코드 | 신 코드 |
+|---|---|---|
+| eacct_mcp | P2026050801 | P2605081 |
+| gmail_cleaner | P2026050601 | P2605061 |
+| wiki_mbo_builder | P2026042801 | P2604281 |
+| wiki_faq_builder | P2026042201 | P2604221 |
+
+---
+
+### eacct_mcp — 산출물 작성 (REQ + FLW) + 웹뷰 적용
+
+**산출물 작성**
+
+| 문서 | doc-id | 주요 내용 |
+|---|---|---|
+| 요구사항정의서 | P2605081-REQ-2026 | BR 3건, FR 6건, NFR 4건, 제약 2건, 가정 2건 |
+| 프로세스흐름도 | P2605081-FLW-2026 | FLW-001(AI 조회 흐름), FLW-002(자격증명 등록 흐름), 예외 3건 |
+
+**웹뷰 적용**
+- `projects/eacct_mcp/docs/index.md` 생성 → 사이드바 **산출물** 메뉴 신설
+- `core/scripts/webview/serve.py` ROOT 버그 수정 (`.parent.parent` → `.parent.parent.parent.parent`)
+- `generate_sidebar.py` 재실행 → `webview/_sidebar.md` 재생성
+- 웹뷰 서버 http://localhost:3000/webview/ 정상 작동 확인
+
+---
+
+## 2026-05-11
+
+### eacct_mcp — 플랫폼 자격증명 관리 체계 구축 + Aurora DB 연결 검증
+
+**배경**
+- T004-B(Aurora MySQL 연동)를 위해 DB 비밀번호 저장 방식 검토
+- `.env` 평문 저장은 보안 리스크 → OS 키체인 기반 자격증명 관리 체계 도입
+
+**결정 사항**
+- **자격증명 저장:** OS 키체인(`keyring` 라이브러리) — Windows(Credential Manager) / macOS(Keychain) / Linux(Secret Service) 크로스플랫폼 지원
+- **단방향 암호화 불가:** DB 접속 자격증명은 드라이버에 실제 값 전달 필요 → 양방향(DPAPI/AES) OS 키체인이 적합
+- **플랫폼 venv 분리:** `core/.venv/` — 플랫폼 공용 도구 전용, 프로젝트 venv와 독립
+- **자격증명 CLI:** `core/scripts/credentials/set_credential.ps1` (Windows) / `.sh` (Mac/Linux) — 위치 무관 실행은 향후 PATH 등록으로 해결
+
+**구축 내역**
+
+| 파일 | 내용 |
+|---|---|
+| `core/.venv/` | 플랫폼 venv 생성, `keyring` 설치 |
+| `core/scripts/credentials/set_credential.py` | 자격증명 등록·조회·삭제 CLI (keyring 기반) |
+| `core/scripts/credentials/set_credential.ps1` | Windows 래퍼 |
+| `core/scripts/credentials/set_credential.sh` | Mac/Linux 래퍼 |
+| `core/setup/secrets_guide.md` | 자격증명 관리 표준 가이드 (신규) |
+
+**자격증명 등록 절차 (최초 1회)**
+1. PowerShell 실행 정책 설정 (최초 1회):
+   ```powershell
+   Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+   ```
+2. 자격증명 등록:
+   ```powershell
+   # 프로젝트 루트에서
+   core\scripts\credentials\set_credential.ps1 set [프로젝트명] [키명]
+   # 예: core\scripts\credentials\set_credential.ps1 set eacct_mcp db_password
+
+   # 하위 폴더에서 (상대 경로 조정)
+   ..\..\core\scripts\credentials\set_credential.ps1 set [프로젝트명] [키명]
+   ```
+3. 프롬프트(`eacct_mcp > db_password 값:`)에 비밀번호 입력 후 Enter
+
+**프로젝트 코드에서 자격증명 사용 패턴**
+```python
+import keyring
+
+password = keyring.get_password("프로젝트명", "키명")
+if password is None:
+    raise RuntimeError(
+        "자격증명 미등록.\n"
+        "  core\\scripts\\credentials\\set_credential.ps1 set [프로젝트명] [키명]   (Windows)\n"
+        "  core/scripts/credentials/set_credential.sh  set [프로젝트명] [키명]   (Mac/Linux)"
+    )
+```
+
+**eacct_mcp DB 연결 검증 결과**
+- `source/db.py` keyring 연동 완료 (`_KEYRING_SERVICE="eacct_mcp"`, `_KEYRING_KEY="db_password"`)
+- DBSafer Agent 실행 상태에서 Aurora MySQL(QA) 연결 성공
+- 연결 엔드포인트: `qgseacc.eacct.gsretail.com:3306 / qgseacc`
+- 인증: DBSafer 투명 프록시 + `i_jaceybaek` 개인 계정
+
+**주요 트러블슈팅**
+
+| 증상 | 원인 | 해결 |
+|---|---|---|
+| `server.py` `.env` 로드 실패 | `load_dotenv` 경로 `.parent.parent.parent` (1단계 초과) | `.parent.parent`로 수정 |
+| keyring 조회 실패 | `db.py`가 DB 계정명으로 조회, `set_credential.py`는 키명으로 저장 — 불일치 | `db.py`에 `_KEYRING_KEY="db_password"` 고정 |
+| PS1 실행 차단 | PowerShell 실행 정책 기본값 Restricted | `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` |
+| 하위 폴더에서 PS1 경로 오류 | 상대 경로가 현재 위치 기준 | 위치에 따라 `..\..\` 조정 필요 (향후 PATH 등록으로 해결 예정) |
+
+---
+
 ## 2026-05-01
 
 ### platform → plugins 구조 전환 및 atlassian_pipeline → atlassian_client 명칭 변경
@@ -356,6 +586,40 @@ sidebar_order: 1
 
 ## 2026-05-08
 
+### 비서 통합 사후 검증
+
+**검증 대상:** personal.yml, ~/.claude/CLAUDE.md, d:/03.project-hub/CLAUDE.md, TRIGGERS.md, init_project.py, hub_init.py, PROJECTS_GLOBAL.md, guides/SETUP.md, templates/SETUP.template.md, 프로젝트별 CLAUDE.md 전체
+
+**결과:** 보존 대상(history/, CHANGELOG.md) 외 세라(Sera) 잔존 0건 — 전항목 이상 없음
+
+---
+
+### G-016: ~/.claude/CLAUDE.md 정리 완료
+
+**배경**
+- 비서 통합(v1.0.0) 이후 전역 CLAUDE.md에 구버전 세라/아이다 역할 분리 표기 및 중복 내용 잔존 확인
+
+**처리 내역**
+1. `## 역할` 수정 — 세라(Sera) 언급 제거, 아이다 통합 비서 단일로 재작성, 이름 의미 정정 ("돕는 자" → "이익을 주는 자, 보상하는 자")
+2. `## 사용자 프로필` 제거 — 플랫폼 전역 설정에 개인 프로필 불필요 (Jacey 판단)
+3. `## Claude 역할` 제거 — project-hub CLAUDE.md 중복
+4. `## 개발 환경` 제거 — project-hub CLAUDE.md 중복
+5. `## 프로젝트 내부 규칙` 제거 — project-hub CLAUDE.md에 더 상세한 버전 존재 (이행 단계 표 내 세라 하드코딩 포함)
+6. `## 응답 규칙` 제거 — project-hub CLAUDE.md 12개 항목 버전 중복
+
+**결과:** 145줄 → 9줄 (역할·호칭 2개 섹션만 유지)
+**변경 파일:** `~/.claude/CLAUDE.md`, `TODO_GLOBAL.md` (G-016 완료 처리)
+
+---
+
+### TRIGGERS.md 수정 — compact/clear 트리거 기록 최우선 정비
+
+**변경 내용**
+- `compact` 트리거: 히스토리·memory 기록을 ①번 최우선으로 재정렬, GitHub·Google Drive 백업 미실행(수동) 명시
+- `clear` 트리거: 신규 등록 — compact와 동일한 기록 우선 절차, `/clear` 입력 안내 추가
+
+---
+
 ### 프로젝트 생성 흐름 테스트 + `init_project.py` --delete 옵션 추가
 
 **테스트 목적**
@@ -404,3 +668,356 @@ python init_project.py --delete {프로젝트명} --yes
 **3. additionalDirectories 정리 (11개 → 6개)**
 - 제거: `D:\05.Claude` 관련 4개, `D:\03.Lab` (임시 마이그레이션 목적지)
 - 유지: `C:\Users\Administrator\.claude`, `AppData\Local\Temp`, `D:\`, `AppData\Roaming`, `.vscode`, Claude Desktop 설정 경로
+
+---
+
+## 2026-05-08 (2차 세션)
+
+### 폴더 구조 전체 검토 및 core/ 재편 (G-020)
+
+**배경**
+- project-hub 구조 전면 검토 — 관리성·확장성·일관성 기준 분석
+- 즉시 정리 3건, 구조 재편 1건, 논의 항목 3건 도출
+
+**즉시 정리**
+1. 루트 `__pycache__/` 삭제 — core/ 스크립트 루트 실행 흔적
+2. `plugins/atlassian_client/atlassian_pipeline.egg-info` 삭제 — 패키지명 변경 잔존물
+3. `wiki_mbo_builder/scripts/` → `source/src/` 통합 — 표준 구조 위반, CLAUDE.md 실행 경로 업데이트, git commit
+4. `wiki_faq_builder/.gitignore` `secrets/` 누락 추가, git commit
+
+**core/ 구조 재편 (G-020 완료)**
+
+| 이전 위치 | 이후 위치 | 비고 |
+|---|---|---|
+| `core/project_creation.md` 등 4개 | `core/project/` | 프로젝트 관리 지침 |
+| `core/connection_setup.md` 등 2개 | `core/setup/` | 플랫폼 설정·연결 |
+| `scripts/generate_sidebar.py` 등 3개 | `core/scripts/webview/` | 루트 `scripts/` 폴더 제거 |
+| `guides/scripts/deploy_record.py` 등 2개 | `core/scripts/manage/` | `guides/scripts/` 폴더 제거 |
+
+- `core/hub_init.py`, `core/init_project.py`, `core/TRIGGERS.md`, `core/ENHANCEMENTS.md` → 루트 유지
+- `CLAUDE.md` 경로 참조 6건 업데이트 (`core/` → `core/project/`, `core/setup/`)
+- `TRIGGERS.md` webview 스크립트 경로 수정 (`scripts/` → `core/scripts/webview/`)
+
+**TRIGGERS.md — clear/compact 트리거 강화**
+- "미기록 시 즉시" → **무조건 기록** (확인 단계 제거)
+- 기록 범위 명시: 구조변경·파일이동·설정변경·기능추가 전부 포함
+- 가이드·문서 경로 변경 시 현행화 단계 추가
+- TODO 상태 최신화 단계 추가
+- git 커밋·Google Drive 백업은 수동으로 명시
+
+**TODO 변경**
+- G-020 완료 (2026-05-08)
+- G-021 신규 등록: mcp_server/ 위치·역할 재정의 (G-017 연계)
+- G-022 신규 등록: docs/ 용도 명확화
+
+---
+
+## 2026-05-08 (3차 세션)
+
+### PLUGINS_PATH 절대경로 하드코딩 제거
+
+**배경**
+- `PLUGINS_PATH=D:\03.project-hub\plugins` 형태로 절대경로가 여러 파일에 하드코딩되어 있어 clone 위치 변경 시 일괄 수동 수정 필요
+- `config/personal.yml`(gitignored)에 경로를 한 곳에서 관리하는 구조로 개선
+
+**변경 내용**
+
+1. `core/hub_init.py` — 초기화 시 `paths.hub_root`, `paths.plugins` 자동 기록 로직 추가 (HUB_ROOT 기준 자동 감지)
+2. `config/personal.yml.example` — `paths.hub_root`, `paths.plugins` 필드 추가
+3. `config/personal.yml` — 현재 clone 위치 기반 `paths` 섹션 추가
+
+**하드코딩 제거 파일 (8개)**
+- `CLAUDE.md` — `PLUGINS_PATH=D:\...` → `config/personal.yml → paths.plugins` 참조
+- `guides/architecture.md` — `.env` 예시 경로 제거
+- `plugins/atlassian_client/atlassian_client_guide.md` — 위치 헤더·패키지구조 다이어그램·환경변수 표·`.env.example` 4곳 수정
+- `projects/wiki_faq_builder/CLAUDE.md` — 설치 주석 수정
+- `projects/wiki_mbo_builder/CLAUDE.md` — 설치 주석 수정
+
+---
+
+## 2026-05-08 (4차 세션)
+
+### e-Acct MCP 서버 구축 — mcp_platform + eacct_mcp POC 완료
+
+**배경**
+- e-Acct 사내 시스템에 AI(Miso) 연동을 위한 MCP 서버 구축 필요성 검토
+- Miso 도구 구조 파악 결과: 내부 코드 기반 HTTP API 호출 방식으로 동작
+- Claude Desktop(MCP) → POC 검증 후 Miso(REST API) 확장 전략 확정
+
+**생성 항목**
+- `plugins/mcp_platform/` — Claude·Miso 이중 인터페이스 공통 MCP 서버 플랫폼 패키지 (신규)
+- `projects/eacct_mcp/` — e-Acct 시스템 연동 MCP 서버 구현체 프로젝트 (P2605081, 신규)
+
+**주요 작업**
+- T001: mcp_platform 뼈대 구현 (base_server, base_tools, rest_bridge, middleware)
+- T002: eacct_mcp 개발 환경 구성 (setup.py 1회 실행으로 venv·Claude Desktop 등록 자동화)
+- T004: Mock tool 2개 구현 (get_invoice, recommend_account — 키워드 룰 기반)
+- T005: Claude Desktop POC 성공 — INV-2026-002 조회·계정과목 추천 정상 동작 확인
+- T006: Miso 개발팀 전달용 REST API 스펙 문서 작성
+- 문서 분리: 공통(mcp_platform) / eacct 전용(eacct_mcp/docs) 구조로 체계화
+- 웹뷰 반영: eacct_mcp 프로젝트 + Miso API 스펙 + MCP-Miso 연동 가이드 사이드바 등록
+
+**버그 수정**
+- `generate_sidebar.py` HUB_ROOT 경로 오류 수정 (scripts/ → core/scripts/webview/ 이동 후 parent 레벨 미반영)
+
+**보류 항목**
+- T003: e-Acct DB 서비스 계정 발급 + 방화벽 오픈 (내부 프로세스 진행 중)
+- T004-B: Mock → DB 실데이터 전환 (T003 완료 후)
+- T007: 사내 서버 배포 구성 (추후)
+
+---
+
+## 2026-05-08 (5차 세션)
+
+### 5-1. daily_briefing 제거
+
+**배경**
+- 초기 MS Graph API 연동 중 중단된 프로젝트로, 잔존이 구조 혼선 유발
+- daily_briefing을 앱 레이어 설계 트리거로 삼았던 G-017 조건도 해소 필요
+
+**처리 내역**
+- git submodule deinit + git rm + `.git/modules` 삭제
+- `PROJECTS_GLOBAL.md`, `webview/_sidebar.md`, `TODO_GLOBAL.md`, `guides/mcp_server_setup.md`, `core/ENHANCEMENTS.md` 관련 언급 제거
+- 메모리 파일 (`project_apps_layer.md`) daily_briefing 참조 정리
+- GitHub 레포(`JaceyBaek/daily_briefing`)는 보존 — 재착수 시 submodule add로 복원 가능
+
+---
+
+### 5-2. 프로젝트 폴더 구조 점검 및 정리
+
+**점검 결과 — 이슈 3건**
+
+| 이슈 | 처리 내역 |
+|---|---|
+| `projects/logs/` 위치 오류 | `eacct_mcp/source/server.py` 로그 경로 수정 (`parent×3` → `parent×2`), `.gitignore`에 `projects/logs/`, `projects/*/logs/` 추가. 로그 파일 잠금으로 디렉토리 삭제는 서버 재시작 후 수동 처리 |
+| `eacct_mcp` submodule 미등록 | GitHub 레포(`JaceyBaek/eacct_mcp`) 신규 생성, 초기 커밋, main 브랜치로 통일, submodule 등록 완료 |
+| `mcp_platform` 미추적 | 이전 세션(ebc6aa5) 커밋에 포함된 것 확인 — 이슈 아님 |
+
+**개별 프로젝트 내부 구조 점검 (4개)**
+- gmail_cleaner, google_drive_backup, wiki_faq_builder, wiki_mbo_builder
+- 구조 일관성 확인 — 리팩토링 필요 사항 없음
+
+---
+
+### 5-3. apps/ 레이어 도입 + google_drive_backup 첫 번째 앱 등록 (G-017)
+
+**배경**
+- 운영 안정화된 `google_drive_backup`을 팀 공용 앱으로 전환하는 것이 적합하다고 판단
+- 동시에 절차 문서·자동화 스크립트를 함께 작성해 향후 등록을 재현 가능하게 구성
+
+**레이어 구조 확정**
+
+| 레이어 | 위치 | 성격 |
+|---|---|---|
+| 연결 도구 | `plugins/` | 외부 서비스 클라이언트 라이브러리 |
+| 개인 프로젝트 | `projects/` | 개인 업무 자동화·분석·실험 |
+| 팀 공용 앱 | `apps/` | 운영 안정화 후 공용 배포 단위 |
+
+**처리 내역**
+1. `apps/catalog.yml` 신설 — 앱 레지스트리 (name, repo, type, requires, run, setup_notes)
+2. `google_drive_backup` submodule `projects/` → `apps/` 이동, venv 재생성 (`google-auth` 등 재설치)
+3. `mcp_server/server.py` PROJECT_RUN_CONFIG 경로 `projects/` → `apps/` 수정
+4. `generate_sidebar.py` — "앱" 섹션 추가 (`render_apps_section`), INIT_META_MAP 경로 수정, 사이드바 재빌드
+5. `PROJECTS_GLOBAL.md` — google_drive_backup 행 제거 (catalog.yml로 이관)
+6. `core/project/app_registration.md` — projects/ → apps/ 등록 절차 전체 문서화
+7. `core/scripts/install_app.py` — 앱 설치·등록 자동화 CLI
+   - `--list`: 설치 상태 포함 앱 목록
+   - `{name}`: 신규 팀원용 설치 (submodule + venv + .env + Claude Desktop 등록)
+   - `--register`: 기존 projects/ → apps/ 이동 자동화
+8. G-017 완료 처리 (2026-05-08)
+
+---
+
+### 5-4. 규칙·트리거 보완
+
+| 항목 | 내용 |
+|---|---|
+| `CLAUDE.md` 8-1 추가 | 절대경로 사용 금지 (`D:\`, `C:\Users\` 등) — 코드·문서·설정 어디에도 금지, 위반 시 즉시 수정 |
+| `TRIGGERS.md` 추가 | "apps로 이동" / "앱으로 등록" 뉘앙스 → app_registration.md 절차대로 자동 진행 |
+
+---
+
+## 2026-05-11
+
+### G-022·G-023 — docs/ 구조 명확화 및 README 갱신
+
+**배경**
+- 루트 `docs/`에 날짜 붙은 HTML 산출물 2개(`project_hub_UTC_20260427.html`, `project_hub_architecture_20260501.html`)가 쌓여 있었으나, 이후 구조 변경(G-017·G-019·G-020)으로 outdated 상태
+- "웹뷰 문서"와 "플랫폼 산출물"이 같은 폴더에 섞이는 문제 인식 → 분리 기준 정의 필요
+- README.md 폴더 구조 박스가 G-017 이후 변경된 항목 다수 미반영
+
+**결정 (G-022 — A안 채택)**
+- `docs/deliverables/` : 작업 중·유효한 플랫폼 산출물
+- `docs/archive/` : 폐기·과거 스냅샷
+- 웹뷰(`webview/`)와 산출물(`docs/`)은 별개 — 웹뷰는 외부 공개, 산출물은 로컬 전용
+
+**처리 내역**
+
+*G-022*
+1. `docs/project_hub_UTC_20260427.html` 폐기 — G-019·G-020 이후 outdated
+2. `docs/project_hub_architecture_20260501.html` 폐기 — G-017(apps 레이어) 미반영
+3. `docs/deliverables/`·`docs/archive/` 신설 (`.gitkeep`)
+4. `.gitignore` — `docs/` 전체 제외 → `docs/deliverables/*`·`docs/archive/*` 제외로 변경, `.gitkeep` 예외 추가
+5. `core/project/deliverables_guide.md` — 산출물 위치 `docs/` → `docs/deliverables/`, 플랫폼 vs 프로젝트 위치 표 추가, archive 정책 명문화
+
+*G-023*
+6. `README.md` 폴더 구조 박스 — `plugins/`·`apps/`·`docs/`·`history/`·`mcp_server/`·`webview/` 추가, `core/` 하위 구조 반영, `guides/scripts/` 오기 제거
+7. `README.md` 유틸리티 스크립트 섹션 — 경로 `guides/scripts/` → `core/scripts/manage/`, `install_app.py` 행 추가
+
+---
+
+## 2026-05-11 (2차 세션)
+
+### MCP 로그 정리·모니터링 wiring·apps 정책 정립·"활성" 용어 통일
+
+**처리 내역**
+
+*로그 정리*
+1. `projects/logs/eacct_mcp.log` 삭제 — 이전 세션 버그(log path 3단계 상위)가 남긴 잔존 파일
+2. eacct_mcp 서버 프로세스(PID 32708·29056) 종료 후 재삭제 성공
+3. `.gitignore` — `projects/logs/` 제거, `projects/*/logs/`·`apps/*/logs/` 추가 (프로젝트별 독립 관리 원칙 반영)
+
+*MCP 모니터링 wiring*
+4. `plugins/mcp_platform/mcp_platform/base_server.py` — `_wrapped_tools()` 메서드 추가
+   - `log_tool_call(self._logger)` 데코레이터를 레지스트리 전체 tool에 적용한 사본 반환
+   - `_build_mcp()` (stdio) 및 REST 모드 양쪽에서 wrapped tools 사용
+   - 효과: mcp_platform 기반 모든 서버에서 도구 호출 시 `CALL/OK/ERROR` 자동 로깅
+
+*apps/ 운영 정책 논의 결론*
+5. **apps/ = 코드 공유, 운영 환경 공유 아님** — fork-clone으로 공유 실현, 각자 로컬에서 독립 실행
+6. "운영"의 두 가지 의미 명확히 분리: 로컬 정기 자동화(개인 몫) vs 진짜 운영(사내 서버·별도 인프라)
+7. 로컬 dev/prod 분리 불필요 결론 — 실패 감지는 G-015·G-008(모니터링+알림)으로 대응
+8. `core/project/app_registration.md` — "apps/ 의 의미" 정책 섹션 신규 추가
+9. `PROJECTS_GLOBAL.md` — "활성" 섹션 정의 주석 추가
+10. `apps/README.md` — 신규 생성 (apps/ 목적·설치 명령·정책 요약)
+
+*"운영중" → "활성" 용어 통일*
+11. 13개 파일 일괄 교체: `PROJECTS_GLOBAL.md`, `CLAUDE.md`, `core/TRIGGERS.md`, `core/project/project_lifecycle.md`, `core/project/versioning.md`, `core/setup/mcp_registration.md`, `core/init_project.py`, `core/scripts/webview/sync_sidebar.py`, `mcp_server/server.py`, `guides/SETUP.md`, `templates/SETUP.template.md`, `apps/google_drive_backup/CLAUDE.md`, `projects/wiki_faq_builder/CLAUDE.md`
+12. `history/` 파일은 과거 기록 보존 목적으로 유지
+
+---
+
+## 2026-05-11 (3차 세션)
+
+### 플랫폼 카탈로그 정비 — 프로젝트/앱/플러그인 현황 체계화
+
+**처리 내역**
+
+*PROJECTS_GLOBAL.md 개선*
+1. 각 섹션 테이블에 `상태` 컬럼(첫 번째 열) 추가 — 현황 표시 시 상태 명시 원칙 확립
+
+*apps/catalog.yml 개선*
+2. `version` 필드 추가 (`google_drive_backup: 0.1.0`)
+3. 필드 설명에 버전 관리 방식 명시 — 스크립트 형태 앱은 catalog.yml에서 직접 관리
+
+*plugins/catalog.yml 신규 생성*
+4. `plugins/catalog.yml` 생성 — 3개 플러그인 등록
+   - `atlassian_client 0.2.0` — Atlassian 제품군 연동 클라이언트
+   - `mcp_platform 0.1.0` — MCP 서버 공통 뼈대 (Claude·Miso 이중 인터페이스)
+   - `miso_client 0.1.0` — 사내 AI 미소 API 클라이언트
+5. 플러그인 버전은 setup.cfg 와 catalog.yml 동기화 방식으로 관리
+6. `dependents` 필드 — 각 플러그인을 사용하는 프로젝트 목록 추적
+
+*피드백 메모리 업데이트*
+7. 플랫폼 카탈로그 현행화 필수 규칙 기록 (플러그인·앱 변경 시 카탈로그 동시 업데이트)
+8. 프로젝트 현황 표시 시 상태 컬럼 필수 규칙 기록
+
+---
+
+## 2026-05-11 (4차 세션)
+
+### Claude Design → Claude Code 연동 + 산출물 템플릿 번들 동기화
+
+**배경**
+- Claude.ai에 추가된 Claude Design(Research Preview) 기능 확인
+- "Handoff to Claude Code..." 공식 연동 기능 발견 — 핸드오프 URL 기반 gzip 번들 전달 방식
+
+**산출물 템플릿 번들 동기화 (templates/deliverables/)**
+
+| 항목 | 내용 |
+|---|---|
+| `index.html` | 번들 최신본으로 업데이트 |
+| `docs/_archive/` | 신규 추가 — 와이어프레임·variation 아카이브 20개 파일 |
+| `guides/01_REQ ~ 10_USM-authoring-guide.md` | 번호화 authoring guide 10종 신규 추가 |
+| `README.md` | 신규 추가 (사용법·폴더 구조·산출물 종류 설명) |
+| `CLAUDE.md` | 신규 추가 — AI 산출물 작성 세부 지침 (로컬 CLAUDE.md, 자동 로드) |
+
+**가이드 파일 정리**
+- `guides/REQ-authoring-guide.md` 삭제 (구버전)
+- 참조 6곳 일괄 수정 → `guides/01_REQ-authoring-guide.md`
+  - `templates/deliverables/CLAUDE.md`, `README.md`(2곳), `index.html`, `docs/01_REQ_요구사항정의서.html`, `core/project/deliverables_guide.md`
+
+**deliverables_guide.md 사용 절차 일반화**
+- REQ 고정값 → `{NN}_{ID}_{한글명}` 패턴으로 변경
+- 모든 산출물 요청에 동일 절차 적용 가능하도록 일반화
+
+**sync_design.ps1 스크립트 신규 작성 (core/scripts/)**
+- Claude Design 핸드오프 URL → 자동 다운로드·압축해제·diff·복사
+- 경로 매핑: `untitled/project/tools/` → `core/tools/rag/`, `untitled/project/` → `templates/deliverables/`
+- 제외 목록: scraps/, uploads/, .gitignore, chats/, untitled/README.md
+- 옵션: `-DryRun` (미적용 미리보기), `-Auto` (확인 없이 적용)
+- 새 Design 프로젝트 추가 시 `$PathMappings` / `$Excludes` 섹션만 수정
+
+---
+
+## 2026-05-11 (5차 세션)
+
+### 4개 서브모듈 미커밋 변경사항 커밋·push 완료
+
+**처리 내역**
+
+1. **서브모듈 git user 로컬 설정** — 서브모듈마다 user.name/email 설정이 없어 커밋 실패, 루트 repo 값(JaceyBaek-GSRetail / jacey.baek@gsretail.com) 기준으로 4개 서브모듈에 로컬 설정 추가
+
+2. **커밋 내용 (4개)**
+
+   | 서브모듈 | 커밋 메시지 |
+   |---|---|
+   | `apps/google_drive_backup` | 상태 표기 통일 — 운영중 → 활성 |
+   | `projects/gmail_cleaner` | 프로젝트 코드(P2605061) 상태 헤더에 추가 |
+   | `projects/wiki_faq_builder` | 상태 활성으로 통일·코드 추가·절대경로 제거 |
+   | `projects/eacct_mcp` | T004-B Aurora MySQL 연동 준비 — pymysql·db.py 추가, .env.example 엔드포인트 명시 |
+
+3. **push 트러블슈팅 — gmail_cleaner PAT workflow 스코프 부재**
+   - `.github/workflows/ci.yml`이 포함된 커밋이 있어 PAT에 `workflow` 스코프 필요
+   - GitHub Personal Access Token에 `workflow` 스코프 추가 후 재시도
+   - Windows 자격 증명 캐시(이전 토큰)가 남아 있어 `git credential reject` 로 캐시 초기화 → push 성공
+
+**push 결과:** 4개 서브모듈 모두 완료
+
+---
+
+## 2026-05-11 (6차 세션)
+
+### 산출물 템플릿 정밀 검토 및 정비
+
+**배경**
+- 산출물 템플릿이 실제 작성 가능한 수준인지, 가이드 누락 여부 전수 확인
+
+**검토 결과 — 발견 이슈 9건**
+
+| 분류 | 항목 | 처리 |
+|---|---|---|
+| A-3 | synonyms-global.json 미구현 | rag-policy.md 명시 후 구현 완료 |
+| B-4 | tools/ 경로 불일치 (README vs 실제) | README.md 수정 |
+| B-5 | 01_REQ-authoring-guide.md 구형 파일명 규칙 | 현행 규칙으로 수정 |
+| B-6 | deliverables_guide.md 단계별 폴더 오기 | flat 구조로 수정 |
+| C-7 | RAG-conversion-guide.md 주석 마커 규칙 충돌 | data-ai-skip 단일 방식으로 수정 |
+| C-8 | .md 출력 경로 docs/ → dist/md/ | build-rag.mjs 수정, 기존 .md 파일 삭제 |
+| C-9 | 검증 규칙 가이드 미비 | validation-rules.md 신규 작성 (35개 규칙) |
+| 2 | DEPLOYMENT.md 파일명 형식 구형 | §1·§6 현행 규칙으로 수정 |
+| 7 | README.md §2 원본 수정 오해 소지 | 복사본 기준 치환임을 명확히 |
+
+**신규 파일**
+- `templates/deliverables/guides/validation-rules.md` — doc-validator.js 35개 규칙 문서화
+- `templates/deliverables/guides/synonyms-global.json` — 도메인 공통 동의어 사전 (19개 용어)
+- `templates/deliverables/TODO.md` — 산출물 템플릿 잔여 작업 목록
+
+**build-rag.mjs 기능 추가**
+- `--docs <path>` 옵션 — 실행 위치 독립적으로 docs 폴더 지정
+- `--synonyms <path>` 옵션 — 전역 synonyms 파일 지정
+- synonyms 로드·병합 로직 — 전역 사전 + 문서별 `doc-synonyms` meta 병합 → 각 청크 `synonyms` 필드 삽입
+- .md 출력 경로 변경 — HTML 옆 → `dist/md/`
+
+**TODO 잔여 (templates/deliverables/TODO.md)**
+- 11_CFG-authoring-guide.md 작성 (CFG 첫 작성 시)
+- 00_TRC 가이드 필요 여부 결정

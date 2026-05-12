@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>FLW · 프로세스흐름도</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+<style>
+  .swimlane {
+    display: grid;
+    grid-template-columns: 110px repeat(5, 1fr);
+    border: 1px solid var(--line);
+    background: #fff;
+  }
+  .swimlane .lane-head, .swimlane .step-head {
+    background: var(--bg-gray);
+    padding: 8px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--line);
+    border-right: 1px solid var(--line-2);
+    letter-spacing: 0.02em;
+    text-align: center;
+  }
+  .swimlane .lane-head { text-align: left; }
+  .swimlane .cell {
+    border-right: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+    padding: 14px 10px;
+    min-height: 90px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .swimlane .lane-name {
+    background: var(--bg-gray);
+    border-right: 1px solid var(--line);
+    font-weight: 700;
+    font-size: 11.5px;
+    padding: 14px 10px;
+    writing-mode: horizontal-tb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 90px;
+  }
+  .step {
+    border: 1.5px solid var(--ink-2);
+    background: #fff;
+    padding: 8px 10px;
+    font-size: 11px;
+    text-align: center;
+    position: relative;
+    min-width: 80%;
+  }
+  .step.decision {
+    transform: rotate(45deg);
+    width: 60px;
+    height: 60px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .step.decision > span { transform: rotate(-45deg); font-size: 10px; }
+  .step .id-mini {
+    position: absolute;
+    top: -10px;
+    right: -6px;
+    background: var(--ink);
+    color: #fff;
+    font-family: ui-monospace, monospace;
+    font-size: 9.5px;
+    padding: 1px 4px;
+  }
+  .arrow-h::after {
+    content: "→";
+    position: absolute;
+    right: -9px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink-2);
+    font-size: 14px;
+    z-index: 2;
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>프로세스흐름도</b></span>
+  <span class="spacer"></span>
+  <span class="status draft">Draft</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+
+  <div class="cf-breadcrumb"><span>Space</span><span>산출물 템플릿</span><span>설계</span><span>프로세스흐름도</span></div>
+  <h1 class="cf-title"><span class="doc-id">FLW</span>프로세스흐름도 <span style="font-size:13px; font-weight:400; color:var(--muted);">— Process Flow</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">담당자</div><div class="v">김기획 (BA)</div></div>
+    <div class="m"><div class="k">버전</div><div class="v">v0.1</div></div>
+    <div class="m"><div class="k">상태</div><div class="v"><span class="status draft">Draft</span></div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">프로세스 수</div><div class="v">3</div></div>
+    <div class="m"><div class="k">Confluence</div><div class="v mono small">/DOCS-TMPL/FLW</div></div>
+  </div>
+
+  <div style="margin:0 0 16px;">
+    <span class="tag">#phase:design</span>
+    <span class="tag">#module:approval</span>
+    <span class="tag">#diagram:swimlane</span>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>목차</h4>
+      <ol>
+        <li>개요</li>
+        <li>프로세스 목록</li>
+        <li>As-Is / To-Be</li>
+        <li>스윔레인 (Swimlane)</li>
+        <li>단계별 상세</li>
+        <li>예외/분기 처리</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>개요</h2>
+      <p>업무 프로세스를 스윔레인 다이어그램과 단계별 상세로 정의한다. 각 단계는 <span class="mono">FLW-###</span> ID로 관리되며, 관련 화면(SCR) · 기능(FUNC)과 연결된다.</p>
+
+      <h2><span class="num">2.</span>프로세스 목록</h2>
+      <table class="cf">
+        <thead><tr><th class="id">ID</th><th>프로세스명</th><th>트리거</th><th>완료 조건</th><th>Trace</th></tr></thead>
+        <tbody>
+          <tr><td class="id">FLW-001</td><td>기안 및 결재</td><td>기안자 상신</td><td>최종 승인 또는 반려</td><td><span class="id-chip muted">REQ-F01</span><span class="id-chip">SCR-001~003</span></td></tr>
+          <tr><td class="id">FLW-002</td><td>모바일 결재</td><td>푸시 알림 수신</td><td>결재 처리 완료</td><td><span class="id-chip muted">REQ-B02</span><span class="id-chip">SCR-010</span></td></tr>
+          <tr><td class="id">FLW-003</td><td>전결/대결 위임</td><td>결재자 부재 설정</td><td>위임자 처리 완료</td><td><span class="id-chip muted">REQ-F05</span><span class="id-chip">ROLE-003</span></td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">3.</span>As-Is / To-Be</h2>
+      <div class="grid-2">
+        <div class="frame">
+          <div class="fhead">AS-IS (종이 결재)</div>
+          <div class="stack-sm">
+            <div class="ph-line w-80"></div><div class="ph-line w-60"></div><div class="ph-line w-70"></div>
+          </div>
+          <div class="small muted" style="margin-top:6px;">평균 처리 시간: 3.2일</div>
+        </div>
+        <div class="frame">
+          <div class="fhead">TO-BE (전자결재)</div>
+          <div class="stack-sm">
+            <div class="ph-line w-90"></div><div class="ph-line w-70"></div><div class="ph-line w-80"></div>
+          </div>
+          <div class="small muted" style="margin-top:6px;">목표 처리 시간: 1.5일</div>
+        </div>
+      </div>
+
+      <h2><span class="num">4.</span>스윔레인 (FLW-001 기안 및 결재)</h2>
+      <div class="swimlane">
+        <div class="lane-head">Lane \ Step</div>
+        <div class="step-head">1. 기안</div>
+        <div class="step-head">2. 상신</div>
+        <div class="step-head">3. 결재</div>
+        <div class="step-head">4. 분기</div>
+        <div class="step-head">5. 완료</div>
+
+        <div class="lane-name">기안자</div>
+        <div class="cell"><div class="step arrow-h">기안문 작성<span class="id-mini">FLW-001-1</span></div></div>
+        <div class="cell"><div class="step">상신<span class="id-mini">FLW-001-2</span></div></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"><div class="step">결과 확인<span class="id-mini">FLW-001-5</span></div></div>
+
+        <div class="lane-name">결재자</div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"><div class="step arrow-h">승인/반려<span class="id-mini">FLW-001-3</span></div></div>
+        <div class="cell"><div class="step decision"><span>반려?</span><span class="id-mini" style="transform:rotate(-45deg);">FLW-001-4</span></div></div>
+        <div class="cell"></div>
+
+        <div class="lane-name">시스템</div>
+        <div class="cell"><div class="step" style="border-style:dashed;">양식 제공</div></div>
+        <div class="cell"><div class="step" style="border-style:dashed;">알림 발송</div></div>
+        <div class="cell"><div class="step" style="border-style:dashed;">이력 저장</div></div>
+        <div class="cell"><div class="step" style="border-style:dashed;">라우팅</div></div>
+        <div class="cell"><div class="step" style="border-style:dashed;">문서 종결</div></div>
+      </div>
+
+      <h2><span class="num">5.</span>단계별 상세</h2>
+      <table class="cf">
+        <thead><tr><th class="id">ID</th><th>단계</th><th>담당</th><th>입력</th><th>처리</th><th>출력</th><th>연결 화면/기능</th></tr></thead>
+        <tbody>
+          <tr><td class="id">FLW-001-1</td><td>기안문 작성</td><td>기안자</td><td>양식, 첨부파일</td><td>본문 작성·임시저장</td><td>Draft 문서</td><td><span class="id-chip">SCR-001</span><span class="id-chip">FUNC-001</span></td></tr>
+          <tr><td class="id">FLW-001-2</td><td>상신</td><td>기안자</td><td>Draft 문서</td><td>결재선 지정·상신</td><td>Pending 문서</td><td><span class="id-chip">SCR-002</span><span class="id-chip">FUNC-002</span></td></tr>
+          <tr><td class="id">FLW-001-3</td><td>결재</td><td>결재자</td><td>Pending 문서</td><td>승인/반려/보류</td><td>상태 업데이트</td><td><span class="id-chip">SCR-003</span><span class="id-chip">FUNC-003</span></td></tr>
+          <tr><td class="id">FLW-001-4</td><td>분기</td><td>시스템</td><td>결재 결과</td><td>다음 결재자 호출 / 반려 처리</td><td>라우팅 결과</td><td><span class="id-chip">FUNC-004</span></td></tr>
+          <tr><td class="id">FLW-001-5</td><td>결과 확인</td><td>기안자</td><td>종결 문서</td><td>열람·다운로드</td><td>보관</td><td><span class="id-chip">SCR-004</span></td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">6.</span>예외/분기 처리</h2>
+      <div class="callout"><div class="t">Exception</div>결재자 부재 시 3일 경과 후 자동으로 대결자에게 전달 (→ FLW-003)</div>
+      <div class="callout"><div class="t">Exception</div>반려 시 기안자에게 사유와 함께 반환, 재상신 시 새 버전으로 관리</div>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div>
+      <h3>변경 이력</h3>
+      <table class="cf">
+        <thead><tr><th>버전</th><th>일자</th><th>작성자</th><th>변경내용</th></tr></thead>
+        <tbody><tr><td>v0.1</td><td>2026-04-24</td><td>김기획</td><td>초안</td></tr></tbody>
+      </table>
+    </div>
+    <div>
+      <h3>관련 페이지</h3>
+      <ul style="margin:0; padding-left:16px; font-size:12px;">
+        <li>REQ · 요구사항정의서</li>
+        <li>SCR · 화면정의서</li>
+        <li>FUNC · 기능정의서</li>
+        <li>ITS · 통합테스트시나리오</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

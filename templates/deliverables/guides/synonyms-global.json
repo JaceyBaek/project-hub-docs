@@ -1,0 +1,21 @@
+{
+  "결재": "approval, 승인",
+  "기안": "draft, 상신, 작성",
+  "반려": "reject, 거절",
+  "대결": "delegation, 위임",
+  "전결": "pre-approval, 전결처리",
+  "참조": "cc, carbon copy, 참고",
+  "합의": "concurrence, 협의",
+  "상신": "submit, 제출, 기안",
+  "결재선": "approval line, 결재경로",
+  "임시저장": "draft save, 저장",
+  "첨부": "attachment, 파일첨부",
+  "권한": "permission, role, 역할",
+  "사용자": "user, 직원, 담당자",
+  "관리자": "admin, administrator, 시스템관리자",
+  "시스템": "system, 플랫폼, 서비스",
+  "오류": "error, 장애, 에러, fault",
+  "로그": "log, 이력, 기록",
+  "배포": "deployment, release, 릴리즈",
+  "설정": "config, configuration, 환경설정"
+}

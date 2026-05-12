@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>USM · 사용자매뉴얼 v1</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+<style>
+  .step-card {
+    border: 1px solid var(--line);
+    background: #fff;
+    padding: 14px;
+    margin: 10px 0;
+    display: grid;
+    grid-template-columns: 40px 1fr 200px;
+    gap: 14px;
+    align-items: start;
+  }
+  .step-card .num-big {
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+  }
+  .step-card .shot {
+    border: 1px dashed var(--line);
+    min-height: 110px;
+    background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(0,0,0,0.025) 8px 9px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 10.5px;
+  }
+  .step-card h4 { margin: 0 0 4px; font-size: 13px; }
+  .step-card p { margin: 0 0 6px; font-size: 12px; color: var(--ink-2); }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>사용자매뉴얼</b> / v1</span>
+  <span class="spacer"></span>
+  <span class="status draft">Draft</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+  <div class="cf-breadcrumb"><span>Space</span><span>산출물 템플릿</span><span>사용자</span><span>사용자매뉴얼</span><span>v1 · Step-by-Step</span></div>
+  <h1 class="cf-title"><span class="doc-id">USM</span>사용자매뉴얼 <span style="font-size:13px; font-weight:400; color:var(--muted);">— User Manual (v1 · Step-by-Step)</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">담당자</div><div class="v">교육팀</div></div>
+    <div class="m"><div class="k">버전</div><div class="v">v1.0</div></div>
+    <div class="m"><div class="k">상태</div><div class="v"><span class="status draft">Draft</span></div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">대상</div><div class="v">전 임직원</div></div>
+    <div class="m"><div class="k">버전 Variation</div><div class="v"><a href="10-user-manual-v2.html">v2</a> · <a href="10-user-manual-v3.html">v3</a></div></div>
+  </div>
+
+  <div style="margin:0 0 16px;">
+    <span class="tag">#audience:enduser</span><span class="tag">#how-to</span>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>목차</h4>
+      <ol>
+        <li>시작하기</li>
+        <li>기안문 작성하기</li>
+        <li>결재 처리하기</li>
+        <li>모바일에서 사용하기</li>
+        <li>문제해결</li>
+        <li>FAQ · Glossary</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>시작하기</h2>
+      <div class="callout"><div class="t">전제</div>사내 SSO 계정으로 로그인할 수 있어야 합니다.</div>
+
+      <h2><span class="num">2.</span>기안문 작성하기</h2>
+
+      <div class="step-card">
+        <div class="num-big">1</div>
+        <div>
+          <h4>양식 선택하기</h4>
+          <p>상단 메뉴 [기안] → [신규] 을 누르고 사용할 양식을 선택합니다.</p>
+          <p class="small muted">※ 양식이 보이지 않으면 관리자에게 문의해 주세요.</p>
+        </div>
+        <div class="shot">[스크린샷 · 양식 선택]</div>
+      </div>
+
+      <div class="step-card">
+        <div class="num-big">2</div>
+        <div>
+          <h4>제목과 본문 작성</h4>
+          <p>제목은 80자 이내, 본문은 10자 이상 입력해 주세요. 30초마다 자동 저장됩니다.</p>
+        </div>
+        <div class="shot">[스크린샷 · 에디터]</div>
+      </div>
+
+      <div class="step-card">
+        <div class="num-big">3</div>
+        <div>
+          <h4>첨부파일 추가 (선택)</h4>
+          <p>파일을 드래그하거나 [+첨부] 버튼을 누릅니다. 최대 10MB, 5개까지 가능합니다.</p>
+        </div>
+        <div class="shot">[스크린샷 · 첨부]</div>
+      </div>
+
+      <div class="step-card">
+        <div class="num-big">4</div>
+        <div>
+          <h4>결재선 지정 후 상신</h4>
+          <p>[상신]을 누르고 결재자·합의자·참조자를 순서대로 선택합니다.</p>
+        </div>
+        <div class="shot">[스크린샷 · 결재선]</div>
+      </div>
+
+      <h2><span class="num">3.</span>결재 처리하기</h2>
+      <div class="step-card">
+        <div class="num-big">1</div>
+        <div>
+          <h4>받은 문서함 열기</h4>
+          <p>[결재함 → 받은 문서]에서 처리 대기 문서를 확인합니다.</p>
+        </div>
+        <div class="shot">[스크린샷 · 문서함]</div>
+      </div>
+      <div class="step-card">
+        <div class="num-big">2</div>
+        <div>
+          <h4>의견과 함께 처리</h4>
+          <p>[승인] / [반려] / [보류] 중 하나를 선택하고 의견을 남깁니다. (의견 미입력 시 "승인합니다." 자동 기입)</p>
+        </div>
+        <div class="shot">[스크린샷 · 결재 처리]</div>
+      </div>
+
+      <h2><span class="num">4.</span>모바일에서 사용하기</h2>
+      <div class="grid-2">
+        <div class="frame"><div class="fhead">iOS</div><div class="small">App Store "CompanyWork" 검색 → 설치 → SSO 로그인</div></div>
+        <div class="frame"><div class="fhead">Android</div><div class="small">Play Store 동일 방식</div></div>
+      </div>
+
+      <h2><span class="num">5.</span>문제해결</h2>
+      <table class="cf">
+        <thead><tr><th>증상</th><th>원인/해결</th></tr></thead>
+        <tbody>
+          <tr><td>로그인이 안 됩니다</td><td>SSO 세션 만료. 사내 포털에서 재로그인 후 재접속.</td></tr>
+          <tr><td>임시저장이 사라졌어요</td><td>30일 경과 시 자동 삭제됩니다. [휴지통]에서 복원 가능.</td></tr>
+          <tr><td>결재자가 목록에 없어요</td><td>HR 동기화 지연 (최대 24h). 총무팀 문의.</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">6.</span>FAQ · Glossary</h2>
+      <div class="frame"><b>Q. 반려된 문서를 수정해서 다시 보낼 수 있나요?</b><div class="small">A. 네, [재상신] 버튼으로 사유와 함께 수정 후 상신할 수 있습니다.</div></div>
+      <div class="frame"><b>Q. 전결이 뭔가요?</b><div class="small">A. 상위 결재자가 하위 결재를 대신 처리하는 권한입니다. (→ Glossary)</div></div>
+
+      <h3>Glossary</h3>
+      <table class="cf">
+        <thead><tr><th>용어</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>기안</td><td>문서를 작성하여 결재를 요청하는 행위</td></tr>
+          <tr><td>상신</td><td>작성된 문서를 결재자에게 전달하는 행위</td></tr>
+          <tr><td>전결</td><td>상위 결재자가 하위 결재를 대신 처리</td></tr>
+        </tbody>
+      </table>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div><h3>변경 이력</h3>
+      <table class="cf"><thead><tr><th>버전</th><th>일자</th><th>작성자</th><th>내용</th></tr></thead>
+      <tbody><tr><td>v1.0</td><td>2026-04-24</td><td>교육팀</td><td>초안</td></tr></tbody></table>
+    </div>
+    <div><h3>관련 페이지</h3>
+      <ul style="margin:0; padding-left:16px; font-size:12px;">
+        <li>SCR · 화면정의서</li><li>FUNC · 기능정의서</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>

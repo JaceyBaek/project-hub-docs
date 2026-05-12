@@ -58,7 +58,7 @@ Claude Desktop ──stdio──► python.exe server.py
 
 ```
 D:\03.project-hub\
-└── mcp_server\
+└── platform\services\mcp\
     ├── server.py          # MCP 서버 본체 — Tool 정의 및 핸들러
     ├── setup.py           # 새 PC 설치 자동화 스크립트
     ├── requirements.txt   # 의존 패키지 (mcp>=1.0.0)
@@ -102,14 +102,14 @@ cd project-hub
 ### 4-2. setup.py 실행 (1회)
 
 ```bash
-python mcp_server/setup.py
+python platform/services/mcp/setup.py
 ```
 
 실행 내용:
 
 | 단계 | 작업 |
 |---|---|
-| [1/3] 가상환경 생성 | `mcp_server/.venv` 생성 (이미 있으면 건너뜀) |
+| [1/3] 가상환경 생성 | `platform/services/mcp/.venv` 생성 (이미 있으면 건너뜀) |
 | [2/3] 패키지 설치 | `mcp>=1.0.0` 및 의존 패키지 설치 |
 | [3/3] MCP 서버 등록 | Claude Desktop 설정 파일에 `project-hub` 서버 자동 등록 |
 
@@ -121,7 +121,7 @@ python mcp_server/setup.py
 =======================================================
 
 [1/3] 가상환경 생성
-  완료: D:\03.project-hub\mcp_server\.venv
+  완료: D:\03.project-hub\platform\services\mcp\.venv
 
 [2/3] 패키지 설치
   완료
@@ -130,8 +130,8 @@ python mcp_server/setup.py
   기존 설정 파일 발견: C:\Users\{계정}\AppData\Local\Packages\Claude_xxx\...
   완료
 
-  command : D:\03.project-hub\mcp_server\.venv\Scripts\python.exe
-  args    : D:\03.project-hub\mcp_server\server.py
+  command : D:\03.project-hub\platform\services\mcp\.venv\Scripts\python.exe
+  args    : D:\03.project-hub\platform\services\mcp\server.py
   config  : C:\Users\{계정}\AppData\Local\Packages\Claude_xxx\...
 
 =======================================================
@@ -217,8 +217,7 @@ Claude Desktop 대화창에 입력:
 | `wiki_mbo_builder` | `python main.py --auto` | APScheduler 없이 1회 실행 |
 | `google_drive_backup` | `python main.py` | 단발 실행 |
 
-> `gmail_cleaner`: Google Apps Script 기반으로 직접 실행 불가 (제외)
-> `daily_briefing`: 개발 진행 중 (추후 추가 예정)
+> `gmail_cleaner`: 자체 MCP 서버를 가지므로 별도 등록 (제외)
 
 ---
 
@@ -298,7 +297,7 @@ C:\Users\{계정}\AppData\Roaming\Claude\logs\mcp-server-project-hub.log
 
 새 개발 프로젝트가 추가됐을 때 실행 Tool 화이트리스트에 등록하는 방법입니다.
 
-`mcp_server/server.py`의 `PROJECT_RUN_CONFIG` 딕셔너리에 항목을 추가합니다.
+`platform/services/mcp/server.py`의 `PROJECT_RUN_CONFIG` 딕셔너리에 항목을 추가합니다.
 
 ```python
 PROJECT_RUN_CONFIG: dict[str, dict] = {
@@ -328,7 +327,7 @@ PROJECT_RUN_CONFIG: dict[str, dict] = {
 → 열린 파일에 `"project-hub"` 항목이 있는지 확인
 
 **해결:**
-1. `python mcp_server/setup.py` 재실행
+1. `python platform/services/mcp/setup.py` 재실행
 2. Claude Desktop 완전 종료(트레이 포함) 후 재시작
 
 ---
@@ -341,8 +340,8 @@ PROJECT_RUN_CONFIG: dict[str, dict] = {
 
 | 오류 메시지 | 원인 | 해결 |
 |---|---|---|
-| `python.exe not found` | venv 미생성 | `python mcp_server/setup.py` 실행 |
-| `No module named 'mcp'` | 패키지 미설치 | `mcp_server/.venv/Scripts/pip install -r mcp_server/requirements.txt` |
+| `python.exe not found` | venv 미생성 | `python platform/services/mcp/setup.py` 실행 |
+| `No module named 'mcp'` | 패키지 미설치 | `platform/services/mcp/.venv/Scripts/pip install -r platform/services/mcp/requirements.txt` |
 | `FileNotFoundError: server.py` | 경로 불일치 | `claude_desktop_config.json`의 `args` 경로 확인 |
 
 ---
@@ -365,7 +364,7 @@ Windows 콘솔 인코딩(cp949) 문제입니다. PowerShell에서 실행하거�
 
 ```powershell
 $env:PYTHONIOENCODING = "utf-8"
-python mcp_server/setup.py
+python platform/services/mcp/setup.py
 ```
 
 ---

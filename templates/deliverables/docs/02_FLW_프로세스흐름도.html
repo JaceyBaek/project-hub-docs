@@ -4,232 +4,238 @@
 <meta charset="utf-8">
 <title>FLW · 프로세스흐름도</title>
 <link rel="stylesheet" href="../assets/wireframe.css">
-<style>
-  .swimlane {
-    display: grid;
-    grid-template-columns: 110px repeat(5, 1fr);
-    border: 1px solid var(--line);
-    background: #fff;
-  }
-  .swimlane .lane-head, .swimlane .step-head {
-    background: var(--bg-gray);
-    padding: 8px 10px;
-    font-size: 11px;
-    font-weight: 700;
-    border-bottom: 1px solid var(--line);
-    border-right: 1px solid var(--line-2);
-    letter-spacing: 0.02em;
-    text-align: center;
-  }
-  .swimlane .lane-head { text-align: left; }
-  .swimlane .cell {
-    border-right: 1px solid var(--line-2);
-    border-bottom: 1px solid var(--line-2);
-    padding: 14px 10px;
-    min-height: 90px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .swimlane .lane-name {
-    background: var(--bg-gray);
-    border-right: 1px solid var(--line);
-    font-weight: 700;
-    font-size: 11.5px;
-    padding: 14px 10px;
-    writing-mode: horizontal-tb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 90px;
-  }
-  .step {
-    border: 1.5px solid var(--ink-2);
-    background: #fff;
-    padding: 8px 10px;
-    font-size: 11px;
-    text-align: center;
-    position: relative;
-    min-width: 80%;
-  }
-  .step.decision {
-    transform: rotate(45deg);
-    width: 60px;
-    height: 60px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .step.decision > span { transform: rotate(-45deg); font-size: 10px; }
-  .step .id-mini {
-    position: absolute;
-    top: -10px;
-    right: -6px;
-    background: var(--ink);
-    color: #fff;
-    font-family: ui-monospace, monospace;
-    font-size: 9.5px;
-    padding: 1px 4px;
-  }
-  .arrow-h::after {
-    content: "→";
-    position: absolute;
-    right: -9px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--ink-2);
-    font-size: 14px;
-    z-index: 2;
-  }
-</style>
-</head>
-<body>
+<script src="../assets/doc-validator.js" defer></script>
 
-<div class="nav-bar">
+<meta name="project-id" content="EM2026">
+<meta name="doc-id" content="EM2026-FLW-2026">
+<meta name="doc-type" content="process-flow">
+<meta name="doc-name-ko" content="프로세스흐름도">
+<meta name="doc-name-en" content="Process Flow">
+<meta name="doc-version" content="v0.1">
+<meta name="doc-status" content="Draft">
+<meta name="doc-last-updated" content="2026-04-24">
+<meta name="doc-owner" content="홍길동 (BA)">
+<meta name="doc-epic" content="PRJ-2026-EM">
+<meta name="doc-tags" content="phase:analysis, module:core, domain:hr-approval, lang:ko">
+<meta name="doc-related" content="REQ, SCR, FUNC, ROLE">
+<meta name="doc-chunk-strategy" content="flow-node">
+<meta name="doc-exclude-from-training" content="false">
+<meta name="doc-embedding-hints" content="전자결재 표준 흐름·분기·예외 처리. 액터별 책임과 화면/기능 매핑.">
+<meta name="doc-primary-entities" content="기안, 상신, 결재, 합의, 반려, 회수, 대결">
+</head>
+<body data-min-chunks="6">
+
+<div class="nav-bar" data-ai-skip="true">
   <span class="brand">WIREFRAME</span>
   <span class="crumbs">산출물 템플릿 / <b>프로세스흐름도</b></span>
   <span class="spacer"></span>
-  <span class="status draft">Draft</span>
+  <span class="status draft">Template</span>
   <a class="back" href="../index.html">← Index</a>
 </div>
 
-<div class="cf-shell">
+<article class="cf-shell" data-project-id="EM2026" data-doc-id="EM2026-FLW-2026" data-doc-type="process-flow">
 
-  <div class="cf-breadcrumb"><span>Space</span><span>산출물 템플릿</span><span>설계</span><span>프로세스흐름도</span></div>
+  <div class="cf-breadcrumb" data-ai-skip="true"><span>Space</span><span>산출물 템플릿</span><span>분석</span><span>프로세스흐름도</span></div>
+
   <h1 class="cf-title"><span class="doc-id">FLW</span>프로세스흐름도 <span style="font-size:13px; font-weight:400; color:var(--muted);">— Process Flow</span></h1>
 
-  <div class="cf-meta">
-    <div class="m"><div class="k">담당자</div><div class="v">김기획 (BA)</div></div>
-    <div class="m"><div class="k">버전</div><div class="v">v0.1</div></div>
-    <div class="m"><div class="k">상태</div><div class="v"><span class="status draft">Draft</span></div></div>
-    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
-    <div class="m"><div class="k">프로세스 수</div><div class="v">3</div></div>
-    <div class="m"><div class="k">Confluence</div><div class="v mono small">/DOCS-TMPL/FLW</div></div>
+  <div class="guide-pointer" data-ai-skip="true">
+    <b>흐름 단위로 청크된다.</b> 각 흐름(<span class="mono">flow:###</span>)은 <b>표준 경로 + 분기 + 예외</b> 를 묶어 1청크로 학습된다.
+    노드 개별 디테일이 필요하면 <span class="mono">node:###</span> 으로 별도 청크.
+    <span class="marker-legend">
+      <span><span class="req-mark">REQ</span> 필수</span>
+      <span><span class="opt-mark">OPT</span> 선택</span>
+    </span>
   </div>
 
-  <div style="margin:0 0 16px;">
-    <span class="tag">#phase:design</span>
-    <span class="tag">#module:approval</span>
-    <span class="tag">#diagram:swimlane</span>
+  <div class="sum-checklist" data-ai-skip="true">
+    <div class="hd"><span>작성 점검 체크리스트</span><span class="small muted">필수 9</span></div>
+    <ul>
+      <li>메타바 6개 필드</li>
+      <li>분류 태그 3개 (#phase, #module, #domain)</li>
+      <li>액터(Actor) 최소 2명 — 역할/책임</li>
+      <li>흐름(Flow) 최소 1건 — 트리거/입력/출력/표준 경로</li>
+      <li>각 흐름에 분기(Branch) 최소 1건</li>
+      <li>예외(Exception) 최소 1건 — 발생 조건/복구</li>
+      <li>모든 흐름에 상위 REQ Trace</li>
+      <li>모든 흐름에 하향 SCR/FUNC Trace</li>
+      <li>AI 메타데이터 블록</li>
+    </ul>
   </div>
+
+  <section data-section-key="metadata" data-chunk="meta" aria-label="문서 메타">
+    <div class="cf-meta">
+      <div class="m"><div class="k">담당자</div><div class="v">홍길동 (BA)</div></div>
+      <div class="m"><div class="k">버전</div><div class="v">v0.1</div></div>
+      <div class="m"><div class="k">상태</div><div class="v"><span class="status draft">Draft</span></div></div>
+      <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+      <div class="m"><div class="k">관련 Epic</div><div class="v">PRJ-2026-EM</div></div>
+      <div class="m"><div class="k">Confluence</div><div class="v mono small">/DOCS-TMPL/FLW</div></div>
+    </div>
+    <div style="margin:0 0 16px;" data-tags="phase:analysis,module:core,domain:hr-approval">
+      <span class="tag">#phase:analysis</span>
+      <span class="tag">#module:core</span>
+      <span class="tag">#domain:hr-approval</span>
+    </div>
+  </section>
 
   <div class="cf-body">
-    <aside class="cf-toc">
+    <aside class="cf-toc" data-ai-skip="true">
       <h4>목차</h4>
       <ol>
         <li>개요</li>
-        <li>프로세스 목록</li>
-        <li>As-Is / To-Be</li>
-        <li>스윔레인 (Swimlane)</li>
-        <li>단계별 상세</li>
-        <li>예외/분기 처리</li>
+        <li>액터 정의</li>
+        <li>흐름 목록</li>
+        <li>표준 흐름 상세</li>
+        <li>예외 / 보상 흐름</li>
+        <li>AI 학습 메타데이터</li>
+        <li>작성 완료 검증표</li>
       </ol>
     </aside>
 
     <main class="cf-content">
 
-      <h2><span class="num">1.</span>개요</h2>
-      <p>업무 프로세스를 스윔레인 다이어그램과 단계별 상세로 정의한다. 각 단계는 <span class="mono">FLW-###</span> ID로 관리되며, 관련 화면(SCR) · 기능(FUNC)과 연결된다.</p>
+      <section data-section-key="overview" data-chunk="overview">
+        <h2 id="overview"><span class="num">1.</span>개요</h2>
+        <div class="field-hint" data-ai-skip="true">대상 시스템 흐름의 범위와 가독 규칙을 1~2문단으로.</div>
+        <p>본 문서는 <b>전자결재</b>의 핵심 비즈니스 프로세스를 서술한다. 각 흐름은 ID(<span class="mono">EM2026-FLW-###</span>)로 식별되며, 상위 요구사항(REQ)과 하향 화면(SCR)·기능(FUNC)에 양방향 추적된다.</p>
+      </section>
 
-      <h2><span class="num">2.</span>프로세스 목록</h2>
-      <table class="cf">
-        <thead><tr><th class="id">ID</th><th>프로세스명</th><th>트리거</th><th>완료 조건</th><th>Trace</th></tr></thead>
-        <tbody>
-          <tr><td class="id">FLW-001</td><td>기안 및 결재</td><td>기안자 상신</td><td>최종 승인 또는 반려</td><td><span class="id-chip muted">REQ-F01</span><span class="id-chip">SCR-001~003</span></td></tr>
-          <tr><td class="id">FLW-002</td><td>모바일 결재</td><td>푸시 알림 수신</td><td>결재 처리 완료</td><td><span class="id-chip muted">REQ-B02</span><span class="id-chip">SCR-010</span></td></tr>
-          <tr><td class="id">FLW-003</td><td>전결/대결 위임</td><td>결재자 부재 설정</td><td>위임자 처리 완료</td><td><span class="id-chip muted">REQ-F05</span><span class="id-chip">ROLE-003</span></td></tr>
-        </tbody>
-      </table>
-
-      <h2><span class="num">3.</span>As-Is / To-Be</h2>
-      <div class="grid-2">
-        <div class="frame">
-          <div class="fhead">AS-IS (종이 결재)</div>
-          <div class="stack-sm">
-            <div class="ph-line w-80"></div><div class="ph-line w-60"></div><div class="ph-line w-70"></div>
-          </div>
-          <div class="small muted" style="margin-top:6px;">평균 처리 시간: 3.2일</div>
+      <section data-section-key="actors" data-chunk="actors">
+        <h2 id="actors"><span class="num">2.</span>액터 정의</h2>
+        <div class="field-hint" data-ai-skip="true">시스템 외부에서 흐름을 트리거하거나 의사결정하는 주체. 최소 2명.</div>
+        <div class="grid-3">
+          <div class="frame" data-chunk="actor:drafter"><div class="fhead">기안자 (Drafter)</div><div class="small">문서 작성·상신·회수. 자신이 작성한 문서만.</div></div>
+          <div class="frame" data-chunk="actor:approver"><div class="fhead">결재자 (Approver)</div><div class="small">승인·반려·보류. 결재선상의 문서만.</div></div>
+          <div class="frame" data-chunk="actor:delegate"><div class="fhead">대결자 (Delegate)</div><div class="small">결재자 부재 시 위임 권한으로 결재.</div></div>
         </div>
-        <div class="frame">
-          <div class="fhead">TO-BE (전자결재)</div>
-          <div class="stack-sm">
-            <div class="ph-line w-90"></div><div class="ph-line w-70"></div><div class="ph-line w-80"></div>
-          </div>
-          <div class="small muted" style="margin-top:6px;">목표 처리 시간: 1.5일</div>
+      </section>
+
+      <section data-section-key="flow-index" data-chunk="flow-index">
+        <h2 id="flow-index"><span class="num">3.</span>흐름 목록</h2>
+        <div class="field-hint" data-ai-skip="true">전체 흐름 카탈로그. 본 문서가 다루는 흐름은 모두 여기에.</div>
+        <table class="cf" data-table-key="flow-index">
+          <colgroup><col style="width:120px"><col style="width:200px"><col><col style="width:80px"><col style="width:160px"></colgroup>
+          <thead><tr><th class="id">ID</th><th>흐름명</th><th>설명</th><th>중요도</th><th>상위 REQ</th></tr></thead>
+          <tbody>
+            <tr data-item-id="EM2026-FLW-001" data-priority="High" data-trace-up="EM2026-REQ-B01,EM2026-REQ-F01,EM2026-REQ-F02,EM2026-REQ-F03"><td class="id">EM2026-FLW-001</td><td>기안→결재 표준 흐름</td><td>기안문 작성부터 최종 승인까지의 메인 패스</td><td>High</td><td><span class="id-chip up">↑ REQ-B01</span></td></tr>
+            <tr data-item-id="EM2026-FLW-002" data-priority="High" data-trace-up="EM2026-REQ-B02"><td class="id">EM2026-FLW-002</td><td>모바일 결재</td><td>외부망 모바일에서 결재 처리</td><td>High</td><td><span class="id-chip up">↑ REQ-B02</span></td></tr>
+            <tr data-item-id="EM2026-FLW-003" data-priority="Medium" data-trace-up="EM2026-REQ-F05"><td class="id">EM2026-FLW-003</td><td>대결 / 위임</td><td>부재 결재자 대신 위임자가 처리</td><td>Medium</td><td><span class="id-chip up">↑ REQ-F05</span></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section data-section-key="flow-detail" data-chunk="flow-detail">
+        <h2 id="flow-detail"><span class="num">4.</span>표준 흐름 상세</h2>
+        <div class="field-hint" data-ai-skip="true">각 흐름은 <b>트리거 / 입력 / 표준 경로 / 분기 / 출력</b> 5요소.</div>
+
+        <div class="frame" data-chunk="flow:EM2026-FLW-001" data-item-id="EM2026-FLW-001" data-trace-up="EM2026-REQ-B01" data-trace-down="EM2026-SCR-001,EM2026-SCR-002,EM2026-SCR-003,EM2026-FUNC-001,EM2026-FUNC-002,EM2026-FUNC-003">
+          <div class="fhead">FLW-001 · 기안→결재 표준 흐름</div>
+          <table class="cf" style="margin-top:8px;">
+            <colgroup><col style="width:120px"><col></colgroup>
+            <tbody>
+              <tr><td class="id">트리거</td><td>기안자가 결재 양식 선택 후 "상신" 클릭</td></tr>
+              <tr><td class="id">입력</td><td>제목·본문·첨부·결재선·합의자·참조자</td></tr>
+              <tr><td class="id">출력</td><td>완결된 결재 문서 + 감사 로그 1건</td></tr>
+              <tr><td class="id">SLA</td><td>상신 → 1차 결재 알림 ≤ 30초</td></tr>
+            </tbody>
+          </table>
+
+          <h4 style="margin:16px 0 6px;">표준 경로</h4>
+          <ol class="step-list">
+            <li data-chunk="node:EM2026-FLW-001-S01"><b>S01</b> 기안문 작성 (양식·본문) — <span class="mono">SCR-001</span></li>
+            <li data-chunk="node:EM2026-FLW-001-S02"><b>S02</b> 결재선 지정 — <span class="mono">SCR-002</span> / <span class="mono">FUNC-002</span></li>
+            <li data-chunk="node:EM2026-FLW-001-S03"><b>S03</b> 상신 (POST /approvals) — <span class="mono">FUNC-001</span></li>
+            <li data-chunk="node:EM2026-FLW-001-S04"><b>S04</b> 결재자 알림 발송 (Push/메일)</li>
+            <li data-chunk="node:EM2026-FLW-001-S05"><b>S05</b> 결재자 검토 후 승인/반려 — <span class="mono">SCR-003</span> / <span class="mono">FUNC-003</span></li>
+            <li data-chunk="node:EM2026-FLW-001-S06"><b>S06</b> 다음 결재자로 이동 (반복)</li>
+            <li data-chunk="node:EM2026-FLW-001-S07"><b>S07</b> 최종 승인 → 완결 + 감사 로그</li>
+          </ol>
+
+          <h4 style="margin:16px 0 6px;">분기</h4>
+          <ul>
+            <li data-chunk="branch:EM2026-FLW-001-B01">S05에서 <b>반려</b> → 기안자에게 회신, 수정 후 재상신 가능</li>
+            <li data-chunk="branch:EM2026-FLW-001-B02">S05에서 <b>합의자</b> 단계인 경우 결재선 영향 없이 의견만 회신</li>
+          </ul>
         </div>
-      </div>
 
-      <h2><span class="num">4.</span>스윔레인 (FLW-001 기안 및 결재)</h2>
-      <div class="swimlane">
-        <div class="lane-head">Lane \ Step</div>
-        <div class="step-head">1. 기안</div>
-        <div class="step-head">2. 상신</div>
-        <div class="step-head">3. 결재</div>
-        <div class="step-head">4. 분기</div>
-        <div class="step-head">5. 완료</div>
+        <div class="frame" data-chunk="flow:EM2026-FLW-002" data-item-id="EM2026-FLW-002" data-trace-up="EM2026-REQ-B02" data-trace-down="EM2026-SCR-010,EM2026-FUNC-020">
+          <div class="fhead">FLW-002 · 모바일 결재</div>
+          <p class="small">FLW-001과 동일하되, 결재자 단계만 모바일 앱에서 수행. 첨부 파일은 미리보기로 제한.</p>
+          <ol class="step-list">
+            <li data-chunk="node:EM2026-FLW-002-S01"><b>S01</b> 모바일 푸시 알림 수신</li>
+            <li data-chunk="node:EM2026-FLW-002-S02"><b>S02</b> 앱 내 결재 화면 — <span class="mono">SCR-010</span></li>
+            <li data-chunk="node:EM2026-FLW-002-S03"><b>S03</b> 지문/PIN 인증 후 처리 — <span class="mono">FUNC-020</span></li>
+          </ol>
+        </div>
+      </section>
 
-        <div class="lane-name">기안자</div>
-        <div class="cell"><div class="step arrow-h">기안문 작성<span class="id-mini">FLW-001-1</span></div></div>
-        <div class="cell"><div class="step">상신<span class="id-mini">FLW-001-2</span></div></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"><div class="step">결과 확인<span class="id-mini">FLW-001-5</span></div></div>
+      <section data-section-key="exceptions" data-chunk="exceptions">
+        <h2 id="exceptions"><span class="num">5.</span>예외 / 보상 흐름</h2>
+        <div class="field-hint" data-ai-skip="true">표준 경로에서 벗어난 케이스. 발생 조건과 복구 절차 명시.</div>
 
-        <div class="lane-name">결재자</div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"><div class="step arrow-h">승인/반려<span class="id-mini">FLW-001-3</span></div></div>
-        <div class="cell"><div class="step decision"><span>반려?</span><span class="id-mini" style="transform:rotate(-45deg);">FLW-001-4</span></div></div>
-        <div class="cell"></div>
+        <div class="callout" data-chunk="exception:EM2026-FLW-001-E01" data-item-id="EM2026-FLW-001-E01" data-trace-up="EM2026-FLW-001">
+          <div class="t">Exception · E01 — 결재자 부재</div>
+          <b>발생.</b> S05 단계에서 결재자가 휴직/퇴사 상태 →
+          <b>처리.</b> 시스템이 대결 규칙(ROLE-003) 자동 적용 → 대결자에게 라우팅.
+          <b>알림.</b> 기안자에게 라우팅 사실 통지.
+        </div>
+        <div class="callout" data-chunk="exception:EM2026-FLW-001-E02" data-item-id="EM2026-FLW-001-E02" data-trace-up="EM2026-FLW-001">
+          <div class="t">Exception · E02 — 회수</div>
+          <b>발생.</b> S04~S06 사이 기안자가 "회수" 클릭 →
+          <b>처리.</b> 진행 중인 단계 취소, 임시저장 상태로 복귀.
+          <b>제약.</b> 1단계라도 승인 완료 시 회수 불가.
+        </div>
+      </section>
 
-        <div class="lane-name">시스템</div>
-        <div class="cell"><div class="step" style="border-style:dashed;">양식 제공</div></div>
-        <div class="cell"><div class="step" style="border-style:dashed;">알림 발송</div></div>
-        <div class="cell"><div class="step" style="border-style:dashed;">이력 저장</div></div>
-        <div class="cell"><div class="step" style="border-style:dashed;">라우팅</div></div>
-        <div class="cell"><div class="step" style="border-style:dashed;">문서 종결</div></div>
-      </div>
+      <section data-section-key="ai-metadata" data-chunk="ai-meta">
+        <h2 id="ai-meta"><span class="num">6.</span>AI 학습 메타데이터</h2>
+        <div class="ai-meta"><span class="k">project_id:</span>    EM2026
+<span class="k">doc_id:</span>        EM2026-FLW-2026
+<span class="k">version:</span>       v0.1
+<span class="k">tags:</span>          ["phase:analysis", "module:core", "domain:hr-approval"]
+<span class="k">primary_entities:</span> ["기안", "상신", "결재", "합의", "반려", "회수", "대결"]
+<span class="k">embedding_hints:</span>
+  - "전자결재 표준 흐름과 분기, 예외 케이스 정의"
+  - "각 노드는 SCR/FUNC와 양방향 추적된다"
+<span class="k">related_docs:</span>  ["REQ-B01..B03", "REQ-F01..F05", "SCR-001..010", "FUNC-001..020"]
+<span class="k">exclude_from_training:</span> false
+<span class="k">chunk_strategy:</span> "flow-node + branch + exception"
+</div>
+      </section>
 
-      <h2><span class="num">5.</span>단계별 상세</h2>
-      <table class="cf">
-        <thead><tr><th class="id">ID</th><th>단계</th><th>담당</th><th>입력</th><th>처리</th><th>출력</th><th>연결 화면/기능</th></tr></thead>
-        <tbody>
-          <tr><td class="id">FLW-001-1</td><td>기안문 작성</td><td>기안자</td><td>양식, 첨부파일</td><td>본문 작성·임시저장</td><td>Draft 문서</td><td><span class="id-chip">SCR-001</span><span class="id-chip">FUNC-001</span></td></tr>
-          <tr><td class="id">FLW-001-2</td><td>상신</td><td>기안자</td><td>Draft 문서</td><td>결재선 지정·상신</td><td>Pending 문서</td><td><span class="id-chip">SCR-002</span><span class="id-chip">FUNC-002</span></td></tr>
-          <tr><td class="id">FLW-001-3</td><td>결재</td><td>결재자</td><td>Pending 문서</td><td>승인/반려/보류</td><td>상태 업데이트</td><td><span class="id-chip">SCR-003</span><span class="id-chip">FUNC-003</span></td></tr>
-          <tr><td class="id">FLW-001-4</td><td>분기</td><td>시스템</td><td>결재 결과</td><td>다음 결재자 호출 / 반려 처리</td><td>라우팅 결과</td><td><span class="id-chip">FUNC-004</span></td></tr>
-          <tr><td class="id">FLW-001-5</td><td>결과 확인</td><td>기안자</td><td>종결 문서</td><td>열람·다운로드</td><td>보관</td><td><span class="id-chip">SCR-004</span></td></tr>
-        </tbody>
-      </table>
-
-      <h2><span class="num">6.</span>예외/분기 처리</h2>
-      <div class="callout"><div class="t">Exception</div>결재자 부재 시 3일 경과 후 자동으로 대결자에게 전달 (→ FLW-003)</div>
-      <div class="callout"><div class="t">Exception</div>반려 시 기안자에게 사유와 함께 반환, 재상신 시 새 버전으로 관리</div>
+      <section data-section-key="validation-checklist" data-ai-skip="true">
+        <h2 id="validation"><span class="num">7.</span>작성 완료 검증표 <span data-validate-summary class="small" style="font-weight:400; margin-left:8px;">계산 중…</span></h2>
+        <table class="cf val-table">
+          <colgroup><col style="width:50px"><col style="width:160px"><col><col style="width:90px"><col style="width:140px"></colgroup>
+          <thead><tr><th>#</th><th>점검 항목</th><th>기대</th><th>구분</th><th>결과</th></tr></thead>
+          <tbody>
+            <tr data-validate-rule="meta-bar"><td>1</td><td>메타바</td><td>6개 필드</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="tags"><td>2</td><td>분류 태그</td><td>#phase, #module, #domain</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="flw-actors"><td>3</td><td>액터</td><td>≥ 2</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="flw-min-flows"><td>4</td><td>흐름</td><td>flow:* ≥ 1</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="flw-exception-min1"><td>5</td><td>예외</td><td>exception:* ≥ 1</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="trace-up-required"><td>6</td><td>상위 Trace</td><td>모든 항목 → REQ</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="trace-required"><td>7</td><td>Trace 존재</td><td>전건 trace</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="ai-metadata"><td>8</td><td>AI 메타데이터</td><td>tags·hints·exclude</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="id-format"><td>9</td><td>ID 규칙</td><td>중복 없음, zero-pad</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="project-id-prefix"><td>10</td><td>Project ID prefix</td><td>모든 ID → {PROJECT}-</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+          </tbody>
+        </table>
+      </section>
 
     </main>
   </div>
 
-  <div class="cf-footer">
+  <div class="cf-footer" data-ai-skip="true">
     <div>
       <h3>변경 이력</h3>
-      <table class="cf">
-        <thead><tr><th>버전</th><th>일자</th><th>작성자</th><th>변경내용</th></tr></thead>
-        <tbody><tr><td>v0.1</td><td>2026-04-24</td><td>김기획</td><td>초안</td></tr></tbody>
-      </table>
+      <table class="cf"><thead><tr><th style="width:80px">버전</th><th style="width:100px">일자</th><th style="width:90px">작성자</th><th>변경내용</th></tr></thead>
+      <tbody><tr><td>v0.1</td><td>2026-04-24</td><td>홍길동</td><td>초안 작성</td></tr></tbody></table>
     </div>
-    <div>
-      <h3>관련 페이지</h3>
-      <ul style="margin:0; padding-left:16px; font-size:12px;">
-        <li>REQ · 요구사항정의서</li>
-        <li>SCR · 화면정의서</li>
-        <li>FUNC · 기능정의서</li>
-        <li>ITS · 통합테스트시나리오</li>
-      </ul>
-    </div>
+    <div><h3>관련 페이지</h3><ul style="margin:0; padding-left:16px; font-size:12px;"><li>REQ · 요구사항정의서</li><li>SCR · 화면정의서</li><li>FUNC · 기능정의서</li><li>ROLE · 권한정의서</li></ul></div>
   </div>
 
-</div>
+</article>
 </body>
 </html>

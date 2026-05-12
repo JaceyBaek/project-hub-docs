@@ -548,8 +548,29 @@ table.cf tr:hover td { background: #fbfbfb; }
   margin-left: auto;
 }
 
-/* print / standalone tweaks */
+/* ===========================================================
+   Print CSS — PDF 출력
+   =========================================================== */
 @media print {
-  .nav-bar { display: none; }
+  .nav-bar,
+  .cf-breadcrumb,
+  .cf-toc,
+  .cf-footer,
+  .guide-pointer,
+  .sum-checklist,
+  .field-hint,
+  [data-ai-skip="true"] { display: none !important; }
+
   body { background: #fff; }
+  .cf-shell { box-shadow: none; padding: 0; max-width: none; border: none; }
+  .cf-body { display: block; }
+  .cf-content { padding: 0; }
+
+  tr, .frame, .callout { page-break-inside: avoid; }
+  h2, h3 { page-break-after: avoid; }
+
+  a[href]::after { content: " (" attr(href) ")"; font-size: 10px; color: #666; }
+  a[href^="#"]::after { content: ""; }
+
+  @page { margin: 18mm 16mm; }
 }

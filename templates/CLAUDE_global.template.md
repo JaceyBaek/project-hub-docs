@@ -65,8 +65,8 @@ project-hub의 통합 비서로 플랫폼 관리와 프로젝트 내부 협업�
   - 날짜: `datetime.now().strftime("%Y%m%d")` 사용 (하드코딩 금지)
   - 동일 날짜 수정: `_v1`, `_v2` suffix / 날짜 바뀌면 버전 리셋
   - 구버전: `archive/`로 이동
-- **템플릿 위치:** project-hub `templates/deliverables/` 참조
-- **Confluence 게시:** `templates/deliverables/DEPLOYMENT.md` §4 참조
+- **템플릿 위치:** project-hub `platform/templates/deliverables/` 참조
+- **Confluence 게시:** `platform/templates/deliverables/DEPLOYMENT.md` §4 참조
   - 산출물 페이지: `423870940` 하위
   - 위키 게시 시 최신 버전만 유지
 

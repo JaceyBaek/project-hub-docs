@@ -2,150 +2,157 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>CFG · 설정가이드 v1</title>
+<title>CFG · 설정가이드</title>
 <link rel="stylesheet" href="../assets/wireframe.css">
-</head>
-<body>
+<script src="../assets/doc-validator.js" defer></script>
 
-<div class="nav-bar">
+<meta name="project-id" content="EM2026">
+<meta name="doc-id" content="EM2026-CFG-2026">
+<meta name="doc-type" content="config-guide">
+<meta name="doc-name-ko" content="설정가이드">
+<meta name="doc-name-en" content="Configuration Guide">
+<meta name="doc-version" content="v0.1">
+<meta name="doc-status" content="Draft">
+<meta name="doc-last-updated" content="2026-04-24">
+<meta name="doc-owner" content="홍길동 (Ops)">
+<meta name="doc-epic" content="PRJ-2026-EM">
+<meta name="doc-tags" content="phase:operate, module:platform, domain:hr-approval, lang:ko">
+<meta name="doc-related" content="ARC, OPM">
+<meta name="doc-chunk-strategy" content="config-key-row">
+<meta name="doc-exclude-from-training" content="false">
+<meta name="doc-embedding-hints" content="환경 변수와 정책 키. 기본값/허용값/변경 영향.">
+<meta name="doc-primary-entities" content="환경변수, 정책 키, 비밀 키 회전">
+</head>
+<body data-min-chunks="2">
+
+<div class="nav-bar" data-ai-skip="true">
   <span class="brand">WIREFRAME</span>
-  <span class="crumbs">산출물 템플릿 / <b>설정가이드</b> / v1</span>
-  <span class="spacer"></span>
-  <span class="status draft">Draft</span>
+  <span class="crumbs">산출물 템플릿 / <b>설정가이드</b></span>
+  <span class="spacer"></span><span class="status draft">Template</span>
   <a class="back" href="../index.html">← Index</a>
 </div>
 
-<div class="cf-shell">
-  <div class="cf-breadcrumb"><span>Space</span><span>산출물 템플릿</span><span>운영</span><span>설정가이드</span><span>v1 · Reference</span></div>
-  <h1 class="cf-title"><span class="doc-id">CFG</span>설정가이드 <span style="font-size:13px; font-weight:400; color:var(--muted);">— Configuration Guide (v1 · Reference)</span></h1>
+<article class="cf-shell" data-project-id="EM2026" data-doc-id="EM2026-CFG-2026" data-doc-type="config-guide">
 
-  <div class="cf-meta">
-    <div class="m"><div class="k">담당자</div><div class="v">SRE팀</div></div>
-    <div class="m"><div class="k">버전</div><div class="v">v1.0</div></div>
-    <div class="m"><div class="k">상태</div><div class="v"><span class="status draft">Draft</span></div></div>
-    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
-    <div class="m"><div class="k">환경</div><div class="v">DEV · STG · PRD</div></div>
-    <div class="m"><div class="k">버전 Variation</div><div class="v"><a href="11-config-guide-v2.html">v2</a> · <a href="11-config-guide-v3.html">v3</a></div></div>
+  <div class="cf-breadcrumb" data-ai-skip="true"><span>Space</span><span>산출물 템플릿</span><span>운영</span><span>설정가이드</span></div>
+  <h1 class="cf-title"><span class="doc-id">CFG</span>설정가이드 <span style="font-size:13px; font-weight:400; color:var(--muted);">— Configuration Guide</span></h1>
+
+  <div class="guide-pointer" data-ai-skip="true"><b>설정 키 단위 행 청크</b>(<span class="mono">config:key.path</span>). 각 행은 키/기본값/허용값/영향 범위 4 필드.</div>
+
+  <div class="sum-checklist" data-ai-skip="true">
+    <div class="hd"><span>작성 점검 체크리스트</span><span class="small muted">필수 7</span></div>
+    <ul><li>메타바 6개</li><li>분류 태그 3개</li><li>환경변수 ≥ 5건</li><li>정책 키 ≥ 3건</li><li>비밀 키 회전 정책</li><li>변경 시 재시작 영향</li><li>AI 메타데이터</li></ul>
   </div>
 
-  <div style="margin:0 0 16px;">
-    <span class="tag">#config</span><span class="tag">#environment</span>
-  </div>
+  <section data-section-key="metadata" data-chunk="meta">
+    <div class="cf-meta">
+      <div class="m"><div class="k">담당자</div><div class="v">홍길동 (Ops)</div></div>
+      <div class="m"><div class="k">버전</div><div class="v">v0.1</div></div>
+      <div class="m"><div class="k">상태</div><div class="v"><span class="status draft">Draft</span></div></div>
+      <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+      <div class="m"><div class="k">관련 Epic</div><div class="v">PRJ-2026-EM</div></div>
+      <div class="m"><div class="k">Confluence</div><div class="v mono small">/DOCS-TMPL/CFG</div></div>
+    </div>
+    <div style="margin:0 0 16px;" data-tags="phase:operate,module:platform,domain:hr-approval">
+      <span class="tag">#phase:operate</span><span class="tag">#module:platform</span><span class="tag">#domain:hr-approval</span>
+    </div>
+  </section>
 
   <div class="cf-body">
-    <aside class="cf-toc">
-      <h4>목차</h4>
-      <ol>
-        <li>개요 · 환경</li>
-        <li>환경변수</li>
-        <li>시스템 파라미터</li>
-        <li>외부 연계 설정</li>
-        <li>설치/초기 세팅</li>
-        <li>체크리스트</li>
-      </ol>
-    </aside>
+    <aside class="cf-toc" data-ai-skip="true"><h4>목차</h4><ol><li>환경 변수</li><li>정책 키</li><li>비밀 회전</li><li>적용 절차</li><li>AI 메타데이터</li><li>검증표</li></ol></aside>
 
     <main class="cf-content">
+      <section data-section-key="env-vars" data-chunk="env-vars">
+        <h2 id="env"><span class="num">1.</span>환경 변수</h2>
+        <table class="cf">
+          <colgroup><col style="width:240px"><col style="width:140px"><col style="width:140px"><col></colgroup>
+          <thead><tr><th>키</th><th>기본값</th><th>허용값</th><th>설명 / 변경 영향</th></tr></thead>
+          <tbody>
+            <tr data-item-id="EM2026-CFG-001" data-chunk="config:APP_ENV"><td><code>APP_ENV</code></td><td>prod</td><td>dev / qa / prod</td><td>로깅 레벨·기본 정책 분기. 재시작 필요.</td></tr>
+            <tr data-item-id="EM2026-CFG-002" data-chunk="config:DB_URL"><td><code>DB_URL</code></td><td>—</td><td>JDBC URL</td><td>RDS 접속 정보. 재시작 필요. 비밀로 분리(SSM).</td></tr>
+            <tr data-item-id="EM2026-CFG-003" data-chunk="config:KAFKA_BROKERS"><td><code>KAFKA_BROKERS</code></td><td>—</td><td>host:port,…</td><td>3개 broker. 재시작 필요.</td></tr>
+            <tr data-item-id="EM2026-CFG-004" data-chunk="config:S3_BUCKET"><td><code>S3_BUCKET</code></td><td>em-approval-prod</td><td>버킷명</td><td>첨부 저장소. KMS 키와 함께 변경.</td></tr>
+            <tr data-item-id="EM2026-CFG-005" data-chunk="config:OIDC_ISSUER"><td><code>OIDC_ISSUER</code></td><td>—</td><td>URL</td><td>Azure AD tenant. 재시작 필요.</td></tr>
+            <tr data-item-id="EM2026-CFG-006" data-chunk="config:LOG_LEVEL"><td><code>LOG_LEVEL</code></td><td>INFO</td><td>DEBUG / INFO / WARN / ERROR</td><td>핫리로드 가능 (SIGHUP).</td></tr>
+          </tbody>
+        </table>
+      </section>
 
-      <h2><span class="num">1.</span>개요 · 환경</h2>
-      <table class="cf">
-        <thead><tr><th>환경</th><th>URL</th><th>용도</th><th>Data</th></tr></thead>
-        <tbody>
-          <tr><td>DEV</td><td class="mono small">dev.company.local</td><td>개발</td><td>Mock</td></tr>
-          <tr><td>STG</td><td class="mono small">stg.company.local</td><td>QA/UAT</td><td>익명화</td></tr>
-          <tr><td>PRD</td><td class="mono small">work.company.com</td><td>운영</td><td>실데이터</td></tr>
-        </tbody>
-      </table>
+      <section data-section-key="policy-keys" data-chunk="policy-keys">
+        <h2 id="policy"><span class="num">2.</span>정책 키 (Admin Console)</h2>
+        <table class="cf">
+          <colgroup><col style="width:280px"><col style="width:160px"><col></colgroup>
+          <thead><tr><th>키</th><th>기본값</th><th>설명</th></tr></thead>
+          <tbody>
+            <tr data-item-id="EM2026-CFG-101" data-chunk="config:approval.bodyMaxBytes"><td><code>approval.bodyMaxBytes</code></td><td>51200</td><td>기안문 본문 최대 바이트</td></tr>
+            <tr data-item-id="EM2026-CFG-102" data-chunk="config:approval.attachmentMaxBytes"><td><code>approval.attachmentMaxBytes</code></td><td>20971520</td><td>첨부 최대 바이트 (20MB)</td></tr>
+            <tr data-item-id="EM2026-CFG-103" data-chunk="config:delegation.maxDays"><td><code>delegation.maxDays</code></td><td>30</td><td>위임 최대 기간(일)</td></tr>
+            <tr data-item-id="EM2026-CFG-104" data-chunk="config:delegation.excludeCategories"><td><code>delegation.excludeCategories</code></td><td>["HR","BUDGET","CONFIDENTIAL"]</td><td>위임 불가 카테고리</td></tr>
+            <tr data-item-id="EM2026-CFG-105" data-chunk="config:audit.retentionYears"><td><code>audit.retentionYears</code></td><td>5</td><td>감사 로그 보존</td></tr>
+          </tbody>
+        </table>
+      </section>
 
-      <h2><span class="num">2.</span>환경변수</h2>
-      <table class="cf">
-        <thead><tr><th>Key</th><th>타입</th><th>기본값</th><th>설명</th><th>변경 영향</th></tr></thead>
-        <tbody>
-          <tr><td class="mono small">DB_URL</td><td>string</td><td>-</td><td>PostgreSQL 접속 URL</td><td>재기동</td></tr>
-          <tr><td class="mono small">REDIS_URL</td><td>string</td><td>-</td><td>세션/캐시</td><td>재기동</td></tr>
-          <tr><td class="mono small">SSO_ISSUER</td><td>string</td><td>-</td><td>Okta OIDC Issuer</td><td>재기동</td></tr>
-          <tr><td class="mono small">MAX_UPLOAD_MB</td><td>int</td><td>10</td><td>첨부 최대 용량</td><td>Hot-reload</td></tr>
-          <tr><td class="mono small">FEATURE_MOBILE_PUSH</td><td>bool</td><td>true</td><td>모바일 푸시 토글</td><td>Hot-reload</td></tr>
-        </tbody>
-      </table>
+      <section data-section-key="secret-rotation" data-chunk="secrets">
+        <h2 id="secret"><span class="num">3.</span>비밀 키 회전</h2>
+        <table class="cf">
+          <colgroup><col style="width:200px"><col style="width:120px"><col></colgroup>
+          <thead><tr><th>대상</th><th>주기</th><th>절차</th></tr></thead>
+          <tbody>
+            <tr><td>DB 비밀번호</td><td>90일</td><td>SSM Parameter Store rotation → 앱 롤링 재시작</td></tr>
+            <tr><td>KMS 키 (S3)</td><td>1년</td><td>새 키 생성 → 이중 인증 후 환경변수 교체</td></tr>
+            <tr><td>OIDC client_secret</td><td>180일</td><td>Azure AD에서 신규 secret 발급 후 SSM 갱신</td></tr>
+          </tbody>
+        </table>
+        <div class="callout"><div class="t">⚠ 주의</div>비밀 값은 Confluence / Git에 직접 기록하지 않는다. 본 문서에는 키 경로만 표기.</div>
+      </section>
 
-      <h2><span class="num">3.</span>시스템 파라미터</h2>
-      <table class="cf">
-        <thead><tr><th>Key</th><th>값</th><th>의미</th><th>Trace</th></tr></thead>
-        <tbody>
-          <tr><td class="mono small">approval.line.max</td><td>10</td><td>결재선 최대 인원</td><td><span class="id-chip muted">REQ-F02</span></td></tr>
-          <tr><td class="mono small">draft.retention.days</td><td>30</td><td>임시저장 보존 기간</td><td><span class="id-chip muted">FUNC-001</span></td></tr>
-          <tr><td class="mono small">absence.autodelegate.days</td><td>3</td><td>부재 자동 대결 기준</td><td><span class="id-chip muted">FLW-003</span></td></tr>
-        </tbody>
-      </table>
+      <section data-section-key="apply-procedure" data-chunk="apply">
+        <h2 id="apply"><span class="num">4.</span>적용 절차</h2>
+        <ol class="step-list">
+          <li data-step="step"><b>1)</b> Stage 환경에서 변경 적용 (SSM/Admin Console)</li>
+          <li data-step="step"><b>2)</b> 회귀 테스트 (UTC/ITS 핵심 시나리오)</li>
+          <li data-step="step"><b>3)</b> Production 적용 — 핫리로드 가능 키는 SIGHUP, 그 외 롤링 재시작</li>
+          <li data-step="step"><b>4)</b> 변경 사항을 본 문서에 반영 후 PR</li>
+        </ol>
+      </section>
 
-      <h2><span class="num">4.</span>외부 연계 설정</h2>
-      <div class="grid-2">
-        <div class="frame">
-          <div class="fhead">SSO (Okta)</div>
-          <table class="cf">
-            <tbody>
-              <tr><th style="width:100px">Issuer</th><td class="mono small">https://company.okta.com</td></tr>
-              <tr><th>Client ID</th><td>ENV: <span class="mono small">SSO_CLIENT_ID</span></td></tr>
-              <tr><th>Redirect</th><td class="mono small">/auth/callback</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="frame">
-          <div class="fhead">HR System</div>
-          <table class="cf">
-            <tbody>
-              <tr><th style="width:100px">Endpoint</th><td class="mono small">https://hr.company.local/api</td></tr>
-              <tr><th>인증</th><td>API Key · IP Allowlist</td></tr>
-              <tr><th>주기</th><td>매일 01:00 (batch: sync-hr)</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <section data-section-key="ai-metadata" data-chunk="ai-meta">
+        <h2 id="ai-meta"><span class="num">5.</span>AI 학습 메타데이터</h2>
+        <div class="ai-meta"><span class="k">project_id:</span>    EM2026
+<span class="k">doc_id:</span>        EM2026-CFG-2026
+<span class="k">tags:</span>          ["phase:operate", "module:platform", "domain:hr-approval"]
+<span class="k">primary_entities:</span> ["환경변수", "정책 키", "비밀 회전"]
+<span class="k">embedding_hints:</span>
+  - "키별 기본값/허용값/영향"
+<span class="k">related_docs:</span>  ["ARC", "OPM"]
+<span class="k">chunk_strategy:</span> "config-key-row"
+</div>
+      </section>
 
-      <h2><span class="num">5.</span>설치/초기 세팅</h2>
-      <div class="frame">
-        <pre class="small mono" style="white-space:pre-wrap; margin:0;">
-# 1. 네임스페이스 생성
-kubectl create namespace approval-prd
-
-# 2. Secret 등록
-kubectl -n approval-prd create secret generic db \
-  --from-literal=url=$DB_URL
-
-# 3. Helm 배포
-helm upgrade --install approval ./charts/approval \
-  -f values.prd.yaml --namespace approval-prd
-        </pre>
-      </div>
-
-      <h2><span class="num">6.</span>체크리스트</h2>
-      <table class="cf">
-        <thead><tr><th style="width:30px">☐</th><th>항목</th><th>확인 방법</th></tr></thead>
-        <tbody>
-          <tr><td>☐</td><td>DB 커넥션 성공</td><td>/healthz → "db":"ok"</td></tr>
-          <tr><td>☐</td><td>SSO 로그인</td><td>테스트 계정으로 로그인</td></tr>
-          <tr><td>☐</td><td>HR 동기화 1회 실행</td><td>batch sync-hr 로그</td></tr>
-          <tr><td>☐</td><td>첨부 업로드 테스트</td><td>10MB 파일 1건</td></tr>
-          <tr><td>☐</td><td>모바일 Push 1건</td><td>테스트 발송</td></tr>
-          <tr><td>☐</td><td>Grafana Alert 연결</td><td>Slack 테스트 알림</td></tr>
-        </tbody>
-      </table>
-
+      <section data-section-key="validation-checklist" data-ai-skip="true">
+        <h2 id="validation"><span class="num">6.</span>작성 완료 검증표 <span data-validate-summary class="small" style="font-weight:400; margin-left:8px;">계산 중…</span></h2>
+        <table class="cf val-table">
+          <colgroup><col style="width:50px"><col style="width:160px"><col><col style="width:90px"><col style="width:140px"></colgroup>
+          <thead><tr><th>#</th><th>점검</th><th>기대</th><th>구분</th><th>결과</th></tr></thead>
+          <tbody>
+            <tr data-validate-rule="meta-bar"><td>1</td><td>메타바</td><td>6개</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="tags"><td>2</td><td>태그</td><td>3개</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="cfg-env-min"><td>3</td><td>환경변수</td><td>≥ 5</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="cfg-policy-min"><td>4</td><td>정책 키</td><td>≥ 3</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="ai-metadata"><td>5</td><td>AI 메타</td><td>3필드</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="id-format"><td>6</td><td>ID 규칙</td><td>중복 없음</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="project-id-prefix"><td>7</td><td>Project prefix</td><td>{PROJECT}-</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+          </tbody>
+        </table>
+      </section>
     </main>
   </div>
 
-  <div class="cf-footer">
-    <div><h3>변경 이력</h3>
-      <table class="cf"><thead><tr><th>버전</th><th>일자</th><th>작성자</th><th>내용</th></tr></thead>
-      <tbody><tr><td>v1.0</td><td>2026-04-24</td><td>SRE팀</td><td>초안</td></tr></tbody></table>
-    </div>
-    <div><h3>관련 페이지</h3>
-      <ul style="margin:0; padding-left:16px; font-size:12px;">
-        <li>ARC · 아키텍처</li><li>OPM · 운영자매뉴얼</li>
-      </ul>
-    </div>
+  <div class="cf-footer" data-ai-skip="true">
+    <div><h3>변경 이력</h3><table class="cf"><thead><tr><th style="width:80px">버전</th><th style="width:100px">일자</th><th style="width:90px">작성자</th><th>변경내용</th></tr></thead><tbody><tr><td>v0.1</td><td>2026-04-24</td><td>홍길동</td><td>초안</td></tr></tbody></table></div>
+    <div><h3>관련 페이지</h3><ul style="margin:0; padding-left:16px; font-size:12px;"><li>ARC</li><li>OPM</li></ul></div>
   </div>
-</div>
+</article>
 </body>
 </html>

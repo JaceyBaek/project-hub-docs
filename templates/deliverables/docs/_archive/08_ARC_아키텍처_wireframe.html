@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>ARC · 아키텍처</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+<style>
+  .arc-diagram { display:grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .arc-node {
+    border: 1.5px solid var(--ink-2);
+    background: #fff;
+    padding: 12px;
+    font-size: 12px;
+    text-align: center;
+    min-height: 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+  .arc-node.external { border-style: dashed; color: var(--ink-3); }
+  .arc-node .role { font-size: 10px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 3px; }
+  .arc-layer {
+    border: 1px dashed var(--line);
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  .arc-layer > .label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>아키텍처</b></span>
+  <span class="spacer"></span>
+  <span class="status review">Review</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<div class="cf-shell">
+  <div class="cf-breadcrumb"><span>Space</span><span>산출물 템플릿</span><span>설계</span><span>아키텍처</span></div>
+  <h1 class="cf-title"><span class="doc-id">ARC</span>아키텍처 <span style="font-size:13px; font-weight:400; color:var(--muted);">— System Architecture</span></h1>
+
+  <div class="cf-meta">
+    <div class="m"><div class="k">담당자</div><div class="v">강아키 (Architect)</div></div>
+    <div class="m"><div class="k">버전</div><div class="v">v0.1</div></div>
+    <div class="m"><div class="k">상태</div><div class="v"><span class="status review">Review</span></div></div>
+    <div class="m"><div class="k">수정일</div><div class="v">2026-04-24</div></div>
+    <div class="m"><div class="k">배포</div><div class="v">K8s / 3-tier</div></div>
+    <div class="m"><div class="k">Confluence</div><div class="v mono small">/DOCS-TMPL/ARC</div></div>
+  </div>
+
+  <div style="margin:0 0 16px;">
+    <span class="tag">#architecture</span><span class="tag">#nfr</span><span class="tag">#security</span>
+  </div>
+
+  <div class="cf-body">
+    <aside class="cf-toc">
+      <h4>목차</h4>
+      <ol>
+        <li>개요 / 원칙</li>
+        <li>논리 아키텍처</li>
+        <li>배포 아키텍처</li>
+        <li>데이터 아키텍처</li>
+        <li>보안 아키텍처</li>
+        <li>비기능 설계 결정</li>
+        <li>의사결정 기록 (ADR)</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <h2><span class="num">1.</span>개요 / 원칙</h2>
+      <div class="grid-3">
+        <div class="frame"><div class="fhead">원칙 #1</div><div class="small">Stateless API · 수평 확장 용이</div></div>
+        <div class="frame"><div class="fhead">원칙 #2</div><div class="small">사내 표준 스택 준수 (Spring Boot · PostgreSQL)</div></div>
+        <div class="frame"><div class="fhead">원칙 #3</div><div class="small">감사 로그 · 모든 쓰기 이벤트 기록</div></div>
+      </div>
+
+      <h2><span class="num">2.</span>논리 아키텍처</h2>
+
+      <div class="arc-layer">
+        <div class="label">Presentation</div>
+        <div class="arc-diagram">
+          <div class="arc-node"><div class="role">WEB</div>Next.js SPA</div>
+          <div class="arc-node"><div class="role">MOBILE</div>React Native</div>
+          <div class="arc-node"><div class="role">ADMIN</div>Admin Console</div>
+          <div class="arc-node external"><div class="role">EXT</div>SSO (Okta)</div>
+        </div>
+      </div>
+
+      <div class="arc-layer">
+        <div class="label">Application / API</div>
+        <div class="arc-diagram">
+          <div class="arc-node"><div class="role">BFF</div>API Gateway</div>
+          <div class="arc-node"><div class="role">SVC</div>Approval Service</div>
+          <div class="arc-node"><div class="role">SVC</div>Notification Service</div>
+          <div class="arc-node"><div class="role">SVC</div>Audit Service</div>
+        </div>
+      </div>
+
+      <div class="arc-layer">
+        <div class="label">Data</div>
+        <div class="arc-diagram">
+          <div class="arc-node"><div class="role">RDB</div>PostgreSQL (HA)</div>
+          <div class="arc-node"><div class="role">CACHE</div>Redis</div>
+          <div class="arc-node"><div class="role">OBJECT</div>S3 (첨부)</div>
+          <div class="arc-node"><div class="role">SEARCH</div>OpenSearch</div>
+        </div>
+      </div>
+
+      <div class="arc-layer">
+        <div class="label">External</div>
+        <div class="arc-diagram">
+          <div class="arc-node external">HR System</div>
+          <div class="arc-node external">Mail/SMS GW</div>
+          <div class="arc-node external">Push (FCM/APNs)</div>
+          <div class="arc-node external">Monitoring</div>
+        </div>
+      </div>
+
+      <h2><span class="num">3.</span>배포 아키텍처</h2>
+      <div class="ph-block tall">[배포 다이어그램 Placeholder · k8s Namespace / Pod / Ingress / CDN]</div>
+
+      <h2><span class="num">4.</span>데이터 아키텍처</h2>
+      <table class="cf">
+        <thead><tr><th>도메인</th><th>저장소</th><th>백업</th><th>보존</th></tr></thead>
+        <tbody>
+          <tr><td>문서/결재</td><td>PostgreSQL</td><td>일 1회 · PITR 7일</td><td>10년</td></tr>
+          <tr><td>첨부파일</td><td>S3</td><td>Cross-Region Replication</td><td>10년</td></tr>
+          <tr><td>감사로그</td><td>OpenSearch + Cold S3</td><td>일 1회</td><td>3년</td></tr>
+          <tr><td>세션</td><td>Redis</td><td>-</td><td>24h</td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">5.</span>보안 아키텍처</h2>
+      <div class="grid-2">
+        <div class="frame"><div class="fhead">인증/인가</div><div class="small">SSO(OIDC) · JWT · RBAC (→ ROLE)</div></div>
+        <div class="frame"><div class="fhead">암호화</div><div class="small">TLS 1.3 · DB 컬럼 암호화(AES-256)</div></div>
+        <div class="frame"><div class="fhead">네트워크</div><div class="small">VPC · WAF · Private Subnet</div></div>
+        <div class="frame"><div class="fhead">감사</div><div class="small">모든 쓰기 이벤트 audit_log</div></div>
+      </div>
+
+      <h2><span class="num">6.</span>비기능 설계 결정</h2>
+      <table class="cf">
+        <thead><tr><th>NFR</th><th>목표</th><th>설계 결정</th><th>Trace</th></tr></thead>
+        <tbody>
+          <tr><td>성능</td><td>2초 (p95)</td><td>Redis 캐싱 + CDN + DB 인덱스</td><td><span class="id-chip muted">REQ-N01</span></td></tr>
+          <tr><td>가용성</td><td>99.5%</td><td>멀티 AZ · HPA · Health Check</td><td><span class="id-chip muted">REQ-N02</span></td></tr>
+          <tr><td>보안</td><td>AES-256</td><td>KMS 기반 키 관리</td><td><span class="id-chip muted">REQ-N03</span></td></tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">7.</span>의사결정 기록 (ADR)</h2>
+      <table class="cf">
+        <thead><tr><th class="id">ADR ID</th><th>제목</th><th>상태</th><th>결정일</th></tr></thead>
+        <tbody>
+          <tr><td class="id">ADR-001</td><td>모놀리식이 아닌 모듈러 모놀리스 채택</td><td><span class="status approved">Accepted</span></td><td>2026-03-10</td></tr>
+          <tr><td class="id">ADR-002</td><td>메시지 브로커로 Kafka 대신 SQS 사용</td><td><span class="status approved">Accepted</span></td><td>2026-03-18</td></tr>
+        </tbody>
+      </table>
+
+    </main>
+  </div>
+
+  <div class="cf-footer">
+    <div><h3>변경 이력</h3>
+      <table class="cf"><thead><tr><th>버전</th><th>일자</th><th>작성자</th><th>내용</th></tr></thead>
+      <tbody><tr><td>v0.1</td><td>2026-04-24</td><td>강아키</td><td>초안</td></tr></tbody></table>
+    </div>
+    <div><h3>관련 페이지</h3>
+      <ul style="margin:0; padding-left:16px; font-size:12px;">
+        <li>REQ · 요구사항정의서</li><li>OPM · 운영자매뉴얼</li><li>CFG · 설정가이드</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
