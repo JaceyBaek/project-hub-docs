@@ -37,14 +37,31 @@ sidebar_order: 1
 - 옛 단계 명칭(분석·구현·시험·이행) 잔재 일괄 제거: CLAUDE_global.template.md 단계 표, 02_FLW breadcrumb
 - `platform/templates/deliverables/README.md` 폴더 구조 그림, authoring-guide 10종 경로, RAG-conversion-guide, tools/rag/README 모두 단계 폴더 반영
 
-**부수 — 정책 명문화**
-- `CLAUDE.md §9`: 작업 단위 commit은 비서 자동 진행, push는 명시 요청 시. 마무리·clear·compact 자동 기록 흐름은 commit 제외(사용자 직접 다듬을 수 있게 보존).
+**6단계 — 메모리/지침 구분 규칙 정비**
+- 라이프사이클 통합 작업 중 잘못 저장된 개인 메모리 2개(`project_lifecycle_v1.md`·`feedback_design_scope.md`) 식별: 플랫폼 정책·디자인 원칙이 개인 머신·계정에만 저장되어 다른 사용자·세션 공유 불가
+- 두 메모리 삭제 + 내용은 hub 내 문서(CLAUDE.md)로 이전
+- `MEMORY.md` 인덱스 정리
+
+**부수 — 정책 명문화 (CLAUDE.md 응답 규칙 보강)**
+- `§9`: 작업 단위 commit은 비서 자동 진행, push는 명시 요청 시. 마무리·clear·compact 자동 기록 흐름은 commit 제외(사용자 직접 다듬을 수 있게 보존)
+- `§13`: 구조·라이프사이클·정책 결정은 확장성·일관성 우선 — 현재 N개 아닌 성숙기(20~30개) 기준 판단. 트레이드오프 발생 시 장기 관점 우선
+- `§14`: 메모리(개인 협업 컨텍스트) vs hub 내 문서(플랫폼 정책) 구분 명문화. 판단 기준: "다른 사용자에게 같은 효력?" YES면 hub. 플랫폼 운영 규칙·디자인 원칙은 메모리 저장 절대 금지
 
 **주요 결정**
 - GitHub Flow 채택 (Git Flow는 동시 다중 버전 운영 시 예외 옵션)
 - 활성 프로젝트 코드/설정 변경 시 PR 강제, 자기 머지는 CI 통과만 확인 (self-approve 생략)
 - 활성 프로젝트 main 직접 커밋 정책: 문서·산출물·메타만 허용, 코드는 브랜치 분기 후 PR
 - project-hub 본 레포는 Jacey 단독 admin, collaborator 추가 금지
+- 플랫폼/프로젝트 운영 규칙·디자인 원칙은 반드시 hub 내 문서에 명문화 (개인 메모리 저장 금지)
+
+**커밋 흐름 (push 완료, eacct_mcp 서브모듈은 별도 작업 중이라 보류)**
+- `e8aa0e8` feat(lifecycle): 단계 도입 + 형상관리 통합 + 권한 정책
+- `282e400` docs(claude): §9 commit/push 정책 명문화
+- `dbd8f7f` chore(templates): 산출물 템플릿 단계 폴더 구조 통일
+- `49e2517` chore(templates): 단계 폴더 구조 일관성 정비
+- `eb7476c` docs(history): 라이프사이클 통합 재설계 기록
+- `b99bc50` docs(claude): §13·§14 신설 — 확장성 우선 + 메모리/지침 구분
+- 서브모듈 4개 push: gmail_cleaner `692132e` · wiki_mbo_builder `34c224c` · wiki_faq_builder `b4ddf76` · google_drive_backup `6b84eba`
 
 ---
 
