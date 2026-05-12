@@ -7,6 +7,47 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-12 (4)
+
+### 플랫폼 — 프로젝트 라이프사이클 통합 재설계
+
+**목적:** 상태(진행중·보류·활성·서비스종료) 외에 단계(기획·설계·개발·테스트·배포·운영) 개념 도입 + 운영 사이클 + 형상관리 + 권한 정책을 단일 라이프사이클 문서로 통합.
+
+**1단계 — 문서 설계**
+- `platform/project/project_lifecycle.md` 전면 재설계: 상태/단계 분리, 5단계 정의, 운영 사이클, 변경 규모 판단(핫픽스/마이너/큰변경), GitHub Flow 단순화, main 직접 커밋 매트릭스, PR 정책(자기 머지 CI만), EOL 체크리스트, 플랫폼 권한 정책
+- `platform/project/deliverables_guide.md`: 단계 명칭 표준화 + 단계별 권장 산출물 매핑 + 단계 폴더 구조
+- `platform/guides/SETUP.md` §10: Git Flow → GitHub Flow 단순화(develop 제거), §7-1 단계 폴더 컬럼 추가
+- `platform/project/project_creation.md`: 단계 진입 안내·tag·상태 전환 흐름 명시
+
+**2단계 — 구조 전환 + 빌드 검증**
+- eacct_mcp 산출물 단계 폴더 이동: `01_REQ` → `01_plan/`, `02_FLW` → `02_design/`
+- `platform/tools/rag/build-rag.mjs`: SKIP_DIRS 통합(`_archive`·`archive`·`_meta`), 단계 폴더 재귀 탐색 검증 완료 (61 chunks, 20 trace nodes)
+- Node.js v24.15.0 LTS + jsdom 설치 (`platform/tools/rag/`에 devDependency)
+- `.gitignore` 보강(node_modules·dist)
+
+**3단계 — 메타 적용**
+- `PROJECTS_GLOBAL.md`에 `단계` 컬럼 추가
+- 5개 프로젝트 CLAUDE.md 헤더에 `단계` 필드 반영: eacct_mcp(설계)·gmail_cleaner·wiki_mbo_builder(테스트)·wiki_faq_builder·google_drive_backup(운영)
+
+**4단계 — 아이다 트리거 추가**
+- `platform/TRIGGERS.md` 4개 트리거 추가: 단계 전환 뉘앙스·활성 변경 규모 판단(사용자 확인 필수)·main 직접 코드 변경 가드·배포 완료(git tag + 상태 전환)
+
+**5단계 — 템플릿 영역 일관성 정비**
+- 산출물 템플릿 11개를 단계 폴더로 이동 (`01_plan`·`02_design`·`03_dev`·`04_test`·`05_deploy`, `00_TRC`만 루트)
+- 옛 단계 명칭(분석·구현·시험·이행) 잔재 일괄 제거: CLAUDE_global.template.md 단계 표, 02_FLW breadcrumb
+- `platform/templates/deliverables/README.md` 폴더 구조 그림, authoring-guide 10종 경로, RAG-conversion-guide, tools/rag/README 모두 단계 폴더 반영
+
+**부수 — 정책 명문화**
+- `CLAUDE.md §9`: 작업 단위 commit은 비서 자동 진행, push는 명시 요청 시. 마무리·clear·compact 자동 기록 흐름은 commit 제외(사용자 직접 다듬을 수 있게 보존).
+
+**주요 결정**
+- GitHub Flow 채택 (Git Flow는 동시 다중 버전 운영 시 예외 옵션)
+- 활성 프로젝트 코드/설정 변경 시 PR 강제, 자기 머지는 CI 통과만 확인 (self-approve 생략)
+- 활성 프로젝트 main 직접 커밋 정책: 문서·산출물·메타만 허용, 코드는 브랜치 분기 후 PR
+- project-hub 본 레포는 Jacey 단독 admin, collaborator 추가 금지
+
+---
+
 ## 2026-05-12 (3)
 
 ### 플랫폼 — 폴더 구조 대개편 전수 검사 (보완)

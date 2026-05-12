@@ -1,13 +1,13 @@
 # 화면정의서 (SCR) — AI 작성 가이드
 
 > **이 문서의 독자는 AI 에이전트입니다.** 화면 사용자에게 노출되지 않습니다.
-> 템플릿(`docs/03_SCR_화면정의서.html`)을 복사해 실제 화면을 채울 때 반드시 이 가이드를 먼저 로드하십시오.
+> 템플릿(`docs/02_design/03_SCR_화면정의서.html`)을 복사해 실제 화면을 채울 때 반드시 이 가이드를 먼저 로드하십시오.
 
 ---
 
 ## 0. 작성 절차
 
-1. 템플릿 복사 → `projects/<프로젝트>/docs/03_SCR_<프로젝트명>_화면정의서.html`
+1. 템플릿 복사 → `projects/<프로젝트>/docs/02_design/03_SCR_<프로젝트명>_화면정의서_<YYYYMMDD>.html`
 2. `<meta>` 단일 소스 갱신 (project-id / doc-id / owner / tags / hints / primary-entities)
 3. `<title>` — `SCR · {시스템명} 화면정의서`
 4. **화면 목록(§2)** — 전체 카탈로그. ID·화면명·플랫폼(Web/Mobile/Tablet) 명시

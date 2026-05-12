@@ -72,19 +72,24 @@ platform/templates/deliverables/
 │   ├── doc-validator.js     ← 검증표 자동 계산
 │   └── meta-injector.js     ← <meta> → 본문 자동 주입
 │
-├── docs/                    ← 산출물 11종 + TRC
-│   ├── 00_TRC_요구사항추적매트릭스.html
-│   ├── 01_REQ_요구사항정의서.html
-│   ├── 02_FLW_프로세스흐름도.html
-│   ├── 03_SCR_화면정의서.html
-│   ├── 04_ROLE_권한정의서.html
-│   ├── 05_FUNC_기능정의서.html
-│   ├── 06_UTC_단위테스트케이스.html
-│   ├── 07_ITS_통합테스트시나리오.html
-│   ├── 08_ARC_아키텍처.html
-│   ├── 09_OPM_운영자매뉴얼.html
-│   ├── 10_USM_사용자매뉴얼.html
-│   ├── 11_CFG_설정가이드.html
+├── docs/                    ← 산출물 11종 + TRC (단계별 폴더)
+│   ├── 00_TRC_요구사항추적매트릭스.html   ← 루트 (전체 추적)
+│   ├── 01_plan/
+│   │   └── 01_REQ_요구사항정의서.html
+│   ├── 02_design/
+│   │   ├── 02_FLW_프로세스흐름도.html
+│   │   ├── 03_SCR_화면정의서.html
+│   │   ├── 04_ROLE_권한정의서.html
+│   │   ├── 05_FUNC_기능정의서.html
+│   │   └── 08_ARC_아키텍처.html
+│   ├── 03_dev/
+│   │   └── 06_UTC_단위테스트케이스.html
+│   ├── 04_test/
+│   │   └── 07_ITS_통합테스트시나리오.html
+│   ├── 05_deploy/
+│   │   ├── 09_OPM_운영자매뉴얼.html
+│   │   ├── 10_USM_사용자매뉴얼.html
+│   │   └── 11_CFG_설정가이드.html
 │   ├── _archive/            ← 이전 버전 보존
 │   └── _meta/               ← 운영 메모 (학습 제외)
 │

@@ -321,22 +321,24 @@ ls {HUB_ROOT}
 
 ### 7-1. 산출물 템플릿 (`platform/templates/deliverables/docs/`)
 
-| 파일명 | 산출물 | 단계 |
-|---|---|---|
-| `01_REQ_요구사항정의서.html` | 요구사항 정의서 | 분석 (필수) |
-| `02_FLW_프로세스흐름도.html` | 프로세스 흐름도 | 분석 |
-| `03_SCR_화면정의서.html` | 화면 정의서 | 설계 (선택) |
-| `04_ROLE_권한정의서.html` | 권한 정의서 | 설계 (선택) |
-| `05_FUNC_기능정의서.html` | 기능 정의서 | 설계 (선택) |
-| `06_UTC_단위테스트케이스.html` | 단위 테스트 케이스 | 구현 (필수) |
-| `07_ITS_통합테스트시나리오.html` | 통합 테스트 시나리오 | 시험 (선택) |
-| `08_ARC_아키텍처.html` | 아키텍처 | 이행 (필수) |
-| `09_OPM_운영자매뉴얼.html` | 운영자 매뉴얼 | 이행 (필수) |
-| `10_USM_사용자매뉴얼.html` | 사용자 매뉴얼 | 이행 (필수) |
-| `11_CFG_설정가이드.html` | 설정 가이드 | 이행 (필수) |
-| `00_TRC_요구사항추적매트릭스.html` | 요구사항 추적 매트릭스 | 이행 (선택) |
+단계별 폴더 구조. 단계 정의·매핑은 `platform/project/deliverables_guide.md` 참조.
 
-> 최신 버전 파일만 유지. 구버전은 `archive/`로 이동.
+| 파일명 | 산출물 | 단계 폴더 | 필수/선택 |
+|---|---|---|---|
+| `01_REQ_요구사항정의서.html` | 요구사항 정의서 | `01_plan/` | 필수 |
+| `02_FLW_프로세스흐름도.html` | 프로세스 흐름도 | `02_design/` | 필수 |
+| `05_FUNC_기능정의서.html` | 기능 정의서 | `02_design/` | 필수 |
+| `08_ARC_아키텍처.html` | 아키텍처 | `02_design/` | 필수 |
+| `03_SCR_화면정의서.html` | 화면 정의서 | `02_design/` | 선택 |
+| `04_ROLE_권한정의서.html` | 권한 정의서 | `02_design/` | 선택 |
+| `06_UTC_단위테스트케이스.html` | 단위 테스트 케이스 | `03_dev/` | 필수 |
+| `07_ITS_통합테스트시나리오.html` | 통합 테스트 시나리오 | `04_test/` | 선택 |
+| `09_OPM_운영자매뉴얼.html` | 운영자 매뉴얼 | `05_deploy/` | 필수 |
+| `11_CFG_설정가이드.html` | 설정 가이드 | `05_deploy/` | 필수 |
+| `10_USM_사용자매뉴얼.html` | 사용자 매뉴얼 | `05_deploy/` | 선택 |
+| `00_TRC_요구사항추적매트릭스.html` | 요구사항 추적 매트릭스 | docs/ 루트 | 전체 |
+
+> 최신 버전 파일만 유지. 구버전은 `_archive/`로 이동.
 
 ### 7-2. 템플릿 사용 방식
 
@@ -411,29 +413,27 @@ git pull origin main
 
 ---
 
-## 10. Git Flow 브랜치 전략
+## 10. 브랜치 전략 (GitHub Flow)
+
+> 상세 정책·운영 사이클 형상관리는 `platform/project/project_lifecycle.md` §5 참조.
 
 ### 브랜치 구조
 
 | 브랜치 | 용도 | 분기 기준 | 병합 대상 |
 |---|---|---|---|
-| `main` | 안정 버전 | — | — |
-| `develop` | 개발 통합 | main | main (PR) |
-| `feature/{기능명}` | 기능 개발 | develop | develop (PR) |
-| `fix/{버그명}` | 버그 수정 | develop | develop (PR) |
+| `main` | 안정 + 운영 배포본 | — | — |
+| `feature/{이슈코드}-{기능명}` | 신규 기능·큰 변경 | main | main (PR) |
+| `fix/{이슈코드}-{버그명}` | 마이너 수정 | main | main (PR) |
+| `hotfix/{이슈코드}-{내용}` | 운영 중 긴급 수정 | main | main (PR) |
 
-### develop 브랜치 생성 (최초 1회)
+**예외:** 하나의 프로젝트가 동시에 여러 버전(v1.x 패치 · v2.x 신규 개발)을 운영해야 할 경우에 한해 Git Flow(develop·release 포함) 채택 가능 — 해당 프로젝트 CLAUDE.md에 명시.
 
-```bash
-git checkout -b develop
-git push -u origin develop
-```
+### main 직접 커밋 정책
 
-### GitHub 기본 브랜치 develop으로 변경
+라이프사이클 §5-2 매트릭스에 따름. 요약:
 
-1. 저장소 → `Settings` → `General`
-2. `Default branch` → 연필 아이콘
-3. `develop` 선택 → `Update` 클릭
+- 진행중(개발 중) / 플랫폼 자체 / 활성의 문서·산출물 변경 → main 직접 허용
+- 활성(운영 중)의 **코드·설정·의존성 변경** → 브랜치 분기 + PR 필수
 
 ### 커밋 메시지 컨벤션
 
@@ -441,7 +441,8 @@ git push -u origin develop
 |---|---|
 | `feat:` | 새 기능 추가 |
 | `fix:` | 버그 수정 |
-| `docs:` | 문서 변경 |
+| `hotfix:` | 운영 중 긴급 수정 |
+| `docs:` | 문서·산출물 변경 |
 | `style:` | 포맷 등 코드 변경 없는 수정 |
 | `refactor:` | 리팩토링 |
 | `test:` | 테스트 추가·수정 |
@@ -684,8 +685,8 @@ python platform/init_project.py
 
 ```bash
 cd {HUB_ROOT}
-git checkout develop && git pull origin develop
-git checkout -b feature/{기능명}
+git checkout main && git pull origin main
+git checkout -b feature/{이슈코드}-{기능명}
 ```
 
 **2. Python 패키지 초기 파일 생성**
@@ -714,13 +715,13 @@ def test_placeholder():
 ```bash
 git add projects/{폴더명}/ .github/workflows/ci-{폴더명}.yml
 git commit -m "feat: add {폴더명} project"
-git push origin feature/{기능명}
-# GitHub에서 PR 생성 (base: develop)
+git push origin feature/{이슈코드}-{기능명}
+# GitHub에서 PR 생성 (base: main)
 ```
 
-**5. 개발 완료 후 (이행 단계)**
+**5. 배포 단계 완료 후**
 
-이행 단계 필수 산출물 모두 완료 후 → `{폴더명}_setup.md` 최종 작성 → Confluence 게시
+배포 단계 권장 산출물(OPM·CFG 등) 작성 후 → `{폴더명}_setup.md` 최종 작성 → Confluence 게시 → git tag (`v1.0.0`) → 상태 `진행중 → 활성`
 
 ---
 
@@ -729,32 +730,30 @@ git push origin feature/{기능명}
 ### 브랜치 흐름
 
 ```
-develop
-  └── feature/{기능명}     ← 작업 브랜치
-        ↓ 개발 완료
-      PR (feature → develop)
-        ↓ CI 통과
-      develop 병합
-        ↓ 배포 준비 완료
-      PR (develop → main)
-        ↓ 최종 검토
-      main 병합
+main (안정 + 운영 배포본)
+  ├── feature/{이슈}    ← 신규 기능·큰 변경
+  ├── fix/{이슈}        ← 마이너 수정
+  └── hotfix/{이슈}     ← 운영 중 긴급
+        ↓ 작업 완료
+      PR (→ main)
+        ↓ CI 통과 + 리뷰
+      main 병합 + git tag
 ```
 
 ### 일반 개발 흐름
 
 ```bash
 # 1. 브랜치 생성
-git checkout develop && git pull origin develop
-git checkout -b feature/{기능명}
+git checkout main && git pull origin main
+git checkout -b feature/{이슈코드}-{기능명}
 
 # 2. 개발 후 커밋 (pre-commit 자동 실행)
 git add {파일}
 git commit -m "feat: 기능 설명"
 
 # 3. push 및 PR
-git push origin feature/{기능명}
-# GitHub에서 PR 생성 (base: develop)
+git push origin feature/{이슈코드}-{기능명}
+# GitHub에서 PR 생성 (base: main)
 ```
 
 ### 로컬 테스트 실행
@@ -869,12 +868,6 @@ def test_placeholder():
 ### GitHub Actions CI가 실행되지 않음
 
 `paths` 필터를 확인하세요. 해당 프로젝트 폴더(`projects/{프로젝트명}/`) 하위 파일이 변경되지 않으면 CI가 실행되지 않습니다.
-
-### `origin/HEAD -> origin/main`으로 표시됨 (기본 브랜치 develop 설정 후)
-
-```bash
-git remote set-head origin develop
-```
 
 ---
 

@@ -25,3 +25,5 @@
 | G-021 | project-hub | [구조 논의] platform/services/mcp/ 역할 재정의 — G-017 apps/ 레이어와 연계, 공용 MCP vs 프로젝트별 MCP(A안) 구분 명확화 | 보통 | 대기 | - | - |
 | G-022 | project-hub | [구조 논의] docs/ 용도 명확화 — 현재 날짜 붙은 HTML 산출물 보관소, archive/docs/ 이동 또는 docs/를 아카이브 역할로 명문화 | 낮음 | 완료 | - | 2026-05-08 |
 | G-023 | project-hub | README.md 폴더 구조 박스 일괄 갱신 — plugins/·apps/·docs/·mcp_server/·webview/·history/ 누락분 반영 | 낮음 | 완료 | - | 2026-05-11 |
+| G-024 | project-hub | 프로젝트 라이프사이클 통합 재설계 — 단계(기획/설계/개발/테스트/배포/운영) 도입 + 운영 사이클 + GitHub Flow 형상관리 + 권한 정책 통합. 단계 폴더 구조 적용(산출물+템플릿), 5개 프로젝트 단계 메타 반영, 아이다 트리거 4개 추가 | 높음 | 완료 | - | 2026-05-12 |
+| G-025 | project-hub | 산출물 메타 `last_reviewed` 필드 도입 + 6개월 미검토 정기 점검 트리거 (라이프사이클 §4-2 후속) | 보통 | 대기 | - | - |

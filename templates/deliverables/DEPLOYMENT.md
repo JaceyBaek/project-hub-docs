@@ -12,9 +12,9 @@
 |---|---|:-:|---|
 | 랜딩 | `platform/templates/deliverables/index.html` | 공개 | Confluence |
 | 스타일 | `platform/templates/deliverables/assets/wireframe.css` | 공개 | Confluence 첨부 |
-| 템플릿 (11종) | `platform/templates/deliverables/docs/{NN}_{ID}_{한글명}.html` | 공개 | Confluence + Git |
+| 템플릿 (11종) | `platform/templates/deliverables/docs/{단계폴더}/{NN}_{ID}_{한글명}.html` | 공개 | Confluence + Git |
 | 이전 버전 | `platform/templates/deliverables/docs/_archive/` | 내부 검토용 | Git 만 |
-| 추적 매트릭스 | `platform/templates/deliverables/docs/00_TRC_요구사항추적매트릭스.html` | 공개 | Confluence + Git |
+| 추적 매트릭스 | `platform/templates/deliverables/docs/00_TRC_요구사항추적매트릭스.html` (루트) | 공개 | Confluence + Git |
 | **AI 작성 가이드** | `platform/templates/deliverables/guides/*.md` | **AI/내부 전용** | Git 만 (외부 노출 금지) |
 
 ---
@@ -97,7 +97,7 @@ DOCS-TMPL (Space)
 
 **방법 A. HTML Macro 플러그인 (가장 충실)**
 1. 페이지 편집 → `+` → `Other macros` → `HTML`
-2. `platform/templates/deliverables/docs/*.html` 의 `<body>` 내부를 그대로 붙여넣기
+2. `platform/templates/deliverables/docs/{단계폴더}/*.html` (또는 루트의 `00_TRC_*.html`) 의 `<body>` 내부를 그대로 붙여넣기
 3. `<head>` 의 CSS는 Space 스타일에 미리 attach 해 둘 것
 4. 저장 후 렌더링 확인
 
@@ -137,7 +137,7 @@ DOCS-TMPL (Space)
 ## 6. 새 산출물 작성 시 AI 워크플로
 
 1. AI는 작업 시작 시 `platform/templates/deliverables/guides/{NN}_{ID}-authoring-guide.md` 를 먼저 로드
-2. `platform/templates/deliverables/docs/{NN}_{ID}_{한글명}.html` 을 복사 → 실 산출물 위치 (예: `projects/{프로젝트명}/docs/{NN}_{ID}_{프로젝트명}_{한글명}.html`)
+2. `platform/templates/deliverables/docs/{단계폴더}/{NN}_{ID}_{한글명}.html` 을 복사 → 실 산출물 위치 (예: `projects/{프로젝트명}/docs/{단계폴더}/{NN}_{ID}_{프로젝트명}_{한글명}_{YYYYMMDD}.html`) — 단계 폴더 매핑은 `platform/project/deliverables_guide.md` 참조
 3. 가이드의 §5 자가 점검 체크리스트 통과 후 PR/페이지 생성
 4. 검증표 (§10) 모든 행 PASS 확인
 5. Confluence 게시는 사람 검토 후 수동

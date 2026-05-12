@@ -111,7 +111,7 @@ HTML `<meta>` → YAML frontmatter 자동 매핑.
 
 ## 7. 산출물
 
-- 입력: `docs/{번호}_{ID}_{한글명}.html`
+- 입력: `docs/{단계폴더}/{번호}_{ID}_{한글명}.html` (`00_TRC`만 `docs/` 루트, 단계 폴더 매핑은 `platform/project/deliverables_guide.md` 참조 — build-rag.mjs가 재귀 탐색)
 - 출력: `dist/md/{번호}_{ID}_{한글명}.md`
 - 메타: `dist/chunks.jsonl` (요구사항 행 단위 청크 + frontmatter, 벡터 DB 인덱싱용)
 - 추적: `dist/traceability.json` (양방향 trace 그래프)

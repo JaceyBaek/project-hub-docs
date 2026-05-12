@@ -15,7 +15,7 @@
 
 ## 2. 템플릿 사용
 
-- 템플릿 위치: `platform/templates/deliverables/docs/<번호>_<코드>_<이름>.html`
+- 템플릿 위치: `platform/templates/deliverables/docs/<단계폴더>/<번호>_<코드>_<이름>.html` (`00_TRC`만 루트). 단계 폴더 매핑은 `platform/project/deliverables_guide.md` 참조
 - **새 문서를 만들 때**: 템플릿을 **복사**하지 말고, 신규 프로젝트 폴더로 가져와 메타만 교체한다.
 - 본문 작성 시 기존 예시(전자결재)는 **반드시 삭제**하고 실제 도메인 내용으로 교체.
 
