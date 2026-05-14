@@ -729,18 +729,22 @@
           var _vars = null;
           function loadVars(cb) {
             if (_vars !== null) { cb(_vars); return; }
+            // 1순위: personal.yml (로컬), 2순위: vars_public.json (GitHub Pages)
             fetch('/platform/config/personal.yml')
               .then(function(r) { return r.ok ? r.text() : null; })
               .then(function(txt) {
-                var v = {};
                 if (txt) {
-                  var m;
+                  var v = {}, m;
                   m = txt.match(/^user_name:\s*"?([^"\n]+)"?/m);
                   if (m) v.user_name = m[1].trim().replace(/"/g, '');
                   m = txt.match(/name_kr:\s*"?([^"\n]+)"?/m);
                   if (m) v.assistant = m[1].trim().replace(/"/g, '');
+                  _vars = v; cb(v);
+                } else {
+                  return fetch('/platform/config/vars_public.json')
+                    .then(function(r) { return r.ok ? r.json() : {}; })
+                    .then(function(j) { _vars = j; cb(j); });
                 }
-                _vars = v; cb(v);
               })
               .catch(function() { _vars = {}; cb({}); });
           }

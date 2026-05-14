@@ -7,6 +7,40 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-14 (24) — 웹뷰 복구: CDN 벤더링 + GitHub Pages basePath 수정 + 변수 치환
+
+### 결정 배경
+
+- 사내 네트워크에서 `cdn.jsdelivr.net` 완전 차단 → Docsify 로드 불가 → 로컬·GitHub 양쪽 웹뷰 blank
+- GitHub Pages 구조 추가 문제: `basePath:'/'`가 `github.io` 루트를 바라봐 모든 md 요청 404
+- `{assistant}` 플레이스홀더가 웹뷰에 리터럴로 노출 (personal.yml 변수가 브라우저까지 전달 안 됨)
+
+### 작업
+
+#### 1 — CDN 의존성 로컬 벤더링
+- `platform/services/webview/vendor/` 신규 — `npm install` 후 dist만 복사
+  - `docsify@4` (docsify.min.js + search.min.js + vue.css)
+  - `docsify-copy-code@2`, `mermaid@10`, `docsify-mermaid@latest`
+- `index.html` CDN URL 6개 → `./vendor/` 상대경로로 교체
+
+#### 2 — GitHub Pages basePath + 경로 구조 수정 (`sync-docs.yml`)
+- **구조 변경**: `project-hub-docs/webview/` → `project-hub-docs/platform/services/webview/`  
+  로컬 경로와 동일하게 미러링해 사이드바 링크 경로가 GitHub Pages에서도 일치
+- **basePath 패치**: 워크플로우 내 `sed`로 `'/'` → `'/project-hub-docs/'` 자동 치환
+- **루트 리다이렉트**: `project-hub-docs/index.html` 생성 → 웹뷰로 자동 이동
+- **구 디렉토리 정리**: 기존 `webview/`, `guides/`, `history/`, `templates/` 자동 삭제
+
+#### 3 — {assistant}/{user_name} 변수 치환 플러그인
+- Docsify `beforeEach` 훅 — `personal.yml` fetch → 정규식 파싱 → 플레이스홀더 치환
+- fallback 체인: `/platform/config/personal.yml` (로컬) → `/platform/config/vars_public.json` (GitHub Pages)
+- `platform/config/vars_public.json` 신규 (hub_init.py 기반 생성, 커밋 가능) — sync 워크플로우로 Pages에 배포
+
+### 기타
+- `.gitignore`에 `.claude/` 추가 — 머신별 절대경로 포함 설정 공유 방지
+- 로컬 Ctrl+Shift+R 브라우저 강제 새로고침 필요 (CDN URL 캐시 제거)
+
+---
+
 ## 2026-05-14 (23) — mcp_platform v0.3.0 신뢰도 시스템 + 자연어 커버리지 확장
 
 ### 결정 배경
