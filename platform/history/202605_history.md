@@ -7,6 +7,85 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-14 (28) — 운영 튜닝: miso_client chat timeout 상향 + google_drive_backup 제외 목록 보강
+
+### 작업
+
+- `platform/plugins/miso_client/miso_client/client.py` — `chat()` 기본 `timeout` 120 → 300s. 장문 응답 케이스에서 타임아웃 빈도 감소가 목적
+- `apps/google_drive_backup` (서브모듈, 3d1d3b9) — 백업 제외 경로에 `node_modules`, `venv` 추가. 백업 산출물 부피·시간 감소
+
+### 영향
+
+- miso_client 호출부 일괄 수혜 — 기본값만 변경, 인자 명시 호출(`timeout=120` 등)은 그대로 유지
+- 신규 백업 실행 시점부터 두 디렉토리는 업로드 대상에서 제외
+
+---
+
+## 2026-05-14 (27) — collab 프로세스 v2 합의·구현 + `platform/processes/` 카테고리 신설
+
+### 결정 배경
+
+- §26 1차 개편 직후 ITGC·보안 design 작성을 시도하다 단일 design 문서에 10개 이슈를 몰아 넣어 dev 분리·합의 트래킹이 흐려지는 문제 발생
+- 옵셔널 협업 프로세스인 collab을 코드 플러그인(`platform/plugins/`)과 같은 칸에 두는 범주 충돌
+- R1 합의 후 V 행이 자동으로 누적되지 않아 마지막에 별도 `합의 검증` 트리거를 호출해야 하는 누락 위험
+
+### 작업
+
+#### 1 — collab 프로세스 v2 합의 (`20260514-1846-collab-process-design`)
+
+- direction 11개 이슈 — R1 합의 5 / R2 합의 6 후 codex `verified_by`까지 완료 (resolved_by: claude / verified_by: codex)
+- 핵심 결정: `design_level: direction | detail` 분리, 파생 상세설계 계획 표, 4-eyes 흐름(개발 Claude ↔ 테스트 Codex), `dev 종료 승인 = Claude 봉인`, 모든 design `verified_by` 개발 진입 게이트
+- Cycle 임계 정책: C1~C3 자유 / C4 원인 분류 필수(`implementation_bug`·`test_bug`·`design_gap`·`scope_change`) / C5+ 설계 회귀 + Jacey 승인
+- 테스트 증적 표준 경로: CI artifact → `projects/{p}/_manage/test_results/{YYYYMMDD-HHmm}-{...}/` → 요약 표
+- **이전 라운드 합의 V 행 자동 누적 룰** 도입 — 본인 차례 진입 시 R 합의 중 V 없는 항목 우선 검증·V 행 추가
+
+#### 2 — README·템플릿·TRIGGERS 개정 (작업지시서 `20260514-1925`)
+
+- `platform/processes/collab/README.md` 14절 전면 재작성 — 합의된 결정값 반영
+- `_template_design.md` direction/detail 공통 템플릿으로 재작성. detail 전용 frontmatter(`parent_design`·`detail_id`·`task_ids`·`depends_on`·`blocks`) + §1 구현 범위·인터페이스 계약·DoD·테스트 항목
+- `_template_dev.md` 개발완료·테스트완료 확인서로 축소 — 5섹션(개발 범위·완료 요약·테스트 요약·Cycle 표·dev 종료 승인) + frontmatter(`design_ref`·`detail_design_ref`·`tester`·`approver`)
+- `platform/TRIGGERS.md` collab 4개 트리거 갱신 — direction/detail/dev 구분, V 행 자동 누적 룰 명시, 모든 design `verified_by` 필수, INDEX 새 형식
+- 1차 검증: README·템플릿 통과 / TRIGGERS 부분 통과 → 2차 보완에서 codex 권장 문구 반영 → 최종 통과
+
+#### 3 — `platform/processes/` 카테고리 신설 + 폴더 이동
+
+- `platform/collab/` → `platform/processes/collab/` 일괄 이동 (active 3건·archive/·표준 파일·.gitignore 모두 동반)
+- 카테고리 의미 분리: `platform/plugins/` = 코드 플러그인(pip install·import) / `platform/processes/` = 프로세스 모듈(옵트인 워크플로우). 향후 RFC·postmortem·incident response 등 동일 카테고리로 확장 가능
+- 루트 `README.md` line 11, `platform/TRIGGERS.md` lines 39-40, collab `README.md` 헤더+§2 파일 구조도 새 경로로 갱신
+- `.gitignore` 새 위치에서 archive 제외 + 표준 파일 추적 동작 확인 (`git check-ignore` 검증)
+
+#### 4 — active 문서 아카이브
+
+- `20260514-1846-collab-process-design.md` → `archive/design/` (이동 트리거 design 예외 — 새 위치에서 직접 archive)
+- `20260514-1925-collab-process-implementation-workorder.md` → `archive/dev/` (Codex 통과 판정 후 마감)
+- `archive/INDEX.md` 새 형식(`파일명 | 유형 | design_level | 결론 한 줄 | 후속`)으로 재작성 + 2건 등록
+
+### 미결
+
+- `20260514-1554-mcp-chatbot-security-ops-design.md` (보안 design, R2 합의 완료) — `verified_by` 별도 `합의 검증` 트랙으로 진행 예정
+
+---
+
+## 2026-05-14 (26) — platform/collab 협업 프로토콜 개편
+
+### 결정 배경
+
+- Codex와의 교차 검증 운영 중, 삭제 기반 워크플로우로는 설계 히스토리가 사라지는 문제 발생
+- 이슈 단위 트래킹 부재로 "어떤 포인트가 합의됐고 재검토 중인지" 파악 불가
+- 설계 검토 문서와 개발 검증 문서 구분 없이 단일 템플릿 사용 — 흐름 불명확
+
+### 작업
+
+- **아카이브 구조 도입**: 합의 완료 파일 삭제 → `archive/design/` / `archive/dev/` 이동으로 변경. 평소 참조 절대 금지 원칙 명시
+- **`archive/INDEX.md` 생성**: 아카이브 목록 + 결론 한 줄 요약 — 파일 열지 않아도 히스토리 파악 가능
+- **이슈 트래킹 B안 적용**: 검토 포인트마다 `I-001`, `I-002` ID 부여 → 트래킹 테이블(라운드·상태·합의자) + ASCII 흐름 도식 병행
+- **문서 유형 분리**: `_template_design.md` / `_template_dev.md` 분리 생성. `design_ref` 필드로 설계↔개발 연결. 구 `_template.md` 삭제
+- **합의 주체 명시**: frontmatter `resolved_by` + 이슈 테이블 `합의자` 컬럼. 개발은 아이다 수행, 합의는 상호 검토
+- **재검토 루프 추적**: frontmatter `round` 필드 + 섹션 반복 주석 블록으로 R2, R3 추적 구조화
+- **`.gitignore` 수정**: active 파일 제외 유지. archive는 로컬 보관용 — git 추적 제외 (설계 히스토리는 로컬에만 보존)
+
+---
+
 ## 2026-05-14 (25) — eacct_chatbot 실행 환경 정비 + 라우터 앱 분리 적용
 
 ### 결정 배경
