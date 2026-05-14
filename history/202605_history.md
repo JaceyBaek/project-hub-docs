@@ -7,6 +7,58 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-14 (23) — mcp_platform v0.3.0 신뢰도 시스템 + 자연어 커버리지 확장
+
+### 결정 배경
+
+- 사용자 질문 "24년도 전표 리스트" → 룰 라우터가 2자리 연도 미인식 + `RE_TIME_HINT`도 4자리만 매칭해 LLM fallback도 트리거 못 함 → 빈 params로 `search_slips` 호출 → 기본값 최근 30일 데이터 조회. 미소 페르소나가 의도-결과 불일치를 검출해 답변 첫 문단에 명시한 결과만 사용자에게 보임 ("왜 멋대로 왜곡?")
+- 대안 검토: A 룰만 보강 / B Miso 라우터 단일화 / C 하이브리드 슬림화 → 사용자가 "현재 룰 유지하되 신뢰도 타이트하게 잡고 부족하면 미소 라우터에 위임" 방향 선택
+- step-by-step 진행: step 1 confidence 시스템 → step 2a 2자리 연도 → step 2b 범위 표현 → step 2c 상대 시기 → step 2d 비교 의도 → step 4 챗봇에 룰 결과 주입
+
+### 작업
+
+#### step 1 — confidence 시스템 (mcp_platform/router/engine.py)
+
+- **`Router.route()` 반환 스키마 확장** — `confidence`(0.0~1.0)·`confidence_reasons`(감점 사유 목록) 부가. binary `needs_llm_fallback`을 연속값 기반으로 재계산.
+- **`_calc_confidence(q, domain, scores, params)`** — 6가지 감점 신호 합산: 도메인 점수차 좁음(-0.20)·도메인 score 낮음(-0.15)·시간 표현 vs 날짜 미추출(-0.40)·날짜 부분 추출(-0.20)·2자리 연도(-0.10, 추출은 가능하나 50 경계 모호성)·비교 의도(-0.40)·필수 인자 누락(-0.40)
+- **`Router(confidence_threshold=0.85)`** 신규 인자. `Router.from_yaml(confidence_threshold=...)` 동일 인자 전파
+- **YAML 도메인 spec 확장** — `required_params: [...]`·`min_top_score: N`. `validate()`에 타입 검증 추가
+- **`default_time_fallback` 자동 등록 제거** — confidence 시스템이 동일 신호(`DEDUCT_TIME_NO_DATE`) 흡수. 함수 자체는 BC를 위해 export 유지
+
+#### step 2 — extractors_common 자연어 커버리지 확장
+
+- **2a 2자리 연도** — `_RE_YEAR_*` 모두 `\d{2,4}` 허용. `_norm_year` 헬퍼 (`00~49 → 20XX`, `50~99 → 19XX` — 회계 도메인 안전 기본값). "24년"·"24년도"·"24년 5월"·"99년 1분기"·"24년 상반기" 정상 처리
+- **2b 범위 표현** — `_RE_MONTH_RANGE`(부터·에서·~·–·—·-)·`_RE_DATE_FROM_ONLY`·`_RE_DATE_TO_ONLY`. "5월부터 7월까지"·"24년 3월부터 25년 7월까지"·"2024-05-15 이후"·"20240515 까지". `_norm_date()` 보강해 `2024.5.15` zero-pad 누락도 정규화
+- **2c 상대 시기** — 어제/오늘/내일·이번/지난/지지난/다음 분기·반기·주. `_quarter_of`·`_quarter_range`·`_shift_quarter`·`_half_of`·`_half_range`·`_shift_half`·`_week_range` 헬퍼. 연도 경계 정확히 처리(예: 2026-05 기준 "지지난 분기" → 2025-Q4). "지난 N {일,달,개월,년}" = "최근 N" 동의어
+- **2d 비교 의도** — `RE_COMPARISON_INTENT` export ("전월 대비"·"전년 동기"·MoM/QoQ/YoY/YTD·"증감률"). 룰로 두 기간을 풀려 시도하지 않고 confidence -0.40 감점으로 LLM 위임 유도
+- **`RE_TIME_HINT` 보강** — 2자리 연도·"다음 분기/반기/주"·"지난 N"까지 시간 신호로 인식
+
+#### step 4 — eacct_chatbot/source/chat_handler.py 룰 결과 주입
+
+- **`_route_via_rules()`** — 반환을 `(intent, rule_hint)` 튜플로 변경. 확정·부분추정·완전실패 3가지 케이스 명시
+- **`_detect_intent(rule_hint=...)`** — 룰의 부분추정(도메인·도구 후보·일부 인자·미신뢰 사유)을 미소 라우터 프롬프트에 동봉. LLM이 처음부터 재파싱하지 않고 보완만 함 → 정확도·일관성·비용 개선
+- **`MisoChatHandler.chat()`** — 튜플 unpack + hint 전달
+
+#### 검증
+
+- **테스트:** 신규 80개 통과(`test_router.py` 31 + `test_extractors_common.py` 49)
+- **실서버:** "24년도 전표 리스트" → `book_dt_from=2024-01-01`·`book_dt_to=2024-12-31`·confidence 0.90(2자리 연도 잔여 모호성 -0.10)·`needs_llm_fallback=False` — 룰 단독 해결
+- **부분추정 케이스:** "YoY 매출 전표" → confidence 0.60·tool_hint=`search_slips`·domain=`slip`·params={}·사유=비교 의도 → LLM에 hint 동봉 위임
+- **도메인 분류 실패:** "지난 분기 매출" → confidence 0.0·candidates 3개 → LLM에 후보 동봉 위임
+
+### 버전·문서
+
+- **mcp_platform v0.2.1 → v0.3.0** — `pyproject.toml`·`__version__`·`CHANGELOG.md` 동기화
+- **CHANGELOG.md** v0.3.0 섹션 신설 — Added(confidence·extractors)·Changed(상수 튜닝·기본값)·Tests
+- 임계치·감점값은 운영하며 튜닝 가능 (`DEDUCT_*` 상수·`DEFAULT_CONFIDENCE_THRESHOLD`·`DEFAULT_MIN_TOP_SCORE`)
+
+### 남은 작업 (옵션)
+
+- step 3: `eacct_mcp/source/tools/router_domains.yml`에 도메인별 `required_params`·`min_top_score` 명시 — 도메인 운영 정책 결정 시 적용. 현재 기본값으로 충분
+- step 5: chat_handler에서 `confidence` 필드 직접 활용은 이미 `needs_llm_fallback`이 confidence 기반이라 추가 작업 불필요
+
+---
+
 ## 2026-05-14 (22) — mcp_platform v0.2.0 정합 + v0.2.1 후속 패치 (collab 합의 마감)
 
 ### 결정 배경
