@@ -8,7 +8,7 @@
 
 - **라이프사이클 자동화** — 프로젝트 생성·상태 전환·히스토리·세션 마무리를 트리거 명령으로
 - **플러그인 확장** — `mcp_platform`·`atlassian_client`·`miso_client`·`secrets_loader` 등 pip-installable 공통 라이브러리
-- **AI 비서 협업 인프라** — CLAUDE.md 규칙·메모리·`platform/collab/` 워크플로우로 멀티 에이전트(아이다 ↔ codex) 컨텍스트 유지
+- **AI 비서 협업 인프라** — CLAUDE.md 규칙·메모리·`platform/collab/` 워크플로우로 멀티 에이전트({assistant} ↔ codex) 컨텍스트 유지
 - **사내 시스템 연동 표준** — Confluence/Jira·Miso AI·MCP·Microsoft 365
 - **보안 표준** — keyring 일원화 + `secrets_loader` 진입점 어댑터, 평문 `.env`·시스템 환경변수 금지
 - **산출물 관리** — 단계별(`01_plan` → `02_design` → ...) HTML 산출물 + 웹뷰 + RAG 변환

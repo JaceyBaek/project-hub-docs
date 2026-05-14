@@ -724,6 +724,35 @@
         successText: '완료'
       },
       plugins: [
+        /* personal.yml → {assistant} · {user_name} 치환 */
+        function(hook) {
+          var _vars = null;
+          function loadVars(cb) {
+            if (_vars !== null) { cb(_vars); return; }
+            fetch('/platform/config/personal.yml')
+              .then(function(r) { return r.ok ? r.text() : null; })
+              .then(function(txt) {
+                var v = {};
+                if (txt) {
+                  var m;
+                  m = txt.match(/^user_name:\s*"?([^"\n]+)"?/m);
+                  if (m) v.user_name = m[1].trim().replace(/"/g, '');
+                  m = txt.match(/name_kr:\s*"?([^"\n]+)"?/m);
+                  if (m) v.assistant = m[1].trim().replace(/"/g, '');
+                }
+                _vars = v; cb(v);
+              })
+              .catch(function() { _vars = {}; cb({}); });
+          }
+          hook.beforeEach(function(content, next) {
+            loadVars(function(v) {
+              var s = content;
+              if (v.assistant) s = s.replace(/\{assistant\}/g, v.assistant);
+              if (v.user_name) s = s.replace(/\{user_name\}/g, v.user_name);
+              next(s);
+            });
+          });
+        },
         function(hook) {
           hook.mounted(function() {
             var nav = document.createElement('div');
