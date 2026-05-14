@@ -12,10 +12,18 @@
   - [변경 이력](CHANGELOG.md)
 
 - **가이드**
+  - [셋업 가이드](platform/guides/SETUP.md)
+  - [MCP Server 설정](platform/guides/mcp_server_setup.md)
+  - [신규 MCP 서버 만들기](platform/guides/new_mcp_server_setup.md)
+  - [산출물 배포](platform/templates/deliverables/DEPLOYMENT.md)
+  - [Claude Code 자동 승인](platform/guides/auto_approve.md)
 
 - **아키텍처**
+  - [Atlassian & Miso 연동](platform/guides/architecture.md)
 
 - **히스토리**
+  - [2026년 5월](platform/history/202605_history.md)
+  - [2026년 4월](platform/history/202604_history.md)
 
 - **앱**
 
