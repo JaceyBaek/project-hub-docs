@@ -1,13 +1,13 @@
-# 기능정의서 (FUNC) — AI 작성 가이드
+﻿# 기능정의서 (FUNC) — AI 작성 가이드
 
 > **이 문서의 독자는 AI 에이전트입니다.** 화면 사용자에게 노출되지 않습니다.
-> 템플릿(`docs/02_design/05_FUNC_기능정의서.html`)을 복사해 실제 기능을 채울 때 반드시 이 가이드를 먼저 로드하십시오.
+> 템플릿(`docs/02_design/FUNC_기능정의서.html`)을 복사해 실제 기능을 채울 때 반드시 이 가이드를 먼저 로드하십시오.
 
 ---
 
 ## 0. 작성 절차
 
-1. 템플릿 복사 → `projects/<프로젝트>/docs/02_design/05_FUNC_<프로젝트명>_기능정의서_<YYYYMMDD>.html`
+1. 템플릿 복사 → `projects/<프로젝트>/docs/02_design/FUNC_<프로젝트명>_기능정의서_<YYYYMMDD>.html`
 2. `<meta>` 단일 소스 갱신 (project-id / doc-id / owner / tags / primary-entities)
 3. `<title>` — `FUNC · {시스템명} 기능정의서`
 4. **기능 목록(§2)** — 전체 기능 카탈로그

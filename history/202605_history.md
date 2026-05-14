@@ -7,6 +7,439 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-14 (22) — mcp_platform v0.2.0 정합 + v0.2.1 후속 패치 (collab 합의 마감)
+
+### 결정 배경
+
+- (21) 보류 항목인 "mcp_platform v0.2.0/v0.2.1 흡수 산출물" 일괄 마감 세션
+- codex 1차 리뷰(`platform/collab/20260513-1724-mcp-platform-router-integration-review.md`) 6건 → claude 응답에서 v0.2.0 정합(1·2·6번) + v0.2.1 후속(3·4·5번)으로 분리 합의
+- "이건 나중에 하고 collab 내용 검토 해줘" → "수정하고 문서도 업데이트" → "남은 건 후속 패치로 합의" → "1(지금 이어서 적용)" → "미완료건 추가 작업" → 마무리 push 순서로 진행
+
+### 작업
+
+#### v0.2.0 정합성 픽스
+- **`mcp_platform/__init__.py`** — `__version__` `0.1.0` → `0.2.0`. 선언 순서를 `from .base_server import PlatformServer` 앞으로 이동 (순환 import 방지)
+- **`mcp_platform/base_server.py`** — `from mcp.server.fastmcp import FastMCP` top-level 제거 → `_build_mcp()` 내부 lazy import + `TYPE_CHECKING` 가드. `PlatformServer(version=None)` 기본값을 `__version__` 참조로 단일화(SoT)
+- **검증:** `mcp` 차단 환경에서 `from mcp_platform.router import Router` 정상 import 확인
+- **빌드 산출물:** `.gitignore`에 `*.egg-info/`·`__pycache__/` 이미 등록·git 미트래킹 확인 → 추가 작업 없음
+
+#### v0.2.1 후속 패치 (Router API 확장)
+- **`RouterValidationError`** (ValueError 서브클래스) 신설 + `mcp_platform.router.engine` export
+- **`Router.from_yaml`** — 스키마 수준 검증(`domains` 키·필드 타입). 친절한 메시지로 파일 경로·필드 위치 명시
+- **`Router.validate()`** — 모든 `register_*` 완료 후 호출. extractor·selector 참조 일관성·default_tool/selector 보유 여부를 모아서 한 번에 raise. 서버 부팅 시점에 깨지므로 YAML typo 무성한 실패 사전 차단
+- **`Router(domains, ambiguity_margin=1.0)`** — top1-top2 점수차 < margin 시 `tool=None`·`candidate_domains`·`candidates`·`needs_llm_fallback=True` 반환. dict 삽입 순서 의존을 LLM fallback 분기로 명시 위임. `_pre_hooks` 확정 케이스는 영향 없음
+- **`route()` unknown 분기 일관화** — `needs_llm_fallback=True`·`fallback_reason` 부여
+- **`rest_bridge._build_input_schema`** — `typing.get_type_hints(func, include_extras=True)` 적용. 실패 시 기존 `inspect.signature` annotation 안전 폴백. `from __future__ import annotations` 호환·`Annotated[str, "..."]` 활용 여지 확보
+
+#### 테스트·문서·버전 동기화
+- **`tests/test_router.py`** 신설 — 12 케이스(스키마 3 / validate 5 / ambiguity 3 / unknown 1), `pytest -q` 0.17s 통과
+- **버전 bump:** `pyproject.toml`·`__version__`·`CLAUDE.md` 모두 `0.2.1` 동기화
+- **`CHANGELOG.md`** — v0.2.1 섹션 신설(Added 5 / Changed 2), v0.2.0의 `Planned (v0.2.1)` 섹션 제거. v0.2.0에는 정합성 픽스 3건 명시
+- **`CLAUDE.md`** — Router API 표에 `validate()` 추가, 생성자에 `ambiguity_margin` 명시, 사용 예에 `router.validate()` 호출 1줄 추가
+
+#### eacct_mcp 사용처 갱신
+- **`projects/eacct_mcp/source/tools/router.py`** — `_router.validate()` 호출 추가(import 시점 검증). venv에서 정상 import 확인(domains: taxbill·slip·comcd)
+- eacct_mcp 서브모듈 내부 별도 commit + project-hub 측 pointer 갱신
+
+#### collab 인프라
+- 합의 종료 후 `platform/collab/20260513-1724-mcp-platform-router-integration-review.md` 본 세션에서 삭제 (.gitignore 처리되어 git 영향 없음)
+
+### 메모
+
+- v0.2.1 ambiguity 정책의 `margin` 기본값 1.0은 현재 점수가 정수 단위(키워드 1매칭당 1점)임을 가정한 값. 향후 가중치 기반으로 점수가 소수화되면 조정 필요
+- `Router.validate()`는 register API에 강제되지 않음(opt-in) — eacct_mcp는 부팅 시점 호출로 안전, 다른 사용처는 자율 선택
+
+---
+
+## 2026-05-13 (21) — 누적 변경 정합성 정리 (working tree 일괄 commit)
+
+### 결정 배경
+
+- (20) 세션 후반에 working tree에 다른 시기 작업들이 정리 안 된 채로 누적되어 있던 것을 발견 — 흡수 세션·secrets 통일·플러그인 문서 표준화 등 의미 단위가 섞임
+- "오늘 작업 기록 다 했으면 커밋 한번 하자, 나눠서 해야 한다고 판단되면 그렇게 해" — 의미 단위 분류 후 commit 분리 진행
+- 분류 기준: ① 이번 세션 직접 작업 / ② 다른 세션·외부 영역(흡수·신규 프로젝트) / ③ 의미 명확한 누적 변경 (정합성 정리 대상)
+
+### 작업
+
+- **(가) `PROJECTS_GLOBAL.md`** (`86327e5`) — eacct_chatbot 등록 + eacct_mcp 단계(설계→개발)
+- **(나) `platform/TRIGGERS.md`** (`26fa1f7`) — eacct 실행 트리거 + collab 리뷰 트리거 3종(요청·검토·종료)
+- **(다) webview 사이드바 docs/ 자동 노출** (`604be63`) — `sync_sidebar.py` 헬퍼 추가, 표시명 우선순위: `sidebar_title` 메타 → 첫 h1 → 파일 stem
+- **(라) keyring 통일 + `secrets_loader` 플러그인 도입** (`cf8b718`) — 시크릿은 `.env` 평문·시스템 환경변수 금지, keyring 단일화. `secrets_loader.inject_secrets` 진입점 어댑터 신규 + 가이드 3건(`secrets_guide`·`connection_setup`·`SETUP`) 동시 갱신
+- **(마) 플러그인 표준 문서 도입** (`e89e86c`) — `atlassian_client`·`miso_client` 각 `CLAUDE.md`·`CHANGELOG.md` (어제 작성된 untracked 표준 문서 commit)
+- **(바) collab 임시 파일 .gitignore** (`7ed77e5`) — 합의 후 삭제되는 임시 협업 파일을 git 추적 제외 (표준 문서 README·_template만 추적)
+- **(사) 서브모듈 secrets_loader 적용** (`dac0068` wiki_faq_builder / `73f5b6a` wiki_mbo_builder) — (라)의 platform 변경에 맞춰 각 프로젝트 진입점에서 `inject_secrets` 호출, `.env.example`에서 시크릿 분리 + keyring 등록 안내. project-hub에서 submodule pointer 갱신 (`6361919`)
+- **세션 기록 정리** (`0f90a06`) — (20) 항목 기록 / (`381d7f5`) — collab 인프라(README + _template) 도입
+
+### 보류
+
+- mcp_platform v0.2.0/v0.2.1 흡수 산출물(base_server·CHANGELOG·__init__·rest_bridge import·CLAUDE.md 잔여 변경) — 흡수 세션이 일괄 마감 예정
+- `projects/eacct_chatbot/` (untracked) — 별도 submodule 등록 절차 필요 (보류된 `connect_github.py` 분리 작업이 이 흐름을 다룰 예정)
+
+---
+
+## 2026-05-13 (20) — platform 안전·품질 패치 (P0 + P1 부분)
+
+### 결정 배경
+
+- codex가 정리한 platform 권고 11건을 collab 워크플로우로 검토 (개인 작업 외 협업 검토는 첫 시도)
+- 그 과정에서 `_update_global_todo_status`가 TODO_GLOBAL.md "기한" 컬럼을 망가뜨려 온 정규식 버그 발견 — 다행히 누적 손상 없음 확인
+- collab 워크플로우는 흐름이 뒤죽박죽돼 향후 정리 후 재사용 예정 (이번엔 검토 결과만 반영, 절차 자체는 미정착)
+
+### 작업 (P0)
+
+- **`_update_global_todo_status` 정규식 버그 fix** (`ccffeb4`) — 표 컬럼 파싱 방식으로 교체, `mcp` 의존성 없이 단위 테스트 가능하도록 `todo_updater.py`로 순수 함수 분리, 회귀 테스트 8건 추가 (`tests/test_todo_updater.py`)
+- **`init_project.py` 안전 패치** (`5de5b6e`) — `validate_project_name` (`^[a-zA-Z0-9_-]+$`) + `resolve_project_path` (`is_relative_to` 검증). CLI·interactive·`--delete` 3개 진입점에 적용. `unregister_from_projects_global`의 부분 매칭 버그(`test` 삭제 시 `test_legacy` 행도 함께 지워짐) 같이 fix
+- **CI 워크플로우 품질 게이트** (`6e40f35`) — `continue-on-error: true` 제거, 빈 테스트 디렉토리 가드 추가
+
+### 작업 (P1)
+
+- **catalog.yml에 mcp_router 등록** (`892609c`) — 작업 도중 (19)의 흡수 작업이 진행되면서 정합성은 (19)·다른 세션이 일괄 정리 예정
+- **eacct_mcp setup.py · CLAUDE.md** (`1d281e3`, `d68ff39`) — 위와 동일, 일부 (19)에서 revert/재구성됨
+- **`middleware.log_tool_call` 시크릿 마스킹** (`da4b2ac`) — 키 이름에 `secret/token/password/credential/api_key/apikey/auth` 포함 시 값을 `***`로 치환. 보수적 정책(false positive 허용)
+- **`rest_bridge._build_input_schema` 타입 확장** (`efde754`) — `Optional[X]`·`list[X]`·`dict[K,V]` 정확 변환, Optional/default 있는 인자는 required에서 제외
+
+### 보류
+
+- `setup_dev_github` 기본 동작 변경(옵션β: `connect_github.py` 분리) — 흡수 세션과의 영향 분리를 위해 이번 세션 범위 밖으로 이관
+- 작업6 (P2 묶음): `install_app.py` OS별 경로 / `set_credential.py` 예외 / `.editorconfig` 인코딩 안내
+
+---
+
+## 2026-05-13 (19) — mcp_router → mcp_platform.router 서브패키지로 통합 (v0.2.0)
+
+### 결정 배경
+
+- 같은 날 (18)에서 mcp_router를 별도 플러그인으로 분리했으나, 재검토 결과 **라우터 사용 = mcp_platform 동행이 99%** 라는 점에서 분리 이점 미미
+- pyyaml은 가벼움(~600KB)이라 코어 의존으로 포함해도 부담 없음
+- 향후 무거운 의존성(임베딩 등)은 `optional-dependencies` (extras)로 분리하면 됨
+- 신규 MCP 서버 만들 때 인지 부담·설치 명령 1줄 줄어듦
+
+### 작업
+
+- **`mcp_platform` v0.1.x → v0.2.0** — `router/` 서브패키지 흡수
+  - `mcp_platform/router/engine.py` (Router 클래스)
+  - `mcp_platform/router/extractors_common.py` (공용 추출기 7종)
+  - `mcp_platform/router/__init__.py` (export)
+  - `pyproject.toml`에 pyyaml 의존성 추가, description 갱신
+  - `CLAUDE.md` 갱신 (router 섹션 신규), `CHANGELOG.md` v0.2.0 기록
+- **`mcp_router` 별도 플러그인 폐기** — `platform/plugins/mcp_router/` 폴더 제거
+- **eacct_mcp import 경로 갱신**: `from mcp_router import Router` → `from mcp_platform.router import Router` (2줄)
+- **eacct_mcp setup.py 갱신**: 자동 설치 항목에서 mcp_router 제거, mcp_platform 단일 설치로 단순화
+- **eacct_mcp venv**: `pip uninstall mcp-router` + `pip install -e mcp_platform` 재설치
+- **`platform/guides/new_mcp_server_setup.md` 갱신**: import 경로·설치 명령·플러그인 표·트러블슈팅 모두 mcp_platform.router 기준으로
+- **eacct_mcp `CLAUDE.md`·`requirements.txt` 갱신** (Jacey 수정본 위에 정리)
+- 메모리 `project_mcp_router.md`·`reference_routing_policy.md`·`MEMORY.md` 갱신 — 통합 사실 반영
+
+### 회귀 검증
+
+- 13개 핵심 케이스 통과 (분리·통합 모두 동일 결과)
+- MCP 서버 정상 가동 (`mcp_tools=7`)
+- 챗봇 정상 가동
+
+### 효과
+
+- 신규 MCP 서버 생성 시 `pip install` 명령 1줄 감소 (mcp_router 별도 설치 불필요)
+- 의존성 관리·버전 호환성 단순화
+- 라우터 API 위치가 한 곳(`mcp_platform.router`)으로 명확
+
+---
+
+## 2026-05-13 (18) — mcp_router 플러그인 신규 + 라우터 분리·하이브리드 라우팅 도입 + 가이드 2종 작성
+
+### 플랫폼 (platform)
+
+- **`platform/plugins/mcp_router/` 신규 플러그인 (v0.1.0)** — MCP 도구 라우팅 공용 엔진
+  - `engine.py` `Router` 클래스 — YAML 도메인 로드·점수 계산·extractor/selector/hook registry·fallback 판단
+  - `extractors_common.py` — 공용 추출기 7개 (date_range·top_n·vendor_name·vendor_no·approval_no·quoted_keyword·code_group_id) + `RE_TIME_HINT`·`RE_CODE_GROUP_ID`
+  - 도메인 무관 엔진 + 도메인 특화 로직(yml·extractor·selector·hook)을 분리해 어떤 MCP 서버에서도 재사용
+- **`platform/guides/new_mcp_server_setup.md` 신규** — 신규 MCP 서버 0→1 생성 가이드 (10단계 + 부록, 가상 hr_mcp 예시 포함)
+- **`platform/guides/onprem_llm_setup.md` 신규** — 사내 LLM 구축 가이드 (vLLM/Ollama·GPU 요구사항·모델 추천·챗봇 연동)
+- **`platform/services/webview/_sidebar.md`** — 가이드 영역에 "신규 MCP 서버 만들기" 등록
+- **`platform/plugins/mcp_router/CLAUDE.md`** — 플러그인 사용 API·YAML 구조·등록 패턴 명세
+- **미해결 결정**: mcp_router를 mcp_platform 서브패키지로 통합할지 검토 — 현재 별도 플러그인 유지, 추후 결정
+
+### eacct_mcp
+
+- **`search_purchase_invoice` 시그니처 확장** — `vendor_name`·`date_from`·`date_to`·`top_n` 신규
+  - Tier 3 목록 조회 모드 추가 (거래처/날짜범위 기반, 거래일자 DESC, top_n 제한, 50건 초과 시 too_many)
+  - 기존 Tier 1(승인번호) / Tier 2(3종 정밀매칭) 보존
+- **도구 5개 docstring에 `[Examples]` / `[Not for]` 보강** — LLM 라우팅 정합도 향상
+- **`router.py` 재작성 → `mcp_router` 엔진으로 분리** (register 패턴)
+  - 회계 특화 extractor: `extractors_eacct.py` (slip_status·gw_status·code_keyword)
+  - 도메인 selector: `router_selectors.py` (comcd_selector·taxbill_selector)
+  - 도메인 정의: `router_domains.yml` (taxbill·slip·comcd)
+  - 비즈니스 강분기 hook: 14자리 → search_purchase_invoice 즉시 확정 / 대문자 코드그룹 ID → comcd +3 부스트
+- **시간 표현 확장**: 분기(2024 Q1, 1분기)·반기(상반기/하반기)·연도(2024년)·월(2024년 3월)·작년·재작년·지지난주 등 인식
+- **`needs_llm_fallback` 플래그** — 룰이 도구는 확정했어도 시간 표현 추출 실패 시 LLM 라우터로 재시도 권고
+- **`requirements.txt`** — pyyaml 제거 (mcp_router가 흡수), mcp_router/mcp_platform editable 설치 안내
+
+### eacct_chatbot
+
+- **3-pass 하이브리드 라우팅 도입** — Pass 0(MCP `route_intent` 룰) → Pass 1(Miso 라우터 앱 LLM fallback) → Pass 2(Miso 답변 앱)
+- **라우터/답변 MisoClient 분리** — `MISO_ROUTER_API_KEY` 환경변수(선택), keyring에 별도 등록
+- **`_route_via_rules` 추가** + `needs_llm_fallback=true` 시 LLM fallback으로 위임
+- **정확도 자동 부착 폐지** — `_estimate_confidence`·`_ensure_confidence_suffix` 제거. LLM 판단 그대로 따름
+- **새 정확도 정책**: 단순 조회·잡담·오류 안내엔 표기 생략. 데이터 해석·분석·제안 응답에만 LLM이 자율 표기
+- **`SYSTEM_PERSONA`에 의도-결과 검증 룰 추가** — 사용자 요청 기간/조건과 도구 결과 불일치 시 답변 첫 문단에 명시
+- **`widget.html` 컨텍스트 임계값 운영값 원복** — `CTX_SHOW_THRESHOLD=75`, `CTX_AUTO_COMPACT_THRESHOLD=95`
+- **`CLAUDE.md` 갱신** — 미소 라우터 앱 생성 절차, 환경변수 표, 3-pass 흐름 명세
+
+### Miso 콘솔 작업 (Jacey 수동 영역)
+
+- **라우터 전용 앱(`e-Acct AI 라우터`) 생성** — JSON 분류기 시스템 프롬프트 + temperature=0.0, max_tokens=512
+- **답변 앱(`e-Acct AI 어시스턴트`) 시스템 프롬프트 갱신** — 의도-결과 검증 룰 + 새 정확도 정책 반영
+
+### 메모리
+
+- `project_mcp_router.md` 신규 — 플러그인 포인터·register 패턴 요약
+- `MEMORY.md` 인덱스 갱신
+
+---
+
+## 2026-05-13 (17) — eacct_mcp route_intent 도메인 분류 아키텍처 + Miso 안내 메시지 논의
+
+### eacct_mcp
+
+- **router.py 전면 재작성** — 도메인 점수 기반 분류 아키텍처로 업그레이드
+  - `_DOMAINS` 테이블(pos/neg/weight) + 도메인별 핸들러 분리 (`_handle_taxbill` / `_handle_slip` / `_handle_comcd`)
+  - 파라미터 자동 추출: 승인번호·사업자번호·거래처명(따옴표/(주))·날짜 범위(이번달·지난달·최근 N일/개월·올해)·top_n
+  - 대문자 코드그룹 ID(BILL_STATUS 등) 감지 시 comcd 부스트
+  - 응답에 `domain`·`scores` 포함 — 디버깅 활용
+
+### eacct_chatbot 연계 논의
+
+- Miso 에이전트 안내 메시지는 **두 레이어** 존재 확인:
+  - Pass 1: `chat_handler.py` `_detect_intent` 프롬프트 (실질 영향)
+  - Pass 2: Miso 앱 UI 시스템 프롬프트 (최종 답변에만 영향)
+- route_intent 연계 옵션 2가지 정리 (단순 가이드 보강 / chat_handler.py 수정으로 Pass 1을 route_intent로 대체) — 결정 보류
+
+---
+
+## 2026-05-13 (16) — eacct_mcp route_intent 라우터 tool 구현
+
+### eacct_mcp
+
+- **`route_intent` tool 신규 구현** (`source/tools/router.py`)
+  - 3-Tier 규칙 기반: 14자리 이상 숫자 → 승인번호 확정 / 키워드 매칭 / 불명확 힌트 반환
+  - Miso가 먼저 route_intent 호출 → 결과로 실제 tool 호출하는 2-step 패턴
+  - tool 수 증가 시 Miso description 부담 없이 확장 가능 (10+tool 대비)
+- **문서 현행화:** miso_api_spec.md v0.4(§3-0 추가), changelog, history
+
+---
+
+## 2026-05-13 (15) — eacct_mcp search_purchase_invoice 구현 + Miso tool 선택 오류 수정
+
+### eacct_mcp
+
+- **`search_purchase_invoice` tool 신규 구현** (`source/tools/taxbill.py`, eacc_taxheader 실DB)
+  - Tier 1: 승인번호(ZISSID) 단건 조회 (날짜 제한 없음·전사 전체)
+  - Tier 2: 공급자 사업자번호 + 합계금액 + 거래일자 3종 조합, 신뢰도 95/80/65%
+  - 응답 섹션: basic / slip_info / source_info / exclusion / transfer
+  - member 테이블 JOIN — 처리자명·이관자명·이관대상자명 반환
+- **`invoice.py` 삭제** (Mock POC → 실DB tool 대체 완료)
+  - `__init__.py` import 제거, CLAUDE.md·miso_api_spec.md(v0.3)·changelog 현행화
+- **Miso tool 선택 오류 수정** (24자리 승인번호를 search_slips bill_ndx로 잘못 전달)
+  - `search_purchase_invoice` docstring: `[규칙] 14자리 이상 → 반드시 이 도구, search_slips 사용 금지`
+  - `search_slips` docstring: `전표번호 최대 13자리, 14자리 이상은 search_purchase_invoice`
+  - `search_slips` 코드: 14자리 이상 bill_ndx 입력 시 자동으로 search_purchase_invoice 위임
+- **후속:** `route_intent` 라우터 tool → (16)에서 구현 완료
+
+---
+
+## 2026-05-13 (14) — eacct_chatbot 슬래시 커맨드·컨텍스트 바 + eacct_mcp 전표조회 개선
+
+### eacct_chatbot
+
+- **운영 배포 가이드 작성:** `projects/eacct_chatbot/docs/production_deployment.md` (서버 구성·임베드·사용자 인증·배포 체크리스트)
+- **슬래시 커맨드 구현:** `/clear` · `/compact` · `/help` — 입력창에서 `/` 입력 시 자동완성 팝업, ↑↓ 키보드 내비게이션
+- **컨텍스트 바 구현:** 누적 대화 문자수 기반 % 표시, 임계값 초과 시 표시 (현재 테스트값 5%), `/compact` 버튼 노출
+- **자동 compact:** 컨텍스트 임계값 도달 시 자동 실행 (테스트: 10%, 운영 확정값: CTX_SHOW=75 / CTX_AUTO_COMPACT=95)
+- **`/compact` 엔드포인트:** `POST /compact` — AI 요약 후 마지막 2턴 보존한 압축 history 반환
+- **`GET /config` 엔드포인트:** 백엔드 종류·max_context_chars 반환
+- **Pass 1 history 전달 버그 수정:** `_detect_intent`에 history 미전달로 후속 질문("1, 2월만 보여줘") 맥락 상실 → 최근 2턴 포함 전달로 수정
+- **Pass 2 표 출력 규칙 추가:** 컬럼명·순서 임의 변경 금지 지시 삽입
+
+### eacct_mcp — search_slips 개선
+
+- **날짜 범위 제한 제거:** `_MAX_DATE_RANGE_DAYS=62` 삭제, `_validate_dates`에서 범위 검증 제거
+- **건수 기반 제한:** `_TOO_MANY_THRESHOLD=50` — 50건 이상 시 Miso 호출 전 직접 안내 반환 (`too_many: true` 플래그)
+- **응답 컬럼 한국어 변환:** `_COLUMN_MAP` 정의, 전표(업무)유형·전표번호·적요·금액·회계일자·전표상태·작성자·작성부서 순 고정 반환
+
+---
+
+## 2026-05-13 (13) — eacct_chatbot Miso 토큰 최적화 + eacct_mcp 오류 확인
+
+- **[eacct_chatbot] Miso Pass 2 토큰 최적화:** `SYSTEM_PERSONA`(~400 토큰)를 Miso 앱 시스템 프롬프트로 이전, `chat_handler.py` Pass 2 prompt 경량화
+- **[eacct_chatbot] CLAUDE.md:** 미소 앱 시스템 프롬프트 샘플 현행화 (페르소나·응답 규칙·정확도 표기 통합본)
+- **[eacct_mcp] T018 등록:** MCP 서버 오류 모니터링 + 관리자 알림 (방식 미결정)
+- **[eacct_mcp] search_slips 500 오류:** DBSafer 미연결로 인한 DB 타임아웃 — 재연결 후 해결
+
+## 2026-05-12 (12)
+
+### eacct_mcp — commcode 개선 + search_slips 고도화
+
+- **commcode.py:** `_add_status_nm` 추가(DEL_YN→'사용중'/'삭제됨'), `get_comcd_group` JOIN으로 그룹명 포함
+- **search_slips tool 고도화:**
+  - 작성자·작성부서 env var 자동 로드, 사용자 파라미터 미노출
+  - 회계반영일 기본값(오늘-30일~오늘) 자동 적용
+  - 50건 초과 시 웹 조회 안내 후 데이터 미반환 종료
+  - CSV export 지원(`export_format="csv"`)
+- `.env` / `.env.example`: `EACCT_USER_SABUN`, `EACCT_USER_DEPT` 추가
+
+---
+
+## 2026-05-12 (11)
+
+### eacct_mcp · eacct_chatbot — Phase 1 완료 / Phase 2 진입
+
+- **Phase 1 완료 판정:** eacct_chatbot REST 연동 + Miso 2-pass로 DB 실시간 조회 검증 완료. stdio(Claude Desktop) 별도 검증 불필요.
+- 두 프로젝트 CLAUDE.md·PROJECTS_GLOBAL.md 단계 업데이트:
+  - eacct_mcp: `설계` → `개발`, Phase 1 완료·Phase 2(Miso 개발팀 연동 요청) 진행중
+  - eacct_chatbot: `기획` → `개발`, Phase 2(E2E 테스트·안정화) 진행중
+
+### eacct_mcp — miso_api_spec.md v0.2 전면 갱신
+
+- tool 목록 현행화 (2종 → 6종): commcode 3종(실DB)·slip 1종(실DB) 추가, invoice 2종(Mock) 유지
+- 미구현 예정 항목(get_vendor_history·get_account_list) 제거
+- 각 tool 파라미터 테이블·요청/응답 예시 신규 작성
+
+### eacct_chatbot — tool 오류·0건 단락 처리
+
+- `MisoChatHandler.chat()` 수정: tool 호출 후 오류·0건이면 Pass 2(Miso) 생략하고 직접 반환
+  - 연결 오류(WinError 10061 등): "eacct_mcp 서버 연결 불가" 메시지 직접 반환
+  - 기타 tool 오류: 오류 내용 직접 반환
+  - 0건 결과: "조회 결과 없음" 직접 반환
+  - 데이터 있음·일반 질문: 기존 Pass 2 유지
+
+---
+
+## 2026-05-12 (10)
+
+### eacct_mcp — 로깅 인프라 개선 (mcp_platform 공통 적용)
+
+**`platform/plugins/mcp_platform` 수정**
+
+- `middleware.py`
+  - StreamHandler UTF-8 인코딩 고정 (Windows 콘솔 한글 깨짐 방지)
+  - tool OK 로그에 처리시간(ms) + 결과 건수(`count`) 추가
+  - tool ERROR 로그에 전체 스택트레이스(`exc_info=True`) 추가
+  - `FileHandler` → `TimedRotatingFileHandler` 전환 (일별 로테이션, 30일 보관)
+- `rest_bridge.py` — HTTP 접속 로그 미들웨어(`_AccessLogMiddleware`) 추가: 메서드·경로·응답코드·소요시간·클라이언트 IP 기록
+- `base_server.py` — `create_rest_app`에 logger 전달하도록 수정
+
+**로그 파일:** `projects/eacct_mcp/logs/eacct_mcp.log`
+
+### eacct_chatbot — MCP 연결 상태 표시 제거
+
+- `widget.html` 헤더: `e-Accounting AI · MCP 연결됨(N)` → `e-Accounting AI 어시스턴트`
+- `index.html` 헤더: MCP 상태 dot + 텍스트 제거
+
+---
+
+## 2026-05-12 (9)
+
+### eacct_mcp — 산출물 파일명 순번 제거 + 웹뷰 사이드바 개선
+
+**eacct_mcp 산출물 파일명 정규화**
+- `01_REQ_eacct_mcp_요구사항정의서.html` → `REQ_eacct_mcp_요구사항정의서.html`
+- `02_FLW_eacct_mcp_프로세스흐름도.html` → `FLW_eacct_mcp_프로세스흐름도.html`
+- `05_FUNC_eacct_mcp_기능정의서.html` → `FUNC_eacct_mcp_기능정의서.html`
+- `docs/index.md` 링크 3개 동일하게 수정
+
+**웹뷰 404 수정 — `index.html` basePath 경로 오류**
+- `basePath: '../'` → `'/'` (서버 루트 = 프로젝트 루트로 고정)
+- `loadSidebar`, `nameLink`, 아이콘 네비 hash 참조, `fetch()` URL, 홈 감지 조건 전체 경로 수정
+- 근본 원인: basePath `'../'`가 `platform/services/`를 기준으로 잡혀 콘텐츠 파일(프로젝트 루트) 404
+
+**sync_sidebar.py 개선 — docs/*.md 자동 스캔**
+- `_get_sidebar_title()` 추가: 다중 줄 HTML 주석의 `sidebar_title` 메타 파싱, H1 폴백
+- `_get_docs_items()` 추가: `docs/*.md` 최상위 파일 자동 수집, `index.md` 항상 마지막
+- `STANDARD_ITEMS`에서 `docs/index.md` 제거 → `_get_docs_items()` 위임
+- 효과: Miso API 스펙·산출물 복구, 이후 docs/*.md 파일 추가 시 자동 반영
+
+---
+
+## 2026-05-12 (8)
+
+### 플랫폼 — 플러그인 문서 체계 수립 + 메모리 포인터 전환
+
+**배경:** 플러그인 관련 정보가 개인 메모리에 분산 저장되어 다음 세션에서 재활용이 어려웠음. CLAUDE.md(현행 상태, 항상 로딩) + CHANGELOG.md(이력, 필요 시 로딩) 이중 체계로 정비.
+
+**플러그인 문서 신규 생성 (6개)**
+
+| 플러그인 | CLAUDE.md | CHANGELOG.md |
+|---|---|---|
+| `mcp_platform` | 모듈 구성·GET /tools 스키마·의존성 | v0.1.1 input_schema 추가, v0.1.0 초기 생성 |
+| `miso_client` | MisoClient 사용법·chat() 동작·앱 매개변수 권장값 | v0.1.0 atlassian_pipeline 분리 배경 |
+| `atlassian_client` | 모듈 구성·ConfluenceAnalyzerBase 예시·환경변수 | v0.2.0 명칭 변경 이력, v0.1.0 초기 생성 |
+
+**메모리 포인터 전환**
+- `project_atlassian_client.md` → 포인터 전용 (상세는 CLAUDE.md 참조)
+- `project_miso_client.md` → 포인터 전용 (상세는 CLAUDE.md 참조, 경로 오류도 수정: `platform/miso_client/` → `platform/plugins/miso_client/`)
+
+---
+
+## 2026-05-12 (7)
+
+### eacct_chatbot (P2605121) — 프로젝트 생성 및 초기 구현
+
+- **신규 프로젝트 생성:** `eacct_chatbot` (P2605121) — e-Acct AI 챗봇, apps 등록 예정
+- **아키텍처:** 브라우저 → FastAPI(7000) → AI 백엔드 → eacct_mcp REST(8000) → e-Acct DB
+- **AI 백엔드:** Claude API(tool_use) / Miso API 전환 지원 (`AI_BACKEND` 환경변수)
+- **Miso 2-pass 오케스트레이션:** Pass1 의도파악(JSON) → tool 호출 → Pass2 최종 답변
+- **구현 파일:** `server.py`(FastAPI) · `chat_handler.py`(ClaudeChatHandler·MisoChatHandler·factory) · `mcp_client.py` · `templates/index.html`(채팅 UI)
+- **mcp_platform rest_bridge.py 확장:** `GET /tools`에 `input_schema` 추가 — 함수 시그니처 타입힌트 → JSON Schema 자동 생성 (Claude tool_use·Miso 호환)
+- **버그 수정:** starlette 1.0.0 + Jinja2 3.1.6 호환성 오류 → `fastapi==0.115.12` 고정 + `Jinja2Templates` 대신 Jinja2 직접 호출로 교체
+- **TRIGGERS.md:** eacct_mcp 서버 실행 / eacct_chatbot 실행 트리거 2건 추가
+- **서버 구동 확인:** eacct_mcp(8000) ✓ · eacct_chatbot(7000) ✓
+- **다음:** E2E 테스트 (T004) — 공통코드 조회 질문 → Miso 응답 확인
+
+---
+
+## 2026-05-12 (5)
+
+### 플랫폼 — 산출물 템플릿 순번 제거 + 신규 4종 추가
+
+**목적:** 단계 폴더 구조 도입으로 파일명 순번(`NN_`)이 중복 역할이 됨에 따라 제거. SDLC 관점 누락 산출물 4종(DAT·API·SEC·RUN) 추가 및 필수/옵션 구분 체계화.
+
+**1단계 — 순번 제거**
+- 템플릿 HTML 12종 파일명 변경: `01_REQ_...` → `REQ_...` 등 (`01_plan/`·`02_design/`·`03_dev/`·`04_test/`·`05_deploy/` + TRC 루트)
+- 가이드 MD 10종 파일명 변경: `01_REQ-authoring-guide.md` → `REQ-authoring-guide.md` 등
+- `platform/project/project_creation.md`: `01_REQ` 참조 → `REQ`
+
+**2단계 — 필수/옵션 구분 + 사용조건 컬럼 추가**
+- `platform/project/deliverables_guide.md`: 산출물 표에 `필수/옵션` · `사용조건` 컬럼 신설 (15종 + TRC 기준)
+  - 필수 8종: REQ·FLW·FUNC·ARC·UTC·ITS·OPM·CFG
+  - 옵션 7종: SCR(UI 있을 때)·ROLE(권한 체계 있을 때)·DAT(DB 있을 때)·API(외부 노출 시)·SEC(인증/PII 처리 시)·RUN(운영 단계 진입 시)·USM(외부 사용자 있을 때)
+- `platform/project/project_lifecycle.md`: 단계별 산출물 목록 구 파일명 전부 갱신
+
+**3단계 — 신규 산출물 4종 작성**
+
+| 종류 | 파일 | 특징 |
+|---|---|---|
+| DAT 데이터모델정의서 | `docs/02_design/DAT_데이터모델정의서.html` | ERD·테이블 상세·FK 관계·인덱스·데이터 정책, chunk=table-row |
+| API 인터페이스명세서 | `docs/02_design/API_인터페이스명세서.html` | 엔드포인트 목록·상세·오류코드, chunk=endpoint-row |
+| SEC 보안설계서 | `docs/02_design/SEC_보안설계서.html` | STRIDE 위협모델·인증/인가·암호화·OWASP·감사로깅, chunk=section+threat-row |
+| RUN 운영Runbook | `docs/05_deploy/RUN_운영Runbook.html` | 모니터링 임계치·일상점검·장애 플레이북·복구 DR·에스컬레이션, chunk=procedure-step |
+
+- 각 산출물별 `authoring-guide.md` 4종 작성 (`guides/DAT-·API-·SEC-·RUN-`)
+- 기존 가이드 10종: §0 파일 경로 참조 구 파일명 → 신규 파일명 일괄 수정
+
+**4단계 — 인덱스 및 CLAUDE.md 갱신**
+- `platform/templates/deliverables/index.html`: "11종" → "15종", 기존 11개 카드 링크 신규 경로로 수정, 신규 4종 카드(NEW 배지) 추가
+- `platform/templates/deliverables/CLAUDE.md`: §2 "15종", §9 가이드 테이블 신규 4종 4행 개별 추가
+
+**주요 결정**
+- 순번은 폴더 구조가 SDLC 순서를 담당하므로 파일명에 불필요 → 제거
+- SCR·ROLE은 옵션이지만 UI/권한 있는 프로젝트에서 사실상 필수에 준함
+- RUN은 운영 단계 진입 시 필수로 분류 (모든 운영 프로젝트)
+- ID 네임스페이스: DAT-E/R/I/P, API-###(3자리), SEC-T/C, RUN-A/D/R
+
+**커밋**
+- `ef73f8d` feat(templates): 산출물 템플릿 순번 제거 + 신규 4종 추가 (35 files, 1871+/101−)
+
+---
+
 ## 2026-05-12 (4)
 
 ### 플랫폼 — 프로젝트 라이프사이클 통합 재설계

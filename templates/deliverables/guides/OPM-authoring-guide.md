@@ -1,13 +1,13 @@
-# 운영자매뉴얼 (OPM) — AI 작성 가이드
+﻿# 운영자매뉴얼 (OPM) — AI 작성 가이드
 
 > **이 문서의 독자는 AI 에이전트입니다.** 화면 사용자에게 노출되지 않습니다.
-> 템플릿(`docs/05_deploy/09_OPM_운영자매뉴얼.html`)을 복사해 실제 운영 절차를 채울 때 반드시 이 가이드를 먼저 로드하십시오.
+> 템플릿(`docs/05_deploy/OPM_운영자매뉴얼.html`)을 복사해 실제 운영 절차를 채울 때 반드시 이 가이드를 먼저 로드하십시오.
 
 ---
 
 ## 0. 작성 절차
 
-1. 템플릿 복사 → `projects/<프로젝트>/docs/05_deploy/09_OPM_<프로젝트명>_운영자매뉴얼_<YYYYMMDD>.html`
+1. 템플릿 복사 → `projects/<프로젝트>/docs/05_deploy/OPM_<프로젝트명>_운영자매뉴얼_<YYYYMMDD>.html`
 2. `<meta>` 단일 소스 갱신 (project-id / doc-id / owner / tags / primary-entities)
 3. `<title>` — `OPM · {시스템명} 운영자매뉴얼`
 4. **§2 운영 대시보드** — 모니터링 지표·임계치

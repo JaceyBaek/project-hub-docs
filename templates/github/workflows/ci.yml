@@ -31,5 +31,9 @@ jobs:
         run: flake8 source/ --max-line-length=120 --exclude=source/.env*
 
       - name: Test (pytest)
-        run: pytest source/tests/ -v
-        continue-on-error: true
+        run: |
+          if [ -d source/tests ] && find source/tests -name 'test_*.py' -o -name '*_test.py' | grep -q .; then
+            pytest source/tests/ -v
+          else
+            echo "테스트 파일 없음 — 건너뜀 (CI 통과)"
+          fi

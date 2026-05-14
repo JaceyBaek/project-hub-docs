@@ -52,20 +52,20 @@
   <section class="hero">
     <div class="cf-breadcrumb"><span>Workspace</span><span>templates</span><span>deliverables</span></div>
     <h1>프로젝트 산출물 템플릿</h1>
-    <div class="sub">사내 업무 시스템(ERP/그룹웨어류) 프로젝트용 11종 템플릿. Confluence 게시 · 파일 백업 · RAG 학습 구조화 대응.</div>
+    <div class="sub">사내 업무 시스템(ERP/그룹웨어류) 프로젝트용 15종 템플릿. Confluence 게시 · 파일 백업 · RAG 학습 구조화 대응.</div>
     <div class="meta-row">
       <span><b>위치</b> templates/deliverables/</span>
-      <span><b>문서 수</b> 11 + Trace Matrix</span>
-      <span><b>ID 체계</b> REQ / FLW / SCR / ROLE / FUNC / UTC / ITS / ARC / OPM / USM / CFG</span>
+      <span><b>문서 수</b> 15 + Trace Matrix</span>
+      <span><b>ID 체계</b> REQ / FLW / SCR / ROLE / FUNC / DAT / API / SEC / UTC / ITS / ARC / OPM / USM / CFG / RUN</span>
       <span><b>언어</b> 한국어</span>
-      <span><b>갱신</b> 2026-05-11</span>
+      <span><b>갱신</b> 2026-05-12</span>
     </div>
   </section>
 
-  <div class="sectionhead">1. 문서 템플릿 (11종 + TRC)</div>
+  <div class="sectionhead">1. 문서 템플릿 (15종 + TRC)</div>
   <div class="doc-grid">
 
-    <a class="doc-card" href="docs/01_REQ_요구사항정의서.html" style="border-color: var(--ink); border-width: 2px;">
+    <a class="doc-card" href="docs/01_plan/REQ_요구사항정의서.html" style="border-color: var(--ink); border-width: 2px;">
       <div class="id">REQ · Requirements <span style="background:var(--ink); color:#fff; font-size:9px; padding:1px 5px; margin-left:4px; letter-spacing:0.06em;">FINAL</span></div>
       <div class="name">요구사항정의서</div>
       <div class="desc">필수/선택 마커 + AI 작성 지침 + 메타 단일소스 + 자동 검증표. RAG 친화 구조 적용 완료.</div>
@@ -73,7 +73,7 @@
       <div class="foot"><span>섹션 10</span><span>→ SCR, FUNC, UTC</span></div>
     </a>
 
-    <a class="doc-card" href="docs/02_FLW_프로세스흐름도.html">
+    <a class="doc-card" href="docs/02_design/FLW_프로세스흐름도.html">
       <div class="id">FLW · Process Flow</div>
       <div class="name">프로세스흐름도</div>
       <div class="desc">업무 절차와 시스템 처리 흐름을 다이어그램 + 단계 표로 문서화.</div>
@@ -81,7 +81,7 @@
       <div class="foot"><span>섹션 6</span><span>← REQ  → SCR</span></div>
     </a>
 
-    <a class="doc-card" href="docs/03_SCR_화면정의서.html">
+    <a class="doc-card" href="docs/02_design/SCR_화면정의서.html">
       <div class="id">SCR · Screen Spec</div>
       <div class="name">화면정의서</div>
       <div class="desc">화면 목록, 레이아웃, 컴포넌트, 이벤트, 유효성 정의.</div>
@@ -89,7 +89,7 @@
       <div class="foot"><span>섹션 7</span><span>← REQ, FLW  → FUNC</span></div>
     </a>
 
-    <a class="doc-card" href="docs/04_ROLE_권한정의서.html">
+    <a class="doc-card" href="docs/02_design/ROLE_권한정의서.html">
       <div class="id">ROLE · Authorization</div>
       <div class="name">권한정의서</div>
       <div class="desc">역할(Role) × 기능/메뉴/데이터 권한 매트릭스와 승인 정책.</div>
@@ -97,7 +97,7 @@
       <div class="foot"><span>섹션 5</span><span>← REQ  → FUNC, SCR</span></div>
     </a>
 
-    <a class="doc-card" href="docs/05_FUNC_기능정의서.html">
+    <a class="doc-card" href="docs/02_design/FUNC_기능정의서.html">
       <div class="id">FUNC · Function Spec</div>
       <div class="name">기능정의서</div>
       <div class="desc">기능 단위의 입력·처리·출력·예외·API 레퍼런스.</div>
@@ -105,7 +105,7 @@
       <div class="foot"><span>섹션 8</span><span>← REQ, SCR  → UTC, ITS</span></div>
     </a>
 
-    <a class="doc-card" href="docs/06_UTC_단위테스트케이스.html">
+    <a class="doc-card" href="docs/03_dev/UTC_단위테스트케이스.html">
       <div class="id">UTC · Unit Test</div>
       <div class="name">단위테스트케이스</div>
       <div class="desc">기능 단위 테스트 케이스. 전제/절차/기대결과/커버리지.</div>
@@ -113,7 +113,7 @@
       <div class="foot"><span>섹션 5</span><span>← FUNC  → ITS</span></div>
     </a>
 
-    <a class="doc-card" href="docs/07_ITS_통합테스트시나리오.html">
+    <a class="doc-card" href="docs/04_test/ITS_통합테스트시나리오.html">
       <div class="id">ITS · Integration Test</div>
       <div class="name">통합테스트시나리오</div>
       <div class="desc">사용자 여정 기반 End-to-End 시나리오. 데이터 전제/환경 정의.</div>
@@ -121,7 +121,7 @@
       <div class="foot"><span>섹션 6</span><span>← FLW, UTC</span></div>
     </a>
 
-    <a class="doc-card" href="docs/08_ARC_아키텍처.html">
+    <a class="doc-card" href="docs/02_design/ARC_아키텍처.html">
       <div class="id">ARC · Architecture</div>
       <div class="name">아키텍처</div>
       <div class="desc">논리/배포/데이터/보안 아키텍처와 비기능 설계 결정.</div>
@@ -129,7 +129,7 @@
       <div class="foot"><span>섹션 7</span><span>← REQ</span></div>
     </a>
 
-    <a class="doc-card" href="docs/09_OPM_운영자매뉴얼.html">
+    <a class="doc-card" href="docs/05_deploy/OPM_운영자매뉴얼.html">
       <div class="id">OPM · Operator Manual</div>
       <div class="name">운영자매뉴얼</div>
       <div class="desc">운영자 업무 절차, 장애 대응, 모니터링, 배치 운영 가이드.</div>
@@ -137,7 +137,7 @@
       <div class="foot"><span>섹션 8</span><span>← ARC, CFG</span></div>
     </a>
 
-    <a class="doc-card" href="docs/10_USM_사용자매뉴얼.html">
+    <a class="doc-card" href="docs/05_deploy/USM_사용자매뉴얼.html">
       <div class="id">USM · User Manual</div>
       <div class="name">사용자매뉴얼</div>
       <div class="desc">최종 사용자 대상 기능 사용법, FAQ, 스크린샷 기반 가이드.</div>
@@ -145,7 +145,7 @@
       <div class="foot"><span>섹션 6</span><span>← SCR, FUNC</span></div>
     </a>
 
-    <a class="doc-card" href="docs/11_CFG_설정가이드.html">
+    <a class="doc-card" href="docs/05_deploy/CFG_설정가이드.html">
       <div class="id">CFG · Config Guide</div>
       <div class="name">설정가이드</div>
       <div class="desc">환경변수/시스템 파라미터/외부 연계 설정과 체크리스트.</div>
@@ -153,7 +153,39 @@
       <div class="foot"><span>섹션 6</span><span>← ARC  → OPM</span></div>
     </a>
 
-    <a class="doc-card" href="docs/00_TRC_요구사항추적매트릭스.html">
+    <a class="doc-card" href="docs/02_design/DAT_데이터모델정의서.html">
+      <div class="id">DAT · Data Model <span style="background:#e8f5e9; color:#2e7d32; font-size:9px; padding:1px 5px; margin-left:4px; letter-spacing:0.06em;">NEW</span></div>
+      <div class="name">데이터모델정의서</div>
+      <div class="desc">테이블 정의, ERD, FK 관계, 인덱스 전략, 데이터 보존 정책.</div>
+      <div class="variations">v1</div>
+      <div class="foot"><span>섹션 9</span><span>← REQ, ARC  → FUNC</span></div>
+    </a>
+
+    <a class="doc-card" href="docs/02_design/API_인터페이스명세서.html">
+      <div class="id">API · Interface Spec <span style="background:#e8f5e9; color:#2e7d32; font-size:9px; padding:1px 5px; margin-left:4px; letter-spacing:0.06em;">NEW</span></div>
+      <div class="name">인터페이스명세서</div>
+      <div class="desc">REST/MCP 엔드포인트 목록, 요청/응답 스키마, 인증 방식, 오류 코드 정의.</div>
+      <div class="variations">v1</div>
+      <div class="foot"><span>섹션 8</span><span>← REQ-F, FUNC  → ARC</span></div>
+    </a>
+
+    <a class="doc-card" href="docs/02_design/SEC_보안설계서.html">
+      <div class="id">SEC · Security Design <span style="background:#e8f5e9; color:#2e7d32; font-size:9px; padding:1px 5px; margin-left:4px; letter-spacing:0.06em;">NEW</span></div>
+      <div class="name">보안설계서</div>
+      <div class="desc">STRIDE 위협 모델, 인증·인가, 암호화, OWASP 대응, 감사 로깅 정책.</div>
+      <div class="variations">v1</div>
+      <div class="foot"><span>섹션 9</span><span>← REQ-N, ARC</span></div>
+    </a>
+
+    <a class="doc-card" href="docs/05_deploy/RUN_운영Runbook.html">
+      <div class="id">RUN · Runbook <span style="background:#e8f5e9; color:#2e7d32; font-size:9px; padding:1px 5px; margin-left:4px; letter-spacing:0.06em;">NEW</span></div>
+      <div class="name">운영Runbook</div>
+      <div class="desc">모니터링 임계치, 일상 점검, 장애 대응 플레이북, 복구 절차, 에스컬레이션 경로.</div>
+      <div class="variations">v1</div>
+      <div class="foot"><span>섹션 8</span><span>← OPM, CFG, ARC</span></div>
+    </a>
+
+    <a class="doc-card" href="docs/TRC_요구사항추적매트릭스.html">
       <div class="id">TRC · Trace Matrix</div>
       <div class="name">요구사항 추적 매트릭스</div>
       <div class="desc">REQ → FLW → SCR → FUNC → UTC → ITS 전체 연결을 한 화면에.</div>

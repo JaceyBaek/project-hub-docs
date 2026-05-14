@@ -461,12 +461,40 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 10-2. .env 설정
+### 10-2. .env 설정 (비시크릿)
 
 ```bash
 cp .env.example .env
-# .env 파일 열어 실제 값 입력
-# .env는 절대 커밋 금지
+# .env 파일 열어 비시크릿 값(URL·페이지 ID 등) 입력
+# .env는 절대 커밋 금지 — .gitignore에 포함 확인 필수
+```
+
+> **시크릿(API Key·토큰·DB 비번)은 `.env`에 두지 않음** — `platform/setup/secrets_guide.md` 참조하여 OS 키체인(keyring)에 등록.
+
+### 10-3. 시크릿 keyring 등록
+
+각 프로젝트의 `source/.env.example` 주석에 등록해야 할 시크릿 목록이 명시되어 있다.
+
+```powershell
+# 최초 1회 — platform venv 셋업 (keyring 도구 실행용)
+cd {HUB_ROOT}
+python -m venv platform\.venv
+platform\.venv\Scripts\python -m pip install keyring
+
+# 시크릿 등록 (입력값은 화면에 표시 안 됨)
+platform\scripts\credentials\set_credential.ps1 set [프로젝트명] [키명]
+```
+
+머신 변경·새 환경 셋업 시 재등록 절차는 `platform/setup/secrets_guide.md` §6 참조.
+
+### 10-4. secrets_loader 등 플러그인 설치 (개발 프로젝트)
+
+미소·Confluence·DB 시크릿을 사용하는 프로젝트는 `secrets_loader` 패키지 필요.
+
+```powershell
+# PLUGINS_PATH 환경변수가 없으면 personal.yml의 paths.plugins 값 사용
+projects\{프로젝트명}\source\.venv\Scripts\pip install -e $env:PLUGINS_PATH\secrets_loader
+# 필요 시 mcp_platform, miso_client, atlassian_client 도 동일하게 install
 ```
 
 ### 10-3. pyproject.toml (프로젝트 루트)

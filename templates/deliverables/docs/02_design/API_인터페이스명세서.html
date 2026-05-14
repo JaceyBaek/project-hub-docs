@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>API · 인터페이스명세서</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+<script src="../assets/doc-validator.js" defer></script>
+
+<meta name="project-id" content="EM2026">
+<meta name="doc-id" content="EM2026-API-2026">
+<meta name="doc-type" content="interface-specification">
+<meta name="doc-name-ko" content="인터페이스명세서">
+<meta name="doc-name-en" content="Interface Specification">
+<meta name="doc-version" content="v0.1">
+<meta name="doc-status" content="Draft">
+<meta name="doc-last-updated" content="2026-05-12">
+<meta name="doc-owner" content="홍길동 (Tech Lead)">
+<meta name="doc-epic" content="PRJ-2026-EM">
+<meta name="doc-tags" content="phase:design, module:api, domain:hr-approval, lang:ko">
+<meta name="doc-related" content="REQ-F, FUNC, ARC, SEC">
+<meta name="doc-chunk-strategy" content="endpoint-row">
+<meta name="doc-exclude-from-training" content="false">
+<meta name="doc-embedding-hints" content="REST API 엔드포인트 정의, 요청/응답 스펙, 인증 방식, 오류 코드 목록.">
+<meta name="doc-primary-entities" content="엔드포인트, HTTP 메서드, 요청 파라미터, 응답 스키마, 오류 코드, 인증">
+</head>
+<body data-min-chunks="3">
+
+<div class="nav-bar" data-ai-skip="true">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>인터페이스명세서</b></span>
+  <span class="spacer"></span><span class="status draft">Template</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<article class="cf-shell" data-project-id="EM2026" data-doc-id="EM2026-API-2026" data-doc-type="interface-specification">
+
+  <div class="cf-breadcrumb" data-ai-skip="true"><span>Space</span><span>산출물 템플릿</span><span>설계</span><span>인터페이스명세서</span></div>
+  <h1 class="cf-title"><span class="doc-id">API</span>인터페이스명세서 <span style="font-size:13px; font-weight:400; color:var(--muted);">— Interface Specification</span></h1>
+
+  <div class="guide-pointer" data-ai-skip="true">
+    <b>엔드포인트 행 단위 청크.</b> 엔드포인트 목록 테이블 각 행마다 <span class="mono">data-chunk="endpoint:{METHOD}:{path}"</span>, 상세 섹션마다 <span class="mono">data-chunk="ep-detail:{ID}"</span>.
+    AI 작성 가이드는 <span class="mono">guides/API-authoring-guide.md</span> 를 참고하세요.
+    <span class="marker-legend">
+      <span><span class="req-mark">REQ</span> 필수</span>
+      <span><span class="opt-mark">OPT</span> 선택</span>
+      <span><span class="cond-mark">COND</span> 조건부</span>
+    </span>
+  </div>
+
+  <div class="sum-checklist" data-ai-skip="true">
+    <div class="hd"><span>작성 점검 체크리스트</span><span class="small muted">필수 8</span></div>
+    <ul>
+      <li>메타바 6개 필드</li>
+      <li>분류 태그 최소 3개</li>
+      <li>Base URL / 프로토콜 / 버전 명시</li>
+      <li>인증 / 인가 방식 명시</li>
+      <li>엔드포인트 목록 ≥ 3건 (메서드·경로·설명·Trace)</li>
+      <li>엔드포인트 상세 — 요청/응답 스키마 ≥ 1건</li>
+      <li>오류 코드 목록 ≥ 3건</li>
+      <li>AI 메타데이터 블록</li>
+    </ul>
+  </div>
+
+  <section data-section-key="metadata" data-chunk="meta">
+    <div class="cf-meta">
+      <div class="m"><div class="k">담당자</div><div class="v">홍길동 (Tech Lead)</div></div>
+      <div class="m"><div class="k">버전</div><div class="v">v0.1</div></div>
+      <div class="m"><div class="k">상태</div><div class="v"><span class="status draft">Draft</span></div></div>
+      <div class="m"><div class="k">수정일</div><div class="v">2026-05-12</div></div>
+      <div class="m"><div class="k">관련 Epic</div><div class="v">PRJ-2026-EM</div></div>
+      <div class="m"><div class="k">Confluence</div><div class="v mono small">/DOCS-TMPL/API</div></div>
+    </div>
+    <div style="margin:0 0 16px;" data-tags="phase:design,module:api,domain:hr-approval">
+      <span class="tag">#phase:design</span><span class="tag">#module:api</span><span class="tag">#domain:hr-approval</span>
+    </div>
+  </section>
+
+  <div class="cf-body">
+    <aside class="cf-toc" data-ai-skip="true">
+      <h4>목차</h4>
+      <ol>
+        <li>개요</li>
+        <li>인증 / 인가</li>
+        <li>공통 규약</li>
+        <li>엔드포인트 목록</li>
+        <li>엔드포인트 상세</li>
+        <li>오류 코드</li>
+        <li>AI 메타데이터</li>
+        <li>작성 완료 검증표</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <section data-section-key="overview" data-chunk="overview">
+        <h2 id="overview"><span class="num">1.</span>개요</h2>
+        <div class="field-hint" data-ai-skip="true">Base URL / 프로토콜 / API 버전 전략 / 인터페이스 유형(REST·gRPC·MCP tool 등) 명시.</div>
+        <div class="grid-3">
+          <div class="frame" data-chunk="overview.base">
+            <div class="fhead">Base URL</div>
+            <div class="small"><code>https://api.example.com/v1</code><br>내부: <code>http://approval-svc:8080</code></div>
+          </div>
+          <div class="frame" data-chunk="overview.protocol">
+            <div class="fhead">프로토콜 / 형식</div>
+            <div class="small">REST over HTTPS / JSON (UTF-8) / OpenAPI 3.0 준거</div>
+          </div>
+          <div class="frame" data-chunk="overview.versioning">
+            <div class="fhead">버전 정책</div>
+            <div class="small">URL 경로 버전 (<code>/v1/</code>). Breaking change 시 새 버전 발행. 구 버전 6개월 유지 후 Deprecated.</div>
+          </div>
+        </div>
+      </section>
+
+
+      <section data-section-key="auth" data-chunk="auth">
+        <h2 id="auth"><span class="num">2.</span>인증 / 인가</h2>
+        <div class="field-hint" data-ai-skip="true">인증 방식(JWT·OAuth2·API Key 등), 토큰 수명, 권한 범위 명시.</div>
+        <table class="cf" data-table-key="auth">
+          <colgroup><col style="width:160px"><col></colgroup>
+          <tbody>
+            <tr data-chunk="auth:type"><td class="id">인증 방식</td><td>Bearer JWT (OIDC — Azure AD 발급). <code>Authorization: Bearer {token}</code></td></tr>
+            <tr data-chunk="auth:ttl"><td class="id">토큰 수명</td><td>Access Token 1시간 / Refresh Token 8시간</td></tr>
+            <tr data-chunk="auth:scope"><td class="id">권한 범위</td><td>Scope: <code>approval:read</code> / <code>approval:write</code> / <code>admin</code></td></tr>
+            <tr data-chunk="auth:403"><td class="id">미인증 처리</td><td>401 Unauthorized (토큰 없음 / 만료) / 403 Forbidden (권한 부족)</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+
+      <section data-section-key="convention" data-chunk="convention">
+        <h2 id="convention"><span class="num">3.</span>공통 규약</h2>
+        <div class="field-hint" data-ai-skip="true">날짜 형식, 페이지네이션, 공통 응답 래퍼 구조.</div>
+        <table class="cf" data-table-key="convention">
+          <colgroup><col style="width:160px"><col></colgroup>
+          <tbody>
+            <tr data-chunk="conv:datetime"><td class="id">날짜/시간</td><td>ISO 8601 (<code>2026-05-12T14:30:00+09:00</code>)</td></tr>
+            <tr data-chunk="conv:pagination"><td class="id">페이지네이션</td><td>cursor 기반: <code>?cursor={id}&amp;limit={n}</code> / 기본 limit: 20, 최대: 100</td></tr>
+            <tr data-chunk="conv:response"><td class="id">응답 래퍼</td><td><code>{"data": {}, "meta": {"request_id": ""}}</code> / 오류: <code>{"error": {"code": "", "message": ""}}</code></td></tr>
+            <tr data-chunk="conv:idempotency"><td class="id">멱등성 키</td><td>POST 요청 시 <code>Idempotency-Key: {uuid}</code> 헤더 권장 (24시간 보관)</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+
+      <section data-section-key="endpoint-list" data-chunk="endpoint-list">
+        <h2 id="endpoints"><span class="num">4.</span>엔드포인트 목록</h2>
+        <div class="field-hint" data-ai-skip="true">ID 규칙: <span class="mono">API-###</span>. 각 행에 Trace (REQ-F## 또는 FUNC-###) 필수.</div>
+        <table class="cf" data-table-key="endpoint-list">
+          <colgroup><col style="width:80px"><col style="width:80px"><col style="width:220px"><col><col style="width:160px"></colgroup>
+          <thead><tr><th class="id">ID</th><th>메서드</th><th>경로</th><th>설명</th><th>Trace (↑ REQ·FUNC)</th></tr></thead>
+          <tbody>
+            <tr id="EM2026-API-001" data-chunk="endpoint:POST:/v1/drafts" data-item-id="EM2026-API-001" data-trace-up="EM2026-REQ-F01,EM2026-FUNC-001">
+              <td class="id">EM2026-API-001</td><td><span class="tag">POST</span></td><td><code>/v1/drafts</code></td>
+              <td>기안문 생성</td>
+              <td><span class="id-chip up">↑ REQ-F01</span><span class="id-chip up">↑ FUNC-001</span></td>
+            </tr>
+            <tr id="EM2026-API-002" data-chunk="endpoint:GET:/v1/drafts/{id}" data-item-id="EM2026-API-002" data-trace-up="EM2026-REQ-F01">
+              <td class="id">EM2026-API-002</td><td><span class="tag">GET</span></td><td><code>/v1/drafts/{id}</code></td>
+              <td>기안문 단건 조회</td>
+              <td><span class="id-chip up">↑ REQ-F01</span></td>
+            </tr>
+            <tr id="EM2026-API-003" data-chunk="endpoint:POST:/v1/drafts/{id}/submit" data-item-id="EM2026-API-003" data-trace-up="EM2026-REQ-F01,EM2026-FUNC-002">
+              <td class="id">EM2026-API-003</td><td><span class="tag">POST</span></td><td><code>/v1/drafts/{id}/submit</code></td>
+              <td>기안문 상신 (결재선 지정 포함)</td>
+              <td><span class="id-chip up">↑ REQ-F01</span><span class="id-chip up">↑ FUNC-002</span></td>
+            </tr>
+            <tr id="EM2026-API-004" data-chunk="endpoint:POST:/v1/approvals/{id}/process" data-item-id="EM2026-API-004" data-trace-up="EM2026-REQ-F03,EM2026-FUNC-003">
+              <td class="id">EM2026-API-004</td><td><span class="tag">POST</span></td><td><code>/v1/approvals/{id}/process</code></td>
+              <td>결재 처리 (승인 / 반려)</td>
+              <td><span class="id-chip up">↑ REQ-F03</span><span class="id-chip up">↑ FUNC-003</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+
+      <section data-section-key="endpoint-detail" data-chunk="endpoint-detail">
+        <h2 id="ep-detail"><span class="num">5.</span>엔드포인트 상세</h2>
+        <div class="field-hint" data-ai-skip="true">각 엔드포인트별 요청 파라미터·헤더·바디 스키마와 응답 예시. 핵심 엔드포인트 우선 작성.</div>
+
+        <div class="frame" data-chunk="ep-detail:EM2026-API-001" data-item-id="EM2026-API-001">
+          <div class="fhead">POST /v1/drafts — 기안문 생성</div>
+          <table class="cf"><colgroup><col style="width:120px"><col></colgroup>
+            <tbody>
+              <tr><td class="id">Request Body</td>
+                <td><pre class="small">{"title": "string (required, max 200)",
+ "body": "string (required, max 50KB)",
+ "form_id": "integer (required)"}</pre></td></tr>
+              <tr><td class="id">Response 201</td>
+                <td><pre class="small">{"data": {"id": 1001, "status": "DRAFT", "created_at": "2026-05-12T14:30:00+09:00"}}</pre></td></tr>
+              <tr><td class="id">오류</td><td>400 (필수 필드 누락) / 422 (form_id 미존재)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="frame" data-chunk="ep-detail:EM2026-API-004" data-item-id="EM2026-API-004">
+          <div class="fhead">POST /v1/approvals/{id}/process — 결재 처리</div>
+          <table class="cf"><colgroup><col style="width:120px"><col></colgroup>
+            <tbody>
+              <tr><td class="id">Path Param</td><td><code>id</code>: approval 고유 ID (integer)</td></tr>
+              <tr><td class="id">Request Body</td>
+                <td><pre class="small">{"result": "APPROVED | REJECTED",
+ "comment": "string (반려 시 필수, max 500)"}</pre></td></tr>
+              <tr><td class="id">Response 200</td>
+                <td><pre class="small">{"data": {"approval_id": 5001, "result": "APPROVED", "processed_at": "…"}}</pre></td></tr>
+              <tr><td class="id">오류</td><td>400 (result 누락) / 409 (이미 처리됨) / 403 (결재자 불일치)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+
+      <section data-section-key="error-codes" data-chunk="error-codes">
+        <h2 id="errors"><span class="num">6.</span>오류 코드</h2>
+        <div class="field-hint" data-ai-skip="true">HTTP 상태 코드 + 도메인 오류 코드 매핑. 최소 3건.</div>
+        <table class="cf" data-table-key="error-codes">
+          <colgroup><col style="width:80px"><col style="width:180px"><col><col style="width:160px"></colgroup>
+          <thead><tr><th>HTTP</th><th>오류 코드</th><th>메시지 (예시)</th><th>원인</th></tr></thead>
+          <tbody>
+            <tr data-chunk="err:400"><td>400</td><td><code>INVALID_REQUEST</code></td><td>Required field 'title' is missing</td><td>요청 바디 유효성 오류</td></tr>
+            <tr data-chunk="err:401"><td>401</td><td><code>UNAUTHORIZED</code></td><td>Bearer token is expired</td><td>토큰 없음 / 만료</td></tr>
+            <tr data-chunk="err:403"><td>403</td><td><code>FORBIDDEN</code></td><td>Not your approval</td><td>권한 없음</td></tr>
+            <tr data-chunk="err:404"><td>404</td><td><code>NOT_FOUND</code></td><td>Draft not found: id=9999</td><td>리소스 미존재</td></tr>
+            <tr data-chunk="err:409"><td>409</td><td><code>ALREADY_PROCESSED</code></td><td>Approval already completed</td><td>중복 처리 시도</td></tr>
+            <tr data-chunk="err:500"><td>500</td><td><code>INTERNAL_ERROR</code></td><td>Unexpected error. request_id: …</td><td>서버 내부 오류</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+
+      <section data-section-key="ai-metadata" data-chunk="ai-meta">
+        <h2 id="ai-meta"><span class="num">7.</span>AI 학습 메타데이터</h2>
+        <div class="ai-meta"><span class="k">project_id:</span>    EM2026
+<span class="k">doc_id:</span>        EM2026-API-2026
+<span class="k">version:</span>       v0.1
+<span class="k">last_updated:</span>  2026-05-12
+<span class="k">tags:</span>          ["phase:design", "module:api", "domain:hr-approval", "lang:ko"]
+<span class="k">primary_entities:</span> ["엔드포인트", "Bearer JWT", "기안문", "결재처리", "오류코드"]
+<span class="k">embedding_hints:</span>
+  - "전자결재 REST API 엔드포인트 명세, 요청·응답 스키마, 인증 방식"
+  - "오류 코드 정의 및 HTTP 상태 매핑"
+<span class="k">related_docs:</span>  ["REQ-F01..F05", "FUNC-001..003", "ARC-*"]
+<span class="k">exclude_from_training:</span> false
+<span class="k">chunk_strategy:</span> "endpoint-row"
+</div>
+      </section>
+
+
+      <section data-section-key="validation-checklist" data-ai-skip="true">
+        <h2 id="validation"><span class="num">8.</span>작성 완료 검증표 <span data-validate-summary class="small" style="font-weight:400; margin-left:8px;">계산 중…</span></h2>
+        <table class="cf val-table">
+          <colgroup><col style="width:50px"><col style="width:160px"><col><col style="width:90px"><col style="width:140px"></colgroup>
+          <thead><tr><th>#</th><th>점검</th><th>기대</th><th>구분</th><th>결과</th></tr></thead>
+          <tbody>
+            <tr data-validate-rule="meta-bar"><td>1</td><td>메타바</td><td>6개</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="tags"><td>2</td><td>태그</td><td>3개</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="api-base-url"><td>3</td><td>Base URL</td><td>명시됨</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="api-auth"><td>4</td><td>인증 방식</td><td>auth 섹션 존재</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="api-endpoint-min"><td>5</td><td>엔드포인트</td><td>≥ 3건</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="api-error-min"><td>6</td><td>오류 코드</td><td>≥ 3건</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="trace-required"><td>7</td><td>Trace</td><td>엔드포인트 trace-up 존재</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="ai-metadata"><td>8</td><td>AI 메타</td><td>3필드</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="id-format"><td>9</td><td>ID 규칙</td><td>중복 없음</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="project-id-prefix"><td>10</td><td>Project prefix</td><td>{PROJECT}-</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="cf-footer" data-ai-skip="true">
+    <div><h3>변경 이력</h3><table class="cf"><thead><tr><th style="width:80px">버전</th><th style="width:100px">일자</th><th style="width:90px">작성자</th><th>변경내용</th></tr></thead><tbody><tr><td>v0.1</td><td>2026-05-12</td><td>홍길동</td><td>초안</td></tr></tbody></table></div>
+    <div><h3>관련 페이지</h3><ul style="margin:0; padding-left:16px; font-size:12px;"><li>REQ-F · 기능 요구사항</li><li>FUNC · 기능정의서</li><li>ARC · 아키텍처</li><li>SEC · 보안설계서</li></ul></div>
+  </div>
+
+</article>
+</body>
+</html>

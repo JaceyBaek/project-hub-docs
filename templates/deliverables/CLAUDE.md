@@ -9,13 +9,13 @@
 
 1. **PROJECT_CODE 확인**: `PROJECTS_GLOBAL.md`의 프로젝트 코드를 그대로 사용한다 (`P{YYMMDD}{N}` 형식).
    - 프로젝트 컨텍스트가 명확하면 별도 질문 불필요. 예: `P2605081` (eacct_mcp)
-2. **산출물 종류 확인**: 11종 중 어느 것을 작성하는지 명확히.
+2. **산출물 종류 확인**: 15종 중 어느 것을 작성하는지 명확히. 옵션 산출물은 사용 조건 충족 여부 확인 (`platform/project/deliverables_guide.md` §산출물 종류 참조).
 3. **참고 자료**: 기존 인터뷰·요구사항·정책 문서가 있는지 확인.
 4. **버전·상태**: Draft / Review / Approved 중 어느 단계인지.
 
 ## 2. 템플릿 사용
 
-- 템플릿 위치: `platform/templates/deliverables/docs/<단계폴더>/<번호>_<코드>_<이름>.html` (`00_TRC`만 루트). 단계 폴더 매핑은 `platform/project/deliverables_guide.md` 참조
+- 템플릿 위치: `platform/templates/deliverables/docs/<단계폴더>/<ID>_<이름>.html` (`TRC`만 루트). 단계 폴더 매핑은 `platform/project/deliverables_guide.md` 참조
 - **새 문서를 만들 때**: 템플릿을 **복사**하지 말고, 신규 프로젝트 폴더로 가져와 메타만 교체한다.
 - 본문 작성 시 기존 예시(전자결재)는 **반드시 삭제**하고 실제 도메인 내용으로 교체.
 
@@ -26,7 +26,7 @@
 예: P2605081-REQ-F01, P2605081-SCR-010, P2605081-FUNC-001
 ```
 
-- TYPE: `REQ-B` / `REQ-F` / `REQ-N` / `FLW` / `SCR` / `ROLE` / `FUNC` / `UTC` / `ITS` / `ARC` / `OPM` / `USM` / `CFG`
+- TYPE: `REQ-B` / `REQ-F` / `REQ-N` / `FLW` / `SCR` / `ROLE` / `FUNC` / `DAT` / `API` / `SEC` / `UTC` / `ITS` / `ARC` / `OPM` / `USM` / `CFG` / `RUN`
 - 번호: 두 자리 zero-pad (`01`, `02` …). 100개 초과 시 세 자리.
 - 한 번 부여한 ID는 **삭제하지 않는다** — 폐기 시 `data-deprecated="true"` 추가.
 
@@ -69,13 +69,28 @@
 
 ## 9. 산출물별 작성 가이드 위치
 
+각 산출물 가이드: `platform/templates/deliverables/guides/{ID}-authoring-guide.md`
+
 | 산출물 | 가이드 |
 |---|---|
-| REQ | `platform/templates/deliverables/guides/01_REQ-authoring-guide.md` |
-| FLW/SCR/ROLE/FUNC | `platform/templates/deliverables/guides/chunk-strategy-matrix.md` 의 마크업 예시 |
-| 공통 정책 | `platform/templates/deliverables/guides/rag-policy.md` |
-| RAG 변환 | `platform/templates/deliverables/guides/RAG-conversion-guide.md` |
-| ID 규칙 | `platform/templates/deliverables/guides/ID-namespace.md` |
+| REQ | `guides/REQ-authoring-guide.md` |
+| FLW | `guides/FLW-authoring-guide.md` |
+| SCR | `guides/SCR-authoring-guide.md` |
+| ROLE | `guides/ROLE-authoring-guide.md` |
+| FUNC | `guides/FUNC-authoring-guide.md` |
+| UTC | `guides/UTC-authoring-guide.md` |
+| ITS | `guides/ITS-authoring-guide.md` |
+| ARC | `guides/ARC-authoring-guide.md` |
+| OPM | `guides/OPM-authoring-guide.md` |
+| USM | `guides/USM-authoring-guide.md` |
+| DAT | `guides/DAT-authoring-guide.md` |
+| API | `guides/API-authoring-guide.md` |
+| SEC | `guides/SEC-authoring-guide.md` |
+| RUN | `guides/RUN-authoring-guide.md` |
+| 공통 정책 | `guides/rag-policy.md` |
+| 청크 전략 | `guides/chunk-strategy-matrix.md` |
+| RAG 변환 | `guides/RAG-conversion-guide.md` |
+| ID 규칙 | `guides/ID-namespace.md` |
 
 ## 10. 금지 사항
 

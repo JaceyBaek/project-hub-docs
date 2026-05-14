@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>RUN · 운영Runbook</title>
+<link rel="stylesheet" href="../assets/wireframe.css">
+<script src="../assets/doc-validator.js" defer></script>
+
+<meta name="project-id" content="EM2026">
+<meta name="doc-id" content="EM2026-RUN-2026">
+<meta name="doc-type" content="runbook">
+<meta name="doc-name-ko" content="운영Runbook">
+<meta name="doc-name-en" content="Operations Runbook">
+<meta name="doc-version" content="v0.1">
+<meta name="doc-status" content="Draft">
+<meta name="doc-last-updated" content="2026-05-12">
+<meta name="doc-owner" content="홍길동 (Ops)">
+<meta name="doc-epic" content="PRJ-2026-EM">
+<meta name="doc-tags" content="phase:operate, module:ops, domain:hr-approval, lang:ko">
+<meta name="doc-related" content="OPM, CFG, ARC, SEC">
+<meta name="doc-chunk-strategy" content="procedure-step">
+<meta name="doc-exclude-from-training" content="false">
+<meta name="doc-embedding-hints" content="운영 Runbook — 모니터링 임계치, 일상 점검, 장애 대응 플레이북, 복구 절차, 에스컬레이션 경로.">
+<meta name="doc-primary-entities" content="장애대응, 모니터링, 알림, 점검, 복구, DR, 에스컬레이션, Rollback">
+</head>
+<body data-min-chunks="4">
+
+<div class="nav-bar" data-ai-skip="true">
+  <span class="brand">WIREFRAME</span>
+  <span class="crumbs">산출물 템플릿 / <b>운영Runbook</b></span>
+  <span class="spacer"></span><span class="status draft">Template</span>
+  <a class="back" href="../index.html">← Index</a>
+</div>
+
+<article class="cf-shell" data-project-id="EM2026" data-doc-id="EM2026-RUN-2026" data-doc-type="runbook">
+
+  <div class="cf-breadcrumb" data-ai-skip="true"><span>Space</span><span>산출물 템플릿</span><span>운영</span><span>운영Runbook</span></div>
+  <h1 class="cf-title"><span class="doc-id">RUN</span>운영Runbook <span style="font-size:13px; font-weight:400; color:var(--muted);">— Operations Runbook</span></h1>
+
+  <div class="guide-pointer" data-ai-skip="true">
+    <b>절차 단계 단위 청크.</b> 플레이북 각 단계에 <span class="mono">data-chunk="step:{SCENARIO}.{NN}"</span>, 알림 임계치 행에 <span class="mono">data-chunk="alert:{ID}"</span>.
+    AI 작성 가이드는 <span class="mono">guides/RUN-authoring-guide.md</span> 를 참고하세요.
+    <span class="marker-legend">
+      <span><span class="req-mark">REQ</span> 필수</span>
+      <span><span class="opt-mark">OPT</span> 선택</span>
+      <span><span class="cond-mark">COND</span> 조건부</span>
+    </span>
+  </div>
+
+  <div class="sum-checklist" data-ai-skip="true">
+    <div class="hd"><span>작성 점검 체크리스트</span><span class="small muted">필수 8</span></div>
+    <ul>
+      <li>메타바 6개 필드</li>
+      <li>분류 태그 최소 3개</li>
+      <li>서비스 아키텍처 요약 (컴포넌트·의존 시스템)</li>
+      <li>모니터링 임계치 ≥ 3건</li>
+      <li>일상 점검 체크리스트 ≥ 3건</li>
+      <li>장애 대응 플레이북 ≥ 2개 시나리오</li>
+      <li>복구 절차 (롤백 포함)</li>
+      <li>AI 메타데이터 블록</li>
+    </ul>
+  </div>
+
+  <section data-section-key="metadata" data-chunk="meta">
+    <div class="cf-meta">
+      <div class="m"><div class="k">담당자</div><div class="v">홍길동 (Ops)</div></div>
+      <div class="m"><div class="k">버전</div><div class="v">v0.1</div></div>
+      <div class="m"><div class="k">상태</div><div class="v"><span class="status draft">Draft</span></div></div>
+      <div class="m"><div class="k">수정일</div><div class="v">2026-05-12</div></div>
+      <div class="m"><div class="k">관련 Epic</div><div class="v">PRJ-2026-EM</div></div>
+      <div class="m"><div class="k">Confluence</div><div class="v mono small">/DOCS-TMPL/RUN</div></div>
+    </div>
+    <div style="margin:0 0 16px;" data-tags="phase:operate,module:ops,domain:hr-approval">
+      <span class="tag">#phase:operate</span><span class="tag">#module:ops</span><span class="tag">#domain:hr-approval</span>
+    </div>
+  </section>
+
+  <div class="cf-body">
+    <aside class="cf-toc" data-ai-skip="true">
+      <h4>목차</h4>
+      <ol>
+        <li>서비스 개요</li>
+        <li>모니터링 / 알림 임계치</li>
+        <li>일상 점검 체크리스트</li>
+        <li>장애 대응 플레이북</li>
+        <li>복구 절차 / DR</li>
+        <li>에스컬레이션 / 연락처</li>
+        <li>AI 메타데이터</li>
+        <li>작성 완료 검증표</li>
+      </ol>
+    </aside>
+
+    <main class="cf-content">
+
+      <section data-section-key="service-overview" data-chunk="service-overview">
+        <h2 id="overview"><span class="num">1.</span>서비스 개요</h2>
+        <div class="field-hint" data-ai-skip="true">운영 담당자가 빠르게 파악할 수 있도록 컴포넌트 목록, 배포 환경, 의존 외부 시스템 요약.</div>
+        <table class="cf" data-table-key="service-overview">
+          <colgroup><col style="width:160px"><col></colgroup>
+          <tbody>
+            <tr data-chunk="svc:components"><td class="id">주요 컴포넌트</td><td>API Gateway / Approval Service (ECS x4) / Audit Service (ECS x2) / RDS PostgreSQL / MSK Kafka / S3</td></tr>
+            <tr data-chunk="svc:env"><td class="id">운영 환경</td><td>AWS ap-northeast-2 (서울), 2 AZ Active-Active</td></tr>
+            <tr data-chunk="svc:deps"><td class="id">외부 의존</td><td>Azure AD (SSO) / HR 시스템 (조직도 동기화, 1일 1회)</td></tr>
+            <tr data-chunk="svc:deploy"><td class="id">배포 방식</td><td>GitHub Actions CI/CD → ECS Rolling Update. 롤백: 이전 Task Definition revision</td></tr>
+            <tr data-chunk="svc:sla"><td class="id">SLA</td><td>가용성 99.9% / 월 / 주요 화면 응답 P95 ≤ 1,000ms</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+
+      <section data-section-key="monitoring" data-chunk="monitoring">
+        <h2 id="monitoring"><span class="num">2.</span>모니터링 / 알림 임계치</h2>
+        <div class="field-hint" data-ai-skip="true">알림 트리거 임계치, 채널, 담당자 명시. 최소 3건.</div>
+        <table class="cf" data-table-key="monitoring">
+          <colgroup><col style="width:80px"><col style="width:200px"><col style="width:120px"><col style="width:80px"><col></colgroup>
+          <thead><tr><th class="id">ID</th><th>메트릭</th><th>임계치</th><th>심각도</th><th>채널 / 담당</th></tr></thead>
+          <tbody>
+            <tr id="EM2026-RUN-A01" data-chunk="alert:EM2026-RUN-A01" data-item-id="EM2026-RUN-A01">
+              <td class="id">EM2026-RUN-A01</td><td>API 오류율 (5xx)</td><td>&gt; 1% / 5분</td><td>Critical</td><td>PagerDuty → 온콜 담당자</td>
+            </tr>
+            <tr id="EM2026-RUN-A02" data-chunk="alert:EM2026-RUN-A02" data-item-id="EM2026-RUN-A02">
+              <td class="id">EM2026-RUN-A02</td><td>P95 응답시간</td><td>&gt; 2,000ms / 5분</td><td>Warning</td><td>Slack #ops-alert</td>
+            </tr>
+            <tr id="EM2026-RUN-A03" data-chunk="alert:EM2026-RUN-A03" data-item-id="EM2026-RUN-A03">
+              <td class="id">EM2026-RUN-A03</td><td>RDS CPU</td><td>&gt; 80% / 10분</td><td>Warning</td><td>Slack #ops-alert</td>
+            </tr>
+            <tr id="EM2026-RUN-A04" data-chunk="alert:EM2026-RUN-A04" data-item-id="EM2026-RUN-A04">
+              <td class="id">EM2026-RUN-A04</td><td>ECS Task 헬스체크 실패</td><td>2회 연속</td><td>Critical</td><td>PagerDuty → 온콜 담당자</td>
+            </tr>
+            <tr id="EM2026-RUN-A05" data-chunk="alert:EM2026-RUN-A05" data-item-id="EM2026-RUN-A05">
+              <td class="id">EM2026-RUN-A05</td><td>Kafka Consumer Lag</td><td>&gt; 10,000 / 15분</td><td>Warning</td><td>Slack #ops-alert</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+
+      <section data-section-key="daily-check" data-chunk="daily-check">
+        <h2 id="daily"><span class="num">3.</span>일상 점검 체크리스트</h2>
+        <div class="field-hint" data-ai-skip="true">운영 담당자가 매일 확인해야 할 항목. 점검 도구·경로도 함께 명시.</div>
+        <table class="cf" data-table-key="daily-check">
+          <colgroup><col style="width:80px"><col style="width:200px"><col><col style="width:120px"></colgroup>
+          <thead><tr><th class="id">ID</th><th>점검 항목</th><th>점검 방법</th><th>주기</th></tr></thead>
+          <tbody>
+            <tr id="EM2026-RUN-D01" data-chunk="check:EM2026-RUN-D01" data-item-id="EM2026-RUN-D01">
+              <td class="id">EM2026-RUN-D01</td><td>API 에러율 / 응답시간</td><td>Grafana 대시보드 → approval-api 패널</td><td>매일 09:00</td>
+            </tr>
+            <tr id="EM2026-RUN-D02" data-chunk="check:EM2026-RUN-D02" data-item-id="EM2026-RUN-D02">
+              <td class="id">EM2026-RUN-D02</td><td>RDS 백업 성공 여부</td><td>AWS Console → RDS → Automated Backups</td><td>매일 09:00</td>
+            </tr>
+            <tr id="EM2026-RUN-D03" data-chunk="check:EM2026-RUN-D03" data-item-id="EM2026-RUN-D03">
+              <td class="id">EM2026-RUN-D03</td><td>HR 조직도 동기화 결과</td><td>CloudWatch Logs → hr-sync 로그 그룹</td><td>매일 08:30</td>
+            </tr>
+            <tr id="EM2026-RUN-D04" data-chunk="check:EM2026-RUN-D04" data-item-id="EM2026-RUN-D04">
+              <td class="id">EM2026-RUN-D04</td><td>미처리 결재 24h 초과 건</td><td>Admin Console → 대기 결재 조회</td><td>매일 10:00</td>
+            </tr>
+            <tr id="EM2026-RUN-D05" data-chunk="check:EM2026-RUN-D05" data-item-id="EM2026-RUN-D05">
+              <td class="id">EM2026-RUN-D05</td><td>인증서 만료 (30일 이내)</td><td>AWS ACM → Certificates 만료일 확인</td><td>매주 월요일</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+
+      <section data-section-key="incident-playbook" data-chunk="playbook">
+        <h2 id="playbook"><span class="num">4.</span>장애 대응 플레이북</h2>
+        <div class="field-hint" data-ai-skip="true">증상별 플레이북. 각 시나리오: 증상 → 원인 확인 → 조치 → 사후 처리. 최소 2개 시나리오.</div>
+
+        <h3 id="play-api-error">4-1. API 5xx 오류율 급증</h3>
+        <ol class="step-list">
+          <li data-step="step" data-chunk="step:api-error.01"><b>1) 확인</b> — Grafana 에러율 패널 → 특정 엔드포인트 집중 여부 확인</li>
+          <li data-step="step" data-chunk="step:api-error.02"><b>2) 로그 확인</b> — CloudWatch Logs → <code>/ecs/approval-svc</code> → ERROR 레벨 필터</li>
+          <li data-step="step" data-chunk="step:api-error.03"><b>3) DB 연결 확인</b> — RDS Metrics → DatabaseConnections, CPU 이상 시 §5 복구 절차 진행</li>
+          <li data-step="step" data-chunk="step:api-error.04"><b>4) 롤백 판단</b> — 최근 배포 이후 발생 시 §5 롤백 절차 즉시 실행</li>
+          <li data-step="step" data-chunk="step:api-error.05"><b>5) 에스컬레이션</b> — 15분 내 해결 불가 시 §6 에스컬레이션 경로에 따라 담당자 호출</li>
+          <li data-step="step" data-chunk="step:api-error.06"><b>6) 사후 처리</b> — 장애 종료 후 24시간 내 PIR(Post-Incident Review) 작성 → <code>_manage/issues.md</code> 등록</li>
+        </ol>
+
+        <h3 id="play-db-slow" style="margin-top:20px;">4-2. DB 응답 지연 / CPU 과부하</h3>
+        <ol class="step-list">
+          <li data-step="step" data-chunk="step:db-slow.01"><b>1) 확인</b> — RDS Metrics → CPU / ReadLatency / WriteLatency</li>
+          <li data-step="step" data-chunk="step:db-slow.02"><b>2) 슬로우 쿼리</b> — RDS Performance Insights → Top SQL 확인</li>
+          <li data-step="step" data-chunk="step:db-slow.03"><b>3) 긴급 쿼리 중단</b> — <code>SELECT pg_cancel_backend(pid)</code> 로 Long-running query 중단</li>
+          <li data-step="step" data-chunk="step:db-slow.04"><b>4) 연결 수 확인</b> — <code>SELECT count(*) FROM pg_stat_activity</code> / 최대 연결 수 초과 시 앱 롤링 재시작</li>
+          <li data-step="step" data-chunk="step:db-slow.05"><b>5) 스케일업 검토</b> — 근본 원인 쿼리 튜닝 전 임시 인스턴스 클래스 업그레이드 고려 (DBA 승인 필요)</li>
+        </ol>
+
+        <h3 id="play-hr-sync-fail" style="margin-top:20px;">4-3. HR 조직도 동기화 실패</h3>
+        <ol class="step-list">
+          <li data-step="step" data-chunk="step:hr-sync.01"><b>1) 확인</b> — CloudWatch Logs → hr-sync 오류 메시지 확인</li>
+          <li data-step="step" data-chunk="step:hr-sync.02"><b>2) 영향 범위</b> — 당일 조직 변경 건수 확인 (HR 담당자 확인 요청)</li>
+          <li data-step="step" data-chunk="step:hr-sync.03"><b>3) 재실행</b> — Admin Console → 수동 동기화 트리거</li>
+          <li data-step="step" data-chunk="step:hr-sync.04"><b>4) HR 시스템 장애 시</b> — 이전 스냅샷 유지 + HR 시스템 복구 대기 + 담당자 알림</li>
+        </ol>
+      </section>
+
+
+      <section data-section-key="recovery" data-chunk="recovery">
+        <h2 id="recovery"><span class="num">5.</span>복구 절차 / DR</h2>
+        <div class="field-hint" data-ai-skip="true">롤백 절차, DB 복구, DR(재해복구) 시나리오. RPO/RTO 수치는 ARC 정합.</div>
+
+        <h3>5-1. 배포 롤백</h3>
+        <ol class="step-list">
+          <li data-step="step" data-chunk="step:rollback.01"><b>1)</b> ECS Console → approval-svc 서비스 → Update Service</li>
+          <li data-step="step" data-chunk="step:rollback.02"><b>2)</b> Task Definition revision → 직전 안정 버전 선택 → Force New Deployment</li>
+          <li data-step="step" data-chunk="step:rollback.03"><b>3)</b> Rolling Update 진행 확인 → 에러율 정상화 확인 (약 3~5분)</li>
+        </ol>
+
+        <h3 style="margin-top:16px;">5-2. DB 복구 (Point-In-Time)</h3>
+        <ol class="step-list">
+          <li data-step="step" data-chunk="step:db-restore.01"><b>1)</b> 복구 시점 결정 — 장애 발생 직전 시각 (RPO ≤ 1시간)</li>
+          <li data-step="step" data-chunk="step:db-restore.02"><b>2)</b> RDS Console → Restore to Point in Time → 신규 인스턴스로 복원</li>
+          <li data-step="step" data-chunk="step:db-restore.03"><b>3)</b> 앱 환경변수(DB_URL) 신규 인스턴스로 교체 → 롤링 재시작 (RTO ≤ 4시간)</li>
+          <li data-step="step" data-chunk="step:db-restore.04"><b>4)</b> 데이터 정합성 확인 후 구 인스턴스 삭제</li>
+        </ol>
+
+        <div class="callout" data-chunk="dr:contact">
+          <div class="t">DR 수행 전 필수</div>
+          DB 복구 및 인프라 변경은 반드시 팀장 승인 후 진행. 야간·주말 장애 시 §6 에스컬레이션 경로로 즉시 보고.
+        </div>
+      </section>
+
+
+      <section data-section-key="escalation" data-chunk="escalation">
+        <h2 id="escalation"><span class="num">6.</span>에스컬레이션 / 연락처</h2>
+        <div class="field-hint" data-ai-skip="true">실제 담당자 이름·연락처는 개인정보이므로 data-pii 마킹. 직책과 채널명만 본문에 노출.</div>
+        <table class="cf" data-table-key="escalation">
+          <colgroup><col style="width:80px"><col style="width:120px"><col style="width:160px"><col></colgroup>
+          <thead><tr><th>단계</th><th>역할</th><th>채널</th><th>기준</th></tr></thead>
+          <tbody>
+            <tr data-chunk="esc:L1"><td>L1</td><td>온콜 운영자</td><td>PagerDuty 자동 호출</td><td>Critical 알림 즉시</td></tr>
+            <tr data-chunk="esc:L2"><td>L2</td><td>개발 리드</td><td>Slack DM / 전화</td><td>L1 15분 내 미해결</td></tr>
+            <tr data-chunk="esc:L3"><td>L3</td><td>팀장</td><td>전화</td><td>서비스 중단 30분 이상 / 데이터 손실 의심</td></tr>
+            <tr data-chunk="esc:vendor"><td>Vendor</td><td>AWS Support</td><td>Support Console</td><td>AWS 인프라 원인 의심 시</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+
+      <section data-section-key="ai-metadata" data-chunk="ai-meta">
+        <h2 id="ai-meta"><span class="num">7.</span>AI 학습 메타데이터</h2>
+        <div class="ai-meta"><span class="k">project_id:</span>    EM2026
+<span class="k">doc_id:</span>        EM2026-RUN-2026
+<span class="k">version:</span>       v0.1
+<span class="k">last_updated:</span>  2026-05-12
+<span class="k">tags:</span>          ["phase:operate", "module:ops", "domain:hr-approval", "lang:ko"]
+<span class="k">primary_entities:</span> ["장애대응", "모니터링", "롤백", "DB복구", "에스컬레이션", "PagerDuty", "Grafana"]
+<span class="k">embedding_hints:</span>
+  - "전자결재 운영 Runbook — 장애 시나리오별 플레이북, 모니터링 임계치, 복구 절차"
+  - "DB 롤백, ECS 배포 롤백, HR 연동 장애 대응 절차"
+<span class="k">related_docs:</span>  ["OPM-*", "CFG-*", "ARC-*"]
+<span class="k">exclude_from_training:</span> false
+<span class="k">chunk_strategy:</span> "procedure-step"
+</div>
+      </section>
+
+
+      <section data-section-key="validation-checklist" data-ai-skip="true">
+        <h2 id="validation"><span class="num">8.</span>작성 완료 검증표 <span data-validate-summary class="small" style="font-weight:400; margin-left:8px;">계산 중…</span></h2>
+        <table class="cf val-table">
+          <colgroup><col style="width:50px"><col style="width:160px"><col><col style="width:90px"><col style="width:140px"></colgroup>
+          <thead><tr><th>#</th><th>점검</th><th>기대</th><th>구분</th><th>결과</th></tr></thead>
+          <tbody>
+            <tr data-validate-rule="meta-bar"><td>1</td><td>메타바</td><td>6개</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="tags"><td>2</td><td>태그</td><td>3개</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="run-svc-overview"><td>3</td><td>서비스 개요</td><td>컴포넌트·환경·의존 명시</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="run-alert-min"><td>4</td><td>알림 임계치</td><td>≥ 3건</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="run-check-min"><td>5</td><td>일상 점검</td><td>≥ 3건</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="run-playbook-min"><td>6</td><td>플레이북</td><td>시나리오 ≥ 2개, 단계 ≥ 3개</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="run-recovery"><td>7</td><td>복구 절차</td><td>롤백 절차 존재</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="run-escalation"><td>8</td><td>에스컬레이션</td><td>L1~L3 정의</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="ai-metadata"><td>9</td><td>AI 메타</td><td>3필드</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="id-format"><td>10</td><td>ID 규칙</td><td>중복 없음</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+            <tr data-validate-rule="project-id-prefix"><td>11</td><td>Project prefix</td><td>{PROJECT}-</td><td><span class="req-mark">REQ</span></td><td data-validate-result>…</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="cf-footer" data-ai-skip="true">
+    <div><h3>변경 이력</h3><table class="cf"><thead><tr><th style="width:80px">버전</th><th style="width:100px">일자</th><th style="width:90px">작성자</th><th>변경내용</th></tr></thead><tbody><tr><td>v0.1</td><td>2026-05-12</td><td>홍길동</td><td>초안</td></tr></tbody></table></div>
+    <div><h3>관련 페이지</h3><ul style="margin:0; padding-left:16px; font-size:12px;"><li>OPM · 운영자매뉴얼</li><li>CFG · 설정가이드</li><li>ARC · 아키텍처</li><li>SEC · 보안설계서</li></ul></div>
+  </div>
+
+</article>
+</body>
+</html>
