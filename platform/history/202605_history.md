@@ -7,6 +7,24 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-14 (25) — eacct_chatbot 실행 환경 정비 + 라우터 앱 분리 적용
+
+### 결정 배경
+
+- mcp_platform v0.3.0 적용 후 재시작 시 `No module named 'mcp_platform'` / `No module named 'uvicorn'` 오류 — 각 프로젝트 venv가 없거나 시스템 Python으로 기동하고 있었음
+- eacct_chatbot에 `.venv` 자체가 없어 신규 생성 필요
+- `MISO_ROUTER_API_KEY` 등록 후에도 라우팅 프롬프트가 답변 앱으로 전달 — 옛날 프로세스(시스템 Python, uvicorn 워커)가 포트 7000을 점유해 새 venv 서버가 기동 불가였음
+
+### 작업
+
+- **eacct_chatbot `.venv` 신규 생성**: `mcp_platform`, `miso_client`, `secrets_loader` editable 설치 + requirements.txt 패키지 설치
+- **`MISO_ROUTER_API_KEY` 키링 등록**: `keyring.set_password('eacct_chatbot', 'miso_router_api_key', ...)` → `server.py`의 `get_secret` 흐름으로 자동 주입
+- **좀비 프로세스 정리**: PID 18976(시스템 Python uvicorn 워커), PID 26344 등 kill → 새 venv python으로 재기동
+- **start.bat 신규**: `projects/eacct_mcp/start.bat`, `projects/eacct_chatbot/start.bat`, `platform/scripts/start_eacct.bat` (통합 기동)
+- **search_slips Q1 2024 0건 확인**: DB 직접 분기별 조회 → Q1 0건이 버그 아님 (해당 사번/부서 Q1 실데이터 없음 확인)
+
+---
+
 ## 2026-05-14 (24) — 웹뷰 복구: CDN 벤더링 + GitHub Pages basePath 수정 + 변수 치환
 
 ### 결정 배경
@@ -35,8 +53,14 @@ sidebar_order: 1
 - fallback 체인: `/platform/config/personal.yml` (로컬) → `/platform/config/vars_public.json` (GitHub Pages)
 - `platform/config/vars_public.json` 신규 (hub_init.py 기반 생성, 커밋 가능) — sync 워크플로우로 Pages에 배포
 
+#### 4 — sync-docs 상시 기동
+- `sync-docs.yml` 트리거에서 `paths:` 필터 제거 → main push마다 무조건 GitHub Pages 동기화
+- 구 필터: `platform/services/webview/**`, `*.md` 등 특정 경로만 트리거 → 워크플로우 파일 변경 시 수동 실행 필요했던 문제 해결
+
 ### 기타
 - `.gitignore`에 `.claude/` 추가 — 머신별 절대경로 포함 설정 공유 방지
+- GitHub Pages URL: `https://jaceybaek.github.io/project-hub-docs/platform/services/webview/`  
+  (루트 `https://jaceybaek.github.io/project-hub-docs/` 접속 시 자동 리다이렉트)
 - 로컬 Ctrl+Shift+R 브라우저 강제 새로고침 필요 (CDN URL 캐시 제거)
 
 ---
