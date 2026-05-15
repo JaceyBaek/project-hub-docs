@@ -7,6 +7,68 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-15 (29) — collab v2 보강: bundle 구조 + 플랫폼/프로젝트 분리 마이그레이션 (DEV_D001)
+
+### 결정 배경
+
+- §27 collab v2 합의 직후 1554 direction에서 6 detail이 파생되며 평면 파일명·평면 디렉토리 운영의 한계 노출
+  - 파일명에 `project`·부모 direction ID·detail ID·timestamp·slug를 모두 인코딩하면 60~75자로 비대화
+  - `dir-HHmm` 같은 짧은 부모 식별자는 다른 날짜 부모 참조 시 모호
+  - mcp_chatbot/mcp_platform/eacct 영역이 한 direction에 혼재 — 단일 귀속 원칙 부재
+- collab .gitignore가 active collab 파일을 git 추적에서 제외하는 정책이라 fs 단위 마이그레이션으로 처리 가능
+
+### 작업
+
+#### 1 — D001 detail 합의 (`D001_20260515-1011_naming-rules-and-platform-project-separation`)
+
+- 부모 direction: `DIR_20260515-0836` (collab v2 보강 메타) 사후 후속 detail
+- R1 13 이슈 (codex 10 + claude 신규 3) — 모두 합의·V1 동의 마감 (resolved_by: codex / verified_by: claude)
+- 핵심 결정:
+  - **bundle 구조**: `collab/{project}/DIR_{ts}_{slug}/` — 부모-자식 관계는 path가 표현, basename은 종류·정렬·식별만
+  - **파일명 패턴**: direction `00_DIRECTION.md` (고정), detail `D{nnn}_{ts}_{slug}.md`, orchestration `O{nnn}_{ts}_{slug}.md`, dev `dev/DEV_{source-id}[-{sub-id}]_{ts}_{slug}.md` (sub-id 옵셔널)
+  - **구분자**: 구조 토큰 `_`, timestamp 내부·slug 내부 `-`
+  - **ID 통일**: `D001`/`O001` 하이픈 제거, frontmatter `parent_design`은 짧은 ID(`DIR_20260515-0836`)
+  - **플랫폼/프로젝트 분리 5원칙**: 단일 귀속, 영역별 direction 분리, `depends_on` 선후 관계 명시, 공통 결정값은 orchestration 매트릭스 cross 표시, MAP 글로벌 SoT + path namespace
+  - **시한부 동결 규칙(§16)**: DEV_D001 마감까지 collab 신규 작성 금지 — 마감 시점에 해제
+
+#### 2 — DEV_D001 마이그레이션 실행 (`DEV_D001_20260515-1233_collab-bundle-naming-migration`)
+
+- 본 건 한정 예외: tester=claude / approver=claude (mechanical 마이그레이션, 일반 원칙 README §6 그대로 유효)
+- Phase 1·2·3 — 9개 active 파일 fs mv (collab .gitignore로 git 미추적, history 영향 없음) + frontmatter 갱신 + 본문 cross-reference sed 일괄 치환 (`D-XXX→DXXX`, `O-001→O001`, 평면 파일명→신 파일명)
+- Phase 4 — README / `_template_design.md` / `_template_dev.md` / `platform/TRIGGERS.md` / `MAP.md` / `ENHANCEMENTS.md` 일괄 개정
+- Phase 5 — T-001 (path 패턴) / T-002 (project ↔ namespace) / T-003 (parent_design ↔ bundle) / T-004 (MAP ↔ 실파일) / T-005 (평면 잔존) — **5/5 통과** (단일 C1, 미통과 없음)
+- 평면 초안 `20260515-1011-PLATFORM-0836-D001-...` fs rm 폐기
+- 시한부 동결 효력 종료
+
+#### 3 — ENHANCEMENTS 백로그 신규
+
+- **E-001**: collab 옵트인 자동화 (라이프사이클 통합) — 보통, 대기
+- **E-002**: MAP/INDEX 프로젝트별 분산 이전 — 낮음, 대기 (트리거: 동시 진행 10+ 또는 MAP 노드 30+)
+- **E-003**: 기존 9개 active 문서 §0 일괄 추가 — **완료** (DEV_D001 마감 직후 batch)
+
+#### 4 — §0 문서 목적 블록 표준 도입
+
+- 신규 표준: 모든 collab 문서는 frontmatter·주석 다음 §1 앞에 `## 0. 문서 목적` 4행 표 (문서 종류 / 역할 / 안 하는 일 / 다음 단계) 보유
+- 템플릿 2개 + DEV_D001 + 1011 D001에 적용
+- E-003으로 기존 9개(1554/0836 direction + D001~D006 detail + O001 orchestration)에 일괄 추가 완료
+- README §11에 "신규 문서부터, 기존 소급 추가 금지 — 일괄은 별도 batch" 정책 명시
+
+### 영향
+
+- collab 모듈 운영 방식 전면 변경 — 신규 작성 트리거 `리뷰 요청 {프로젝트} {주제}` 인자 추가, bundle path 자동 조립
+- 자식 파일명 평균 60~75자 → 30~40자
+- archive 정책: 평면 분류(`archive/design/`·`archive/dev/`) → bundle 단위 통째 이동(`archive/{project}/{DIR_...}/`)
+- frontmatter 표기 통일 (project 필수·하이픈 제거 ID·짧은 ID parent_design)
+
+### 후속
+
+- ENHANCEMENTS E-001 (옵트인 자동화), E-002 (MAP 분산) — 트리거 충족 시 진행
+- 0903 O001 orchestration R2 claude verified_by 진행 — collab 일반 흐름 복귀
+- 1554 D001~D006 detail R1 진행 — 0903 verified 후 dev 진입 게이트 충족
+- DEV-001 ~ DEV-004 (D006은 7단계 sub-DEV) 순차/병행 진입
+
+---
+
 ## 2026-05-14 (28) — 운영 튜닝: miso_client chat timeout 상향 + google_drive_backup 제외 목록 보강
 
 ### 작업
