@@ -7,6 +7,62 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-15 (30) — collab v2 후속: 0903 폐기 → O001 1414 재작성·R1 리뷰 + archive bundle 통합 재구성
+
+### 결정 배경
+
+- §29 직후 0903 O001 orchestration이 D001(1011) 합의 + DEV_D001 마이그레이션 **전에** 작성된 점이 드러남. R2까지 codex 응답이 진행됐으나 새 규칙(파일명·합의 단위 vs 검증 단위 분리·dev 묶음 파일 단위) 미인지 상태라 verified 진행 시 누락 위험.
+- archive 정리: 직전 §29에서 0836 bundle은 archive 통째 이동했으나, 구 평면(1846 direction + 1925 dev)이 여전히 `archive/design/`·`archive/dev/` 평면 분류로 남아 있어 bundle 표준과 불일치.
+
+### 작업
+
+#### 1 — 0903 폐기 + O001 재작성 의뢰
+
+- 기존 0903(`O001_20260515-0903_security-ops.md`) fs rm 폐기 (collab .gitignore로 git 미추적, 본 채팅 이력만 historical)
+- MAP의 1554 노드 Orchestration 섹션을 "재작성 대기"로 갱신
+- codex 작성 명세 정리·전달 (1554 direction + D001~D006 본문 base + 새 규칙 인지 + dev 묶음 narrative·파일 단위·sub-DEV 명시 필수)
+
+#### 2 — archive bundle 통합 재구성 (1846 + 1925)
+
+- `archive/PLATFORM/DIR_20260514-1846_collab-process/` 신설
+- 1846 direction → `00_DIRECTION.md` (frontmatter에 `project: PLATFORM` + 신 필드 보강, 본문 보존)
+- 1925 dev workorder → `dev/DEV_DIR_20260514-1925_implementation-workorder.md` (frontmatter 신설 — 원본은 markdown header만, `type: dev` / `design_ref: DIR_20260514-1846` / source-id=DIR로 표기)
+- 빈 `archive/design/`·`archive/dev/` 폴더 rmdir
+- `archive/INDEX.md` Bundle 섹션 통합 (1846 + 0836 bundle 2건, 구 평면 섹션 폐기)
+- MAP의 1846 노드를 bundle 경로로 갱신 + Workorder 섹션 → Dev 섹션
+
+#### 3 — 새 O001 1414 작성 (codex) + R1 리뷰 (claude)
+
+- 신 파일: `PLATFORM/DIR_20260514-1554_mcp-chatbot-security-ops/O001_20260515-1414_security-ops-execution-plan.md`
+- §1 codex 본문: 의존성 그래프(D001 → {D002,D004} → {D003,D005} → D006), 임계 경로 Path A/B, 병행 묶음 P0~P3, 회귀 영향 매트릭스(9개 cross-detail 계약 행), dev 묶음 narrative·파일 단위 정책·D006 sub-DEV 7단계, 진입 게이트
+- claude R1 리뷰 결과:
+  - **합의 7건**: I-001 의존성 / I-002 임계 경로 / I-003 병행 묶음 / I-006 단일 source-id 정책 / I-008 D006 sub-DEV / I-009 진입 판정 / I-010 O001 verified gate
+  - **R2 이관 5건**:
+    - I-004 — §E 회귀 매트릭스에 1554 §11 추가 통제 7개(prompt injection/tool abuse/DB read-only/mTLS/데이터 보존/변경관리/보안 산출물) 흡수만 되어 별도 행 미표기
+    - I-005 — narrative ID(DEV-NNN) ↔ source-id 번호 불일치(DEV-003=DEV_D004, DEV-004=DEV_D006) → narrative ID 폐기 권장
+    - I-007 — §F.2 정책 문구 "후행 또는 더 좁은" 모순(실제 적용은 둘 다 선행) → "선행 또는 더 좁은"으로 정정
+    - I-011 (claude 신규) — §F.3 dev 생성 순서 표에 O001 verified 미명시
+    - I-012 (claude 신규) — § 합의 결론 "아카이브 위치" 옛 평면 분류 표기 → bundle 단위로 갱신
+
+#### 4 — D001~D006 §0 블록 갱신 (codex 자율)
+
+- 본 세션 진행 중 codex가 D001~D006의 §0 "다음 단계" 항목에 "O001 orchestration verified 후 R1 검토" 명시 추가 — R1 진입 흐름 명확화
+
+### 영향
+
+- 1554 dev 진입 게이트의 SoT 정합 향상 (0903 폐기 + 1414 재작성 + R1 진행)
+- archive 전체 bundle 표준 통일 (구 평면 분류 폐기, 1846/0836 두 bundle 통합)
+- E-003 (§0 일괄 추가) 완료 후 신규 §0 표준의 추가 검증 사이트로 1414 신규 작성·검토 동시 진행
+
+### 후속 (미완료)
+
+- **1414 O001 R2** — codex 응답 차례 (5건 R2이관). 응답 후 claude 합의 검증 → verified_by 마감
+- **1554 D001~D006 R1** — O001 verified 후 진입 (D001~D006 모두 본문 §1 작성 완료, R1 검토 시작 전)
+- **DEV 진입** — D001 verified 후 DEV_D001 → 이후 묶음 순차/병행
+- **ENHANCEMENTS E-001 옵트인 자동화 / E-002 MAP 분산** — 대기
+
+---
+
 ## 2026-05-15 (29) — collab v2 보강: bundle 구조 + 플랫폼/프로젝트 분리 마이그레이션 (DEV_D001)
 
 ### 결정 배경
