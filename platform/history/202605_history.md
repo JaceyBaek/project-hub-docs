@@ -7,6 +7,18 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-19 — wiki_faq_builder·wiki_mbo_builder 플러그인 경로 복구
+
+**문제**
+- `platform/plugins/`로 구조 이동 후 두 프로젝트 venv의 `atlassian-client`, `miso-client`, `secrets-loader` editable 경로가 구 경로(`plugins/`)를 가리켜 실행 불가
+
+**조치**
+- 글로벌 Python 환경 + 두 프로젝트 `.venv` 총 3개 환경에서 세 패키지 재설치
+- `run.bat` 생성 (각 프로젝트 루트, `_manage/logs/run.log` 누적)
+- `--auto` 실행: FAQ 신규 2·갱신 1, MBO 신규 4
+
+---
+
 ## 2026-05-18 (33) — DEV_D001 mcp-platform-common-contracts 개발·자체 테스트 완료 (v0.4.0)
 
 ### 개요
