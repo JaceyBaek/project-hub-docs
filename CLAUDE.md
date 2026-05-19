@@ -54,6 +54,7 @@
 - MCP 등록 → `platform/setup/mcp_registration.md`
 - 산출물 작성 규칙·절차·ID prefix·RAG 변환 → `platform/project/deliverables_guide.md`
 - 버전 관리 → `platform/project/versioning.md`
+- 히스토리·이슈·To-Do 등 시간순 누적 문서 검색 정책(기본 2주 윈도우 + 확장 규칙) → `platform/guides/context_search_policy.md`
 
 ---
 

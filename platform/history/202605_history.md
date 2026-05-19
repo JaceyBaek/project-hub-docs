@@ -7,6 +7,114 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-18 (33) — DEV_D001 mcp-platform-common-contracts 개발·자체 테스트 완료 (v0.4.0)
+
+### 개요
+D001 detail design 합의 내용을 `mcp_platform` 패키지에 구현하고 자체 검증(Claude 기본 검증, 99 passed)을 완료했다. **DEV_D001 `status: dev_selfcheck`** — codex 공식 cycle은 §3·§4에서 진행 예정.
+
+### 신규 모듈 (`platform/plugins/mcp_platform/mcp_platform/`)
+- **`registry.py`** — `ToolEntry`(frozen, policy_name·audit_required·llm_exposure·input_schema 메타 슬롯) / `ToolRegistry`(server-scoped) / `default_registry()` (전역 `@tool` 호환 계층)
+- **`context.py`** — `AuthContext` / `RequestContext` / `bind_context`·`current_context`·`new_request_id`·`reset_context` (contextvars 기반)
+- **`errors.py`** — `ErrorCode`(9개 enum) / `PlatformError` / `success_envelope`·`error_envelope`·`http_status`
+- **`policy.py`** — `PolicyEngine`(Protocol) / `PolicyDecision` / `AllowAllPolicyEngine`
+- **`privacy.py`** — `Redactor`(Protocol) / `FieldClassification`(PUBLIC/INTERNAL/SENSITIVE/SECRET) / `NoopRedactor`
+- **`audit.py`** — `AuditEvent` / `AuditLogger`(Protocol) / `NullAuditLogger`
+- **`observability.py`** — `HealthProvider`(Protocol) / `HealthCheckResult` / `aggregate_state`
+
+### 기존 파일 확장 (`platform/plugins/mcp_platform/`)
+- **`base_server.py`** — `PlatformConfig` dataclass, `AuthVerifier`·`KillSwitch` Protocol + `Noop*` 기본 구현, `PlatformServer` 생성자 슬롯 9종 추가(`registry`·`auth_verifier`·`kill_switch`·`policy_engine`·`audit_logger`·`redactor`·`inbound_auth`·`input_validator`·`health_providers`). `dispatch()` 메서드로 8단계 hook 체인 표준화(D001 §4 합의 순서). `default registry` 사용 시 `DeprecationWarning`, `allow_default_registry=False` 시 차단. 기존 `PlatformServer(name, log_file=...)` 시그니처 완전 호환.
+- **`base_tools.py`** — 전역 `tool`·`get_tools`를 `default_registry()`로 위임하는 호환 계층으로 재작성.
+- **`rest_bridge.py`** — `create_rest_app(server=...)` 시그니처, `POST /tools/{name}` success/error envelope 표준화, `X-Request-ID` 헤더 수용·회신, `GET /health/live`·`/health/ready`·`/version`·`/metrics` endpoint 추가. `GET /tools` 기존 schema 유지(rollback 안전장치).
+- **`__init__.py`** — 신규 계약 33종 export. `__version__` 0.3.0 → 0.4.0.
+- **`pyproject.toml`** — version 0.4.0.
+- **`CHANGELOG.md`** — v0.4.0 항목 (D001 합의 1:1 매핑 + Deferred D002~D006).
+- **`CLAUDE.md`** — 모듈 표·REST 엔드포인트·8단계 hook 흐름·신규/호환 사용 예·후속 detail 책임 경계 반영.
+
+### 테스트
+- **`tests/test_platform_contracts.py`** — 19개 신규 (T-001 default registry 호환 / T-002 registry 격리 / T-003 REST envelope / T-004 RequestContext·request_id 전파 / T-005 health·version endpoint / auth_verifier·kill_switch·expose_error_detail·async tool 추가).
+- **전체 99 passed** (신규 19 + 기존 router 31 + extractors 49), 1.03s.
+- 증적: `platform/plugins/mcp_platform/_manage/test_results/20260518-1900-d001-selfcheck/`
+
+### 콜랩 문서
+- `DEV_D001` frontmatter `status: dev_selfcheck`, DoD 9개 `[x]`, §2 개발 완료 요약 작성.
+
+### 알려진 deferred
+- codex 공식 테스트 cycle (§3·§4) 미진행. dev 종료 승인(§5 `status: resolved`)은 cycle 완료 후 처리.
+- stdio envelope 통일·`/metrics` Prometheus 포맷·auth_verifier 본 구현·fail-closed audit·kill switch 저장소는 D002~D006.
+
+---
+
+## 2026-05-15 (32) — 1554 collab 진행: O001 verified · D001 verified · D002/D004 R1 + 결재 헤더 표준 + 트래킹 정렬 정책
+
+### 1554 direction 진행 상태 갱신
+- **O001 1414** — R2 합의 + V2 동의 마감. `status: resolved` / `resolved_by: claude` / `verified_by: codex`. R2이관 5건(I-004 회귀 매트릭스 보강, I-005 narrative ID 폐기, I-007 정책 문구 정정, I-011 §F.3 O001 verified 명시, I-012 archive bundle 위치) 모두 합의. codex 본문 갱신 완료(§E 7개 행 추가, §F.1 narrative ID 폐기, §F.2 정책 문구 정정, §F.3 O001 verified 공통 게이트 명시, § 합의 archive 위치 bundle 단위).
+- **D001 mcp_platform 공통 모듈** — R1 → R2 → V2 마감. `status: resolved` / `resolved_by: claude` / `verified_by: codex`. R1 합의 4건(D1-I-001/003/004/006), R2 합의 2건(D1-I-002 auth_verifier·kill_switch 별도 슬롯 / D1-I-005 1554 §11 hook 슬롯 매핑). 본문 갱신 5건(§4 호출순서 8단계, PlatformServer 시그니처 auth_verifier·kill_switch 추가, 제외 범위 hook deferral 매핑, stdio envelope deferral, DoD 보강) 모두 반영. **DEV_D001 진입 가능 게이트 통과.**
+- **D002 인증/세션/signed context** — R1 claude 검토 완료. 합의 3건(D2-I-001 JWT claim·TTL·rotation / D2-I-003 세션·RequestContext 경계 / D2-I-004 role·purpose 교차검증). R2이관 3건(D2-I-002 JWKS grace + dual-key rotation / D2-I-005 dev_auth 운영 차단 책임 위치 / D2-I-006 claude 신규: chatbot↔MCP mTLS 책임 위치).
+- **D004 audit/fail-closed/kill switch** — R1 claude 검토 완료. 합의 3건(D4-I-002 hash chain / D4-I-004 컴포넌트별 fail 정책 / D4-I-005 redacted+hash). R2이관 2건(D4-I-001 audit 2-phase 강제 — ITGC 증적 공백 차단 / D4-I-003 kill switch config 변경 경로 1차 구현 표준).
+- **D003/D005** — D002/D004 의존 → P2 묶음 R1은 D002/D004 verified 후 진행 결정 (회귀 부담 회피).
+- **D006** — D001~D005 verified 후 진입.
+
+### 결재 헤더 표준 + 트래킹 테이블 정렬 정책
+- **결재 헤더**: frontmatter 직후 3열×2행 단순 표. design은 `기안 (author) / 합의 (resolved_by) / 동의 (verified_by)`, dev는 `개발 (author) / 테스트 (tester) / 승인 (approver)`. blockquote/제목 라벨 없음. 최종 값만 반영, frontmatter와 일시 동기화.
+- **트래킹 테이블 정렬**: ID 순 + ID 내 라운드 순 (R1 → R2 → … → V1 → V2 → …). 같은 ID 인접 배치. 행 내용 수정 금지, 정렬 순서만 유지.
+- **규칙 위치**: README §8 트래킹 정렬 / README §11 결재 헤더·트래킹 정렬 정책 / _template_design.md + _template_dev.md frontmatter 직후 placeholder.
+
+### 활성·archive 문서 일괄 적용 (12개)
+- **활성 7개** (1554 direction, O001 1414, D001, D002~D006): 결재 헤더 추가. 합의/동의 완료 문서는 미상 일시를 2026-05-15로 채움 (이번 마이그레이션 한정 — 향후 신규는 실제 일시 입력).
+- **archive 5개** (1846 direction + DEV_DIR_1925, 0836 direction + D001_1011 + DEV_D001_1233): 결재 헤더 추가. 본문 보존 + 결재만 신설.
+- **D001 트래킹 테이블 14행 ID 순 재정렬** (O001은 codex가 이미 ID 순 정렬해 별도 작업 없음). archive 트래킹 정렬은 보류 (감사 보존 측면).
+
+### MAP.md 갱신
+- D001 [active] → [resolved · verified] (resolved_by: claude / verified_by: codex)
+- D002 [active] → [active · R1 reviewing], D004 [active] → [active · R1 reviewing]
+- O001 → resolved 완료 상태 갱신
+
+---
+
+## 2026-05-15 (31) — 콘솔 인코딩 원천 해결: PS 5.1·7 UTF-8 프로파일 + VSCode 기본 터미널 pwsh 전환
+
+### 배경
+
+- 문서 검토 중 한글 출력이 콘솔에서 깨져 보이는 사례 반복 발생. 원인은 Windows PowerShell 5.1 + CP949(Active Code Page 949) 환경과 UTF-8 파일의 불일치.
+- 임시 회피(`chcp 65001`, 개별 파일 `-Encoding utf8`) 누적되어 일관성 부족.
+
+### 작업
+
+#### 1 — PowerShell 프로파일에 UTF-8 강제
+
+- `C:\Users\Administrator\Documents\WindowsPowerShell\profile.ps1` (PS 5.1 전용) 신규 작성
+- `C:\Users\Administrator\Documents\PowerShell\profile.ps1` (PS 7 전용) 신규 작성
+- 공통 내용: `[Console]::OutputEncoding`·`[Console]::InputEncoding`·`$OutputEncoding` 모두 UTF-8, `$PSDefaultParameterValues['*:Encoding'] = 'utf8'` (Get-Content/Out-File 등 기본 인코딩 통일)
+
+#### 2 — PowerShell 7 설치
+
+- `winget install Microsoft.PowerShell` → 7.6.1.0 설치
+- 실행 경로: `C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps\pwsh.exe` (winget Store-style 별칭)
+- PS 5.1과 병존 — 5.1은 일부 레거시 호환 용도로 유지
+
+#### 3 — VSCode 기본 터미널을 pwsh 7로 전환
+
+- `%APPDATA%\Code\User\settings.json` 갱신:
+  - `terminal.integrated.defaultProfile.windows` = `"PowerShell 7"`
+  - `terminal.integrated.profiles.windows`에 `PowerShell 7` (pwsh.exe) / `PowerShell 5.1` (기존) / `Command Prompt` 3개 프로필 정의
+
+### 결정
+
+- **시스템 로캘 변경(Beta UTF-8)은 보류** — 일부 한글 윈도우 전용 프로그램에서 깨질 위험. 셸 레벨 UTF-8(프로파일) + pwsh 7로 충분.
+- **PS 5.1 잔존 유지** — 일부 레거시 모듈 호환을 위해 제거하지 않음.
+
+### 검증
+
+- pwsh 7에서 `[Console]::OutputEncoding.WebName` → `utf-8`, 한글 출력 정상 확인.
+- 새 셸 세션부터 자동 적용. 현재 열린 콘솔은 재시작 필요.
+
+### 영향 범위
+
+- 머신 로컬 설정 — Jacey 개인 Windows 환경에 한정. 다른 사용자·머신에는 미적용.
+- 플랫폼 정책 아님(hub 문서에 명문화 대상 아님). 메모리(`feedback_console_encoding.md`)에 기록.
+
+---
+
 ## 2026-05-15 (30) — collab v2 후속: 0903 폐기 → O001 1414 재작성·R1 리뷰 + archive bundle 통합 재구성
 
 ### 결정 배경
