@@ -7,6 +7,103 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-20 — 플랫폼 정리 및 기능 옵션화 아이디어 등록
+
+### 작업 내용
+- `platform/tools/sanitizer/` 삭제 — 테스트용으로 만든 폴더, 불필요 확인 후 제거 (`__init__.py`, `payload_sanitizer.py`, `test_payload_sanitizer.py` 3개 파일)
+- 플랫폼 기능 옵션화 아이디어 논의: 플러그인·프로세스·기능을 `personal.yml features:` 섹션으로 on/off 제어, 비활성화 시 아이다가 해당 경로 완전 무시하는 방식
+- 할일 등록: 사용자 입력 방식 검토 및 구현 (pending)
+
+---
+
+## 2026-05-20 — DEV_D004(+D005) 개발 완료: mcp_platform v0.6.0 + audit·kill switch·infra controls
+
+### 개요
+DEV_D002(+D003) C1 검증 대기 중에 병행으로 `DEV_D004(+D005)` 개발 착수 및 자체 검증 완료 (O001 §G 게이트 조건: DEV_D001 통과, D004·D005 verified — DEV_D002 선행 조건 아님). mcp_platform v0.6.0으로 올리고 D004(audit fail-closed·kill switch) + D005(infra·deploy·금지 플래그) 전 범위를 구현했다.
+
+### 주요 구현 (mcp_platform v0.6.0)
+- `audit.py` 확장: `AuditWriteResult`, `AuditPhase`, `RecoveryQueueEntry` 신규. `AuditLogger` Protocol `write()+check_available()`. `FileAuditLogger`(JSONL+SHA-256 hash chain+threading.Lock+genesis 복원). `NullAuditLogger` 업데이트
+- `kill_switch.py` 신규: `FileKillSwitchProvider` (YAML 5 scope: global·llm_egress·system·tool·user_session + atomic reload + last-known-good fallback + threading.Lock)
+- `policy.py` 확장: `RateLimitPolicyEngine` (per-user per-minute sliding window, deque+threading.Lock)
+- `deploy.py` 신규: `check_prod_forbidden_flags()` 금지 플래그 11종 검사, `FlagViolation` NamedTuple
+- `base_server.py` 확장: `dispatch()` 2-phase audit (pre→kill_switch→policy→tool→post), `_audit_failure()` pre_event_id 파라미터, post-audit 실패 시 recovery queue + AUDIT_UNAVAILABLE
+- `__init__.py`: v0.6.0, 신규 심볼 전부 export
+
+### 주요 구현 (프로젝트 파일)
+- `projects/eacct_mcp/config/kill_switch.yml` 신규: 기본 비활성 kill switch 설정
+- `projects/eacct_mcp/deploy/manifest.yml` 신규: D005 배포 매니페스트
+- `projects/eacct_mcp/deploy/config_validate.py` 신규: --strict CI 게이트용 금지 플래그 검증 CLI
+- `projects/eacct_chatbot/deploy/manifest.yml` 신규: D005 배포 매니페스트
+
+### pytest 결과
+- 153/153 통과 (기존 122 회귀 + D004·D005 신규 31)
+- 임시 파일 정리: `_test_import.py`, `_run_test.ps1` 제거 필요
+
+### collab 문서
+- DEV_D004 문서 `30_DEV_D004_20260520-1821_audit-infra-controls.md` 신규 작성
+- TC_D004 문서 `40_TC_D004_20260520-1821_audit-infra-controls.md` 신규 작성 (TC-001~031)
+- MAP.md: DEV_D004, TC_D004 항목 추가
+
+---
+
+## 2026-05-20 — DEV_D002(+D003) 개발 완료: mcp_platform v0.5.0 + auth·privacy 통합
+
+### 개요
+DEV_D001 승인 직후 `DEV_D002(+D003)` 개발 착수 및 자체 검증 완료. mcp_platform을 v0.5.0으로 올리고 D002(인증·JWT) + D003(privacy·LLM-safe) 전 범위를 구현했다.
+
+### 주요 구현 (mcp_platform v0.5.0)
+- `auth.py` 신규: `JwtAuthVerifierImpl`, `JwksCache`(TTL 10분, grace 5분), `McpTokenIssuer`(RS256, kid, TTL 5분, clock skew 30초), `DevAuthVerifier`, `validate_auth_env`, `METADATA_JWT_TOKEN`/`METADATA_SESSION_ID`
+- `privacy.py` 확장: `PrivacyKind` 9종, `PrivacyHit`, `ToolResponse`, `PrivacyFilter`/`PayloadStore` Protocol
+- `base_server.py`: `PlatformConfig.dev_auth_allowed` + startup validation hook
+- `rest_bridge.py`: Authorization Bearer / X-Session-ID 추출 → `RequestContext.metadata`
+- `pyproject.toml`: `pyjwt[crypto]` 의존성 추가
+
+### 주요 구현 (eacct_chatbot)
+- `auth.py` 신규: `DevSignedContextIssuer`(인메모리 RSA-2048), `JwtSignedContextIssuer`, `create_issuer()`
+- `payload_store.py` 신규: `InMemoryPayloadStore` (bounded-read 5회 + TTL 5분 + session binding, fail-safe 3종)
+- `chat_handler.py`: LLM boundary 완성 (`llm_safe_summary` 전환, `items_ref` 생성, `tool_calls_log` PII 제거), `payload_store`·`session_id` 연결
+- `server.py`: `/payload/{items_ref}` endpoint, X-Session-ID 전달
+
+### 주요 구현 (eacct_mcp)
+- `response_builder.py` 신규: `ToolResponseBuilder` (`llm_safe_summary`+`ui_payload` 분리)
+- `policies/tools.yml` 신규: field classification YAML
+- `slip.py` / `taxbill.py`: D002 auth context 연동 + `ToolResponseBuilder` 적용
+- `server.py`: explicit `ToolRegistry` + `DevAuthVerifier` 주입 + D006 compat layer
+
+### 테스트 결과
+pytest 122/122 통과, 1 warning (의도된 InsecureKeyLengthWarning). 신규 23건 모두 통과, 기존 99건 회귀 없음.
+
+### 다음 단계
+C1 3-way 검증 (Codex + Antigravity) → TC 문서 작성 → Jacey 승인 → DEV_D004(+D005) 진입
+
+---
+
+## 2026-05-20 — collab 테스트 프로세스 3-way 검증 체계 완성 + DEV_D001 Jacey 승인
+
+### 개요
+collab 프로세스의 테스트 역할을 3-way 검증 체계로 전환하고, DEV_D001 최종 승인까지 완료했다.
+
+### 프로세스 변경
+- **3-way 검증 체계 확립**: 개발(Claude) → 테스트-설계검증(Codex) + 테스트-제3자(Antigravity) → 승인(Jacey)
+- **TC 파일 분리**: 테스트 케이스를 DEV 문서에서 `40_tc/40_TC_{source-id}_{ts}_{slug}.md`로 독립 분리
+- **bundle 폴더 구조 정비**: `20_detail/` · `30_dev/` · `40_tc/` 역할별 분리, prefix `_` 통일
+- **승인자 변경**: `claude` → `jacey` (최종 dev 종료 승인은 Jacey가 직접)
+- **승인 일시 형식**: 날짜만 → `YYYY-MM-DD HH:mm` 포함 기록. 아이다가 "승인" 트리거 즉시 처리.
+
+### 변경 파일
+- `platform/processes/collab/README.md` — 기본 역할·파이프라인·§6·§9·§14·§16 갱신
+- `platform/processes/collab/_template_dev.md` — 결재 헤더 4컬럼, `approver: jacey`, §3 재구성, §5 형식
+- `platform/processes/collab/_template_testcase.md` — 신규 (TC 파일 템플릿)
+- `PLATFORM/DIR_.../30_dev/30_DEV_D001_...md` — 3-way 검증 소급 적용, Jacey 승인 완료
+- `PLATFORM/DIR_.../40_tc/40_TC_D001_...md` — §1 TC-001~027 Claude 작성 완료
+- `platform/processes/collab/MAP.md` — TC 섹션 추가, DEV_D001 [resolved·verified] 반영
+
+### DEV_D001 승인
+- **2026-05-20 16:52 Jacey 승인** — C1 3-way 검증(Claude·Codex·Antigravity) 전원 통과
+- O001 §G 게이트 해제 — 후속 `DEV_D002(+D003)` / `DEV_D004(+D005)` / `DEV_D006-*` 진입 가능
+
+---
+
 ## 2026-05-19 — wiki_faq_builder·wiki_mbo_builder 플러그인 경로 복구
 
 **문제**

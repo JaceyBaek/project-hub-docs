@@ -27,3 +27,4 @@
 | G-023 | project-hub | README.md 폴더 구조 박스 일괄 갱신 — plugins/·apps/·docs/·mcp_server/·webview/·history/ 누락분 반영 | 낮음 | 완료 | - | 2026-05-11 |
 | G-024 | project-hub | 프로젝트 라이프사이클 통합 재설계 — 단계(기획/설계/개발/테스트/배포/운영) 도입 + 운영 사이클 + GitHub Flow 형상관리 + 권한 정책 통합. 단계 폴더 구조 적용(산출물+템플릿), 5개 프로젝트 단계 메타 반영, 아이다 트리거 4개 추가 | 높음 | 완료 | - | 2026-05-12 |
 | G-025 | project-hub | 산출물 메타 `last_reviewed` 필드 도입 + 6개월 미검토 정기 점검 트리거 (라이프사이클 §4-2 후속) | 보통 | 대기 | - | - |
+| G-026 | project-hub | [검토 보류] collab 기반 AI 3개(Claude·Codex·Antigravity) 완전 자동화 파이프라인 구현 — Claude Code hooks + 각 CLI headless(subprocess) 방식, 추가 API 비용 없음. 선행 확인: Codex CLI·Antigravity CLI headless 모드 지원 여부. mcp 관련 개발 마무리 후 재검토 | 보통 | 대기 | - | - |

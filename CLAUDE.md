@@ -34,6 +34,8 @@
 
 **프로젝트 레이어:** 소스코드 / 산출물(HTML) / 이슈·To-Do·히스토리·회의록·의사결정·변경이력 / 기능 변경 시 가이드 문서 현행화 자동 확인
 
+> **테스트·시연 코드 규칙:** 목적이 테스트·시연·PoC이면 반드시 별도 프로젝트를 생성하고 시작. `platform/` 직접 추가 금지. 플랫폼에 올라오는 코드는 프로젝트에서 검증 후 승격 심사를 통과한 것만.
+
 ## 작업 디렉토리
 
 - 프로젝트: `projects/` / 스크립트: `platform/scripts/` / 플러그인: `platform/plugins/` (`PLUGINS_PATH` = `platform/config/personal.yml` → `paths.plugins`, pip install -e)
@@ -44,7 +46,7 @@
 
 - 현황: `PROJECTS_GLOBAL.md` (섹션: 진행중 / 보류 / 활성 / 서비스종료)
 - 상태 표기: 각 프로젝트 CLAUDE.md 상단 → `상태: 진행중 | 코드: {코드} | 담당: {이름} | 시작일: YYYY-MM-DD`
-- 단위 관리: `_manage/` — `history/YYYYMM.md` / `todo.md` / `issues.md` / `meetings/` / `decisions.md` / `changelog.md`
+- 단위 관리: `_manage/` — `history/YYYYMM.md` / `todo.md` / `issues.md` / `meetings/` / `decisions.md` / `changelog.md` / `lessons.md`
 - 우선순위: 높음·보통·낮음 / 상태: 대기·진행중·완료·보류 / 이슈유형: 버그·변경요청·리스크
 
 **필요 시 로드할 상세 지침:**
@@ -55,6 +57,8 @@
 - 산출물 작성 규칙·절차·ID prefix·RAG 변환 → `platform/project/deliverables_guide.md`
 - 버전 관리 → `platform/project/versioning.md`
 - 히스토리·이슈·To-Do 등 시간순 누적 문서 검색 정책(기본 2주 윈도우 + 확장 규칙) → `platform/guides/context_search_policy.md`
+- 교훈 기록·에스컬레이션 흐름 → `platform/guides/lessons_learned.md` (프로젝트별 `_manage/lessons.md` → `[공통]` 태그 → 플랫폼 승격)
+- 플랫폼 승격 심사 절차 → `platform/project/platform_promotion.md` (미구현, 추후 설계)
 
 ---
 
