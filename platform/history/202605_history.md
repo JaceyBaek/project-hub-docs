@@ -7,6 +7,14 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-21 — mcp_platform 버그픽스: REST 모드 로깅 + datetime 직렬화
+
+### 작업 내용
+- `mcp_platform/base_server.py`: `dispatch()` step 8에 `log_tool_call` 래퍼 적용 — REST 모드에서 CALL/OK/ERROR 로그 누락 버그 수정. `_func = log_tool_call(self._logger)(entry.func)` 후 비동기·동기 분기 모두 `_func` 호출
+- `mcp_platform/rest_bridge.py`: 성공 응답 직렬화에 `jsonable_encoder` 추가 — pymysql `datetime.date` 객체 포함 결과에서 `TypeError: Object of type date is not JSON serializable` 수정
+
+---
+
 ## 2026-05-20 — 플랫폼 정리 및 기능 옵션화 아이디어 등록
 
 ### 작업 내용
