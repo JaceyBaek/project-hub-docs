@@ -7,6 +7,60 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-21 — DEV_D004(+D005) Jacey 승인 완료 — DEV_D006-5 게이트 해제
+
+### 작업 내용
+
+- DEV_D004 C3 재수정: `projects/eacct_mcp/deploy/config_validate.py` em dash → ASCII 교체 + stdout reconfigure 적용
+- Codex C3 재테스트 통과 (자동화 31/31, 전체 회귀 154/154, TC-C01~C03 PASS)
+- Antigravity A1 제3자 검증 통과 (KillSwitch 방어·금지 플래그 대소문자 처리 확인)
+- Jacey 승인 — DEV_D004 frontmatter `status: approved`, `verified_by: codex+antigravity`, `approved_by: jacey`
+- O001 §G 게이트 해제: DEV_D006-5 (audit·policy fail-closed 통합) 진입 가능
+
+### 결과
+
+- mcp_platform v0.6.0 봉인: FileAuditLogger · FileKillSwitchProvider · RateLimitPolicyEngine · 2-phase audit dispatch · 금지 플래그 11종 CLI 전 범위 통과
+
+---
+
+## 2026-05-21 — mcp_platform D002 validate_auth_env 확장 + D005 CLI 버그픽스 (v0.5.1)
+
+### 작업 내용
+
+**D002 — validate_auth_env 검사 범위 확장 (`auth.py`)**
+- `validate_auth_env()`: `DEV_AUTH_ENABLED` 단일 체크 → `_DEV_ONLY_VARS` 4종 전수 검사로 확장
+  - 검사 대상: `DEV_AUTH_ENABLED`, `DEV_USER_REF`, `DEV_DEPT_REF`, `DEV_ROLES`
+  - 에러 메시지에 실제 감지된 변수명 나열
+- `test_auth_privacy.py`: TC 사전 격리 보강 + `test_dev_user_ref_raises` (TC-C02) 신규
+
+**D005 — config_validate CLI 버그픽스 (`deploy/config_validate.py`)**
+- `deploy/config_validate.py` 신규 생성 — DEV_D004 C1 TC-C02 FAIL 원인 수정
+  - PASS/BLOCKED 메시지 em dash(`—` U+2014) → ` - ` (ASCII) 교체
+  - `sys.stdout.reconfigure(errors="replace")` 추가 — 비UTF-8 콘솔 안전망
+- `_manage/test_results/20260521-1806-d004-c1/summary.md` 판정 업데이트 → C1 통과
+- `CHANGELOG.md` v0.5.0(D002~D005 소급) + v0.5.1 항목 추가
+
+### 결과
+- pytest 154 passed, 1 warning / DEV_D004 C1 TC-C01~C03 모두 PASS
+
+---
+
+## 2026-05-21 — collab README 개선 + eacct_mcp 산출물 반영 절차 등록
+
+### 작업 내용
+- **collab README (`platform/processes/collab/README.md`) 4건 수정**
+  - 헤더 설명 변경: "설계부터 테스트까지 여러 AI가 함께 작업하는 협업 공간" 으로 명확화. 완료 후 프로젝트 산출물 반영 원칙(§4-1) 링크 추가
+  - §4 파이프라인: `종료` 단계 뒤 `[해당 시] 프로젝트 산출물 반영 (§4-1)` 단계 추가
+  - §4-1 신설: 반영 시점·대상 산출물(REQ·FLW·FUNC·TC·테스트결과서)·traceability·책임·To-Do 사전 등록 원칙 상세 기술
+  - §4-1 첫 줄 "설계 협의 공간" → "설계부터 테스트까지 협업하는 공간" 으로 헤더와 일치시킴
+
+### 배경
+- DIR-20260514-1554 요구사항 저장 위치 확인 과정에서 REQ와 direction 간 traceability 없음 확인
+- REQ는 POC 기능 중심(v0.1), direction은 보안·ITGC·운영 설계로 범위 확장 — 갭 10개 항목 정리
+- collab 완료 후 프로젝트 산출물 역방향 반영 절차가 README에 없었음 → 신설
+
+---
+
 ## 2026-05-21 — mcp_platform 버그픽스: REST 모드 로깅 + datetime 직렬화
 
 ### 작업 내용
