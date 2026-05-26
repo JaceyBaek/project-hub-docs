@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="doc-type" content="INDEX">
+<meta name="project" content="P2605991">
+<meta name="updated" content="2026-05-26">
+<title>P2605991 — 근태관리 시스템 산출물 뷰어</title>
+<style>
+/* ─── Design Tokens ─────────────────────────────────────── */
+:root {
+  --primary:#0d1b2a; --accent:#1565c0; --accent-light:#e3f2fd;
+  --success:#2e7d32; --success-bg:#e8f5e9;
+  --warn:#e65100; --warn-bg:#fff3e0;
+  --border:#dde3ea; --bg:#f0f2f5; --card:#fff;
+  --text:#1a202c; --muted:#6b7280;
+  --sidebar-w:228px;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',system-ui,sans-serif;
+  --mono:'Fira Code','Consolas','Courier New',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:14px;}
+body{font-family:var(--font);line-height:1.75;color:var(--text);background:var(--bg);display:flex;min-height:100vh;}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+.sidebar{width:var(--sidebar-w);background:var(--primary);color:#cdd5df;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;}
+.sidebar-logo{display:flex;align-items:center;gap:8px;padding:16px 16px 12px;color:#fff;font-weight:700;font-size:15px;border-bottom:1px solid rgba(255,255,255,.08);text-decoration:none;}
+.sidebar-logo:hover{text-decoration:none;background:rgba(255,255,255,.04);}
+.sidebar-logo small{font-size:11px;font-weight:400;color:#7fa3b8;display:block;}
+.sidebar-project{padding:8px 16px 10px;border-bottom:1px solid rgba(255,255,255,.06);}
+.sidebar-project .proj-code{font-size:10px;color:#7fa3b8;letter-spacing:.06em;}
+.sidebar-project .proj-name{font-size:12px;color:#e2e8f0;font-weight:600;margin-top:1px;}
+.nav-group{padding:6px 0;}
+.nav-group-title{padding:5px 16px 2px;font-size:10px;font-weight:700;color:#4a6070;text-transform:uppercase;letter-spacing:.08em;}
+.nav-item{display:flex;align-items:center;gap:6px;padding:5px 16px;color:#a8bcc8;font-size:12.5px;transition:background .12s,color .12s;text-decoration:none;}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#e2e8f0;text-decoration:none;}
+.nav-item.active{background:var(--accent);color:#fff;font-weight:600;}
+.nav-req{color:#4fc3f7;font-size:9px;}
+.nav-opt{color:#455a64;font-size:9px;}
+.main{margin-left:var(--sidebar-w);flex:1;padding:32px 40px 72px;max-width:960px;}
+.hero{background:var(--primary);color:#e2e8f0;border-radius:12px;padding:36px 40px;margin-bottom:28px;}
+.hero h1{font-size:26px;font-weight:700;color:#fff;margin-bottom:6px;}
+.hero p{font-size:14px;color:#a8bcc8;margin-bottom:0;}
+.hero-meta{display:flex;gap:20px;flex-wrap:wrap;margin-top:16px;font-size:12.5px;color:#7fa3b8;}
+.hero-meta span{display:flex;align-items:center;gap:5px;}
+.section-title{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:28px 0 12px;}
+.doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:8px;}
+.doc-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05);transition:box-shadow .15s,border-color .15s;text-decoration:none;color:var(--text);display:block;}
+.doc-card:hover{box-shadow:0 3px 10px rgba(21,101,192,.12);border-color:#90caf9;text-decoration:none;}
+.doc-card-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.doc-type{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-light);padding:2px 7px;border-radius:3px;}
+.badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;}
+.st-draft{background:#eceff1;color:#546e7a;}
+.st-review{background:var(--warn-bg);color:var(--warn);}
+.st-approved{background:var(--success-bg);color:var(--success);}
+.req-yes{background:#fce4ec;color:#c62828;}
+.req-cond{background:#f3e5f5;color:#7b1fa2;}
+.ph-plan{background:#f3e5f5;color:#7b1fa2;}
+.ph-design{background:var(--accent-light);color:var(--accent);}
+.ph-dev{background:var(--success-bg);color:var(--success);}
+.ph-test{background:#fffde7;color:#f57f17;}
+.ph-deploy{background:#ede7f6;color:#4527a0;}
+.doc-card-name{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.doc-card-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+.coverage-bar{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:20px;}
+.coverage-bar h2{font-size:13.5px;font-weight:700;margin-bottom:14px;color:var(--primary);}
+.cov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;}
+.cov-item{display:flex;flex-direction:column;gap:4px;}
+.cov-label{font-size:11.5px;font-weight:600;color:var(--text);}
+.cov-bar-wrap{background:#eef0f3;border-radius:20px;height:6px;overflow:hidden;}
+.cov-fill{height:100%;border-radius:20px;background:var(--accent);}
+.cov-pct{font-size:11px;color:var(--muted);}
+@media print{.sidebar{display:none!important;}.main{margin-left:0!important;}}
+@media(max-width:768px){.sidebar{transform:translateX(-100%);}.main{margin-left:0;padding:20px 16px 48px;}}
+</style>
+</head>
+<body>
+
+<!-- ─── Sidebar ─────────────────────────────────────────── -->
+<nav class="sidebar">
+  <a href="./index.html" class="sidebar-logo">
+    📋 산출물 뷰어<small>Document Viewer</small>
+  </a>
+  <div class="sidebar-project">
+    <div class="proj-code">P2605991</div>
+    <div class="proj-name">근태관리 시스템</div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-title">추적</div>
+    <a href="./docs/TRC_요구사항추적매트릭스.html" class="nav-item">
+      <span class="nav-req">●</span> TRC 추적매트릭스
+    </a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-title">01 Plan</div>
+    <a href="./docs/01_plan/REQ_요구사항정의서.html" class="nav-item">
+      <span class="nav-req">●</span> REQ 요구사항정의서
+    </a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-title">02 Design</div>
+    <a href="./docs/02_design/FLW_프로세스흐름도.html" class="nav-item">
+      <span class="nav-req">●</span> FLW 프로세스흐름도
+    </a>
+    <a href="./docs/02_design/SCR_화면정의서.html" class="nav-item">
+      <span class="nav-opt">◌</span> SCR 화면정의서
+    </a>
+    <a href="./docs/02_design/ROLE_권한정의서.html" class="nav-item">
+      <span class="nav-opt">◌</span> ROLE 권한정의서
+    </a>
+    <a href="./docs/02_design/FUNC_기능정의서.html" class="nav-item">
+      <span class="nav-req">●</span> FUNC 기능정의서
+    </a>
+    <a href="./docs/02_design/ARC_아키텍처.html" class="nav-item">
+      <span class="nav-req">●</span> ARC 아키텍처
+    </a>
+    <a href="./docs/02_design/DAT_데이터모델정의서.html" class="nav-item">
+      <span class="nav-opt">◌</span> DAT 데이터모델정의서
+    </a>
+    <a href="./docs/02_design/API_인터페이스명세서.html" class="nav-item">
+      <span class="nav-opt">◌</span> API 인터페이스명세서
+    </a>
+    <a href="./docs/02_design/SEC_보안설계서.html" class="nav-item">
+      <span class="nav-opt">◌</span> SEC 보안설계서
+    </a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-title">03 Dev</div>
+    <a href="./docs/03_dev/UTC_단위테스트케이스.html" class="nav-item">
+      <span class="nav-req">●</span> UTC 단위테스트케이스
+    </a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-title">04 Test</div>
+    <a href="./docs/04_test/ITS_통합테스트시나리오.html" class="nav-item">
+      <span class="nav-opt">◌</span> ITS 통합테스트시나리오
+    </a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-title">05 Deploy</div>
+    <a href="./docs/05_deploy/OPM_운영자매뉴얼.html" class="nav-item">
+      <span class="nav-req">●</span> OPM 운영자매뉴얼
+    </a>
+    <a href="./docs/05_deploy/USM_사용자매뉴얼.html" class="nav-item">
+      <span class="nav-opt">◌</span> USM 사용자매뉴얼
+    </a>
+    <a href="./docs/05_deploy/CFG_설정가이드.html" class="nav-item">
+      <span class="nav-req">●</span> CFG 설정가이드
+    </a>
+    <a href="./docs/05_deploy/RUN_운영Runbook.html" class="nav-item">
+      <span class="nav-req">●</span> RUN 운영Runbook
+    </a>
+  </div>
+</nav>
+
+<!-- ─── Main ─────────────────────────────────────────────── -->
+<main class="main">
+
+  <div class="hero">
+    <h1>📋 근태관리 시스템</h1>
+    <p>Employee Attendance Management System — 산출물 웹뷰 예시 (P2605991)</p>
+    <div class="hero-meta">
+      <span>📁 프로젝트: P2605991</span>
+      <span>📅 기준일: 2026-05-26</span>
+      <span>🧑‍💻 오너: 김** (팀장)</span>
+      <span>🔖 버전: v0.2.0</span>
+      <span>🏷 상태: review</span>
+    </div>
+  </div>
+
+  <!-- Coverage summary -->
+  <div class="coverage-bar">
+    <h2>📊 산출물 커버리지</h2>
+    <div class="cov-grid">
+      <div class="cov-item">
+        <div class="cov-label">전체 (16/16)</div>
+        <div class="cov-bar-wrap"><div class="cov-fill" style="width:100%"></div></div>
+        <div class="cov-pct">100%</div>
+      </div>
+      <div class="cov-item">
+        <div class="cov-label">필수 (10/10)</div>
+        <div class="cov-bar-wrap"><div class="cov-fill" style="width:100%;background:#2e7d32"></div></div>
+        <div class="cov-pct">100%</div>
+      </div>
+      <div class="cov-item">
+        <div class="cov-label">조건부 (6/6)</div>
+        <div class="cov-bar-wrap"><div class="cov-fill" style="width:100%;background:#7b1fa2"></div></div>
+        <div class="cov-pct">100%</div>
+      </div>
+      <div class="cov-item">
+        <div class="cov-label">승인 완료 (3/16)</div>
+        <div class="cov-bar-wrap"><div class="cov-fill" style="width:19%;background:#2e7d32"></div></div>
+        <div class="cov-pct">19%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Plan -->
+  <div class="section-title">📌 추적</div>
+  <div class="doc-grid">
+    <a href="./docs/TRC_요구사항추적매트릭스.html" class="doc-card">
+      <div class="doc-card-top">
+        <span class="doc-type">TRC</span>
+        <span class="badge st-review">review</span>
+        <span class="badge req-yes">필수</span>
+      </div>
+      <div class="doc-card-name">요구사항 추적 매트릭스</div>
+      <div class="doc-card-desc">전체 산출물 간 양방향 추적, 커버리지 집계</div>
+    </a>
+  </div>
+
+  <div class="section-title">01 Plan</div>
+  <div class="doc-grid">
+    <a href="./docs/01_plan/REQ_요구사항정의서.html" class="doc-card">
+      <div class="doc-card-top">
+        <span class="doc-type">REQ</span>
+        <span class="badge st-approved">approved</span>
+        <span class="badge req-yes">필수</span>
+        <span class="badge ph-plan">plan</span>
+      </div>
+      <div class="doc-card-name">요구사항정의서</div>
+      <div class="doc-card-desc">비즈니스·기능·비기능 요구사항 정의</div>
+    </a>
+  </div>
+
+  <div class="section-title">02 Design</div>
+  <div class="doc-grid">
+    <a href="./docs/02_design/FLW_프로세스흐름도.html" class="doc-card">
+      <div class="doc-card-top">
+        <span class="doc-type">FLW</span>
+        <span class="badge st-approved">approved</span>
+        <span class="badge req-yes">필수</span>
+        <span class="badge ph-design">design</span>
+      </div>
+      <div class="doc-card-name">프로세스흐름도</div>
+      <div class="doc-card-desc">출퇴근·결재 흐름 다이어그램</div>
+    </a>
+    <a href="./docs/02_design/SCR_화면정의서.html" class="doc-card">
+      <div class="doc-card-top">
+        <span class="doc-type">SCR</span>
+        <span class="badge st-review">review</span>
+        <span class="badge req-cond">조건부</span>
+        <span class="badge ph-design">design</span>
+      </div>
+      <div class="doc-card-name">화면정의서</div>
+      <div class="doc-card-desc">주요 3개 화면 UI 레이아웃 정의</div>
+    </a>
+    <a href="./docs/02_design/ROLE_권한정의서.html" class="doc-card">
+      <div class="doc-card-top">
+        <span class="doc-type">ROLE</span>
+        <span class="badge st-review">review</span>
+        <span class="badge req-cond">조건부</span>
+        <span class="badge ph-design">design</span>
+      </div>
+      <div class="doc-card-name">권한정의서</div>
+      <div class="doc-card-desc">4가지 역할 권한 매트릭스 (RBAC)</div>
+    </a>
+    <a href="./docs/02_design/FUNC_기능정의서.html" class="doc-card">
+      <div class="doc-card-top">
+        <span class="doc-type">FUNC</span>
+        <span class="badge st-review">review</span>
+        <span class="badge req-yes">필수</span>
+        <span class="badge ph-design">design</span>
+      </div>
+      <div class="doc-card-name">기능정의서</div>
+      <div class="doc-card-desc">핵심 함수 시그니처·처리 로직·에러코드</div>
+    </a>
+    <a href="./docs/02_design/ARC_아키텍처.html" class="doc-card">
+      <div class="doc-card-top">
+        <span class="doc-type">ARC</span>
+        <span class="badge st-approved">approved</span>
+        <span class="badge req-yes">필수</span>
+        <span class="badge ph-design">design</span>
+      </div>
+      <div class="doc-card-name">아키텍처</div>
+      <div class="doc-card-desc">React+FastAPI+PostgreSQL+Redis 구조</div>
+    </a>
+    <a href="./docs/02_design/DAT_데이터모델정의서.html" class="doc-card">
+      <div class="doc-card-top">
+        <span class="doc-type">DAT</span>
+        <span class="badge st-review">review</span>
+        <span class="badge req-cond">조건부</span>
+        <span class="badge ph-design">design</span>
+      </div>
+      <div class="doc-card-name">데이터모델정의서</div>
+      <div class="doc-card-desc">ERD, 4개 엔티티, 인덱스·보존 정책</div>
+    </a>
+    <a href="./docs/02_design/API_인터페이스명세서.html" class="doc-card">
+      <div class="doc-card-top">
+        <span class="doc-type">API</span>
+        <span class="badge st-review">review</span>
+        <span class="badge req-cond">조건부</span>
+        <span class="badge ph-design">design</span>
+      </div>
+      <div class="doc-card-name">인터페이스명세서</div>
+      <div class="doc-card-desc">REST API 5개 엔드포인트 상세 명세</div>
+    </a>
+    <a href="./docs/02_design/SEC_보안설계서.html" class="doc-card">
+      <div class="doc-card-top">
+        <span class="doc-type">SEC</span>
+        <span class="badge st-draft">draft</span>
+        <span class="badge req-cond">조건부</span>
+        <span class="badge ph-design">design</span>
+      </div>
+      <div class="doc-card-name">보안설계서</div>
+      <div class="doc-card-desc">STRIDE 위협 모델, JWT·RBAC, PII 처리</div>
+    </a>
+  </div>
+
+  <div class="section-title">03 Dev</div>
+  <div class="doc-grid">
+    <a href="./docs/03_dev/UTC_단위테스트케이스.html" class="doc-card">
+      <div class="doc-card-top">
+        <span class="doc-type">UTC</span>
+        <span class="badge st-review">review</span>
+        <span class="badge req-yes">필수</span>
+        <span class="badge ph-dev">dev</span>
+      </div>
+      <div class="doc-card-name">단위테스트케이스</div>
+      <div class="doc-card-desc">pytest 기반 핵심 함수 단위테스트</div>
+    </a>
+  </div>
+
+  <div class="section-title">04 Test</div>
+  <div class="doc-grid">
+    <a href="./docs/04_test/ITS_통합테스트시나리오.html" class="doc-card">
+      <div class="doc-card-top">
+        <span class="doc-type">ITS</span>
+        <span class="badge st-draft">draft</span>
+        <span class="badge req-cond">조건부</span>
+        <span class="badge ph-test">test</span>
+      </div>
+      <div class="doc-card-name">통합테스트시나리오</div>
+      <div class="doc-card-desc">E2E 2개 시나리오, 급여 연동 포함</div>
+    </a>
+  </div>
+
+  <div class="section-title">05 Deploy</div>
+  <div class="doc-grid">
+    <a href="./docs/05_deploy/OPM_운영자매뉴얼.html" class="doc-card">
+      <div class="doc-card-top">
+        <span class="doc-type">OPM</span>
+        <span class="badge st-draft">draft</span>
+        <span class="badge req-yes">필수</span>
+        <span class="badge ph-deploy">deploy</span>
+      </div>
+      <div class="doc-card-name">운영자매뉴얼</div>
+      <div class="doc-card-desc">배포·시작·종료·롤백·모니터링</div>
+    </a>
+    <a href="./docs/05_deploy/USM_사용자매뉴얼.html" class="doc-card">
+      <div class="doc-card-top">
+        <span class="doc-type">USM</span>
+        <span class="badge st-draft">draft</span>
+        <span class="badge req-cond">조건부</span>
+        <span class="badge ph-deploy">deploy</span>
+      </div>
+      <div class="doc-card-name">사용자매뉴얼</div>
+      <div class="doc-card-desc">출퇴근·휴가신청·통계조회 태스크</div>
+    </a>
+    <a href="./docs/05_deploy/CFG_설정가이드.html" class="doc-card">
+      <div class="doc-card-top">
+        <span class="doc-type">CFG</span>
+        <span class="badge st-review">review</span>
+        <span class="badge req-yes">필수</span>
+        <span class="badge ph-deploy">deploy</span>
+      </div>
+      <div class="doc-card-name">설정가이드</div>
+      <div class="doc-card-desc">환경변수, keyring 시크릿, .env.example</div>
+    </a>
+    <a href="./docs/05_deploy/RUN_운영Runbook.html" class="doc-card">
+      <div class="doc-card-top">
+        <span class="doc-type">RUN</span>
+        <span class="badge st-draft">draft</span>
+        <span class="badge req-yes">필수</span>
+        <span class="badge ph-deploy">deploy</span>
+      </div>
+      <div class="doc-card-name">운영 Runbook</div>
+      <div class="doc-card-desc">3개 플레이북, 에스컬레이션, Postmortem</div>
+    </a>
+  </div>
+
+</main>
+</body>
+</html>

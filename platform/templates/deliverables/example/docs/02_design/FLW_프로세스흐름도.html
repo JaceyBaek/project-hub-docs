@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="doc-id" content="P2605991-FLW-01">
+<meta name="doc-type" content="FLW">
+<meta name="project" content="P2605991">
+<meta name="version" content="1.0.0">
+<meta name="status" content="approved">
+<meta name="owner" content="박**(백엔드)">
+<meta name="updated" content="2026-05-26">
+<title>[P2605991-FLW-01] 프로세스 흐름도</title>
+<style>
+:root{--primary:#0d1b2a;--accent:#1565c0;--accent-hover:#0d47a1;--accent-light:#e3f2fd;--success:#2e7d32;--success-bg:#e8f5e9;--warn:#e65100;--warn-bg:#fff3e0;--danger:#b71c1c;--danger-bg:#ffebee;--border:#dde3ea;--bg:#f0f2f5;--card:#ffffff;--text:#1a202c;--text2:#374151;--muted:#6b7280;--sidebar-w:228px;--radius:10px;--shadow:0 1px 4px rgba(0,0,0,.06);--font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',system-ui,sans-serif;--font-mono:'Fira Code','Consolas','Courier New',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:var(--font-sans);line-height:1.75;color:var(--text);background:var(--bg);display:flex;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.sidebar{width:var(--sidebar-w);background:var(--primary);color:#cdd5df;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
+.sidebar-logo{display:flex;align-items:center;gap:8px;padding:16px 16px 12px;color:#fff;font-weight:700;font-size:15px;border-bottom:1px solid rgba(255,255,255,.08);text-decoration:none}
+.sidebar-logo:hover{text-decoration:none;background:rgba(255,255,255,.04)}
+.sidebar-logo small{font-size:11px;font-weight:400;color:#7fa3b8;display:block}
+.sidebar-project{padding:8px 16px 10px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sidebar-project .proj-code{font-size:10px;color:#7fa3b8;letter-spacing:.06em}
+.sidebar-project .proj-name{font-size:12px;color:#e2e8f0;font-weight:600;margin-top:1px}
+.nav-group{padding:6px 0}
+.nav-group-title{padding:5px 16px 2px;font-size:10px;font-weight:700;color:#4a6070;text-transform:uppercase;letter-spacing:.08em}
+.nav-item{display:flex;align-items:center;gap:6px;padding:5px 16px;color:#a8bcc8;font-size:12.5px;transition:background .12s,color .12s;text-decoration:none}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#e2e8f0;text-decoration:none}
+.nav-item.active{background:var(--accent);color:#fff;font-weight:600}
+.nav-req{color:#4fc3f7;font-size:9px}
+.nav-opt{color:#455a64;font-size:9px}
+.nav-item.active .nav-req,.nav-item.active .nav-opt{color:rgba(255,255,255,.7)}
+.main{margin-left:var(--sidebar-w);flex:1;padding:32px 40px 72px;max-width:960px}
+.doc-header{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px 20px;margin-bottom:24px;box-shadow:var(--shadow)}
+.meta-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.doc-id{font-family:var(--font-mono);font-size:11.5px;font-weight:700;color:var(--accent);background:var(--accent-light);padding:2px 9px;border-radius:4px}
+.badge{font-size:10.5px;font-weight:600;padding:2px 9px;border-radius:20px;display:inline-flex;align-items:center;gap:3px}
+.st-draft{background:#eceff1;color:#546e7a}
+.st-review{background:var(--warn-bg);color:var(--warn)}
+.st-approved{background:var(--success-bg);color:var(--success)}
+.ph-plan{background:#f3e5f5;color:#7b1fa2}
+.ph-design{background:var(--accent-light);color:var(--accent)}
+.ph-dev{background:var(--success-bg);color:var(--success)}
+.ph-test{background:#fffde7;color:#f57f17}
+.ph-deploy{background:#ede7f6;color:#4527a0}
+.req-yes{background:#fce4ec;color:#c62828}
+.req-cond{background:#f3e5f5;color:#7b1fa2}
+.doc-title{font-size:22px;font-weight:700;color:var(--primary);margin-bottom:6px}
+.doc-info{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-bottom:16px}
+.doc-info span{display:flex;align-items:center;gap:4px}
+.trace-bar{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:12px 16px;display:flex;gap:28px;flex-wrap:wrap}
+.trace-col{flex:1;min-width:160px}
+.trace-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.trace-links{display:flex;flex-wrap:wrap;gap:6px}
+.trace-link{font-family:var(--font-mono);font-size:11px;font-weight:500;padding:3px 10px;border-radius:4px;background:var(--accent-light);color:var(--accent);border:1px solid transparent;text-decoration:none;transition:background .12s,color .12s}
+.trace-link:hover{background:var(--accent);color:#fff;text-decoration:none}
+.trace-none{font-size:12px;color:var(--muted);font-style:italic}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin-bottom:18px;box-shadow:var(--shadow)}
+.card h2{font-size:15px;font-weight:700;color:var(--primary);padding-bottom:8px;margin-bottom:14px;border-bottom:2px solid var(--accent-light);display:flex;align-items:center;gap:6px}
+.card h3{font-size:13.5px;font-weight:600;color:var(--text);margin:16px 0 8px}
+.card h3:first-child{margin-top:0}
+.card h4{font-size:13px;font-weight:600;color:var(--text2);margin:12px 0 6px}
+.card p{margin-bottom:10px}
+.card ul,.card ol{padding-left:20px;margin-bottom:10px}
+.card li{margin-bottom:3px}
+.card>*:last-child{margin-bottom:0}
+.tbl-wrap{overflow-x:auto;margin:10px 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f0f4f8;padding:7px 11px;text-align:left;font-size:11.5px;font-weight:700;color:var(--primary);border:1px solid var(--border);white-space:nowrap}
+td{padding:6px 11px;border:1px solid var(--border);vertical-align:top;line-height:1.55}
+tr:nth-child(even) td{background:#fafbfd}
+tr:hover td{background:#f0f6ff}
+td code{font-family:var(--font-mono);font-size:11px;background:#f0f4f8;padding:1px 5px;border-radius:3px;color:var(--accent)}
+pre{background:#1a2332;color:#cdd5df;padding:14px 18px;border-radius:8px;overflow-x:auto;font-size:12.5px;line-height:1.6;margin:10px 0;border-left:3px solid var(--accent);font-family:var(--font-mono)}
+.ic{background:#f0f4f8;color:var(--accent);padding:1px 6px;border-radius:3px;font-family:var(--font-mono);font-size:12px}
+.diagram{background:linear-gradient(135deg,#f5f7fa,#e8eef4);border:2px dashed var(--border);border-radius:8px;padding:20px;margin:10px 0;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px}
+.diagram .d-icon{font-size:28px;margin-top:4px}
+.diagram .d-title{font-size:13px;font-weight:600;color:var(--text)}
+.diagram .d-code{font-family:var(--font-mono);font-size:11px;color:#555;background:#fff;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:left;width:100%;max-width:680px;white-space:pre;overflow-x:auto;margin-top:4px;line-height:1.5}
+.alert{padding:10px 14px;border-radius:6px;margin:10px 0;font-size:13px;display:flex;gap:8px;align-items:flex-start}
+.alert-info{background:var(--accent-light);border-left:3px solid var(--accent)}
+.alert-warn{background:var(--warn-bg);border-left:3px solid var(--warn)}
+.alert-success{background:var(--success-bg);border-left:3px solid var(--success)}
+.alert-danger{background:var(--danger-bg);border-left:3px solid var(--danger)}
+.checklist-card{background:#fffbf0;border:1px solid #fde68a;border-radius:var(--radius);padding:18px 22px;margin-top:24px}
+.checklist-card h2{font-size:13.5px;font-weight:700;color:#92400e;margin-bottom:12px;display:flex;align-items:center;gap:6px;padding-bottom:0;border-bottom:none}
+.cl-item{display:flex;align-items:flex-start;gap:8px;padding:3px 0;font-size:13px}
+.cl-item input{width:14px;height:14px;margin-top:3px;accent-color:var(--success);cursor:pointer}
+.cl-done{color:var(--muted);text-decoration:line-through}
+@media print{.sidebar{display:none!important}.main{margin-left:0!important}pre{background:#f5f5f5!important;color:#333!important}}
+@media(max-width:768px){.sidebar{transform:translateX(-100%)}.main{margin-left:0;padding:20px 16px 48px}}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <a href="../../index.html" class="sidebar-logo">📋 산출물 뷰어<small>P2605991 · 근태관리 시스템</small></a>
+  <div class="sidebar-project"><div class="proj-code">P2605991</div><div class="proj-name">근태관리 시스템</div></div>
+  <div class="nav-group">
+    <div class="nav-group-title">추적</div>
+    <a href="../TRC_요구사항추적매트릭스.html" class="nav-item"><span class="nav-req">●</span> TRC 추적매트릭스</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">01 Plan</div>
+    <a href="../01_plan/REQ_요구사항정의서.html" class="nav-item"><span class="nav-req">●</span> REQ 요구사항정의서</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">02 Design</div>
+    <a href="./FLW_프로세스흐름도.html" class="nav-item active"><span class="nav-req">●</span> FLW 프로세스흐름도</a>
+    <a href="./SCR_화면정의서.html" class="nav-item"><span class="nav-opt">◌</span> SCR 화면정의서</a>
+    <a href="./ROLE_권한정의서.html" class="nav-item"><span class="nav-opt">◌</span> ROLE 권한정의서</a>
+    <a href="./FUNC_기능정의서.html" class="nav-item"><span class="nav-req">●</span> FUNC 기능정의서</a>
+    <a href="./ARC_아키텍처.html" class="nav-item"><span class="nav-req">●</span> ARC 아키텍처</a>
+    <a href="./DAT_데이터모델정의서.html" class="nav-item"><span class="nav-opt">◌</span> DAT 데이터모델정의서</a>
+    <a href="./API_인터페이스명세서.html" class="nav-item"><span class="nav-opt">◌</span> API 인터페이스명세서</a>
+    <a href="./SEC_보안설계서.html" class="nav-item"><span class="nav-opt">◌</span> SEC 보안설계서</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">03 Dev</div>
+    <a href="../03_dev/UTC_단위테스트케이스.html" class="nav-item"><span class="nav-req">●</span> UTC 단위테스트케이스</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">04 Test</div>
+    <a href="../04_test/ITS_통합테스트시나리오.html" class="nav-item"><span class="nav-opt">◌</span> ITS 통합테스트시나리오</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">05 Deploy</div>
+    <a href="../05_deploy/OPM_운영자매뉴얼.html" class="nav-item"><span class="nav-req">●</span> OPM 운영자매뉴얼</a>
+    <a href="../05_deploy/USM_사용자매뉴얼.html" class="nav-item"><span class="nav-opt">◌</span> USM 사용자매뉴얼</a>
+    <a href="../05_deploy/CFG_설정가이드.html" class="nav-item"><span class="nav-req">●</span> CFG 설정가이드</a>
+    <a href="../05_deploy/RUN_운영Runbook.html" class="nav-item"><span class="nav-req">●</span> RUN 운영Runbook</a>
+  </div>
+</nav>
+<main class="main">
+  <div class="doc-header">
+    <div class="meta-row">
+      <span class="doc-id">P2605991-FLW-01</span>
+      <span class="badge st-approved">✅ 승인</span>
+      <span class="badge ph-design">Design</span>
+      <span class="badge req-yes">필수</span>
+    </div>
+    <div class="doc-title">프로세스 흐름도 (FLW)</div>
+    <div class="doc-info">
+      <span>👤 담당: 박**(백엔드)</span>
+      <span>📌 버전: v1.0.0</span>
+      <span>📅 수정: 2026-05-26</span>
+      <span>🏷 핵심 프로세스 2종</span>
+    </div>
+    <div class="trace-bar">
+      <div class="trace-col">
+        <div class="trace-label">↑ 상위 문서</div>
+        <div class="trace-links">
+          <a href="../01_plan/REQ_요구사항정의서.html" class="trace-link">P2605991-REQ-01</a>
+        </div>
+      </div>
+      <div class="trace-col">
+        <div class="trace-label">↓ 하위 문서</div>
+        <div class="trace-links">
+          <a href="./FUNC_기능정의서.html" class="trace-link">P2605991-FUNC-01</a>
+          <a href="./SCR_화면정의서.html" class="trace-link">P2605991-SCR-01</a>
+          <a href="../TRC_요구사항추적매트릭스.html" class="trace-link">P2605991-TRC-01</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §1 개요 -->
+  <div class="card">
+    <h2>§1 개요</h2>
+    <p>근태관리 시스템의 핵심 비즈니스 프로세스 2종을 정의합니다. 각 흐름도는 액터(Actor), 시스템 처리 단계, 분기 조건, 예외 흐름을 포함합니다.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>프로세스명</th><th>관련 REQ</th><th>노드 수</th><th>주요 액터</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>출퇴근 기록 프로세스</td><td><code>REQ-F01</code>, <code>REQ-B01</code></td><td>4개</td><td>직원, FastAPI, Redis, PostgreSQL</td></tr>
+          <tr><td>결재 신청·승인 프로세스</td><td><code>REQ-F03</code>, <code>REQ-B02</code></td><td>4개</td><td>직원, 팀장, FastAPI, 알림 서비스</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §2 노드·엣지 목록 -->
+  <div class="card">
+    <h2>§2 노드·엣지 목록</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>노드 ID</th><th>설명</th><th>유형</th><th>담당 컴포넌트</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>P2605991-FLW-N01</code></td><td>직원이 QR코드 스캔 또는 수동 기록</td><td>Start/Action</td><td>Frontend (React)</td></tr>
+          <tr><td><code>P2605991-FLW-N02</code></td><td>위치 정보 수신 및 유효성 검증</td><td>Process</td><td>FastAPI</td></tr>
+          <tr><td><code>P2605991-FLW-N03</code></td><td>출퇴근 시간 DB 저장</td><td>Process</td><td>FastAPI → PostgreSQL</td></tr>
+          <tr><td><code>P2605991-FLW-N04</code></td><td>근태 통계 캐시 갱신 (Redis)</td><td>Process</td><td>FastAPI → Redis</td></tr>
+          <tr><td><code>P2605991-FLW-N05</code></td><td>직원이 결재 신청 양식 작성</td><td>Start/Action</td><td>Frontend (React)</td></tr>
+          <tr><td><code>P2605991-FLW-N06</code></td><td>팀장에게 결재 요청 알림 발송</td><td>Process</td><td>FastAPI → 알림 서비스</td></tr>
+          <tr><td><code>P2605991-FLW-N07</code></td><td>팀장 승인/반려 처리</td><td>Decision</td><td>Frontend → FastAPI</td></tr>
+          <tr><td><code>P2605991-FLW-N08</code></td><td>결재 완료 알림 및 DB 업데이트</td><td>End</td><td>FastAPI → PostgreSQL → 알림 서비스</td></tr>
+          <tr><td><code>P2605991-FLW-N09</code></td><td>급여 시스템으로 월별 데이터 전송</td><td>Process</td><td>FastAPI → 외부 급여 API</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §3 다이어그램 -->
+  <div class="card">
+    <h2>§3 프로세스 다이어그램</h2>
+
+    <h3>3.1 출퇴근 기록 흐름도</h3>
+    <div class="diagram">
+      <div class="d-icon">📊</div>
+      <div class="d-title">출퇴근 기록 프로세스 흐름도 (Mermaid)</div>
+      <div class="d-code">flowchart TD
+    A([직원: QR스캔 또는 앱 버튼 클릭\nFLW-N01]) --> B{중복 출근\n여부 체크}
+    B -->|이미 출근 기록 있음| E1([오류 응답: AlreadyClockedInError 409])
+    B -->|없음| C[위치 정보 수신 및\n유효성 검증 - FLW-N02]
+    C --> D{위치 정보\n유효?}
+    D -->|무효 또는 없음| C2[위치 없이 기록\n경고 로그 기록]
+    D -->|유효| F[AttendanceRecord 생성\nDB 저장 - FLW-N03]
+    C2 --> F
+    F --> G[Redis 통계 캐시 무효화\n- FLW-N04]
+    G --> H[이벤트 발행\naudit_log 기록]
+    H --> Z([응답: 출근 기록 완료\n{record_id, clock_in_at}])</div>
+    </div>
+
+    <h3>3.2 결재 신청·승인 흐름도</h3>
+    <div class="diagram">
+      <div class="d-icon">📊</div>
+      <div class="d-title">결재 신청·승인 프로세스 흐름도 (Mermaid)</div>
+      <div class="d-code">flowchart TD
+    A([직원: 결재 신청 양식 작성\nFLW-N05]) --> B[LeaveRequest 생성\nstatus=pending]
+    B --> C[팀장에게 알림 발송\n이메일 + 슬랙 - FLW-N06]
+    C --> D{팀장 처리\n- FLW-N07}
+    D -->|승인| E[status=approved\nDB 업데이트]
+    D -->|반려| F[status=rejected\n반려 사유 입력 필수]
+    D -->|시간 초과 48h| G([에스컬레이션: 상위 팀장 알림])
+    E --> H[직원에게 승인 알림 발송\n- FLW-N08]
+    F --> H2[직원에게 반려 알림 발송\n사유 포함 - FLW-N08]
+    H --> Z([종료: 결재 완료])
+    H2 --> Z2([종료: 재신청 가능])</div>
+    </div>
+
+    <h3>3.3 급여 연동 흐름도</h3>
+    <div class="diagram">
+      <div class="d-icon">📊</div>
+      <div class="d-title">급여 연동 프로세스 흐름도 (Mermaid)</div>
+      <div class="d-code">flowchart TD
+    A([HR: 월말 급여 연동 실행]) --> B[해당 월 근태 데이터\n집계 - FLW-N09]
+    B --> C{데이터 검증\n누락 레코드?}
+    C -->|누락 있음| D[경고 리포트 생성\nHR 확인 요청]
+    D --> E{HR 확인\n완료?}
+    E -->|No| D
+    E -->|Yes| F
+    C -->|없음| F[급여 시스템 API\nREST POST 전송]
+    F --> G{전송 성공?}
+    G -->|실패| H[재시도 3회 후\n오류 알림]
+    G -->|성공| Z([종료: 전송 완료 로그 기록])</div>
+    </div>
+  </div>
+
+  <!-- §4 예외 처리 -->
+  <div class="card">
+    <h2>§4 예외 처리</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>예외 상황</th><th>발생 노드</th><th>처리 방법</th><th>에러 코드</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>QR코드 인식 실패</td>
+            <td><code>FLW-N01</code></td>
+            <td>수동 입력 UI 폴백 제공. 3회 연속 실패 시 IT 지원 안내 팝업 표시.</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>중복 출근 시도</td>
+            <td><code>FLW-N02</code></td>
+            <td>AlreadyClockedInError(409) 반환. 기존 출근 기록 표시 및 수정 안내.</td>
+            <td>409</td>
+          </tr>
+          <tr>
+            <td>퇴근 시 출근 기록 없음</td>
+            <td><code>FLW-N03</code></td>
+            <td>NotClockedInError(409) 반환. 관리자에게 수동 기록 요청 안내.</td>
+            <td>409</td>
+          </tr>
+          <tr>
+            <td>결재 시간 초과 (48시간)</td>
+            <td><code>FLW-N07</code></td>
+            <td>상위 팀장 및 HR에 에스컬레이션 알림 자동 발송.</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>급여 API 전송 실패</td>
+            <td><code>FLW-N09</code></td>
+            <td>최대 3회 재시도(지수 백오프). 재시도 후 실패 시 HR 담당자 이메일 알림.</td>
+            <td>502</td>
+          </tr>
+          <tr>
+            <td>Redis 캐시 장애</td>
+            <td><code>FLW-N04</code></td>
+            <td>캐시 없이 DB 직접 조회로 폴백. 캐시 복구 후 자동 재인덱싱.</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 검증 체크리스트 -->
+  <div class="checklist-card">
+    <h2>✅ 검증 체크리스트</h2>
+    <div class="cl-item"><input type="checkbox" checked><span class="cl-done">핵심 프로세스 2종(출퇴근·결재) 흐름도 완성</span></div>
+    <div class="cl-item"><input type="checkbox" checked><span class="cl-done">모든 노드(FLW-N01~N09)가 정의되고 Mermaid 코드에 반영됨</span></div>
+    <div class="cl-item"><input type="checkbox" checked><span class="cl-done">각 흐름도에 분기(Decision) 노드가 포함됨</span></div>
+    <div class="cl-item"><input type="checkbox" checked><span class="cl-done">예외 처리 시나리오 6종 정의 완료</span></div>
+    <div class="cl-item"><input type="checkbox" checked><span class="cl-done">각 노드가 REQ 또는 FUNC와 연결 추적 가능</span></div>
+    <div class="cl-item"><input type="checkbox" checked><span class="cl-done">급여 연동 흐름(FLW-N09) 포함</span></div>
+    <div class="cl-item"><input type="checkbox"><span>이해관계자(PM·HR) 흐름도 검토 확인 (승인 완료 2026-05-22)</span></div>
+  </div>
+</main>
+</body>
+</html>

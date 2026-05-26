@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITS 통합테스트시나리오 — P2605991</title>
+<style>
+:root{--primary:#0d1b2a;--accent:#1565c0;--accent-hover:#0d47a1;--accent-light:#e3f2fd;--success:#2e7d32;--success-bg:#e8f5e9;--warn:#e65100;--warn-bg:#fff3e0;--danger:#b71c1c;--danger-bg:#ffebee;--border:#dde3ea;--bg:#f0f2f5;--card:#ffffff;--text:#1a202c;--text2:#374151;--muted:#6b7280;--sidebar-w:228px;--radius:10px;--shadow:0 1px 4px rgba(0,0,0,.06);--font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',system-ui,sans-serif;--font-mono:'Fira Code','Consolas','Courier New',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:var(--font-sans);line-height:1.75;color:var(--text);background:var(--bg);display:flex;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.sidebar{width:var(--sidebar-w);background:var(--primary);color:#cdd5df;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
+.sidebar-logo{display:flex;align-items:center;gap:8px;padding:16px 16px 12px;color:#fff;font-weight:700;font-size:15px;border-bottom:1px solid rgba(255,255,255,.08);text-decoration:none}
+.sidebar-logo:hover{text-decoration:none;background:rgba(255,255,255,.04)}
+.sidebar-logo small{font-size:11px;font-weight:400;color:#7fa3b8;display:block}
+.sidebar-project{padding:8px 16px 10px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sidebar-project .proj-code{font-size:10px;color:#7fa3b8;letter-spacing:.06em}
+.sidebar-project .proj-name{font-size:12px;color:#e2e8f0;font-weight:600;margin-top:1px}
+.nav-group{padding:6px 0}
+.nav-group-title{padding:5px 16px 2px;font-size:10px;font-weight:700;color:#4a6070;text-transform:uppercase;letter-spacing:.08em}
+.nav-item{display:flex;align-items:center;gap:6px;padding:5px 16px;color:#a8bcc8;font-size:12.5px;transition:background .12s,color .12s;text-decoration:none}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#e2e8f0;text-decoration:none}
+.nav-item.active{background:var(--accent);color:#fff;font-weight:600}
+.nav-req{color:#4fc3f7;font-size:9px}
+.nav-opt{color:#455a64;font-size:9px}
+.nav-item.active .nav-req,.nav-item.active .nav-opt{color:rgba(255,255,255,.7)}
+.main{margin-left:var(--sidebar-w);flex:1;padding:32px 40px 72px;max-width:960px}
+.doc-header{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px 20px;margin-bottom:24px;box-shadow:var(--shadow)}
+.meta-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.doc-id{font-family:var(--font-mono);font-size:11.5px;font-weight:700;color:var(--accent);background:var(--accent-light);padding:2px 9px;border-radius:4px}
+.badge{font-size:10.5px;font-weight:600;padding:2px 9px;border-radius:20px;display:inline-flex;align-items:center;gap:3px}
+.st-draft{background:#eceff1;color:#546e7a}
+.st-review{background:var(--warn-bg);color:var(--warn)}
+.st-approved{background:var(--success-bg);color:var(--success)}
+.ph-plan{background:#f3e5f5;color:#7b1fa2}
+.ph-design{background:var(--accent-light);color:var(--accent)}
+.ph-dev{background:var(--success-bg);color:var(--success)}
+.ph-test{background:#fffde7;color:#f57f17}
+.ph-deploy{background:#ede7f6;color:#4527a0}
+.req-yes{background:#fce4ec;color:#c62828}
+.req-cond{background:#f3e5f5;color:#7b1fa2}
+.doc-title{font-size:22px;font-weight:700;color:var(--primary);margin-bottom:6px}
+.doc-info{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-bottom:16px}
+.doc-info span{display:flex;align-items:center;gap:4px}
+.trace-bar{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:12px 16px;display:flex;gap:28px;flex-wrap:wrap}
+.trace-col{flex:1;min-width:160px}
+.trace-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.trace-links{display:flex;flex-wrap:wrap;gap:6px}
+.trace-link{font-family:var(--font-mono);font-size:11px;font-weight:500;padding:3px 10px;border-radius:4px;background:var(--accent-light);color:var(--accent);border:1px solid transparent;text-decoration:none;transition:background .12s,color .12s}
+.trace-link:hover{background:var(--accent);color:#fff;text-decoration:none}
+.trace-none{font-size:12px;color:var(--muted);font-style:italic}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin-bottom:18px;box-shadow:var(--shadow)}
+.card h2{font-size:15px;font-weight:700;color:var(--primary);padding-bottom:8px;margin-bottom:14px;border-bottom:2px solid var(--accent-light);display:flex;align-items:center;gap:6px}
+.card h3{font-size:13.5px;font-weight:600;color:var(--text);margin:16px 0 8px}
+.card h3:first-child{margin-top:0}
+.card h4{font-size:13px;font-weight:600;color:var(--text2);margin:12px 0 6px}
+.card p{margin-bottom:10px}
+.card ul,.card ol{padding-left:20px;margin-bottom:10px}
+.card li{margin-bottom:3px}
+.card>*:last-child{margin-bottom:0}
+.tbl-wrap{overflow-x:auto;margin:10px 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f0f4f8;padding:7px 11px;text-align:left;font-size:11.5px;font-weight:700;color:var(--primary);border:1px solid var(--border);white-space:nowrap}
+td{padding:6px 11px;border:1px solid var(--border);vertical-align:top;line-height:1.55}
+tr:nth-child(even) td{background:#fafbfd}
+tr:hover td{background:#f0f6ff}
+td code{font-family:var(--font-mono);font-size:11px;background:#f0f4f8;padding:1px 5px;border-radius:3px;color:var(--accent)}
+pre{background:#1a2332;color:#cdd5df;padding:14px 18px;border-radius:8px;overflow-x:auto;font-size:12.5px;line-height:1.6;margin:10px 0;border-left:3px solid var(--accent);font-family:var(--font-mono)}
+.ic{background:#f0f4f8;color:var(--accent);padding:1px 6px;border-radius:3px;font-family:var(--font-mono);font-size:12px}
+.diagram{background:linear-gradient(135deg,#f5f7fa,#e8eef4);border:2px dashed var(--border);border-radius:8px;padding:20px;margin:10px 0;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px}
+.diagram .d-icon{font-size:28px;margin-top:4px}
+.diagram .d-title{font-size:13px;font-weight:600;color:var(--text)}
+.diagram .d-code{font-family:var(--font-mono);font-size:11px;color:#555;background:#fff;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:left;width:100%;max-width:600px;white-space:pre;overflow-x:auto;margin-top:4px;line-height:1.5}
+.alert{padding:10px 14px;border-radius:6px;margin:10px 0;font-size:13px;display:flex;gap:8px;align-items:flex-start}
+.alert-info{background:var(--accent-light);border-left:3px solid var(--accent)}
+.alert-warn{background:var(--warn-bg);border-left:3px solid var(--warn)}
+.alert-success{background:var(--success-bg);border-left:3px solid var(--success)}
+.alert-danger{background:var(--danger-bg);border-left:3px solid var(--danger)}
+.pii{display:inline-flex;align-items:center;gap:3px;background:#fce4ec;color:#c62828;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:4px}
+.checklist-card{background:#fffbf0;border:1px solid #fde68a;border-radius:var(--radius);padding:18px 22px;margin-top:24px}
+.checklist-card h2{font-size:13.5px;font-weight:700;color:#92400e;margin-bottom:12px;display:flex;align-items:center;gap:6px;padding-bottom:0;border-bottom:none}
+.cl-item{display:flex;align-items:flex-start;gap:8px;padding:3px 0;font-size:13px}
+.cl-item input{width:14px;height:14px;margin-top:3px;accent-color:var(--success);cursor:pointer}
+.cl-done{color:var(--muted);text-decoration:line-through}
+@media print{.sidebar{display:none!important}.main{margin-left:0!important}pre{background:#f5f5f5!important;color:#333!important}}
+@media(max-width:768px){.sidebar{transform:translateX(-100%)}.main{margin-left:0;padding:20px 16px 48px}}
+.pri-high{display:inline-block;background:#ffebee;color:#b71c1c;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:3px}
+.pri-medium{display:inline-block;background:#fff3e0;color:#e65100;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:3px}
+.st-ready{display:inline-block;background:#fffde7;color:#f57f17;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:3px}
+.step-box{background:#f8fafc;border:1px solid var(--border);border-radius:6px;padding:14px 16px;margin:8px 0}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:50%;margin-right:8px;flex-shrink:0}
+.step-row{display:flex;align-items:flex-start;gap:0;margin-bottom:6px;font-size:13px}
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <a href="../../index.html" class="sidebar-logo">📋 산출물 뷰어<small>P2605991 · 근태관리 시스템</small></a>
+  <div class="sidebar-project"><div class="proj-code">P2605991</div><div class="proj-name">근태관리 시스템</div></div>
+  <div class="nav-group">
+    <div class="nav-group-title">추적</div>
+    <a href="../TRC_요구사항추적매트릭스.html" class="nav-item"><span class="nav-req">●</span> TRC 추적매트릭스</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">01 Plan</div>
+    <a href="../01_plan/REQ_요구사항정의서.html" class="nav-item"><span class="nav-req">●</span> REQ 요구사항정의서</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">02 Design</div>
+    <a href="../02_design/FLW_프로세스흐름도.html" class="nav-item"><span class="nav-req">●</span> FLW 프로세스흐름도</a>
+    <a href="../02_design/SCR_화면정의서.html" class="nav-item"><span class="nav-opt">◌</span> SCR 화면정의서</a>
+    <a href="../02_design/ROLE_권한정의서.html" class="nav-item"><span class="nav-opt">◌</span> ROLE 권한정의서</a>
+    <a href="../02_design/FUNC_기능정의서.html" class="nav-item"><span class="nav-req">●</span> FUNC 기능정의서</a>
+    <a href="../02_design/ARC_아키텍처.html" class="nav-item"><span class="nav-req">●</span> ARC 아키텍처</a>
+    <a href="../02_design/DAT_데이터모델정의서.html" class="nav-item"><span class="nav-opt">◌</span> DAT 데이터모델정의서</a>
+    <a href="../02_design/API_인터페이스명세서.html" class="nav-item"><span class="nav-opt">◌</span> API 인터페이스명세서</a>
+    <a href="../02_design/SEC_보안설계서.html" class="nav-item"><span class="nav-opt">◌</span> SEC 보안설계서</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">03 Dev</div>
+    <a href="../03_dev/UTC_단위테스트케이스.html" class="nav-item"><span class="nav-req">●</span> UTC 단위테스트케이스</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">04 Test</div>
+    <a href="../04_test/ITS_통합테스트시나리오.html" class="nav-item active"><span class="nav-opt">◌</span> ITS 통합테스트시나리오</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">05 Deploy</div>
+    <a href="../05_deploy/OPM_운영자매뉴얼.html" class="nav-item"><span class="nav-req">●</span> OPM 운영자매뉴얼</a>
+    <a href="../05_deploy/USM_사용자매뉴얼.html" class="nav-item"><span class="nav-opt">◌</span> USM 사용자매뉴얼</a>
+    <a href="../05_deploy/CFG_설정가이드.html" class="nav-item"><span class="nav-req">●</span> CFG 설정가이드</a>
+    <a href="../05_deploy/RUN_운영Runbook.html" class="nav-item"><span class="nav-req">●</span> RUN 운영Runbook</a>
+  </div>
+</nav>
+
+<main class="main">
+  <div class="doc-header">
+    <div class="meta-row">
+      <span class="doc-id">P2605991-ITS-01</span>
+      <span class="badge st-draft">📝 초안</span>
+      <span class="badge ph-test">Test</span>
+      <span class="badge req-cond">조건부 (다중 컴포넌트)</span>
+    </div>
+    <div class="doc-title">ITS 통합테스트시나리오</div>
+    <div class="doc-info">
+      <span>📁 P2605991 근태관리 시스템</span>
+      <span>👤 박** (백엔드), 이** (프론트엔드)</span>
+      <span>📅 2026-05-26</span>
+      <span>🔖 v0.1</span>
+    </div>
+    <div class="trace-bar">
+      <div class="trace-col">
+        <div class="trace-label">▲ 상위 문서</div>
+        <div class="trace-links">
+          <a href="../02_design/FUNC_기능정의서.html" class="trace-link">P2605991-FUNC-01</a>
+          <a href="../02_design/API_인터페이스명세서.html" class="trace-link">P2605991-API-01</a>
+        </div>
+      </div>
+      <div class="trace-col">
+        <div class="trace-label">▼ 하위 문서</div>
+        <div class="trace-links">
+          <a href="../TRC_요구사항추적매트릭스.html" class="trace-link">P2605991-TRC-01</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §1 테스트 범위 -->
+  <div class="card">
+    <h2>§1 테스트 범위 및 환경 개요</h2>
+    <p>통합 테스트는 단위 테스트에서 격리된 외부 컴포넌트(PostgreSQL, Redis)를 실제 컨테이너로 구동하여 전체 데이터 흐름을 검증합니다.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>항목</th><th>설정</th></tr></thead>
+        <tbody>
+          <tr><td>테스트 범위</td><td>FastAPI ↔ PostgreSQL 16 ↔ Redis 7.2 실제 컨테이너 연동</td></tr>
+          <tr><td>컨테이너 구동</td><td><code>docker-compose -f docker-compose.test.yml up -d</code></td></tr>
+          <tr><td>테스트 프레임워크</td><td>pytest 7.x + httpx (비동기 HTTP 클라이언트)</td></tr>
+          <tr><td>테스트 데이터</td><td><code>fixtures/integration_data.json</code>에서 로드</td></tr>
+          <tr><td>테스트 실행 명령</td><td><code>pytest tests/integration/ -v --timeout=30</code></td></tr>
+          <tr><td>CI 실행 조건</td><td>main 브랜치 PR merge 전 필수 통과</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>대상 컴포넌트 연동도</h3>
+    <div class="diagram">
+      <div class="d-icon">📊</div>
+      <div class="d-title">통합 테스트 컴포넌트 연동</div>
+      <div class="d-code">graph LR
+    TC[테스트 클라이언트<br/>pytest + httpx] --> FA[FastAPI<br/>:8000]
+    FA --> PG[PostgreSQL 16<br/>:5432]
+    FA --> RD[Redis 7.2<br/>:6379]
+    FA --> EM[Email Mock<br/>unittest.mock]
+    PG --> PG2[attendance_test DB]
+    RD --> RD2[DB 0 - 캐시/토큰]</div>
+    </div>
+  </div>
+
+  <!-- §2 시나리오 목록 -->
+  <div class="card">
+    <h2>§2 시나리오 목록</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>시나리오 ID</th><th>시나리오명</th><th>우선순위</th><th>상태</th><th>연관 API</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>P2605991-ITS-S01</code></td>
+            <td>출퇴근 기록 → 통계 갱신 E2E</td>
+            <td><span class="pri-medium">Medium</span></td>
+            <td><span class="st-ready">준비중</span></td>
+            <td>API-001, API-002, API-003</td>
+          </tr>
+          <tr>
+            <td><code>P2605991-ITS-S02</code></td>
+            <td>결재 신청 → 팀장 승인 → 상태 반영 E2E</td>
+            <td><span class="pri-high">High</span></td>
+            <td><span class="st-ready">준비중</span></td>
+            <td>API-004, API-005</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §3 시나리오 상세 -->
+  <div class="card">
+    <h2>§3 시나리오 상세</h2>
+
+    <h3>ITS-S01 출퇴근 기록 → 통계 갱신 E2E</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>목적</td><td>출근 기록 → Redis 캐시 무효화 → 퇴근 기록 → 통계 조회까지 전체 흐름 검증</td></tr>
+          <tr><td>선행 조건</td><td>직원 EMP001 존재, 당일(2026-05-26) 출퇴근 기록 없음, Redis 캐시 초기화 상태</td></tr>
+          <tr><td>판정 기준</td><td>각 API 응답 2초 이내, work_minutes = 540, Redis 캐시 갱신 확인</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>실행 스텝</h4>
+    <div class="step-box">
+      <div class="step-row"><span class="step-num">1</span><div><strong>출근 기록</strong> — <code>POST /api/v1/attendance/clock-in</code><br>Body: <code>{"employee_id": "EMP001-UUID", "timestamp": "2026-05-26T09:00:00+09:00", "location": {"lat": 37.5, "lng": 127.0}}</code><br>기대 응답: <code>201</code>, <code>status: "normal"</code></div></div>
+      <div class="step-row"><span class="step-num">2</span><div><strong>Redis 캐시 무효화 확인</strong><br><code>redis-cli GET stats:EMP001-UUID:2026-05</code> → nil (캐시 삭제됨)</div></div>
+      <div class="step-row"><span class="step-num">3</span><div><strong>퇴근 기록</strong> — <code>POST /api/v1/attendance/clock-out</code><br>Body: <code>{"employee_id": "EMP001-UUID", "timestamp": "2026-05-26T18:00:00+09:00"}</code><br>기대 응답: <code>200</code>, <code>work_minutes: 540</code></div></div>
+      <div class="step-row"><span class="step-num">4</span><div><strong>통계 조회</strong> — <code>GET /api/v1/attendance/EMP001-UUID/stats?from=2026-05-26&amp;to=2026-05-26</code><br>기대 응답: <code>200</code>, <code>present_days: 1</code>, <code>total_work_minutes: 540</code></div></div>
+      <div class="step-row"><span class="step-num">5</span><div><strong>Redis 캐시 재생성 확인</strong><br><code>redis-cli EXISTS stats:EMP001-UUID:2026-05</code> → 1 (캐시 갱신됨)</div></div>
+    </div>
+
+    <h3 style="margin-top:24px">ITS-S02 결재 신청 → 팀장 승인 → 상태 반영 E2E</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>목적</td><td>직원 휴가 신청 → 팀장 승인 → 상태 전이 → 이메일 알림 발송 전체 흐름 검증</td></tr>
+          <tr><td>선행 조건</td><td>직원 EMP001 (ROLE-01), 팀장 MGR001 (ROLE-02, 동일 팀) 존재. 이메일 서비스 mock 설정 완료</td></tr>
+          <tr><td>판정 기준</td><td>상태 전이 정확 (pending → approved), 이메일 mock 호출 1회, 총 소요 3초 이내</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>실행 스텝</h4>
+    <div class="step-box">
+      <div class="step-row"><span class="step-num">1</span><div><strong>EMP001 로그인</strong> — <code>POST /api/v1/auth/login</code><br>Body: <code>{"emp_no": "EMP001", "password": "..."}</code><br>기대 응답: <code>200</code>, <code>access_token</code> 발급 → 이후 요청에 <code>Authorization: Bearer &lt;token&gt;</code> 사용</div></div>
+      <div class="step-row"><span class="step-num">2</span><div><strong>휴가 신청</strong> — <code>POST /api/v1/leave/request</code><br>Body: <code>{"leave_type": "annual", "start_at": "2026-06-02T09:00:00+09:00", "end_at": "2026-06-02T18:00:00+09:00", "reason": "통합 테스트용 연차"}</code><br>기대 응답: <code>201</code>, <code>request_id</code> 반환, <code>status: "pending"</code></div></div>
+      <div class="step-row"><span class="step-num">3</span><div><strong>DB 상태 직접 확인</strong><br>PostgreSQL: <code>SELECT status FROM leave_requests WHERE id = '{request_id}';</code> → <code>pending</code></div></div>
+      <div class="step-row"><span class="step-num">4</span><div><strong>MGR001 로그인</strong> — <code>POST /api/v1/auth/login</code><br>MGR001 JWT 발급 → 이후 요청에 사용</div></div>
+      <div class="step-row"><span class="step-num">5</span><div><strong>휴가 승인</strong> — <code>PUT /api/v1/leave/request/{request_id}/approve</code><br>Body: <code>{"approved": true, "comment": "승인합니다."}</code><br>기대 응답: <code>200</code>, <code>status: "approved"</code></div></div>
+      <div class="step-row"><span class="step-num">6</span><div><strong>DB 상태 재확인</strong><br>PostgreSQL: <code>SELECT status, approved_by FROM leave_requests WHERE id = '{request_id}';</code> → <code>approved</code>, <code>approved_by = MGR001-UUID</code></div></div>
+      <div class="step-row"><span class="step-num">7</span><div><strong>이메일 알림 발송 확인</strong><br>email_service mock 호출 횟수 검증 → <code>send_email.call_count == 1</code>, 수신자 = EMP001 이메일</div></div>
+    </div>
+  </div>
+
+  <!-- §4 테스트 환경 -->
+  <div class="card">
+    <h2>§4 테스트 환경 설정</h2>
+    <h3>docker-compose.test.yml 구성</h3>
+    <pre>version: '3.9'
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: attendance_test
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_pass
+    ports:
+      - "5433:5432"  # 로컬 충돌 방지
+
+  redis:
+    image: redis:7.2-alpine
+    ports:
+      - "6380:6379"  # 로컬 충돌 방지
+
+  app:
+    build: .
+    environment:
+      APP_ENV: test
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: attendance_test
+      DB_USER: test_user
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "8001:8000"</pre>
+
+    <h3>테스트 실행 순서</h3>
+    <pre># 1. 컨테이너 시작
+docker-compose -f docker-compose.test.yml up -d
+
+# 2. DB 마이그레이션 (테스트 DB)
+alembic -x env=test upgrade head
+
+# 3. 테스트 데이터 로드
+python scripts/load_fixtures.py --env test
+
+# 4. 통합 테스트 실행
+pytest tests/integration/ -v --timeout=30
+
+# 5. 컨테이너 정리
+docker-compose -f docker-compose.test.yml down -v</pre>
+  </div>
+
+  <!-- §5 테스트 데이터 -->
+  <div class="card">
+    <h2>§5 테스트 데이터</h2>
+    <p>테스트 데이터는 <span class="ic">fixtures/integration_data.json</span>에서 로드합니다. 아래는 핵심 fixture 구조입니다.</p>
+    <pre>{
+  "employees": [
+    {
+      "emp_no": "EMP001",
+      "name": "테스트직원",
+      "email": "emp001@test.internal",
+      "role": "EMPLOYEE",
+      "team_id": "TEAM001"
+    },
+    {
+      "emp_no": "MGR001",
+      "name": "테스트팀장",
+      "email": "mgr001@test.internal",
+      "role": "MANAGER",
+      "team_id": "TEAM001"
+    }
+  ],
+  "teams": [
+    {
+      "team_id": "TEAM001",
+      "name": "개발1팀",
+      "manager_emp_no": "MGR001"
+    }
+  ]
+}</pre>
+    <div class="alert alert-warn">
+      <span>⚠️</span>
+      <div>테스트 데이터는 테스트 DB 전용입니다. 스테이징/운영 DB에 절대 로드하지 마세요. 패스워드는 bcrypt 해시로 저장해야 합니다 — 평문 저장 금지.</div>
+    </div>
+  </div>
+
+  <!-- 검증 체크리스트 -->
+  <div class="checklist-card">
+    <h2>✅ 검증 체크리스트</h2>
+    <div class="cl-item"><input type="checkbox" checked disabled><span class="cl-done">시나리오 2개 설계 완료 (ITS-S01, ITS-S02)</span></div>
+    <div class="cl-item"><input type="checkbox" checked disabled><span class="cl-done">docker-compose.test.yml 구성 완료</span></div>
+    <div class="cl-item"><input type="checkbox" checked disabled><span class="cl-done">fixtures/integration_data.json 구조 정의</span></div>
+    <div class="cl-item"><input type="checkbox"><span>docker-compose.test.yml 실제 동작 검증</span></div>
+    <div class="cl-item"><input type="checkbox"><span>ITS-S01 pytest 코드 구현 완료</span></div>
+    <div class="cl-item"><input type="checkbox"><span>ITS-S02 pytest 코드 구현 완료</span></div>
+    <div class="cl-item"><input type="checkbox"><span>이메일 mock 설정 검증 (call_count 포함)</span></div>
+    <div class="cl-item"><input type="checkbox"><span>응답 시간 SLA (S01: 2초, S02: 3초) 통과</span></div>
+    <div class="cl-item"><input type="checkbox"><span>CI 파이프라인에 통합 테스트 단계 추가</span></div>
+  </div>
+</main>
+</body>
+</html>

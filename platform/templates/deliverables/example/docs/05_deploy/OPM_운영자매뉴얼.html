@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPM 운영자매뉴얼 — P2605991</title>
+<style>
+:root{--primary:#0d1b2a;--accent:#1565c0;--accent-hover:#0d47a1;--accent-light:#e3f2fd;--success:#2e7d32;--success-bg:#e8f5e9;--warn:#e65100;--warn-bg:#fff3e0;--danger:#b71c1c;--danger-bg:#ffebee;--border:#dde3ea;--bg:#f0f2f5;--card:#ffffff;--text:#1a202c;--text2:#374151;--muted:#6b7280;--sidebar-w:228px;--radius:10px;--shadow:0 1px 4px rgba(0,0,0,.06);--font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',system-ui,sans-serif;--font-mono:'Fira Code','Consolas','Courier New',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:var(--font-sans);line-height:1.75;color:var(--text);background:var(--bg);display:flex;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.sidebar{width:var(--sidebar-w);background:var(--primary);color:#cdd5df;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
+.sidebar-logo{display:flex;align-items:center;gap:8px;padding:16px 16px 12px;color:#fff;font-weight:700;font-size:15px;border-bottom:1px solid rgba(255,255,255,.08);text-decoration:none}
+.sidebar-logo:hover{text-decoration:none;background:rgba(255,255,255,.04)}
+.sidebar-logo small{font-size:11px;font-weight:400;color:#7fa3b8;display:block}
+.sidebar-project{padding:8px 16px 10px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sidebar-project .proj-code{font-size:10px;color:#7fa3b8;letter-spacing:.06em}
+.sidebar-project .proj-name{font-size:12px;color:#e2e8f0;font-weight:600;margin-top:1px}
+.nav-group{padding:6px 0}
+.nav-group-title{padding:5px 16px 2px;font-size:10px;font-weight:700;color:#4a6070;text-transform:uppercase;letter-spacing:.08em}
+.nav-item{display:flex;align-items:center;gap:6px;padding:5px 16px;color:#a8bcc8;font-size:12.5px;transition:background .12s,color .12s;text-decoration:none}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#e2e8f0;text-decoration:none}
+.nav-item.active{background:var(--accent);color:#fff;font-weight:600}
+.nav-req{color:#4fc3f7;font-size:9px}
+.nav-opt{color:#455a64;font-size:9px}
+.nav-item.active .nav-req,.nav-item.active .nav-opt{color:rgba(255,255,255,.7)}
+.main{margin-left:var(--sidebar-w);flex:1;padding:32px 40px 72px;max-width:960px}
+.doc-header{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px 20px;margin-bottom:24px;box-shadow:var(--shadow)}
+.meta-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.doc-id{font-family:var(--font-mono);font-size:11.5px;font-weight:700;color:var(--accent);background:var(--accent-light);padding:2px 9px;border-radius:4px}
+.badge{font-size:10.5px;font-weight:600;padding:2px 9px;border-radius:20px;display:inline-flex;align-items:center;gap:3px}
+.st-draft{background:#eceff1;color:#546e7a}
+.st-review{background:var(--warn-bg);color:var(--warn)}
+.st-approved{background:var(--success-bg);color:var(--success)}
+.ph-plan{background:#f3e5f5;color:#7b1fa2}
+.ph-design{background:var(--accent-light);color:var(--accent)}
+.ph-dev{background:var(--success-bg);color:var(--success)}
+.ph-test{background:#fffde7;color:#f57f17}
+.ph-deploy{background:#ede7f6;color:#4527a0}
+.req-yes{background:#fce4ec;color:#c62828}
+.req-cond{background:#f3e5f5;color:#7b1fa2}
+.doc-title{font-size:22px;font-weight:700;color:var(--primary);margin-bottom:6px}
+.doc-info{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-bottom:16px}
+.doc-info span{display:flex;align-items:center;gap:4px}
+.trace-bar{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:12px 16px;display:flex;gap:28px;flex-wrap:wrap}
+.trace-col{flex:1;min-width:160px}
+.trace-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.trace-links{display:flex;flex-wrap:wrap;gap:6px}
+.trace-link{font-family:var(--font-mono);font-size:11px;font-weight:500;padding:3px 10px;border-radius:4px;background:var(--accent-light);color:var(--accent);border:1px solid transparent;text-decoration:none;transition:background .12s,color .12s}
+.trace-link:hover{background:var(--accent);color:#fff;text-decoration:none}
+.trace-none{font-size:12px;color:var(--muted);font-style:italic}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin-bottom:18px;box-shadow:var(--shadow)}
+.card h2{font-size:15px;font-weight:700;color:var(--primary);padding-bottom:8px;margin-bottom:14px;border-bottom:2px solid var(--accent-light);display:flex;align-items:center;gap:6px}
+.card h3{font-size:13.5px;font-weight:600;color:var(--text);margin:16px 0 8px}
+.card h3:first-child{margin-top:0}
+.card h4{font-size:13px;font-weight:600;color:var(--text2);margin:12px 0 6px}
+.card p{margin-bottom:10px}
+.card ul,.card ol{padding-left:20px;margin-bottom:10px}
+.card li{margin-bottom:3px}
+.card>*:last-child{margin-bottom:0}
+.tbl-wrap{overflow-x:auto;margin:10px 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f0f4f8;padding:7px 11px;text-align:left;font-size:11.5px;font-weight:700;color:var(--primary);border:1px solid var(--border);white-space:nowrap}
+td{padding:6px 11px;border:1px solid var(--border);vertical-align:top;line-height:1.55}
+tr:nth-child(even) td{background:#fafbfd}
+tr:hover td{background:#f0f6ff}
+td code{font-family:var(--font-mono);font-size:11px;background:#f0f4f8;padding:1px 5px;border-radius:3px;color:var(--accent)}
+pre{background:#1a2332;color:#cdd5df;padding:14px 18px;border-radius:8px;overflow-x:auto;font-size:12.5px;line-height:1.6;margin:10px 0;border-left:3px solid var(--accent);font-family:var(--font-mono)}
+.ic{background:#f0f4f8;color:var(--accent);padding:1px 6px;border-radius:3px;font-family:var(--font-mono);font-size:12px}
+.diagram{background:linear-gradient(135deg,#f5f7fa,#e8eef4);border:2px dashed var(--border);border-radius:8px;padding:20px;margin:10px 0;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px}
+.diagram .d-icon{font-size:28px;margin-top:4px}
+.diagram .d-title{font-size:13px;font-weight:600;color:var(--text)}
+.diagram .d-code{font-family:var(--font-mono);font-size:11px;color:#555;background:#fff;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:left;width:100%;max-width:600px;white-space:pre;overflow-x:auto;margin-top:4px;line-height:1.5}
+.alert{padding:10px 14px;border-radius:6px;margin:10px 0;font-size:13px;display:flex;gap:8px;align-items:flex-start}
+.alert-info{background:var(--accent-light);border-left:3px solid var(--accent)}
+.alert-warn{background:var(--warn-bg);border-left:3px solid var(--warn)}
+.alert-success{background:var(--success-bg);border-left:3px solid var(--success)}
+.alert-danger{background:var(--danger-bg);border-left:3px solid var(--danger)}
+.pii{display:inline-flex;align-items:center;gap:3px;background:#fce4ec;color:#c62828;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:4px}
+.checklist-card{background:#fffbf0;border:1px solid #fde68a;border-radius:var(--radius);padding:18px 22px;margin-top:24px}
+.checklist-card h2{font-size:13.5px;font-weight:700;color:#92400e;margin-bottom:12px;display:flex;align-items:center;gap:6px;padding-bottom:0;border-bottom:none}
+.cl-item{display:flex;align-items:flex-start;gap:8px;padding:3px 0;font-size:13px}
+.cl-item input{width:14px;height:14px;margin-top:3px;accent-color:var(--success);cursor:pointer}
+.cl-done{color:var(--muted);text-decoration:line-through}
+@media print{.sidebar{display:none!important}.main{margin-left:0!important}pre{background:#f5f5f5!important;color:#333!important}}
+@media(max-width:768px){.sidebar{transform:translateX(-100%)}.main{margin-left:0;padding:20px 16px 48px}}
+.p1{display:inline-block;background:#ffebee;color:#b71c1c;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:3px}
+.p2{display:inline-block;background:#fff3e0;color:#e65100;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:3px}
+.p3{display:inline-block;background:#fffde7;color:#f57f17;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:3px}
+.p4{display:inline-block;background:#e8f5e9;color:#2e7d32;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:3px}
+.th-normal{color:#2e7d32;font-weight:700}
+.th-warn{color:#e65100;font-weight:700}
+.th-danger{color:#b71c1c;font-weight:700}
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <a href="../../index.html" class="sidebar-logo">📋 산출물 뷰어<small>P2605991 · 근태관리 시스템</small></a>
+  <div class="sidebar-project"><div class="proj-code">P2605991</div><div class="proj-name">근태관리 시스템</div></div>
+  <div class="nav-group">
+    <div class="nav-group-title">추적</div>
+    <a href="../TRC_요구사항추적매트릭스.html" class="nav-item"><span class="nav-req">●</span> TRC 추적매트릭스</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">01 Plan</div>
+    <a href="../01_plan/REQ_요구사항정의서.html" class="nav-item"><span class="nav-req">●</span> REQ 요구사항정의서</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">02 Design</div>
+    <a href="../02_design/FLW_프로세스흐름도.html" class="nav-item"><span class="nav-req">●</span> FLW 프로세스흐름도</a>
+    <a href="../02_design/SCR_화면정의서.html" class="nav-item"><span class="nav-opt">◌</span> SCR 화면정의서</a>
+    <a href="../02_design/ROLE_권한정의서.html" class="nav-item"><span class="nav-opt">◌</span> ROLE 권한정의서</a>
+    <a href="../02_design/FUNC_기능정의서.html" class="nav-item"><span class="nav-req">●</span> FUNC 기능정의서</a>
+    <a href="../02_design/ARC_아키텍처.html" class="nav-item"><span class="nav-req">●</span> ARC 아키텍처</a>
+    <a href="../02_design/DAT_데이터모델정의서.html" class="nav-item"><span class="nav-opt">◌</span> DAT 데이터모델정의서</a>
+    <a href="../02_design/API_인터페이스명세서.html" class="nav-item"><span class="nav-opt">◌</span> API 인터페이스명세서</a>
+    <a href="../02_design/SEC_보안설계서.html" class="nav-item"><span class="nav-opt">◌</span> SEC 보안설계서</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">03 Dev</div>
+    <a href="../03_dev/UTC_단위테스트케이스.html" class="nav-item"><span class="nav-req">●</span> UTC 단위테스트케이스</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">04 Test</div>
+    <a href="../04_test/ITS_통합테스트시나리오.html" class="nav-item"><span class="nav-opt">◌</span> ITS 통합테스트시나리오</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">05 Deploy</div>
+    <a href="./OPM_운영자매뉴얼.html" class="nav-item active"><span class="nav-req">●</span> OPM 운영자매뉴얼</a>
+    <a href="./USM_사용자매뉴얼.html" class="nav-item"><span class="nav-opt">◌</span> USM 사용자매뉴얼</a>
+    <a href="./CFG_설정가이드.html" class="nav-item"><span class="nav-req">●</span> CFG 설정가이드</a>
+    <a href="./RUN_운영Runbook.html" class="nav-item"><span class="nav-req">●</span> RUN 운영Runbook</a>
+  </div>
+</nav>
+
+<main class="main">
+  <div class="doc-header">
+    <div class="meta-row">
+      <span class="doc-id">P2605991-OPM-01</span>
+      <span class="badge st-draft">📝 초안</span>
+      <span class="badge ph-deploy">Deploy</span>
+      <span class="badge req-yes">필수</span>
+    </div>
+    <div class="doc-title">OPM 운영자매뉴얼</div>
+    <div class="doc-info">
+      <span>📁 P2605991 근태관리 시스템</span>
+      <span>👤 박** (백엔드), 김** (PM)</span>
+      <span>📅 2026-05-26</span>
+      <span>🔖 v0.1</span>
+    </div>
+    <div class="trace-bar">
+      <div class="trace-col">
+        <div class="trace-label">▲ 상위 문서</div>
+        <div class="trace-links">
+          <a href="../02_design/ARC_아키텍처.html" class="trace-link">P2605991-ARC-01</a>
+          <a href="./CFG_설정가이드.html" class="trace-link">P2605991-CFG-01</a>
+        </div>
+      </div>
+      <div class="trace-col">
+        <div class="trace-label">▼ 하위 문서</div>
+        <div class="trace-links">
+          <a href="./RUN_운영Runbook.html" class="trace-link">P2605991-RUN-01</a>
+          <a href="../TRC_요구사항추적매트릭스.html" class="trace-link">P2605991-TRC-01</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §1 시스템 구성 개요 -->
+  <div class="card">
+    <h2>§1 시스템 구성 개요</h2>
+    <div class="diagram">
+      <div class="d-icon">🏗️</div>
+      <div class="d-title">근태관리 시스템 아키텍처 (운영 환경)</div>
+      <div class="d-code">인터넷/사내망
+    ↓
+[Nginx 1.24] :80/:443  ← TLS 종단, 리버스 프록시, Rate Limiting
+    ↓ (upstream round-robin)
+[FastAPI :8000] × 2인스턴스  ← gunicorn + uvicorn workers
+    ├── [PostgreSQL 16] :5432  ← 주 DB (출퇴근/결재/직원 데이터)
+    └── [Redis 7.2] :6379       ← 캐시, JWT blacklist, 세션</div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>컴포넌트</th><th>버전</th><th>포트</th><th>역할</th><th>서비스명</th></tr></thead>
+        <tbody>
+          <tr><td>Nginx</td><td>1.24</td><td>80, 443</td><td>리버스 프록시, TLS 종단, 정적 파일 서빙</td><td><code>nginx</code></td></tr>
+          <tr><td>FastAPI</td><td>0.115.12</td><td>8000</td><td>API 서버 (2인스턴스 운영)</td><td><code>attendance-api</code></td></tr>
+          <tr><td>PostgreSQL</td><td>16</td><td>5432</td><td>주 데이터베이스</td><td><code>postgresql</code></td></tr>
+          <tr><td>Redis</td><td>7.2</td><td>6379</td><td>캐시, JWT blacklist</td><td><code>redis</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §2 서비스 시작/종료/상태 -->
+  <div class="card">
+    <h2>§2 서비스 시작 · 종료 · 상태 확인</h2>
+    <h3>서비스 시작</h3>
+    <pre>sudo systemctl start postgresql
+sudo systemctl start redis
+sudo systemctl start attendance-api
+sudo systemctl start nginx</pre>
+
+    <h3>서비스 종료</h3>
+    <pre>sudo systemctl stop nginx
+sudo systemctl stop attendance-api
+# PostgreSQL, Redis는 API 서버 완전 종료 후 중지</pre>
+
+    <h3>상태 확인</h3>
+    <pre># 서비스 상태
+sudo systemctl status attendance-api
+sudo systemctl status nginx
+
+# 실시간 로그 (최근 5분)
+journalctl -u attendance-api -f --since "5 minutes ago"
+
+# 헬스체크 (HTTP 200 응답 확인)
+curl -s http://localhost:8000/health | python3 -m json.tool
+
+# 예상 응답
+{
+  "status": "healthy",
+  "db": "connected",
+  "redis": "connected",
+  "version": "0.2.1"
+}</pre>
+
+    <div class="alert alert-warn">
+      <span>⚠️</span>
+      <div>헬스체크 응답이 <code>"status": "healthy"</code>가 아닌 경우 즉시 Runbook <a href="./RUN_운영Runbook.html">P2605991-RUN-P01</a>을 참조하세요.</div>
+    </div>
+  </div>
+
+  <!-- §3 배포 절차 -->
+  <div class="card">
+    <h2>§3 배포 절차 (Rolling Update)</h2>
+    <div class="alert alert-info">
+      <span>ℹ️</span>
+      <div>Rolling 배포: 인스턴스 1개씩 교체하여 무중단 배포합니다. 배포 전 <strong>반드시 헬스체크 통과 확인</strong> 후 다음 인스턴스로 진행하세요.</div>
+    </div>
+    <pre># 1. 신규 버전 코드 pull
+cd /opt/attendance && git fetch origin && git checkout v0.2.1
+
+# 2. 의존성 갱신
+source .venv/bin/activate
+pip install -r requirements.txt --no-deps --upgrade
+
+# 3. DB 마이그레이션 (다운타임 없는 마이그레이션만 허용)
+alembic upgrade head
+
+# 4. 인스턴스 1 재시작
+sudo systemctl restart attendance-api@1
+
+# 5. 인스턴스 1 헬스체크 (OK 확인 후 인스턴스 2 진행)
+sleep 5 && curl -s http://localhost:8001/health | python3 -m json.tool
+
+# 6. 인스턴스 2 재시작
+sudo systemctl restart attendance-api@2
+
+# 7. 최종 헬스체크
+curl -s http://localhost:8000/health | python3 -m json.tool</pre>
+
+    <h3>배포 전 체크리스트</h3>
+    <ul>
+      <li>통합 테스트 (ITS) 전체 통과 확인</li>
+      <li>DB 마이그레이션이 롤백 가능한지 확인 (<code>alembic downgrade -1</code> 테스트)</li>
+      <li>스테이징 환경에서 동일 버전 검증 완료</li>
+      <li>배포 담당자 2인 확인 (Four-eyes 원칙)</li>
+    </ul>
+  </div>
+
+  <!-- §4 롤백 -->
+  <div class="card">
+    <h2>§4 롤백 절차</h2>
+    <div class="alert alert-danger">
+      <span>🚨</span>
+      <div>배포 후 에러율 5% 초과 또는 헬스체크 실패 시 즉시 롤백을 실행합니다. 판단 기준: 배포 후 5분 이내 확인.</div>
+    </div>
+    <pre># 1. 이전 버전으로 코드 복구
+cd /opt/attendance && git checkout v0.2.0
+
+# 2. DB 마이그레이션 롤백 (필요 시)
+alembic downgrade -1
+
+# 3. 서비스 재시작
+sudo systemctl restart attendance-api
+
+# 4. 헬스체크 및 에러율 확인
+curl -s http://localhost:8000/health
+journalctl -u attendance-api --since "5 minutes ago" | grep -i error | wc -l</pre>
+  </div>
+
+  <!-- §5 인시던트 등급 -->
+  <div class="card">
+    <h2>§5 인시던트 등급 정의</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>등급</th><th>기준</th><th>대응 시간</th><th>Runbook 참조</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="p1">P1 Critical</span></td>
+            <td>서비스 완전 중단 — HTTP 응답 없음, 헬스체크 실패, 전체 사용자 접속 불가</td>
+            <td>30분 이내</td>
+            <td><a href="./RUN_운영Runbook.html">P2605991-RUN-P01</a></td>
+          </tr>
+          <tr>
+            <td><span class="p2">P2 High</span></td>
+            <td>DB 연결 오류 — SQLAlchemy OperationalError 반복, 데이터 읽기/쓰기 불가</td>
+            <td>1시간 이내</td>
+            <td><a href="./RUN_운영Runbook.html">P2605991-RUN-P02</a></td>
+          </tr>
+          <tr>
+            <td><span class="p3">P3 Medium</span></td>
+            <td>성능 저하 — API 응답 5초 이상, 일부 기능 느림. Redis 연결 오류</td>
+            <td>4시간 이내</td>
+            <td><a href="./RUN_운영Runbook.html">P2605991-RUN-P03</a></td>
+          </tr>
+          <tr>
+            <td><span class="p4">P4 Low</span></td>
+            <td>비기능 이슈 — 로그 경고, 일부 UI 표시 오류, 비필수 기능 장애</td>
+            <td>다음 업무일</td>
+            <td>-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §6 정기 작업 -->
+  <div class="card">
+    <h2>§6 정기 운영 작업</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>주기</th><th>시각</th><th>작업</th><th>담당</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td>매일</td><td>00:00</td><td>당일 근태 집계 배치 실행 — 지각/조퇴/결근 자동 판정</td><td>cronjob (자동)</td><td>실패 시 슬랙 알림</td></tr>
+          <tr><td>매일</td><td>00:30</td><td>위치 정보 6개월 초과 데이터 자동 삭제</td><td>cronjob (자동)</td><td>감사 로그 기록</td></tr>
+          <tr><td>매주 일요일</td><td>02:00</td><td>로그 아카이빙 — /var/log/attendance/ → 압축 보관</td><td>cronjob (자동)</td><td>90일 후 삭제</td></tr>
+          <tr><td>매월 1일</td><td>09:00</td><td>전월 급여 데이터 export — /data/payroll/YYYY-MM.csv</td><td>HR 담당자 (수동)</td><td>최**(HR) 담당</td></tr>
+          <tr><td>분기</td><td>-</td><td>DB Vacuum, 인덱스 재구성, 성능 점검</td><td>운영 엔지니어</td><td>점검 윈도우 필요</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Crontab 설정 예시</h3>
+    <pre># /etc/cron.d/attendance
+0 0 * * *   attendance  python /opt/attendance/scripts/daily_batch.py
+30 0 * * *  attendance  python /opt/attendance/scripts/cleanup_location.py
+0 2 * * 0   attendance  /opt/attendance/scripts/archive_logs.sh</pre>
+  </div>
+
+  <!-- §7 모니터링 임계값 -->
+  <div class="card">
+    <h2>§7 모니터링 임계값</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>지표</th><th class="th-normal">정상</th><th class="th-warn">경고</th><th class="th-danger">위험</th><th>알림 채널</th></tr></thead>
+        <tbody>
+          <tr><td>API 평균 응답시간</td><td>≤ 2s</td><td>2s ~ 5s</td><td>&gt; 5s</td><td>#it-monitoring</td></tr>
+          <tr><td>API 에러율 (5xx)</td><td>&lt; 1%</td><td>1% ~ 5%</td><td>&gt; 5%</td><td>#it-oncall (P1/P2)</td></tr>
+          <tr><td>DB 연결 풀 사용률</td><td>&lt; 70%</td><td>70% ~ 90%</td><td>&gt; 90%</td><td>#it-monitoring</td></tr>
+          <tr><td>Redis 메모리 사용률</td><td>&lt; 70%</td><td>70% ~ 85%</td><td>&gt; 85%</td><td>#it-monitoring</td></tr>
+          <tr><td>CPU 사용률 (API 서버)</td><td>&lt; 60%</td><td>60% ~ 80%</td><td>&gt; 80%</td><td>#it-monitoring</td></tr>
+          <tr><td>디스크 사용률</td><td>&lt; 70%</td><td>70% ~ 85%</td><td>&gt; 85%</td><td>#it-monitoring</td></tr>
+          <tr><td>동시 접속자</td><td>&lt; 500</td><td>500 ~ 800</td><td>&gt; 800</td><td>#it-oncall</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert alert-info">
+      <span>ℹ️</span>
+      <div>모니터링 도구: Prometheus + Grafana. 대시보드 URL: <code>https://monitoring.gsretail.internal/d/attendance</code> (사내망 접근 필요)</div>
+    </div>
+  </div>
+
+  <!-- 검증 체크리스트 -->
+  <div class="checklist-card">
+    <h2>✅ 검증 체크리스트</h2>
+    <div class="cl-item"><input type="checkbox" checked disabled><span class="cl-done">시스템 구성도 작성 완료</span></div>
+    <div class="cl-item"><input type="checkbox" checked disabled><span class="cl-done">서비스 시작/종료/상태 확인 명령어 검증</span></div>
+    <div class="cl-item"><input type="checkbox" checked disabled><span class="cl-done">Rolling 배포 절차 정의 완료</span></div>
+    <div class="cl-item"><input type="checkbox" checked disabled><span class="cl-done">인시던트 등급 4단계 정의 완료</span></div>
+    <div class="cl-item"><input type="checkbox" checked disabled><span class="cl-done">정기 작업 스케줄 정의 완료</span></div>
+    <div class="cl-item"><input type="checkbox"><span>운영 환경 실제 배포 테스트 (스테이징 검증)</span></div>
+    <div class="cl-item"><input type="checkbox"><span>롤백 절차 실제 테스트 완료</span></div>
+    <div class="cl-item"><input type="checkbox"><span>모니터링 대시보드 임계값 알림 설정 완료</span></div>
+    <div class="cl-item"><input type="checkbox"><span>On-call 로테이션 등록 완료</span></div>
+    <div class="cl-item"><input type="checkbox"><span>운영 팀 교육 완료</span></div>
+  </div>
+</main>
+</body>
+</html>

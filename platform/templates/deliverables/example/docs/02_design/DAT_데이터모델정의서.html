@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="doc-id" content="P2605991-DAT-01">
+<meta name="doc-type" content="DAT">
+<meta name="project" content="P2605991">
+<meta name="version" content="1.0.0">
+<meta name="status" content="review">
+<meta name="owner" content="박**(백엔드)">
+<meta name="updated" content="2026-05-26">
+<title>[P2605991-DAT-01] 데이터 모델 정의서</title>
+<style>
+:root{--primary:#0d1b2a;--accent:#1565c0;--accent-hover:#0d47a1;--accent-light:#e3f2fd;--success:#2e7d32;--success-bg:#e8f5e9;--warn:#e65100;--warn-bg:#fff3e0;--danger:#b71c1c;--danger-bg:#ffebee;--border:#dde3ea;--bg:#f0f2f5;--card:#ffffff;--text:#1a202c;--text2:#374151;--muted:#6b7280;--sidebar-w:228px;--radius:10px;--shadow:0 1px 4px rgba(0,0,0,.06);--font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',system-ui,sans-serif;--font-mono:'Fira Code','Consolas','Courier New',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:var(--font-sans);line-height:1.75;color:var(--text);background:var(--bg);display:flex;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.sidebar{width:var(--sidebar-w);background:var(--primary);color:#cdd5df;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
+.sidebar-logo{display:flex;align-items:center;gap:8px;padding:16px 16px 12px;color:#fff;font-weight:700;font-size:15px;border-bottom:1px solid rgba(255,255,255,.08);text-decoration:none}
+.sidebar-logo:hover{text-decoration:none;background:rgba(255,255,255,.04)}
+.sidebar-logo small{font-size:11px;font-weight:400;color:#7fa3b8;display:block}
+.sidebar-project{padding:8px 16px 10px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sidebar-project .proj-code{font-size:10px;color:#7fa3b8;letter-spacing:.06em}
+.sidebar-project .proj-name{font-size:12px;color:#e2e8f0;font-weight:600;margin-top:1px}
+.nav-group{padding:6px 0}
+.nav-group-title{padding:5px 16px 2px;font-size:10px;font-weight:700;color:#4a6070;text-transform:uppercase;letter-spacing:.08em}
+.nav-item{display:flex;align-items:center;gap:6px;padding:5px 16px;color:#a8bcc8;font-size:12.5px;transition:background .12s,color .12s;text-decoration:none}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#e2e8f0;text-decoration:none}
+.nav-item.active{background:var(--accent);color:#fff;font-weight:600}
+.nav-req{color:#4fc3f7;font-size:9px}
+.nav-opt{color:#455a64;font-size:9px}
+.nav-item.active .nav-req,.nav-item.active .nav-opt{color:rgba(255,255,255,.7)}
+.main{margin-left:var(--sidebar-w);flex:1;padding:32px 40px 72px;max-width:960px}
+.doc-header{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px 20px;margin-bottom:24px;box-shadow:var(--shadow)}
+.meta-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.doc-id{font-family:var(--font-mono);font-size:11.5px;font-weight:700;color:var(--accent);background:var(--accent-light);padding:2px 9px;border-radius:4px}
+.badge{font-size:10.5px;font-weight:600;padding:2px 9px;border-radius:20px;display:inline-flex;align-items:center;gap:3px}
+.st-review{background:var(--warn-bg);color:var(--warn)}
+.ph-design{background:var(--accent-light);color:var(--accent)}
+.req-cond{background:#f3e5f5;color:#7b1fa2}
+.doc-title{font-size:22px;font-weight:700;color:var(--primary);margin-bottom:6px}
+.doc-info{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-bottom:16px}
+.doc-info span{display:flex;align-items:center;gap:4px}
+.trace-bar{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:12px 16px;display:flex;gap:28px;flex-wrap:wrap}
+.trace-col{flex:1;min-width:160px}
+.trace-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.trace-links{display:flex;flex-wrap:wrap;gap:6px}
+.trace-link{font-family:var(--font-mono);font-size:11px;font-weight:500;padding:3px 10px;border-radius:4px;background:var(--accent-light);color:var(--accent);border:1px solid transparent;text-decoration:none;transition:background .12s,color .12s}
+.trace-link:hover{background:var(--accent);color:#fff;text-decoration:none}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin-bottom:18px;box-shadow:var(--shadow)}
+.card h2{font-size:15px;font-weight:700;color:var(--primary);padding-bottom:8px;margin-bottom:14px;border-bottom:2px solid var(--accent-light);display:flex;align-items:center;gap:6px}
+.card h3{font-size:13.5px;font-weight:600;color:var(--text);margin:16px 0 8px}
+.card h3:first-child{margin-top:0}
+.card h4{font-size:13px;font-weight:600;color:var(--text2);margin:12px 0 6px}
+.card p{margin-bottom:10px}
+.card ul,.card ol{padding-left:20px;margin-bottom:10px}
+.card li{margin-bottom:3px}
+.card>*:last-child{margin-bottom:0}
+.tbl-wrap{overflow-x:auto;margin:10px 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f0f4f8;padding:7px 11px;text-align:left;font-size:11.5px;font-weight:700;color:var(--primary);border:1px solid var(--border);white-space:nowrap}
+td{padding:6px 11px;border:1px solid var(--border);vertical-align:top;line-height:1.55}
+tr:nth-child(even) td{background:#fafbfd}
+tr:hover td{background:#f0f6ff}
+td code{font-family:var(--font-mono);font-size:11px;background:#f0f4f8;padding:1px 5px;border-radius:3px;color:var(--accent)}
+pre{background:#1a2332;color:#cdd5df;padding:14px 18px;border-radius:8px;overflow-x:auto;font-size:12.5px;line-height:1.6;margin:10px 0;border-left:3px solid var(--accent);font-family:var(--font-mono)}
+.diagram{background:linear-gradient(135deg,#f5f7fa,#e8eef4);border:2px dashed var(--border);border-radius:8px;padding:20px;margin:10px 0;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px}
+.diagram .d-icon{font-size:28px;margin-top:4px}
+.diagram .d-title{font-size:13px;font-weight:600;color:var(--text)}
+.diagram .d-code{font-family:var(--font-mono);font-size:11px;color:#555;background:#fff;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:left;width:100%;max-width:680px;white-space:pre;overflow-x:auto;margin-top:4px;line-height:1.5}
+.alert{padding:10px 14px;border-radius:6px;margin:10px 0;font-size:13px;display:flex;gap:8px;align-items:flex-start}
+.alert-info{background:var(--accent-light);border-left:3px solid var(--accent)}
+.alert-warn{background:var(--warn-bg);border-left:3px solid var(--warn)}
+.pii{display:inline-flex;align-items:center;gap:3px;background:#fce4ec;color:#c62828;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:4px}
+.checklist-card{background:#fffbf0;border:1px solid #fde68a;border-radius:var(--radius);padding:18px 22px;margin-top:24px}
+.checklist-card h2{font-size:13.5px;font-weight:700;color:#92400e;margin-bottom:12px;display:flex;align-items:center;gap:6px;padding-bottom:0;border-bottom:none}
+.cl-item{display:flex;align-items:flex-start;gap:8px;padding:3px 0;font-size:13px}
+.cl-item input{width:14px;height:14px;margin-top:3px;accent-color:var(--success);cursor:pointer}
+.cl-done{color:var(--muted);text-decoration:line-through}
+@media print{.sidebar{display:none!important}.main{margin-left:0!important}pre{background:#f5f5f5!important;color:#333!important}}
+@media(max-width:768px){.sidebar{transform:translateX(-100%)}.main{margin-left:0;padding:20px 16px 48px}}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <a href="../../index.html" class="sidebar-logo">📋 산출물 뷰어<small>P2605991 · 근태관리 시스템</small></a>
+  <div class="sidebar-project"><div class="proj-code">P2605991</div><div class="proj-name">근태관리 시스템</div></div>
+  <div class="nav-group">
+    <div class="nav-group-title">추적</div>
+    <a href="../TRC_요구사항추적매트릭스.html" class="nav-item"><span class="nav-req">●</span> TRC 추적매트릭스</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">01 Plan</div>
+    <a href="../01_plan/REQ_요구사항정의서.html" class="nav-item"><span class="nav-req">●</span> REQ 요구사항정의서</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">02 Design</div>
+    <a href="./FLW_프로세스흐름도.html" class="nav-item"><span class="nav-req">●</span> FLW 프로세스흐름도</a>
+    <a href="./SCR_화면정의서.html" class="nav-item"><span class="nav-opt">◌</span> SCR 화면정의서</a>
+    <a href="./ROLE_권한정의서.html" class="nav-item"><span class="nav-opt">◌</span> ROLE 권한정의서</a>
+    <a href="./FUNC_기능정의서.html" class="nav-item"><span class="nav-req">●</span> FUNC 기능정의서</a>
+    <a href="./ARC_아키텍처.html" class="nav-item"><span class="nav-req">●</span> ARC 아키텍처</a>
+    <a href="./DAT_데이터모델정의서.html" class="nav-item active"><span class="nav-opt">◌</span> DAT 데이터모델정의서</a>
+    <a href="./API_인터페이스명세서.html" class="nav-item"><span class="nav-opt">◌</span> API 인터페이스명세서</a>
+    <a href="./SEC_보안설계서.html" class="nav-item"><span class="nav-opt">◌</span> SEC 보안설계서</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">03 Dev</div>
+    <a href="../03_dev/UTC_단위테스트케이스.html" class="nav-item"><span class="nav-req">●</span> UTC 단위테스트케이스</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">04 Test</div>
+    <a href="../04_test/ITS_통합테스트시나리오.html" class="nav-item"><span class="nav-opt">◌</span> ITS 통합테스트시나리오</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">05 Deploy</div>
+    <a href="../05_deploy/OPM_운영자매뉴얼.html" class="nav-item"><span class="nav-req">●</span> OPM 운영자매뉴얼</a>
+    <a href="../05_deploy/USM_사용자매뉴얼.html" class="nav-item"><span class="nav-opt">◌</span> USM 사용자매뉴얼</a>
+    <a href="../05_deploy/CFG_설정가이드.html" class="nav-item"><span class="nav-req">●</span> CFG 설정가이드</a>
+    <a href="../05_deploy/RUN_운영Runbook.html" class="nav-item"><span class="nav-req">●</span> RUN 운영Runbook</a>
+  </div>
+</nav>
+<main class="main">
+  <div class="doc-header">
+    <div class="meta-row">
+      <span class="doc-id">P2605991-DAT-01</span>
+      <span class="badge st-review">🔍 검토 중</span>
+      <span class="badge ph-design">Design</span>
+      <span class="badge req-cond">조건부 (DB)</span>
+    </div>
+    <div class="doc-title">데이터 모델 정의서 (DAT)</div>
+    <div class="doc-info">
+      <span>👤 담당: 박**(백엔드)</span>
+      <span>📌 버전: v1.0.0</span>
+      <span>📅 수정: 2026-05-26</span>
+      <span>🏷 엔티티 4개 · PostgreSQL 16</span>
+    </div>
+    <div class="trace-bar">
+      <div class="trace-col">
+        <div class="trace-label">↑ 상위 문서</div>
+        <div class="trace-links">
+          <a href="./ARC_아키텍처.html" class="trace-link">P2605991-ARC-01</a>
+        </div>
+      </div>
+      <div class="trace-col">
+        <div class="trace-label">↓ 하위 문서</div>
+        <div class="trace-links">
+          <a href="./API_인터페이스명세서.html" class="trace-link">P2605991-API-01</a>
+          <a href="./SEC_보안설계서.html" class="trace-link">P2605991-SEC-01</a>
+          <a href="../05_deploy/CFG_설정가이드.html" class="trace-link">P2605991-CFG-01</a>
+          <a href="../TRC_요구사항추적매트릭스.html" class="trace-link">P2605991-TRC-01</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §1 ERD -->
+  <div class="card">
+    <h2>§1 ERD (Entity Relationship Diagram)</h2>
+    <div class="alert alert-warn">
+      <span>⚠️</span>
+      <span><span class="pii">PII</span> 표시 컬럼은 개인정보보호법 대상 개인식별정보입니다. 암호화 저장 및 접근 제어 적용 필수.</span>
+    </div>
+    <div class="diagram">
+      <div class="d-icon">📊</div>
+      <div class="d-title">ERD (Mermaid erDiagram)</div>
+      <div class="d-code">erDiagram
+    Department {
+        UUID id PK
+        VARCHAR(20) code UK
+        VARCHAR(100) name
+        UUID manager_id FK
+        UUID parent_id FK
+    }
+
+    Employee {
+        UUID id PK
+        VARCHAR(10) emp_no UK
+        VARCHAR(50) name "PII"
+        UUID dept_id FK
+        ENUM role
+        VARCHAR(100) email "PII"
+        VARCHAR(20) phone "PII"
+        TIMESTAMP created_at
+        BOOLEAN is_active
+    }
+
+    AttendanceRecord {
+        UUID id PK
+        UUID employee_id FK
+        TIMESTAMP clock_in_at "PII"
+        TIMESTAMP clock_out_at "PII"
+        POINT location_in "PII"
+        INT work_minutes
+        ENUM status
+        BOOLEAN is_deleted
+        TIMESTAMP created_at
+    }
+
+    LeaveRequest {
+        UUID id PK
+        UUID employee_id FK
+        ENUM leave_type
+        TIMESTAMP start_at
+        TIMESTAMP end_at
+        TEXT reason
+        ENUM status
+        UUID approver_id FK
+        TIMESTAMP approved_at
+        TIMESTAMP created_at
+    }
+
+    Department ||--o{ Employee : "소속"
+    Employee ||--o| Employee : "팀장(self-ref)"
+    Employee ||--o{ AttendanceRecord : "출퇴근 기록"
+    Employee ||--o{ LeaveRequest : "결재 신청"
+    Employee ||--o{ LeaveRequest : "결재 승인(approver)"
+    Department ||--o| Department : "상위 부서(self-ref)"</div>
+    </div>
+  </div>
+
+  <!-- §2 엔티티 상세 -->
+  <div class="card">
+    <h2>§2 엔티티 상세 정의</h2>
+
+    <h3>2.1 Employee (직원)</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>컬럼명</th><th>타입</th><th>제약조건</th><th>설명</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>id</code></td><td>UUID</td><td>PK, NOT NULL, DEFAULT gen_random_uuid()</td><td>직원 고유 식별자</td></tr>
+          <tr><td><code>emp_no</code></td><td>VARCHAR(10)</td><td>NOT NULL, UNIQUE</td><td>사번 (예: EMP00001)</td></tr>
+          <tr><td><code>name</code><span class="pii">PII</span></td><td>VARCHAR(50)</td><td>NOT NULL</td><td>성명. 암호화 저장 대상.</td></tr>
+          <tr><td><code>dept_id</code></td><td>UUID</td><td>FK → Department.id, NOT NULL</td><td>소속 부서</td></tr>
+          <tr><td><code>role</code></td><td>ENUM</td><td>NOT NULL, DEFAULT 'employee'</td><td>employee / manager / hr / admin</td></tr>
+          <tr><td><code>email</code><span class="pii">PII</span></td><td>VARCHAR(100)</td><td>NOT NULL, UNIQUE</td><td>이메일. 알림 발송에 사용. 암호화 저장.</td></tr>
+          <tr><td><code>phone</code><span class="pii">PII</span></td><td>VARCHAR(20)</td><td>NULL 허용</td><td>휴대전화번호. 암호화 저장.</td></tr>
+          <tr><td><code>manager_id</code></td><td>UUID</td><td>FK → Employee.id, NULL 허용</td><td>직속 팀장. Self-reference.</td></tr>
+          <tr><td><code>created_at</code></td><td>TIMESTAMP WITH TIME ZONE</td><td>NOT NULL, DEFAULT now()</td><td>계정 생성 일시</td></tr>
+          <tr><td><code>is_active</code></td><td>BOOLEAN</td><td>NOT NULL, DEFAULT true</td><td>false = 퇴직 처리. 로그인 차단.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>2.2 AttendanceRecord (출퇴근 기록)</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>컬럼명</th><th>타입</th><th>제약조건</th><th>설명</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>id</code></td><td>UUID</td><td>PK, NOT NULL, DEFAULT gen_random_uuid()</td><td>기록 고유 식별자</td></tr>
+          <tr><td><code>employee_id</code></td><td>UUID</td><td>FK → Employee.id, NOT NULL</td><td>직원 참조</td></tr>
+          <tr><td><code>clock_in_at</code><span class="pii">PII</span></td><td>TIMESTAMP WITH TIME ZONE</td><td>NOT NULL</td><td>출근 시각. KST 저장. 개인식별 정보로 분류.</td></tr>
+          <tr><td><code>clock_out_at</code><span class="pii">PII</span></td><td>TIMESTAMP WITH TIME ZONE</td><td>NULL 허용</td><td>퇴근 시각. 출근 후 미퇴근 시 NULL.</td></tr>
+          <tr><td><code>location_in</code><span class="pii">PII</span></td><td>POINT (PostGIS)</td><td>NULL 허용</td><td>출근 시 GPS 좌표. 위치정보 = PII.</td></tr>
+          <tr><td><code>work_minutes</code></td><td>INT</td><td>NULL 허용, CHECK ≥ 0</td><td>총 근무 분 (퇴근 후 계산). 퇴근 전 NULL.</td></tr>
+          <tr><td><code>status</code></td><td>ENUM</td><td>NOT NULL, DEFAULT 'normal'</td><td>normal / late / early_leave / absent</td></tr>
+          <tr><td><code>is_deleted</code></td><td>BOOLEAN</td><td>NOT NULL, DEFAULT false</td><td>논리 삭제 플래그. 물리 삭제 금지.</td></tr>
+          <tr><td><code>created_at</code></td><td>TIMESTAMP WITH TIME ZONE</td><td>NOT NULL, DEFAULT now()</td><td>레코드 생성 일시</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>2.3 LeaveRequest (결재 신청)</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>컬럼명</th><th>타입</th><th>제약조건</th><th>설명</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>id</code></td><td>UUID</td><td>PK, NOT NULL, DEFAULT gen_random_uuid()</td><td>결재 신청 고유 ID</td></tr>
+          <tr><td><code>employee_id</code></td><td>UUID</td><td>FK → Employee.id, NOT NULL</td><td>신청자 직원</td></tr>
+          <tr><td><code>leave_type</code></td><td>ENUM</td><td>NOT NULL</td><td>annual (연차) / half_am / half_pm (반차) / out (외출)</td></tr>
+          <tr><td><code>start_at</code></td><td>TIMESTAMP WITH TIME ZONE</td><td>NOT NULL</td><td>부재 시작 일시</td></tr>
+          <tr><td><code>end_at</code></td><td>TIMESTAMP WITH TIME ZONE</td><td>NOT NULL, CHECK > start_at</td><td>부재 종료 일시</td></tr>
+          <tr><td><code>reason</code></td><td>TEXT</td><td>NOT NULL, CHECK length ≥ 10</td><td>신청 사유. 최소 10자.</td></tr>
+          <tr><td><code>status</code></td><td>ENUM</td><td>NOT NULL, DEFAULT 'pending'</td><td>pending / approved / rejected / cancelled</td></tr>
+          <tr><td><code>approver_id</code></td><td>UUID</td><td>FK → Employee.id, NULL 허용</td><td>승인자 (pending 시 NULL)</td></tr>
+          <tr><td><code>approved_at</code></td><td>TIMESTAMP WITH TIME ZONE</td><td>NULL 허용</td><td>승인/반려 처리 일시</td></tr>
+          <tr><td><code>created_at</code></td><td>TIMESTAMP WITH TIME ZONE</td><td>NOT NULL, DEFAULT now()</td><td>신청 일시</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>2.4 Department (부서)</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>컬럼명</th><th>타입</th><th>제약조건</th><th>설명</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>id</code></td><td>UUID</td><td>PK, NOT NULL, DEFAULT gen_random_uuid()</td><td>부서 고유 ID</td></tr>
+          <tr><td><code>code</code></td><td>VARCHAR(20)</td><td>NOT NULL, UNIQUE</td><td>부서 코드 (예: HR, IT, SALES)</td></tr>
+          <tr><td><code>name</code></td><td>VARCHAR(100)</td><td>NOT NULL</td><td>부서명 (예: 인사팀, IT팀)</td></tr>
+          <tr><td><code>manager_id</code></td><td>UUID</td><td>FK → Employee.id, NULL 허용</td><td>부서 팀장. Self-reference with Employee.</td></tr>
+          <tr><td><code>parent_id</code></td><td>UUID</td><td>FK → Department.id, NULL 허용</td><td>상위 부서 (NULL = 최상위 부서)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §3 인덱스 정책 -->
+  <div class="card">
+    <h2>§3 인덱스 정책</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>인덱스명</th><th>테이블</th><th>컬럼</th><th>인덱스 유형</th><th>목적</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>idx_emp_dept</code></td><td>employee</td><td>dept_id</td><td>B-Tree</td><td>부서별 직원 조회</td></tr>
+          <tr><td><code>idx_emp_active</code></td><td>employee</td><td>is_active</td><td>Partial (WHERE is_active=true)</td><td>활성 직원 빠른 필터</td></tr>
+          <tr><td><code>idx_att_emp_date</code></td><td>attendance_record</td><td>(employee_id, clock_in_at)</td><td>B-Tree 복합</td><td>직원별 기간 조회 최적화 — 핵심 쿼리</td></tr>
+          <tr><td><code>idx_att_date</code></td><td>attendance_record</td><td>clock_in_at</td><td>B-Tree</td><td>전체 날짜 기준 집계 (HR 사용)</td></tr>
+          <tr><td><code>idx_att_not_deleted</code></td><td>attendance_record</td><td>is_deleted</td><td>Partial (WHERE is_deleted=false)</td><td>삭제 제외 기본 조회</td></tr>
+          <tr><td><code>idx_leave_emp_status</code></td><td>leave_request</td><td>(employee_id, status)</td><td>B-Tree 복합</td><td>직원별 결재 상태 조회 — 팀장 화면 최적화</td></tr>
+          <tr><td><code>idx_leave_approver</code></td><td>leave_request</td><td>approver_id</td><td>B-Tree</td><td>팀장이 처리한 결재 내역 조회</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §4 보존·삭제 정책 -->
+  <div class="card">
+    <h2>§4 데이터 보존·삭제 정책</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>테이블</th><th>보존 기간</th><th>근거</th><th>삭제 방식</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>attendance_record</td>
+            <td><strong>5년</strong></td>
+            <td>근로기준법 제42조 (임금대장 등 근로관계 서류 보존)</td>
+            <td>논리 삭제 (<code>is_deleted=true</code>). 물리 삭제 절대 금지.</td>
+          </tr>
+          <tr>
+            <td>leave_request</td>
+            <td><strong>5년</strong></td>
+            <td>근로기준법 제42조 동일 적용</td>
+            <td>논리 삭제. status=cancelled로 상태 전환.</td>
+          </tr>
+          <tr>
+            <td>employee</td>
+            <td><strong>5년 (퇴직 후)</strong></td>
+            <td>개인정보보호법 (업무 관련 보존 기간)</td>
+            <td>논리 삭제 (<code>is_active=false</code>). PII 컬럼 마스킹 처리.</td>
+          </tr>
+          <tr>
+            <td>department</td>
+            <td>무기한</td>
+            <td>조직 이력 보존 필요</td>
+            <td>비활성 플래그 처리 (is_active 추가 예정).</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert alert-info">
+      <span>ℹ️</span>
+      <span>PII 컬럼(name·email·phone·clock_in_at·location_in) 만료 처리 절차: 퇴직 5년 후 해당 컬럼을 마스킹 값("***")으로 UPDATE. 레코드 자체는 통계 무결성 유지를 위해 물리 삭제하지 않습니다.</span>
+    </div>
+  </div>
+
+  <!-- §5 마이그레이션 -->
+  <div class="card">
+    <h2>§5 마이그레이션 관리</h2>
+    <p>Alembic 1.13을 사용합니다. 모든 마이그레이션 스크립트는 <code>up(upgrade)</code>과 <code>down(downgrade)</code>을 모두 작성해야 합니다.</p>
+    <h4>초기 마이그레이션 (0001_initial)</h4>
+    <pre>"""0001_initial: 4개 테이블 초기 생성"""
+
+def upgrade():
+    op.create_table('department',
+        sa.Column('id', UUID(), primary_key=True, server_default=text('gen_random_uuid()')),
+        sa.Column('code', sa.VARCHAR(20), nullable=False, unique=True),
+        sa.Column('name', sa.VARCHAR(100), nullable=False),
+        sa.Column('manager_id', UUID(), sa.ForeignKey('employee.id'), nullable=True),
+        sa.Column('parent_id', UUID(), sa.ForeignKey('department.id'), nullable=True),
+    )
+    op.create_table('employee', ...)
+    op.create_table('attendance_record', ...)
+    op.create_table('leave_request', ...)
+    # 인덱스 생성
+    op.create_index('idx_att_emp_date', 'attendance_record',
+                    ['employee_id', 'clock_in_at'])
+
+def downgrade():
+    op.drop_table('leave_request')
+    op.drop_table('attendance_record')
+    op.drop_table('employee')
+    op.drop_table('department')</pre>
+    <div class="alert alert-warn">
+      <span>⚠️</span>
+      <span>마이그레이션 실행 전 반드시 백업을 수행해야 합니다. 운영 환경 적용은 점검 시간(일요일 00:00~04:00) 내에 진행합니다.</span>
+    </div>
+  </div>
+
+  <!-- 검증 체크리스트 -->
+  <div class="checklist-card">
+    <h2>✅ 검증 체크리스트</h2>
+    <div class="cl-item"><input type="checkbox" checked><span class="cl-done">ERD (Mermaid erDiagram) 완성 — 4개 엔티티 + 관계</span></div>
+    <div class="cl-item"><input type="checkbox" checked><span class="cl-done">모든 엔티티 컬럼 정의 완료 (타입·제약조건·설명)</span></div>
+    <div class="cl-item"><input type="checkbox" checked><span class="cl-done">PII 컬럼 식별 및 암호화 저장 요건 명시</span></div>
+    <div class="cl-item"><input type="checkbox" checked><span class="cl-done">핵심 인덱스 7개 정의 (복합 인덱스 포함)</span></div>
+    <div class="cl-item"><input type="checkbox" checked><span class="cl-done">데이터 보존 정책(5년) 및 논리 삭제 방식 정의</span></div>
+    <div class="cl-item"><input type="checkbox" checked><span class="cl-done">Alembic up/down 마이그레이션 패턴 명시</span></div>
+    <div class="cl-item"><input type="checkbox"><span>개인정보보호법 준수 여부 법무·HR 검토 필요</span></div>
+    <div class="cl-item"><input type="checkbox"><span>PostgreSQL PII 컬럼 암호화 방식 결정 (pgcrypto vs 애플리케이션 레이어)</span></div>
+  </div>
+</main>
+</body>
+</html>

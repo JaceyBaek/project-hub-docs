@@ -7,6 +7,212 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-26 — P2604221 wiki_faq_builder 운영 단계 산출물 전체 생성 (18:37)
+
+### 작업 내용
+
+- wiki_faq_builder(P2604221) 운영 단계 진입에 따라 12종 산출물 생성 (MD + HTML, 총 25파일)
+  - TRC / REQ / FLW / FUNC / ARC / API / SEC / UTC / ITS / OPM / CFG / RUN
+  - UTC: 실제 테스트 파일 4개 분석 → 54개 실제 TC 문서화
+  - TRC 커버리지: REQ→설계 100%, FUNC→테스트 80%(미추적 2건 v1.1 예정), 설계→운영 100%, 전체 94%
+- `docs/index.html` 신규 생성 (프로젝트 문서 진입점, 12종 카드 구성)
+- 이후 수정: `index.html` 루트 → `docs/` 이동, 사이드바 nav item 약자→전체 명칭 통일
+
+---
+
+## 2026-05-26 — eacct_mcp 필드 등급 재분류 + EacctRedactor 구현 (18:34)
+
+### 작업 내용
+
+- `field_classification.yml` 필드 등급 전면 재분류: public 5종 / internal 1종(사원번호) / sensitive 2종(이름·이메일)
+- `tools.yml` `sensitive_fields` → `restricted_fields` rename + llm_safe_fields 동기화
+- `EacctRedactor` 신규 구현 — PlatformServer dispatch step 9(Redactor 슬롯) 실제 활성화
+  - tools.yml 런타임 로드로 정책 변경 시 코드 무변경
+- `response_builder.py` 하드코딩 제거, `slip/taxbill/commcode` tool 함수 raw 반환으로 정리
+- mcp_platform 계층 구조 정리: platform/services/mcp(project-hub 관리 서버)와 eacct_mcp는 형제 관계 확인
+
+---
+
+## 2026-05-26 — 산출물 템플릿 example/ 웹뷰 + HTML 생성 가이드 완성 (15:39)
+
+### 작업 내용
+
+- `platform/templates/deliverables/example/` 폴더 신규 생성 (P2605991 근태관리 시스템 샘플)
+  - `index.html` — 프로젝트 문서 인덱스 (16개 산출물 진입점)
+  - `assets/style.css` — CSS 정규 소스 (각 HTML에 인라인 임베드 기준)
+  - 16개 산출물 HTML 전체 작성 (TRC / REQ / FLW / SCR / ROLE / FUNC / ARC / DAT / API / SEC / UTC / ITS / OPM / USM / CFG / RUN)
+- HTML 핵심 원칙: 완전 독립형(Self-Contained) — 외부 CSS/JS/CDN/웹폰트 의존 없음, `<style>` 인라인 임베드
+- 문서 간 상대경로 링크 (Sidebar nav + Trace bar + 본문 cross-reference)
+- `guides/HTML-generation-guide.md` 신규 작성 (§1 독립형 원칙, §2 링크 경로 표, §3 구조 템플릿, §4 Mermaid 처리, §5 PII 마킹, §6 CSS 관리, §7 파일명 규칙, §8 생성 체크리스트)
+- `CLAUDE.md` §9 가이드 표 + `README.md` 폴더 구조 현행화
+
+---
+
+## 2026-05-26 — DEV_D006-7 C2 보완 완료 (Codex blocker 4건 해소)
+
+### 작업 내용
+
+- CODEX-001: `eacct_mcp/manifest.yml` env_required에 `PAYLOAD_STORE_BACKEND: redis` 추가
+- CODEX-002: `eacct_chatbot/manifest.yml` env_required에 `REQUIRE_SIGNED_CONTEXT: "true"` 추가
+- CODEX-003: `deploy.py` DEV_AUTH_ENABLED 차단 범위 `"true"` → `"1"/"true"/"yes"` 확장
+- CODEX-004: `eacct_chatbot/tests/` 신규 (conftest keyring patch + TC-C07 chatbot `/health` TestClient smoke)
+- 플랫폼 170/170 + eacct_mcp smoke 8/8 + chatbot smoke 1/1 전원 PASS
+- MAP.md `[active · blocked]` → `[active]` 해제
+
+---
+
+## 2026-05-22 — DEV_D006-6 Jacey 승인 완료 + DEV_D006-7 진입
+
+### 작업 내용
+
+- DEV_D006-6 §5 최종 승인 (2026-05-22 18:41) — 전 DoD 충족, PASS
+- DEV_D006-7 collab 문서(30_DEV_D006-7) + TC_D006-7 문서 생성 — deploy smoke / rollback dry-run / T-008 · T-009 config validation
+- REQUIRE_SIGNED_CONTEXT=true 전환 허용 상태 진입 (D6-I-001 합의)
+
+---
+
+## 2026-05-22 — DEV_D006-6 C2 재수정: items_ref tool 바인딩 연동 버그 + Miso LLM 토큰 보존 + 주석 오류
+
+### 작업 내용
+
+- chat_handler.py: items_ref 토큰에 tool 포함 (`items_ref={ref}&tool={tool_name}`) — Claude/Miso 핸들러 공통
+- chat_handler.py: Miso Pass 2 프롬프트에 토큰 보존 지시 추가 (LLM 우회 방지)
+- widget.html + index.html: regex `&tool=` 선택적 캡처 + fetchItemsRef `?tool=` 파라미터 전달
+- payload_store.py: `_check_binding` 주석 오류 수정 (D6-6-C1-CODEX-002)
+- DEV_D006-6 §2-3·§4 이슈 resolved 갱신, TC-012·013 기대결과 갱신
+
+---
+
+## 2026-05-22 — DEV_D006-6 C1 개발: eacct_chatbot signed context E2E + items_ref UI 렌더링
+
+### 작업 내용
+
+- server.py per-request token refresh (DevSignedContextIssuer → McpTokenIssuer.issue() → mcp.set_auth() 자동 갱신)
+- widget.html + index.html: items_ref 버튼 렌더링 + /payload/{ref} fetch + 테이블 표시 + X-Session-ID 헤더
+- C1 TC-001~014 전원 PASS (14/14). Codex·Antigravity 검증 대기.
+- MAP.md: DEV_D006-6·TC_D006-6 [active] 등록
+
+---
+
+## 2026-05-22 — DEV_D006-5 승인: eacct_mcp audit fail-closed 집행 + policy YAML 완성 최종 완료
+
+### 작업 내용
+
+- 3-way 검증(Claude 18/18 + Codex TC-C01~C06 포함 24/24 + Antigravity TC-C01~C06 포함 24/24) 전원 통과
+- Jacey 승인 (16:52). DEV_D006-6 진입 가능.
+- MAP.md: DEV_D006-5·TC_D006-5 [resolved · verified], DEV_D006-6 진입 게이트 해제
+
+---
+
+## 2026-05-22 — DEV_D006-5 C1 개발: eacct_mcp audit fail-closed 집행 + policy YAML 완성
+
+### 작업 내용
+
+- `projects/eacct_mcp/source/server.py`: `FileAuditLogger` 주입 — `audit_required=True` tool(slip/taxbill) fail-closed 실질 활성화 (`logs/audit.jsonl` JSONL+hash chain)
+- `projects/eacct_mcp/source/tools/slip.py`, `taxbill.py`: too_many 조기 반환 → `ToolResponseBuilder` 경유 (`{llm_safe_summary, ui_payload}` 구조 통일, 3곳)
+- `projects/eacct_mcp/source/policies/tools.yml`: policy_name·audit_required·max_rows·sensitive·required_roles 보완 (route_intent 신규 추가), 6개 tool 전체 선언
+- `projects/eacct_mcp/source/policies/field_classification.yml`: 신규 (8개 kind: sensitive 5개 + internal 3개)
+- collab 문서 신규: `30_DEV_D006-5`, `40_TC_D006-5`
+- Claude 자체 검증 18/18 통과. Codex·Antigravity 검증 대기.
+
+---
+
+## 2026-05-22 — DEV_D006-4 승인: eacct_mcp LLM-safe response 전환 + tool 정책 메타데이터 최종 완료
+
+### 작업 내용
+
+- `projects/eacct_mcp/source/tools/commcode.py`: 3개 tool(`list_comcd_groups`·`get_comcd_group`·`search_comcd`) 성공 반환 → `ToolResponseBuilder.build_generic_response` 경유 전환, 비민감 공개 데이터
+- `projects/eacct_mcp/source/tools/__init__.py`: `register_all` 6개 tool에 `policy_name`·`llm_exposure`·`audit_required` 메타데이터 선언 (commcode=allow, slip/taxbill=summary_only, route_intent=deny)
+- collab 문서: `30_DEV_D006-4_20260522-1558_llm-safe-response.md`, `40_TC_D006-4_20260522-1558_llm-safe-response.md` 신규 생성
+- 3-way 검증(Claude·Codex·Antigravity) 21/21 전원 통과 — Jacey 승인(2026-05-22 16:35)
+- MAP.md: DEV_D006-4·TC_D006-4 [resolved · verified], DEV_D006-5 진입 게이트 해제
+
+---
+
+## 2026-05-22 — DEV_D006-3 승인: REQUIRE_SIGNED_CONTEXT 배포 게이트 최종 완료
+
+### 작업 내용
+
+- DEV_D006-3 Jacey 승인 (15:58): 결재 헤더·문서 변경이력 갱신, §5 체크리스트 전원 [x], 최종 결론 기재
+- MAP.md: DEV_D006-3·TC_D006-3 [resolved · verified], DEV_D006-4 진입 게이트 해제 명시
+- `_template_dev.md` 지침 강화: 문서 변경이력 수행자 의무 명시 (각 수행자가 직접 자신의 섹션 완료 후 즉시 추가)
+
+---
+
+## 2026-05-22 — DEV_D006-2 완료: eacct_mcp namespace/registry 전환 (from tools import * 제거)
+
+### 작업 내용
+
+- `projects/eacct_mcp/source/server.py`: `from tools import *` + global `_default_registry` copy 제거, `from tools import register_all; register_all(registry)` 추가
+- `projects/eacct_mcp/source/tools/__init__.py`: `register_all(registry)` 함수 신규 추가 (명시 registry 등록 단일 진입점)
+- `projects/eacct_mcp/source/tools/slip.py·taxbill.py·commcode.py·router.py`: `@tool` 데코레이터 전량 제거, `tool` import 제거
+- collab 문서: `30_DEV_D006-2_20260522-1053_eacct-registry-transition.md`, `40_TC_D006-2_20260522-1053_eacct-registry-transition.md` 신규 생성 및 3-way 검증 완료
+- 3-way 검증(Claude·Codex·Antigravity) 18/18 전원 통과 — Jacey 승인(2026-05-22 11:25)
+- MAP.md: DEV_D006-2 `[resolved · verified]`, DEV_D006-3 진입 게이트 해제
+
+### 결과
+
+- DEV_D006-2 resolved. DEV_D006-3 (signed context 전환) 진입 가능.
+
+### Pain point
+
+- TC-004: `"default_registry" not in content` 단순 grep이 `allow_default_registry=False` 파라미터명에 걸려 false positive 발생 → test_bug으로 분류 후 C2 재검증으로 해소
+
+---
+
+## 2026-05-22 — collab 문서 변경 이력 표기 개선 + GitHub SSH 다중 계정 설정
+
+### 작업 내용
+
+**collab 문서 변경 이력 표기 개선**
+- `문서 변경 이력` 표 일시 컬럼: 날짜(YYYY-MM-DD) → 날짜+시간(YYYY-MM-DD HH:MM) 형식으로 통일
+- 수정자 컬럼 역할 표기 추가: `claude (개발)` / `codex (설계)` / `antigravity (테스터)` / `jacey (승인)`
+- README.md §9 예시 표: Antigravity 행 추가 + 역할 표기 반영
+- README.md §9 TC 섹션: TC §2 append 완료 시 MAP.md 갱신 의무 및 상태 전환 기준 명시
+- MAP.md: TC_D004 `[active]` → `[resolved · verified]` 갱신 (Antigravity TC-A01~A03 기완료 반영)
+- USAGE.md: 아이다 → Claude 명칭 정리 (3곳)
+- DEV_D002·DEV_D004 문서 변경 이력 표: 역할 표기 소급 적용
+
+**GitHub SSH 다중 계정 설정**
+- SSH 키 2쌍 생성: `~/.ssh/id_github_personal` (JaceyBaek) / `~/.ssh/id_github_gsretail` (JaceyBaek-GSRetail)
+- `~/.ssh/config`: 호스트 별칭 `github-personal` / `github-gsretail` 분리 설정 (`IdentitiesOnly yes`)
+- remote URL 교체: project-hub → `git@github-gsretail:gsr-ax/...` / eacct_chatbot·eacct_mcp → `git@github-personal:JaceyBaek/...`
+- 연결 테스트 통과 (양 계정 모두 `Hi {계정명}!` 응답 확인)
+- 가이드 문서 작성: `platform/setup/github_ssh_multiaccounts.md`
+
+### 결과
+
+- push 시 GitHub 계정 선택 팝업 제거 — repo 위치에 따라 자동 계정 선택
+- collab 문서 변경 이력 역할·시간 표기 기준 통일 완료
+
+---
+
+## 2026-05-22 — DEV_D001 문서 보정 + DEV_D002(+D003) Jacey 승인 완료 — DEV_D006-3~4 게이트 해제
+
+### 작업 내용
+
+- DEV_D001 문서 보정: `## 문서 변경이력` 섹션 신설(헤더 표·증적 타임스탬프·§5 텍스트 복원), frontmatter `resolved_by: jacey → claude` + `approved_by: jacey` + `approved_at: 2026-05-20` + `status: approved` 패턴 통일, MAP.md `approved_by: jacey (2026-05-20)` 추가
+- DEV_D002(+D003) 승인: Codex C3(2026-05-22 09:40) + Antigravity A1(2026-05-22 10:00) 전원 통과 확인 후 Jacey 승인
+  - Antigravity Gap 3건(고위험 소비 API 트리거 누락, JWKS Negative Caching 미구현, PolicyEngine 런타임 검증 부재) 차기 마일스톤 이관 — DoD 충족에 영향 없음
+  - frontmatter `status: approved`, `verified_by: codex+antigravity`, `approved_by: jacey`, `approved_at: 2026-05-22`
+
+### 결과
+
+- DEV_D001 문서 패턴 DEV_D004 기준으로 소급 통일 완료
+- O001 §G 게이트 해제: DEV_D006-3~4 (signed context + privacy 적용) 진입 가능
+
+---
+
+## 2026-05-22 — eacct_mcp 보안팀 사전 대응 문서 작성
+
+### 작업 내용
+
+- eacct_mcp (P2605081) mcp_platform 보안 계층 전체 코드 리뷰 (D001~D005)
+- `projects/eacct_mcp/dist/md/03_SEC_eacct_mcp_보안설계대응서.md` 신규: 서버 프레임워크 중심 보안 통제 9개 항목 정리, 보안팀 예상 질의 사전 답변 포함
+- 리스크 식별: HIGH 2건 / MEDIUM 3건 / LOW 3건
+
+---
+
 ## 2026-05-21 — DEV_D004(+D005) Jacey 승인 완료 — DEV_D006-5 게이트 해제
 
 ### 작업 내용

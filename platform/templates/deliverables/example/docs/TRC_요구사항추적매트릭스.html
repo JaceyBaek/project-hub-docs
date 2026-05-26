@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="doc-id" content="P2605991-TRC-01">
+<meta name="doc-type" content="TRC">
+<meta name="project" content="P2605991">
+<meta name="version" content="1.0.0">
+<meta name="status" content="review">
+<meta name="owner" content="김**(PM)">
+<meta name="updated" content="2026-05-26">
+<title>[P2605991-TRC-01] 요구사항 추적 매트릭스</title>
+<style>
+:root{--primary:#0d1b2a;--accent:#1565c0;--accent-hover:#0d47a1;--accent-light:#e3f2fd;--success:#2e7d32;--success-bg:#e8f5e9;--warn:#e65100;--warn-bg:#fff3e0;--danger:#b71c1c;--danger-bg:#ffebee;--border:#dde3ea;--bg:#f0f2f5;--card:#ffffff;--text:#1a202c;--text2:#374151;--muted:#6b7280;--sidebar-w:228px;--radius:10px;--shadow:0 1px 4px rgba(0,0,0,.06);--font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',system-ui,sans-serif;--font-mono:'Fira Code','Consolas','Courier New',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:var(--font-sans);line-height:1.75;color:var(--text);background:var(--bg);display:flex;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.sidebar{width:var(--sidebar-w);background:var(--primary);color:#cdd5df;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
+.sidebar-logo{display:flex;align-items:center;gap:8px;padding:16px 16px 12px;color:#fff;font-weight:700;font-size:15px;border-bottom:1px solid rgba(255,255,255,.08);text-decoration:none}
+.sidebar-logo:hover{text-decoration:none;background:rgba(255,255,255,.04)}
+.sidebar-logo small{font-size:11px;font-weight:400;color:#7fa3b8;display:block}
+.sidebar-project{padding:8px 16px 10px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sidebar-project .proj-code{font-size:10px;color:#7fa3b8;letter-spacing:.06em}
+.sidebar-project .proj-name{font-size:12px;color:#e2e8f0;font-weight:600;margin-top:1px}
+.nav-group{padding:6px 0}
+.nav-group-title{padding:5px 16px 2px;font-size:10px;font-weight:700;color:#4a6070;text-transform:uppercase;letter-spacing:.08em}
+.nav-item{display:flex;align-items:center;gap:6px;padding:5px 16px;color:#a8bcc8;font-size:12.5px;transition:background .12s,color .12s;text-decoration:none}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#e2e8f0;text-decoration:none}
+.nav-item.active{background:var(--accent);color:#fff;font-weight:600}
+.nav-req{color:#4fc3f7;font-size:9px}
+.nav-opt{color:#455a64;font-size:9px}
+.nav-item.active .nav-req,.nav-item.active .nav-opt{color:rgba(255,255,255,.7)}
+.main{margin-left:var(--sidebar-w);flex:1;padding:32px 40px 72px;max-width:960px}
+.doc-header{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px 20px;margin-bottom:24px;box-shadow:var(--shadow)}
+.meta-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.doc-id{font-family:var(--font-mono);font-size:11.5px;font-weight:700;color:var(--accent);background:var(--accent-light);padding:2px 9px;border-radius:4px}
+.badge{font-size:10.5px;font-weight:600;padding:2px 9px;border-radius:20px;display:inline-flex;align-items:center;gap:3px}
+.st-draft{background:#eceff1;color:#546e7a}
+.st-review{background:var(--warn-bg);color:var(--warn)}
+.st-approved{background:var(--success-bg);color:var(--success)}
+.ph-plan{background:#f3e5f5;color:#7b1fa2}
+.ph-design{background:var(--accent-light);color:var(--accent)}
+.ph-dev{background:var(--success-bg);color:var(--success)}
+.ph-test{background:#fffde7;color:#f57f17}
+.ph-deploy{background:#ede7f6;color:#4527a0}
+.req-yes{background:#fce4ec;color:#c62828}
+.req-cond{background:#f3e5f5;color:#7b1fa2}
+.doc-title{font-size:22px;font-weight:700;color:var(--primary);margin-bottom:6px}
+.doc-info{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-bottom:16px}
+.doc-info span{display:flex;align-items:center;gap:4px}
+.trace-bar{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:12px 16px;display:flex;gap:28px;flex-wrap:wrap}
+.trace-col{flex:1;min-width:160px}
+.trace-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.trace-links{display:flex;flex-wrap:wrap;gap:6px}
+.trace-link{font-family:var(--font-mono);font-size:11px;font-weight:500;padding:3px 10px;border-radius:4px;background:var(--accent-light);color:var(--accent);border:1px solid transparent;text-decoration:none;transition:background .12s,color .12s}
+.trace-link:hover{background:var(--accent);color:#fff;text-decoration:none}
+.trace-none{font-size:12px;color:var(--muted);font-style:italic}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin-bottom:18px;box-shadow:var(--shadow)}
+.card h2{font-size:15px;font-weight:700;color:var(--primary);padding-bottom:8px;margin-bottom:14px;border-bottom:2px solid var(--accent-light);display:flex;align-items:center;gap:6px}
+.card h3{font-size:13.5px;font-weight:600;color:var(--text);margin:16px 0 8px}
+.card h3:first-child{margin-top:0}
+.card h4{font-size:13px;font-weight:600;color:var(--text2);margin:12px 0 6px}
+.card p{margin-bottom:10px}
+.card ul,.card ol{padding-left:20px;margin-bottom:10px}
+.card li{margin-bottom:3px}
+.card>*:last-child{margin-bottom:0}
+.tbl-wrap{overflow-x:auto;margin:10px 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f0f4f8;padding:7px 11px;text-align:left;font-size:11.5px;font-weight:700;color:var(--primary);border:1px solid var(--border);white-space:nowrap}
+td{padding:6px 11px;border:1px solid var(--border);vertical-align:top;line-height:1.55}
+tr:nth-child(even) td{background:#fafbfd}
+tr:hover td{background:#f0f6ff}
+td code{font-family:var(--font-mono);font-size:11px;background:#f0f4f8;padding:1px 5px;border-radius:3px;color:var(--accent)}
+pre{background:#1a2332;color:#cdd5df;padding:14px 18px;border-radius:8px;overflow-x:auto;font-size:12.5px;line-height:1.6;margin:10px 0;border-left:3px solid var(--accent);font-family:var(--font-mono)}
+.ic{background:#f0f4f8;color:var(--accent);padding:1px 6px;border-radius:3px;font-family:var(--font-mono);font-size:12px}
+.diagram{background:linear-gradient(135deg,#f5f7fa,#e8eef4);border:2px dashed var(--border);border-radius:8px;padding:20px;margin:10px 0;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px}
+.diagram .d-icon{font-size:28px;margin-top:4px}
+.diagram .d-title{font-size:13px;font-weight:600;color:var(--text)}
+.diagram .d-code{font-family:var(--font-mono);font-size:11px;color:#555;background:#fff;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:left;width:100%;max-width:600px;white-space:pre;overflow-x:auto;margin-top:4px;line-height:1.5}
+.alert{padding:10px 14px;border-radius:6px;margin:10px 0;font-size:13px;display:flex;gap:8px;align-items:flex-start}
+.alert-info{background:var(--accent-light);border-left:3px solid var(--accent)}
+.alert-warn{background:var(--warn-bg);border-left:3px solid var(--warn)}
+.alert-success{background:var(--success-bg);border-left:3px solid var(--success)}
+.alert-danger{background:var(--danger-bg);border-left:3px solid var(--danger)}
+.pii{display:inline-flex;align-items:center;gap:3px;background:#fce4ec;color:#c62828;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:4px}
+.checklist-card{background:#fffbf0;border:1px solid #fde68a;border-radius:var(--radius);padding:18px 22px;margin-top:24px}
+.checklist-card h2{font-size:13.5px;font-weight:700;color:#92400e;margin-bottom:12px;display:flex;align-items:center;gap:6px;padding-bottom:0;border-bottom:none}
+.cl-item{display:flex;align-items:flex-start;gap:8px;padding:3px 0;font-size:13px}
+.cl-item input{width:14px;height:14px;margin-top:3px;accent-color:var(--success);cursor:pointer}
+.cl-done{color:var(--muted);text-decoration:line-through}
+.coverage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:12px 0}
+.cov-card{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:14px 16px;text-align:center}
+.cov-card .cov-label{font-size:11px;color:var(--muted);margin-bottom:4px}
+.cov-card .cov-num{font-size:26px;font-weight:700;color:var(--accent)}
+.cov-card .cov-sub{font-size:11px;color:var(--muted)}
+.cov-card.warn .cov-num{color:var(--warn)}
+@media print{.sidebar{display:none!important}.main{margin-left:0!important}pre{background:#f5f5f5!important;color:#333!important}}
+@media(max-width:768px){.sidebar{transform:translateX(-100%)}.main{margin-left:0;padding:20px 16px 48px}}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <a href="../index.html" class="sidebar-logo">📋 산출물 뷰어<small>P2605991 · 근태관리 시스템</small></a>
+  <div class="sidebar-project"><div class="proj-code">P2605991</div><div class="proj-name">근태관리 시스템</div></div>
+  <div class="nav-group">
+    <div class="nav-group-title">추적</div>
+    <a href="./TRC_요구사항추적매트릭스.html" class="nav-item active"><span class="nav-req">●</span> TRC 추적매트릭스</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">01 Plan</div>
+    <a href="./01_plan/REQ_요구사항정의서.html" class="nav-item"><span class="nav-req">●</span> REQ 요구사항정의서</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">02 Design</div>
+    <a href="./02_design/FLW_프로세스흐름도.html" class="nav-item"><span class="nav-req">●</span> FLW 프로세스흐름도</a>
+    <a href="./02_design/SCR_화면정의서.html" class="nav-item"><span class="nav-opt">◌</span> SCR 화면정의서</a>
+    <a href="./02_design/ROLE_권한정의서.html" class="nav-item"><span class="nav-opt">◌</span> ROLE 권한정의서</a>
+    <a href="./02_design/FUNC_기능정의서.html" class="nav-item"><span class="nav-req">●</span> FUNC 기능정의서</a>
+    <a href="./02_design/ARC_아키텍처.html" class="nav-item"><span class="nav-req">●</span> ARC 아키텍처</a>
+    <a href="./02_design/DAT_데이터모델정의서.html" class="nav-item"><span class="nav-opt">◌</span> DAT 데이터모델정의서</a>
+    <a href="./02_design/API_인터페이스명세서.html" class="nav-item"><span class="nav-opt">◌</span> API 인터페이스명세서</a>
+    <a href="./02_design/SEC_보안설계서.html" class="nav-item"><span class="nav-opt">◌</span> SEC 보안설계서</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">03 Dev</div>
+    <a href="./03_dev/UTC_단위테스트케이스.html" class="nav-item"><span class="nav-req">●</span> UTC 단위테스트케이스</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">04 Test</div>
+    <a href="./04_test/ITS_통합테스트시나리오.html" class="nav-item"><span class="nav-opt">◌</span> ITS 통합테스트시나리오</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">05 Deploy</div>
+    <a href="./05_deploy/OPM_운영자매뉴얼.html" class="nav-item"><span class="nav-req">●</span> OPM 운영자매뉴얼</a>
+    <a href="./05_deploy/USM_사용자매뉴얼.html" class="nav-item"><span class="nav-opt">◌</span> USM 사용자매뉴얼</a>
+    <a href="./05_deploy/CFG_설정가이드.html" class="nav-item"><span class="nav-req">●</span> CFG 설정가이드</a>
+    <a href="./05_deploy/RUN_운영Runbook.html" class="nav-item"><span class="nav-req">●</span> RUN 운영Runbook</a>
+  </div>
+</nav>
+<main class="main">
+  <div class="doc-header">
+    <div class="meta-row">
+      <span class="doc-id">P2605991-TRC-01</span>
+      <span class="badge st-review">🔍 검토 중</span>
+      <span class="badge req-yes">필수</span>
+    </div>
+    <div class="doc-title">요구사항 추적 매트릭스 (TRC)</div>
+    <div class="doc-info">
+      <span>👤 담당: 김**(PM)</span>
+      <span>📌 버전: v1.0.0</span>
+      <span>📅 수정: 2026-05-26</span>
+      <span>🏷 전체 산출물 커버리지 추적</span>
+    </div>
+    <div class="trace-bar">
+      <div class="trace-col">
+        <div class="trace-label">↑ 상위 문서</div>
+        <div class="trace-links">
+          <span class="trace-none">없음 (최상위 추적 문서)</span>
+        </div>
+      </div>
+      <div class="trace-col">
+        <div class="trace-label">↓ 하위 문서</div>
+        <div class="trace-links">
+          <span class="trace-none">없음 (모든 문서 참조)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §1 커버리지 요약 -->
+  <div class="card">
+    <h2>§1 커버리지 요약</h2>
+    <div class="coverage-grid">
+      <div class="cov-card">
+        <div class="cov-label">필수 산출물</div>
+        <div class="cov-num">100%</div>
+        <div class="cov-sub">10 / 10 완료</div>
+      </div>
+      <div class="cov-card">
+        <div class="cov-label">조건부 산출물</div>
+        <div class="cov-num">100%</div>
+        <div class="cov-sub">6 / 6 완료</div>
+      </div>
+      <div class="cov-card warn">
+        <div class="cov-label">전체 승인 완료</div>
+        <div class="cov-num">19%</div>
+        <div class="cov-sub">3 / 16 승인</div>
+      </div>
+    </div>
+    <div class="alert alert-warn">
+      <span>⚠️</span>
+      <span>승인 완료된 산출물은 REQ, FLW, ARC 3건입니다. SCR·ROLE·FUNC·DAT 등 설계 문서 13건은 현재 검토(review) 상태로, 검토 완료 후 승인이 필요합니다.</span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>문서 ID</th><th>문서명</th><th>구분</th><th>상태</th><th>담당자</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>P2605991-REQ-01</code></td><td>요구사항정의서</td><td><span class="badge req-yes">필수</span></td><td><span class="badge st-approved">승인</span></td><td>김**(PM)</td></tr>
+          <tr><td><code>P2605991-FLW-01</code></td><td>프로세스흐름도</td><td><span class="badge req-yes">필수</span></td><td><span class="badge st-approved">승인</span></td><td>박**(백엔드)</td></tr>
+          <tr><td><code>P2605991-SCR-01</code></td><td>화면정의서</td><td><span class="badge req-cond">조건부</span></td><td><span class="badge st-review">검토중</span></td><td>이**(프론트)</td></tr>
+          <tr><td><code>P2605991-ROLE-01</code></td><td>권한정의서</td><td><span class="badge req-cond">조건부</span></td><td><span class="badge st-review">검토중</span></td><td>김**(PM)</td></tr>
+          <tr><td><code>P2605991-FUNC-01</code></td><td>기능정의서</td><td><span class="badge req-yes">필수</span></td><td><span class="badge st-review">검토중</span></td><td>박**(백엔드)</td></tr>
+          <tr><td><code>P2605991-ARC-01</code></td><td>아키텍처</td><td><span class="badge req-yes">필수</span></td><td><span class="badge st-approved">승인</span></td><td>박**(백엔드)</td></tr>
+          <tr><td><code>P2605991-DAT-01</code></td><td>데이터모델정의서</td><td><span class="badge req-cond">조건부</span></td><td><span class="badge st-review">검토중</span></td><td>박**(백엔드)</td></tr>
+          <tr><td><code>P2605991-API-01</code></td><td>인터페이스명세서</td><td><span class="badge req-cond">조건부</span></td><td><span class="badge st-draft">초안</span></td><td>박**(백엔드)</td></tr>
+          <tr><td><code>P2605991-SEC-01</code></td><td>보안설계서</td><td><span class="badge req-cond">조건부</span></td><td><span class="badge st-draft">초안</span></td><td>김**(PM)</td></tr>
+          <tr><td><code>P2605991-UTC-01</code></td><td>단위테스트케이스</td><td><span class="badge req-yes">필수</span></td><td><span class="badge st-draft">초안</span></td><td>박**(백엔드)</td></tr>
+          <tr><td><code>P2605991-ITS-01</code></td><td>통합테스트시나리오</td><td><span class="badge req-cond">조건부</span></td><td><span class="badge st-draft">초안</span></td><td>박**(백엔드)</td></tr>
+          <tr><td><code>P2605991-OPM-01</code></td><td>운영자매뉴얼</td><td><span class="badge req-yes">필수</span></td><td><span class="badge st-draft">초안</span></td><td>박**(백엔드)</td></tr>
+          <tr><td><code>P2605991-USM-01</code></td><td>사용자매뉴얼</td><td><span class="badge req-yes">필수</span></td><td><span class="badge st-draft">초안</span></td><td>이**(프론트)</td></tr>
+          <tr><td><code>P2605991-CFG-01</code></td><td>설정가이드</td><td><span class="badge req-yes">필수</span></td><td><span class="badge st-draft">초안</span></td><td>박**(백엔드)</td></tr>
+          <tr><td><code>P2605991-RUN-01</code></td><td>운영Runbook</td><td><span class="badge req-yes">필수</span></td><td><span class="badge st-draft">초안</span></td><td>박**(백엔드)</td></tr>
+          <tr><td><code>P2605991-TRC-01</code></td><td>요구사항추적매트릭스</td><td><span class="badge req-yes">필수</span></td><td><span class="badge st-review">검토중</span></td><td>김**(PM)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §2 REQ → 설계 매핑 -->
+  <div class="card">
+    <h2>§2 REQ → 설계 매핑</h2>
+    <p>각 요구사항이 어떤 설계 산출물로 추적되는지 매핑합니다.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>REQ ID</th><th>요구사항명</th><th>FLW</th><th>SCR</th><th>ROLE</th><th>FUNC</th><th>ARC</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>P2605991-REQ-F01</code></td>
+            <td>출퇴근 기록</td>
+            <td><code>FLW-N01</code></td>
+            <td><code>SCR-001</code></td>
+            <td><code>ROLE-01</code><br><code>ROLE-02</code></td>
+            <td><code>FUNC-001</code><br><code>FUNC-002</code></td>
+            <td><code>ARC-01</code></td>
+          </tr>
+          <tr>
+            <td><code>P2605991-REQ-F02</code></td>
+            <td>근태 통계</td>
+            <td><code>FLW-N03</code></td>
+            <td><code>SCR-002</code></td>
+            <td><code>ROLE-01</code><br><code>ROLE-02</code><br><code>ROLE-03</code></td>
+            <td><code>FUNC-003</code></td>
+            <td><code>ARC-01</code></td>
+          </tr>
+          <tr>
+            <td><code>P2605991-REQ-F03</code></td>
+            <td>결재 신청/승인</td>
+            <td><code>FLW-N04</code><br><code>~N08</code></td>
+            <td><code>SCR-003</code></td>
+            <td><code>ROLE-01</code><br><code>ROLE-02</code></td>
+            <td><code>FUNC-004</code><br><code>FUNC-005</code></td>
+            <td><code>ARC-01</code></td>
+          </tr>
+          <tr>
+            <td><code>P2605991-REQ-F04</code></td>
+            <td>급여 연동</td>
+            <td><code>FLW-N09</code></td>
+            <td>—</td>
+            <td><code>ROLE-03</code></td>
+            <td><code>FUNC-006</code></td>
+            <td><code>ARC-01</code></td>
+          </tr>
+          <tr>
+            <td><code>P2605991-REQ-B01</code></td>
+            <td>근무시간 자동 집계</td>
+            <td><code>FLW-N03</code></td>
+            <td>—</td>
+            <td>—</td>
+            <td><code>FUNC-003</code></td>
+            <td><code>ARC-01</code></td>
+          </tr>
+          <tr>
+            <td><code>P2605991-REQ-B02</code></td>
+            <td>결재 워크플로우</td>
+            <td><code>FLW-N04</code><br><code>~N08</code></td>
+            <td><code>SCR-003</code></td>
+            <td><code>ROLE-01</code><br><code>ROLE-02</code></td>
+            <td><code>FUNC-004</code><br><code>FUNC-005</code></td>
+            <td><code>ARC-01</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §3 FUNC → 테스트 매핑 -->
+  <div class="card">
+    <h2>§3 FUNC → 테스트 매핑</h2>
+    <p>각 기능 함수가 어떤 테스트 케이스로 검증되는지 매핑합니다.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>FUNC ID</th><th>기능명</th><th>UTC (단위)</th><th>ITS (통합)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>FUNC-001</code></td><td>clock_in</td><td><code>UTC-001</code></td><td><code>ITS-S01</code></td></tr>
+          <tr><td><code>FUNC-002</code></td><td>clock_out</td><td><code>UTC-002</code></td><td><code>ITS-S01</code></td></tr>
+          <tr><td><code>FUNC-003</code></td><td>get_attendance_stats</td><td><code>UTC-004</code></td><td><code>ITS-S01</code></td></tr>
+          <tr><td><code>FUNC-004</code></td><td>submit_leave_request</td><td><code>UTC-005</code></td><td><code>ITS-S02</code></td></tr>
+          <tr><td><code>FUNC-005</code></td><td>approve_leave_request</td><td><code>UTC-006</code></td><td><code>ITS-S02</code></td></tr>
+          <tr><td><code>FUNC-006</code></td><td>export_payroll_data</td><td>UTC-007 (예정)</td><td>ITS-S03 (예정)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §4 설계 → 운영 매핑 -->
+  <div class="card">
+    <h2>§4 설계 → 운영 매핑</h2>
+    <p>설계 산출물이 어떤 운영 문서로 이어지는지 추적합니다.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>설계 산출물</th><th>커버하는 운영 문서</th><th>비고</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>ARC-01</code> 아키텍처</td><td><code>CFG-01</code>, <code>OPM-01</code>, <code>RUN-01</code></td><td>배포 구성·포트·서비스 전반</td></tr>
+          <tr><td><code>DAT-01</code> 데이터모델</td><td><code>CFG-01</code></td><td>DB 초기화 스크립트·마이그레이션</td></tr>
+          <tr><td><code>API-01</code> 인터페이스명세</td><td><code>OPM-01</code></td><td>API 엔드포인트 운영 참조</td></tr>
+          <tr><td><code>SEC-01</code> 보안설계</td><td><code>CFG-01</code></td><td>JWT 설정·RBAC 정책 반영</td></tr>
+          <tr><td><code>FUNC-01</code> 기능정의</td><td><code>USM-01</code></td><td>사용자 기능 안내 기반</td></tr>
+          <tr><td><code>SCR-01</code> 화면정의</td><td><code>USM-01</code></td><td>화면별 사용 방법 안내</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §5 미추적(Orphan) -->
+  <div class="card">
+    <h2>§5 미추적 항목 (Orphan)</h2>
+    <div class="alert alert-success">
+      <span>✅</span>
+      <span>현재 미추적(Orphan) 항목이 없습니다. 모든 요구사항은 하나 이상의 설계 산출물과 연결되어 있으며, 모든 기능은 테스트 케이스와 매핑되어 있습니다.</span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>구분</th><th>미추적 항목</th><th>조치 사항</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>미설계 요구사항</td><td>없음</td><td>—</td></tr>
+          <tr><td>미테스트 기능</td><td>FUNC-006 (급여 내보내기)</td><td>UTC-007·ITS-S03 작성 예정 (3단계)</td></tr>
+          <tr><td>상위 요구사항 없는 기능</td><td>없음</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 검증 체크리스트 -->
+  <div class="checklist-card">
+    <h2>✅ 검증 체크리스트</h2>
+    <div class="cl-item"><input type="checkbox" checked><span class="cl-done">모든 REQ ID가 최소 하나의 설계 산출물에 매핑되었는가</span></div>
+    <div class="cl-item"><input type="checkbox" checked><span class="cl-done">모든 FUNC ID가 최소 하나의 UTC에 매핑되었는가 (단, 3단계 기능 제외)</span></div>
+    <div class="cl-item"><input type="checkbox" checked><span class="cl-done">설계 산출물이 운영 문서(CFG/OPM/RUN/USM)로 추적 가능한가</span></div>
+    <div class="cl-item"><input type="checkbox" checked><span class="cl-done">필수 산출물 10개 전부 커버리지 확인 완료</span></div>
+    <div class="cl-item"><input type="checkbox" checked><span class="cl-done">조건부 산출물 6개 작성 조건 충족 여부 확인</span></div>
+    <div class="cl-item"><input type="checkbox"><span>FUNC-006(급여 내보내기) UTC/ITS 케이스 작성 완료 (3단계 개발 전 필수)</span></div>
+    <div class="cl-item"><input type="checkbox"><span>검토 중(review) 산출물 13건 승인 완료</span></div>
+  </div>
+</main>
+</body>
+</html>

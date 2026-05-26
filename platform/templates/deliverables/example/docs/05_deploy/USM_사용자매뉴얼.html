@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>USM 사용자매뉴얼 — P2605991</title>
+<style>
+:root{--primary:#0d1b2a;--accent:#1565c0;--accent-hover:#0d47a1;--accent-light:#e3f2fd;--success:#2e7d32;--success-bg:#e8f5e9;--warn:#e65100;--warn-bg:#fff3e0;--danger:#b71c1c;--danger-bg:#ffebee;--border:#dde3ea;--bg:#f0f2f5;--card:#ffffff;--text:#1a202c;--text2:#374151;--muted:#6b7280;--sidebar-w:228px;--radius:10px;--shadow:0 1px 4px rgba(0,0,0,.06);--font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',system-ui,sans-serif;--font-mono:'Fira Code','Consolas','Courier New',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:var(--font-sans);line-height:1.75;color:var(--text);background:var(--bg);display:flex;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.sidebar{width:var(--sidebar-w);background:var(--primary);color:#cdd5df;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
+.sidebar-logo{display:flex;align-items:center;gap:8px;padding:16px 16px 12px;color:#fff;font-weight:700;font-size:15px;border-bottom:1px solid rgba(255,255,255,.08);text-decoration:none}
+.sidebar-logo:hover{text-decoration:none;background:rgba(255,255,255,.04)}
+.sidebar-logo small{font-size:11px;font-weight:400;color:#7fa3b8;display:block}
+.sidebar-project{padding:8px 16px 10px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sidebar-project .proj-code{font-size:10px;color:#7fa3b8;letter-spacing:.06em}
+.sidebar-project .proj-name{font-size:12px;color:#e2e8f0;font-weight:600;margin-top:1px}
+.nav-group{padding:6px 0}
+.nav-group-title{padding:5px 16px 2px;font-size:10px;font-weight:700;color:#4a6070;text-transform:uppercase;letter-spacing:.08em}
+.nav-item{display:flex;align-items:center;gap:6px;padding:5px 16px;color:#a8bcc8;font-size:12.5px;transition:background .12s,color .12s;text-decoration:none}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#e2e8f0;text-decoration:none}
+.nav-item.active{background:var(--accent);color:#fff;font-weight:600}
+.nav-req{color:#4fc3f7;font-size:9px}
+.nav-opt{color:#455a64;font-size:9px}
+.nav-item.active .nav-req,.nav-item.active .nav-opt{color:rgba(255,255,255,.7)}
+.main{margin-left:var(--sidebar-w);flex:1;padding:32px 40px 72px;max-width:960px}
+.doc-header{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px 20px;margin-bottom:24px;box-shadow:var(--shadow)}
+.meta-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.doc-id{font-family:var(--font-mono);font-size:11.5px;font-weight:700;color:var(--accent);background:var(--accent-light);padding:2px 9px;border-radius:4px}
+.badge{font-size:10.5px;font-weight:600;padding:2px 9px;border-radius:20px;display:inline-flex;align-items:center;gap:3px}
+.st-draft{background:#eceff1;color:#546e7a}
+.st-review{background:var(--warn-bg);color:var(--warn)}
+.st-approved{background:var(--success-bg);color:var(--success)}
+.ph-plan{background:#f3e5f5;color:#7b1fa2}
+.ph-design{background:var(--accent-light);color:var(--accent)}
+.ph-dev{background:var(--success-bg);color:var(--success)}
+.ph-test{background:#fffde7;color:#f57f17}
+.ph-deploy{background:#ede7f6;color:#4527a0}
+.req-yes{background:#fce4ec;color:#c62828}
+.req-cond{background:#f3e5f5;color:#7b1fa2}
+.doc-title{font-size:22px;font-weight:700;color:var(--primary);margin-bottom:6px}
+.doc-info{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-bottom:16px}
+.doc-info span{display:flex;align-items:center;gap:4px}
+.trace-bar{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:12px 16px;display:flex;gap:28px;flex-wrap:wrap}
+.trace-col{flex:1;min-width:160px}
+.trace-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.trace-links{display:flex;flex-wrap:wrap;gap:6px}
+.trace-link{font-family:var(--font-mono);font-size:11px;font-weight:500;padding:3px 10px;border-radius:4px;background:var(--accent-light);color:var(--accent);border:1px solid transparent;text-decoration:none;transition:background .12s,color .12s}
+.trace-link:hover{background:var(--accent);color:#fff;text-decoration:none}
+.trace-none{font-size:12px;color:var(--muted);font-style:italic}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin-bottom:18px;box-shadow:var(--shadow)}
+.card h2{font-size:15px;font-weight:700;color:var(--primary);padding-bottom:8px;margin-bottom:14px;border-bottom:2px solid var(--accent-light);display:flex;align-items:center;gap:6px}
+.card h3{font-size:13.5px;font-weight:600;color:var(--text);margin:16px 0 8px}
+.card h3:first-child{margin-top:0}
+.card h4{font-size:13px;font-weight:600;color:var(--text2);margin:12px 0 6px}
+.card p{margin-bottom:10px}
+.card ul,.card ol{padding-left:20px;margin-bottom:10px}
+.card li{margin-bottom:3px}
+.card>*:last-child{margin-bottom:0}
+.tbl-wrap{overflow-x:auto;margin:10px 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f0f4f8;padding:7px 11px;text-align:left;font-size:11.5px;font-weight:700;color:var(--primary);border:1px solid var(--border);white-space:nowrap}
+td{padding:6px 11px;border:1px solid var(--border);vertical-align:top;line-height:1.55}
+tr:nth-child(even) td{background:#fafbfd}
+tr:hover td{background:#f0f6ff}
+td code{font-family:var(--font-mono);font-size:11px;background:#f0f4f8;padding:1px 5px;border-radius:3px;color:var(--accent)}
+pre{background:#1a2332;color:#cdd5df;padding:14px 18px;border-radius:8px;overflow-x:auto;font-size:12.5px;line-height:1.6;margin:10px 0;border-left:3px solid var(--accent);font-family:var(--font-mono)}
+.ic{background:#f0f4f8;color:var(--accent);padding:1px 6px;border-radius:3px;font-family:var(--font-mono);font-size:12px}
+.diagram{background:linear-gradient(135deg,#f5f7fa,#e8eef4);border:2px dashed var(--border);border-radius:8px;padding:20px;margin:10px 0;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px}
+.diagram .d-icon{font-size:28px;margin-top:4px}
+.diagram .d-title{font-size:13px;font-weight:600;color:var(--text)}
+.diagram .d-code{font-family:var(--font-mono);font-size:11px;color:#555;background:#fff;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:left;width:100%;max-width:600px;white-space:pre;overflow-x:auto;margin-top:4px;line-height:1.5}
+.alert{padding:10px 14px;border-radius:6px;margin:10px 0;font-size:13px;display:flex;gap:8px;align-items:flex-start}
+.alert-info{background:var(--accent-light);border-left:3px solid var(--accent)}
+.alert-warn{background:var(--warn-bg);border-left:3px solid var(--warn)}
+.alert-success{background:var(--success-bg);border-left:3px solid var(--success)}
+.alert-danger{background:var(--danger-bg);border-left:3px solid var(--danger)}
+.pii{display:inline-flex;align-items:center;gap:3px;background:#fce4ec;color:#c62828;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:4px}
+.checklist-card{background:#fffbf0;border:1px solid #fde68a;border-radius:var(--radius);padding:18px 22px;margin-top:24px}
+.checklist-card h2{font-size:13.5px;font-weight:700;color:#92400e;margin-bottom:12px;display:flex;align-items:center;gap:6px;padding-bottom:0;border-bottom:none}
+.cl-item{display:flex;align-items:flex-start;gap:8px;padding:3px 0;font-size:13px}
+.cl-item input{width:14px;height:14px;margin-top:3px;accent-color:var(--success);cursor:pointer}
+.cl-done{color:var(--muted);text-decoration:line-through}
+@media print{.sidebar{display:none!important}.main{margin-left:0!important}pre{background:#f5f5f5!important;color:#333!important}}
+@media(max-width:768px){.sidebar{transform:translateX(-100%)}.main{margin-left:0;padding:20px 16px 48px}}
+.task-card{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-bottom:14px}
+.task-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.task-id{font-family:var(--font-mono);font-size:10.5px;color:var(--muted)}
+.task-title{font-size:13.5px;font-weight:600;color:var(--primary)}
+.task-role{display:inline-block;font-size:10.5px;font-weight:600;padding:1px 7px;border-radius:3px;background:var(--accent-light);color:var(--accent)}
+.step-ol{padding-left:0;list-style:none;margin:8px 0}
+.step-ol li{display:flex;gap:10px;margin-bottom:7px;font-size:13px;align-items:flex-start}
+.step-ol li .sn{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:50%;margin-top:1px;flex-shrink:0}
+.faq-item{border-bottom:1px solid var(--border);padding:12px 0}
+.faq-item:last-child{border-bottom:none}
+.faq-q{font-weight:600;color:var(--primary);margin-bottom:4px;font-size:13px}
+.faq-a{color:var(--text2);font-size:13px}
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <a href="../../index.html" class="sidebar-logo">📋 산출물 뷰어<small>P2605991 · 근태관리 시스템</small></a>
+  <div class="sidebar-project"><div class="proj-code">P2605991</div><div class="proj-name">근태관리 시스템</div></div>
+  <div class="nav-group">
+    <div class="nav-group-title">추적</div>
+    <a href="../TRC_요구사항추적매트릭스.html" class="nav-item"><span class="nav-req">●</span> TRC 추적매트릭스</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">01 Plan</div>
+    <a href="../01_plan/REQ_요구사항정의서.html" class="nav-item"><span class="nav-req">●</span> REQ 요구사항정의서</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">02 Design</div>
+    <a href="../02_design/FLW_프로세스흐름도.html" class="nav-item"><span class="nav-req">●</span> FLW 프로세스흐름도</a>
+    <a href="../02_design/SCR_화면정의서.html" class="nav-item"><span class="nav-opt">◌</span> SCR 화면정의서</a>
+    <a href="../02_design/ROLE_권한정의서.html" class="nav-item"><span class="nav-opt">◌</span> ROLE 권한정의서</a>
+    <a href="../02_design/FUNC_기능정의서.html" class="nav-item"><span class="nav-req">●</span> FUNC 기능정의서</a>
+    <a href="../02_design/ARC_아키텍처.html" class="nav-item"><span class="nav-req">●</span> ARC 아키텍처</a>
+    <a href="../02_design/DAT_데이터모델정의서.html" class="nav-item"><span class="nav-opt">◌</span> DAT 데이터모델정의서</a>
+    <a href="../02_design/API_인터페이스명세서.html" class="nav-item"><span class="nav-opt">◌</span> API 인터페이스명세서</a>
+    <a href="../02_design/SEC_보안설계서.html" class="nav-item"><span class="nav-opt">◌</span> SEC 보안설계서</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">03 Dev</div>
+    <a href="../03_dev/UTC_단위테스트케이스.html" class="nav-item"><span class="nav-req">●</span> UTC 단위테스트케이스</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">04 Test</div>
+    <a href="../04_test/ITS_통합테스트시나리오.html" class="nav-item"><span class="nav-opt">◌</span> ITS 통합테스트시나리오</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">05 Deploy</div>
+    <a href="./OPM_운영자매뉴얼.html" class="nav-item"><span class="nav-req">●</span> OPM 운영자매뉴얼</a>
+    <a href="./USM_사용자매뉴얼.html" class="nav-item active"><span class="nav-opt">◌</span> USM 사용자매뉴얼</a>
+    <a href="./CFG_설정가이드.html" class="nav-item"><span class="nav-req">●</span> CFG 설정가이드</a>
+    <a href="./RUN_운영Runbook.html" class="nav-item"><span class="nav-req">●</span> RUN 운영Runbook</a>
+  </div>
+</nav>
+
+<main class="main">
+  <div class="doc-header">
+    <div class="meta-row">
+      <span class="doc-id">P2605991-USM-01</span>
+      <span class="badge st-draft">📝 초안</span>
+      <span class="badge ph-deploy">Deploy</span>
+      <span class="badge req-cond">조건부 (사용자 UI)</span>
+    </div>
+    <div class="doc-title">USM 사용자매뉴얼</div>
+    <div class="doc-info">
+      <span>📁 P2605991 근태관리 시스템</span>
+      <span>👤 이** (프론트엔드), 최** (HR)</span>
+      <span>📅 2026-05-26</span>
+      <span>🔖 v0.1</span>
+    </div>
+    <div class="trace-bar">
+      <div class="trace-col">
+        <div class="trace-label">▲ 상위 문서</div>
+        <div class="trace-links">
+          <a href="../02_design/SCR_화면정의서.html" class="trace-link">P2605991-SCR-01</a>
+          <a href="../02_design/FUNC_기능정의서.html" class="trace-link">P2605991-FUNC-01</a>
+        </div>
+      </div>
+      <div class="trace-col">
+        <div class="trace-label">▼ 하위 문서</div>
+        <div class="trace-links">
+          <a href="../TRC_요구사항추적매트릭스.html" class="trace-link">P2605991-TRC-01</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §1 대상 독자 -->
+  <div class="card">
+    <h2>§1 대상 독자</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>대상</th><th>역할</th><th>주요 사용 기능</th></tr></thead>
+        <tbody>
+          <tr><td>전체 직원 (ROLE-01)</td><td>본인 출퇴근 기록, 휴가 신청, 근태 통계 조회</td><td>USM-T01, USM-T02, USM-T03</td></tr>
+          <tr><td>팀장 (ROLE-02)</td><td>본인 출퇴근 + 팀원 결재 승인/반려, 팀 통계 조회</td><td>USM-T01 ~ USM-T04</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert alert-info">
+      <span>ℹ️</span>
+      <div>HR 담당자(ROLE-03)와 시스템관리자(ROLE-04)의 관리 기능 사용법은 별도 관리자 가이드를 참조하세요.</div>
+    </div>
+  </div>
+
+  <!-- §2 시스템 접속 -->
+  <div class="card">
+    <h2>§2 시스템 접속</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>URL</td><td><a href="https://attendance.gsretail.internal" target="_blank">https://attendance.gsretail.internal</a></td></tr>
+          <tr><td>접속 방법</td><td>사내 SSO(Single Sign-On)로 자동 로그인. 별도 아이디/패스워드 입력 불필요</td></tr>
+          <tr><td>권장 브라우저</td><td>Chrome 최신 버전 / Microsoft Edge 최신 버전</td></tr>
+          <tr><td>접속 환경</td><td>사내망 또는 VPN 접속 필요 (외부망 직접 접근 불가)</td></tr>
+          <tr><td>모바일</td><td>반응형 지원 — 스마트폰 브라우저에서도 출퇴근 기록 가능</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>화면 구성</h3>
+    <div class="diagram">
+      <div class="d-icon">🖥️</div>
+      <div class="d-title">메인 화면 구성</div>
+      <div class="d-code">┌──────────────────────────────────────────────────┐
+│ 상단 네비게이션: 로고 | 오늘 날짜·시각 | 알림 | 프로필 │
+├────────────┬─────────────────────────────────────┤
+│ 좌측 메뉴  │  메인 컨텐츠 영역                    │
+│            │                                      │
+│ - 홈       │  [오늘 출퇴근 카드]                  │
+│ - 근태현황 │    출근: 09:00 ✅                    │
+│ - 근태통계 │    퇴근: -                           │
+│ - 결재신청 │    [퇴근 버튼]                       │
+│ - 결재함   │                                      │
+│  (팀장만)  │  [이번 달 요약 카드]                 │
+│            │    출근 18일 | 지각 1 | 연차 2일     │
+└────────────┴─────────────────────────────────────┘</div>
+    </div>
+  </div>
+
+  <!-- §3 빠른 시작 -->
+  <div class="card">
+    <h2>§3 빠른 시작</h2>
+    <ol style="padding-left:20px;margin-bottom:0">
+      <li style="margin-bottom:8px">브라우저에서 <code>https://attendance.gsretail.internal</code> 접속</li>
+      <li style="margin-bottom:8px">사내 SSO 인증 페이지로 자동 이동 → 회사 계정으로 자동 로그인 (VPN 연결 상태에서)</li>
+      <li style="margin-bottom:8px">메인 화면의 오늘 날짜·시각 확인 후 <strong>출근</strong> 버튼 클릭</li>
+      <li style="margin-bottom:8px">위치 정보 허용 팝업 → <strong>허용</strong> 선택 (위치 기반 재직 확인용)</li>
+      <li>화면 우측 상단에 "출근 기록 완료" 토스트 메시지 확인</li>
+    </ol>
+  </div>
+
+  <!-- §4 태스크별 사용법 -->
+  <div class="card">
+    <h2>§4 태스크별 사용 가이드</h2>
+
+    <!-- USM-T01 -->
+    <div class="task-card">
+      <div class="task-header">
+        <span class="task-id">USM-T01</span>
+        <span class="task-title">출퇴근 기록하기</span>
+        <span class="task-role">전체 직원</span>
+      </div>
+      <ol class="step-ol">
+        <li><span class="sn">1</span><div>메인 화면 접속 → 상단 오늘 날짜와 현재 시각 확인</div></li>
+        <li><span class="sn">2</span><div>메인 카드의 <strong>[출근]</strong> 버튼 클릭 (또는 QR 코드 스캔 — 사무실 입구 게시)</div></li>
+        <li><span class="sn">3</span><div>위치 정보 허용 팝업이 나타나면 <strong>[허용]</strong> 선택. 거부 시 출근 기록이 처리되지만 위치 정보는 저장되지 않습니다.</div></li>
+        <li><span class="sn">4</span><div>화면 우측 상단 "출근 기록 완료" 토스트 확인 → 출근 시각 표시</div></li>
+        <li><span class="sn">5</span><div>퇴근 시: 메인 카드의 <strong>[퇴근]</strong> 버튼 클릭 → "퇴근 기록 완료" 토스트 확인 → 총 근무 시간 표시</div></li>
+      </ol>
+      <div class="alert alert-warn" style="margin-top:10px">
+        <span>⚠️</span>
+        <div>출근 버튼은 <strong>당일 1회만</strong> 활성화됩니다. 실수로 누른 경우 또는 기록 오류는 총무팀(슬랙 <strong>#근태문의</strong>)에 증빙 첨부 후 수정 요청하세요.</div>
+      </div>
+    </div>
+
+    <!-- USM-T02 -->
+    <div class="task-card">
+      <div class="task-header">
+        <span class="task-id">USM-T02</span>
+        <span class="task-title">휴가 신청하기</span>
+        <span class="task-role">전체 직원</span>
+      </div>
+      <ol class="step-ol">
+        <li><span class="sn">1</span><div>좌측 메뉴 → <strong>[결재 신청]</strong> 클릭</div></li>
+        <li><span class="sn">2</span><div>결재 유형 선택: <strong>연차</strong> / <strong>반차</strong> (오전/오후) / <strong>외출</strong></div></li>
+        <li><span class="sn">3</span><div>시작일시 ~ 종료일시 입력 (달력 선택기 사용)</div></li>
+        <li><span class="sn">4</span><div>사유 입력 — 최소 10자 이상. 예: "가족 경조사 참석"</div></li>
+        <li><span class="sn">5</span><div><strong>[신청]</strong> 버튼 클릭 → 팀장에게 카카오워크/슬랙 알림 발송</div></li>
+        <li><span class="sn">6</span><div>승인/반려 결과는 이메일 및 알림으로 통보됩니다. <strong>결재 신청 메뉴</strong>에서 현재 상태 확인 가능</div></li>
+      </ol>
+      <div class="alert alert-info" style="margin-top:10px">
+        <span>ℹ️</span>
+        <div>잔여 연차는 결재 신청 화면 상단에 표시됩니다. 반차는 0.5일, 연차는 1일 차감. 잔여 연차 부족 시 신청이 거부됩니다.</div>
+      </div>
+    </div>
+
+    <!-- USM-T03 -->
+    <div class="task-card">
+      <div class="task-header">
+        <span class="task-id">USM-T03</span>
+        <span class="task-title">근태 통계 조회하기</span>
+        <span class="task-role">전체 직원</span>
+      </div>
+      <ol class="step-ol">
+        <li><span class="sn">1</span><div>좌측 메뉴 → <strong>[근태 통계]</strong> 클릭</div></li>
+        <li><span class="sn">2</span><div>조회 기간 선택: <strong>일</strong> / <strong>주</strong> / <strong>월</strong> 탭 또는 직접 기간 입력</div></li>
+        <li><span class="sn">3</span><div>카드 형태로 요약 표시:
+          <ul style="margin-top:6px;margin-bottom:0">
+            <li><strong>출근일수</strong>: 이번 달 출근한 날</li>
+            <li><strong>지각 횟수</strong>: 09:00 이후 출근 건수</li>
+            <li><strong>조퇴 횟수</strong>: 18:00 이전 퇴근 건수</li>
+            <li><strong>총 근무시간</strong>: 누적 근무 분을 시간으로 환산</li>
+            <li><strong>잔여 연차</strong>: 남은 연차 일수</li>
+          </ul>
+        </div></li>
+        <li><span class="sn">4</span><div>일별 상세 내역: 하단 표에서 날짜별 출근/퇴근 시각 및 상태 확인</div></li>
+      </ol>
+    </div>
+
+    <!-- USM-T04 (팀장용) -->
+    <div class="task-card">
+      <div class="task-header">
+        <span class="task-id">USM-T04</span>
+        <span class="task-title">팀원 결재 승인/반려하기</span>
+        <span class="task-role" style="background:#e8f5e9;color:#2e7d32">팀장 전용</span>
+      </div>
+      <ol class="step-ol">
+        <li><span class="sn">1</span><div>좌측 메뉴 → <strong>[결재함]</strong> 클릭 (팀장만 표시됨)</div></li>
+        <li><span class="sn">2</span><div>대기 중인 신청 목록 확인 — 직원명, 유형, 기간, 사유 표시</div></li>
+        <li><span class="sn">3</span><div>신청 건을 클릭하면 상세 정보 모달 표시</div></li>
+        <li><span class="sn">4</span><div>의견(선택) 입력 후 <strong>[승인]</strong> 또는 <strong>[반려]</strong> 버튼 클릭. 반려 시 사유 입력 권장</div></li>
+        <li><span class="sn">5</span><div>처리 즉시 신청자에게 이메일 및 알림 발송</div></li>
+      </ol>
+      <div class="alert alert-warn" style="margin-top:10px">
+        <span>⚠️</span>
+        <div>승인/반려 후 취소가 불가합니다. 잘못 처리한 경우 총무팀(슬랙 <strong>#근태문의</strong>)에 즉시 문의하세요.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §5 FAQ -->
+  <div class="card">
+    <h2>§5 자주 묻는 질문 (FAQ)</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">FAQ-01. QR코드가 스캔되지 않을 때는 어떻게 하나요?</div>
+      <div class="faq-a">
+        화면 밝기를 최대로 높이고, 카메라와 QR코드 사이 거리를 약 15~20cm로 유지한 후 다시 시도해 주세요. 그래도 안 되면 브라우저에서 직접 접속(<code>https://attendance.gsretail.internal</code>)하여 <strong>수동 기록</strong> 버튼을 사용하세요.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">FAQ-02. 출퇴근 시간을 잘못 기록했을 때 수정할 수 있나요?</div>
+      <div class="faq-a">
+        직원 본인은 수정할 수 없습니다. 총무팀 슬랙 채널 <strong>#근태문의</strong>에 ① 날짜, ② 정확한 시각, ③ 오류 증빙(출입 로그, 업무 메신저 기록 등)을 첨부하여 요청하세요. 처리는 영업일 기준 1~2일 소요됩니다.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">FAQ-03. 결재 신청이 오랫동안 승인되지 않을 때는 어떻게 하나요?</div>
+      <div class="faq-a">
+        우선 팀장에게 직접 확인 요청하세요. 신청 후 <strong>3 영업일</strong> 이상 처리가 없으면 HR 담당 최**에게 에스컬레이션하세요 (슬랙 DM 또는 이메일).
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">FAQ-04. 반차와 연차의 차이는 무엇인가요?</div>
+      <div class="faq-a">
+        연차는 1일 전체 사용(연차 1일 차감), 반차는 오전 또는 오후 4시간 사용(연차 0.5일 차감)입니다. 외출은 연차 미차감이며 4시간 이내 자리를 비울 때 사용합니다.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">FAQ-05. 휴일 근무는 어디에 기록하나요?</div>
+      <div class="faq-a">
+        현재 버전(v0.2.1)에서는 휴일 근무 별도 기록 기능이 없습니다. 총무팀에 별도 양식으로 제출해 주세요. 다음 버전(v0.3.0)에서 지원 예정입니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- §6 문의 -->
+  <div class="card">
+    <h2>§6 문의 채널</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>문의 유형</th><th>채널</th><th>운영 시간</th></tr></thead>
+        <tbody>
+          <tr><td>기능 사용 문의 / 오류 신고</td><td>슬랙 <strong>#근태시스템-지원</strong></td><td>평일 09:00 ~ 18:00</td></tr>
+          <tr><td>출퇴근 기록 수정 요청</td><td>슬랙 <strong>#근태문의</strong> (증빙 첨부 필수)</td><td>평일 09:00 ~ 18:00</td></tr>
+          <tr><td>결재 에스컬레이션</td><td>HR 담당 최** (슬랙 DM)</td><td>평일 09:00 ~ 18:00</td></tr>
+          <tr><td>긴급 시스템 장애</td><td>슬랙 <strong>#it-oncall</strong></td><td>24시간</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 검증 체크리스트 -->
+  <div class="checklist-card">
+    <h2>✅ 검증 체크리스트</h2>
+    <div class="cl-item"><input type="checkbox" checked disabled><span class="cl-done">대상 독자별 기능 분류 완료</span></div>
+    <div class="cl-item"><input type="checkbox" checked disabled><span class="cl-done">USM-T01~T04 태스크 가이드 작성 완료</span></div>
+    <div class="cl-item"><input type="checkbox" checked disabled><span class="cl-done">FAQ 5개 항목 작성 완료</span></div>
+    <div class="cl-item"><input type="checkbox" checked disabled><span class="cl-done">문의 채널 명시 완료</span></div>
+    <div class="cl-item"><input type="checkbox"><span>실제 화면 스크린샷 삽입 (화면 개발 완료 후)</span></div>
+    <div class="cl-item"><input type="checkbox"><span>HR 담당자 최** 검토 완료</span></div>
+    <div class="cl-item"><input type="checkbox"><span>비기술 직원 대상 사용성 테스트 (5명 이상)</span></div>
+    <div class="cl-item"><input type="checkbox"><span>모바일 브라우저 동작 검증</span></div>
+    <div class="cl-item"><input type="checkbox"><span>접근성 (웹 접근성 지침 WCAG 2.1 AA) 준수 확인</span></div>
+  </div>
+</main>
+</body>
+</html>
