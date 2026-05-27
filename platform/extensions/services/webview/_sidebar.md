@@ -15,6 +15,8 @@
 
 - **아키텍처**
 
+- **협업 프로세스**
+
 - **히스토리**
   - [2026년 5월](platform/_manage/history/202605_history.md)
   - [2026년 4월](platform/_manage/history/202604_history.md)
