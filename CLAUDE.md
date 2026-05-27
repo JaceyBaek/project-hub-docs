@@ -1,6 +1,6 @@
 # project-hub
 
-> 비서명: `{assistant}` → assistant.name_kr / `{user_name}` → user_name (`platform/config/personal.yml` 참조, 없으면 `platform/hub_init.py` 먼저 실행)
+> 비서명: `{assistant}` → assistant.name_kr / `{user_name}` → user_name (`platform/setup/config/personal.yml` 참조, 없으면 `platform/hub_init.py` 먼저 실행)
 > 히스토리 파일·코드 기본값은 변수화 대상 제외
 
 ## AI 비서
@@ -14,7 +14,7 @@
 
 마무리 뉘앙스 감지 시 ("오늘은 여기까지", "수고했어", "내일 하자" 등): clear 트리거와 동일하게 즉시 자동 기록 실행 — git 커밋 제외 (수동)
 
-**히스토리 기록 규칙:** `platform/history/YYYYMM.md` 및 `_manage/history/YYYYMM.md`에 새 항목 추가 시 **파일 최상단(첫 번째 `---` 구분선 바로 아래)에 삽입** — 최신 항목이 항상 위에 오도록 유지
+**히스토리 기록 규칙:** `platform/_manage/history/YYYYMM.md` 및 `_manage/history/YYYYMM.md`에 새 항목 추가 시 **파일 최상단(첫 번째 `---` 구분선 바로 아래)에 삽입** — 최신 항목이 항상 위에 오도록 유지
 
 ## 트리거 관리
 
@@ -30,7 +30,7 @@
 | `projects/{프로젝트명}/` 하위 | 프로젝트 레이어 — 해당 CLAUDE.md 우선. {user_name}과 단둘이 작업 |
 | `projects/`와 동일 레벨 또는 상위 | 플랫폼 레이어 — 루트 CLAUDE.md 적용 |
 
-**플랫폼 레이어:** 세션 프로토콜 / 프로젝트 생성·상태 전환 / GLOBAL 파일 관리 / platform/ 하위 전체(templates·config·guides·scripts·plugins·services) 관리 / 글로벌 히스토리
+**플랫폼 레이어:** 세션 프로토콜 / 프로젝트 생성·상태 전환 / GLOBAL 파일 관리 / platform/ 하위 전체(templates·config·processes·extensions) 관리 / 글로벌 히스토리
 
 **프로젝트 레이어:** 소스코드 / 산출물(HTML) / 이슈·To-Do·히스토리·회의록·의사결정·변경이력 / 기능 변경 시 가이드 문서 현행화 자동 확인
 
@@ -38,7 +38,7 @@
 
 ## 작업 디렉토리
 
-- 프로젝트: `projects/` / 스크립트: `platform/scripts/` / 플러그인: `platform/plugins/` (`PLUGINS_PATH` = `platform/config/personal.yml` → `paths.plugins`, pip install -e)
+- 프로젝트: `projects/` / 스크립트: `platform/extensions/scripts/` / 플러그인: `platform/extensions/plugins/` (`PLUGINS_PATH` = `platform/setup/config/personal.yml` → `paths.plugins`, pip install -e)
 
 ---
 
@@ -50,15 +50,15 @@
 - 우선순위: 높음·보통·낮음 / 상태: 대기·진행중·완료·보류 / 이슈유형: 버그·변경요청·리스크
 
 **필요 시 로드할 상세 지침:**
-- 상태 전환·서비스종료 절차 → `platform/project/project_lifecycle.md`
-- 새 프로젝트 생성 절차 → `platform/project/project_creation.md`
+- 상태 전환·서비스종료 절차 → `platform/processes/project/project_lifecycle.md`
+- 새 프로젝트 생성 절차 → `platform/processes/project/project_creation.md`
 - 연결 설정(Confluence/Miso) → `platform/setup/connection_setup.md`
 - MCP 등록 → `platform/setup/mcp_registration.md`
-- 산출물 작성 규칙·절차·ID prefix·RAG 변환 → `platform/project/deliverables_guide.md`
-- 버전 관리 → `platform/project/versioning.md`
-- 히스토리·이슈·To-Do 등 시간순 누적 문서 검색 정책(기본 2주 윈도우 + 확장 규칙) → `platform/guides/context_search_policy.md`
-- 교훈 기록·에스컬레이션 흐름 → `platform/guides/lessons_learned.md` (프로젝트별 `_manage/lessons.md` → `[공통]` 태그 → 플랫폼 승격)
-- 플랫폼 승격 심사 절차 → `platform/project/platform_promotion.md` (미구현, 추후 설계)
+- 산출물 작성 규칙·절차·ID prefix·RAG 변환 → `platform/processes/project/deliverables_guide.md`
+- 버전 관리 → `platform/processes/project/versioning.md`
+- 히스토리·이슈·To-Do 등 시간순 누적 문서 검색 정책(기본 2주 윈도우 + 확장 규칙) → `platform/processes/context_search_policy.md`
+- 교훈 기록·에스컬레이션 흐름 → `platform/processes/lessons_learned.md` (프로젝트별 `_manage/lessons.md` → `[공통]` 태그 → 플랫폼 승격)
+- 플랫폼 승격 심사 절차 → `platform/processes/project/platform_promotion.md` (미구현, 추후 설계)
 
 ---
 
@@ -80,7 +80,7 @@
 11. **더 간단한 방법 우선** — 요청 외 기능·추상화 추가 금지
 12. **수정 범위 최소화** — 요청된 것만 수정. 기존 데드코드 언급만, 삭제 금지
 13. **구조·라이프사이클·정책 결정은 확장성·일관성 우선** — 현재 규모(프로젝트·산출물 N개)로 판단 금지. "성숙기(20~30개 프로젝트 + 다수 산출물 동시 운영)일 때도 관리 가능한가" 기준으로 제안. 폴더 구조·메타 컬럼·라이프사이클·형상관리 같은 구조 결정은 한번 정하면 마이그레이션 비용이 크므로 처음부터 확장성 고려. "지금은 오버킬 같지만 장기적으로 필요" 트레이드오프 발생 시 장기 관점을 먼저 짚고 양 옵션 제시.
-14. **메모리 vs 지침 구분** — 메모리(`~/.claude/projects/.../memory/`)는 **개인 협업 컨텍스트**(다음 세션 본인에게만 유용, 다른 머신·계정·사용자 공유 불가). 플랫폼 정책·디자인 원칙·운영 규칙은 hub 내 문서(CLAUDE.md·`platform/project/`·`platform/guides/` 등)에 명문화 — 모든 사용자·세션·머신 공유 대상. **판단 기준:** "이 내용이 다른 사용자에게도 같은 효력을 가져야 하나?" → YES면 hub, NO면 메모리. 플랫폼 운영 규칙·디자인 원칙을 메모리에 저장 절대 금지.
+14. **메모리 vs 지침 구분** — 메모리(`~/.claude/projects/.../memory/`)는 **개인 협업 컨텍스트**(다음 세션 본인에게만 유용, 다른 머신·계정·사용자 공유 불가). 플랫폼 정책·디자인 원칙·운영 규칙은 hub 내 문서(CLAUDE.md·`platform/processes/`·`platform/setup/` 등)에 명문화 — 모든 사용자·세션·머신 공유 대상. **판단 기준:** "이 내용이 다른 사용자에게도 같은 효력을 가져야 하나?" → YES면 hub, NO면 메모리. 플랫폼 운영 규칙·디자인 원칙을 메모리에 저장 절대 금지.
 15. **추천은 단일하게** — 선택지 제시 시 추천 안은 하나만. `(제안)` 라벨 안과 본문 결론 일치. 다른 안은 조건부 후보로만 남기고 동시에 `(제안)` 표시 금지. 모든 안 장단점만 나열 후 결론을 사용자에게 떠넘기지 말 것.
 16. **테스트 요청 시점** — 여러 수정이 필요한 작업은 모든 수정 완료 후 한 번만 테스트 요청. 중간 단계마다 테스트 요청 금지. `localStorage` 강제 초기화 등 캐시 조작 방법 안내 금지.
 
@@ -96,7 +96,7 @@
 2. **프로젝트 .env 완전 독립** — `MISO_API_URL` 등 공통값도 각 프로젝트 `.env.example`에 개별 포함. 공유 env 파일 참조 구조 금지 (apps/ 독립 배포 가능성).
 3. **.gitignore 동기화 필수** — 폴더 구조 변경(이동·재배치) 직후 `.gitignore` 경로 패턴 즉시 갱신. `git check-ignore <민감파일>`로 검증 필수. 커밋 전 `git status`의 `??` 항목 전수 확인 — `git add -A` 금지.
 4. **서버 구동은 nohup + 로그 파일** — `nohup ... > /tmp/<프로젝트명>.log 2>&1 &` 패턴 사용. 로그 확인은 `tail -f /tmp/<프로젝트명>.log`. Windows 프로세스 종료는 `taskkill //F //PID <pid>`.
-5. **플랫폼 카탈로그 현행화** — 플러그인·앱 추가·제거·버전 변경 시 `plugins/catalog.yml` / `apps/catalog.yml` 즉시 갱신 필수. 플러그인 버전은 `setup.cfg`와 동기화.
+5. **플랫폼 카탈로그 현행화** — 플러그인·앱 추가·제거·버전 변경 시 `extensions/plugins/catalog.yml` / `apps/catalog.yml` 즉시 갱신 필수. 플러그인 버전은 `setup.cfg`와 동기화.
 6. **collab 문서 즉시 갱신** — 테스트 실패로 재수정 완료 시 DEV_D00X §2(변경 파일 목록)·§4(Cycle 표) 및 MAP.md DEV 항목을 동일 작업 범위 안에서 즉시 갱신. 별도 지시 없어도 선제 진행.
 7. **Python Windows 인코딩** — Windows 환경 Python 스크립트에 한글·유니코드 포함 시 상단에 반드시 추가:
     ```python
@@ -105,5 +105,5 @@
     ```
 8. **사이드바 빈 콘텐츠 필터** — `webview/_sidebar.md` 등록 링크는 의미 있는 데이터가 있을 때만 노출. 빈 표·제목만 있는 파일·HTML 주석만 있는 파일은 메뉴에서 숨김. 통일성 요청에도 빈 메뉴 표시 금지.
 9. **프로젝트 현황 상태 컬럼 필수** — PROJECTS_GLOBAL.md 기반 현황 표시 시 `상태` 컬럼 첫 번째 열 필수. 신규 행 추가 시도 상태 컬럼 유지.
-10. **플랫폼 지침과 개인 운영 절차 분리** — 등록 요청이 오면 "다른 사용자에게도 동일하게 적용 가능한가?" 기준으로 판단. 개인·환경 의존(특정 도구·계정·앱)이면 플랫폼 문서에서 제외. 변경 시 CLAUDE.md / TRIGGERS.md / guides/ / templates/ 4곳 동시 점검.
+10. **플랫폼 지침과 개인 운영 절차 분리** — 등록 요청이 오면 "다른 사용자에게도 동일하게 적용 가능한가?" 기준으로 판단. 개인·환경 의존(특정 도구·계정·앱)이면 플랫폼 문서에서 제외. 변경 시 CLAUDE.md / TRIGGERS.md / processes/ / templates/ 4곳 동시 점검.
 
