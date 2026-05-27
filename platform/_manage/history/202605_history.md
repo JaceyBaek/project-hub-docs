@@ -7,6 +7,28 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-27 — eacct_mcp 보안 검토 요청서 작성 + CI 경로 수정 (14:48)
+
+### 작업 내용
+
+- mcp_platform 버전 정합: pyproject.toml 0.5.0 → 0.5.1, CLAUDE.md v0.4.0 → v0.5.1 (D002~D006 구현 완료 반영)
+- eacct_mcp 보안 검토 요청서 신규 작성 (`SEC_REVIEW_REQUEST_20260527_mcp-chatbot-security.md/html`)
+  - §1 시스템 개요: 시각 아키텍처 플로우 다이어그램, 미카 챗봇 위젯 CSS 목업 포함
+  - §2 핵심 보안 원칙 / §3 적용된 보안 통제(인증·PII·감사·kill switch·hook체인) / §4 POC 미구현 / §5 구현 예정 / §6 검토 요청 / §7 참고 문서 / §8 용어집
+  - ITGC: 필수 표현 → 적용 가능성 검토 대상으로 뉘앙스 조정
+  - DB: Oracle → MySQL, 화살표 단방향 → 양방향, Miso 연결 위치 chatbot → MCP 레벨로 수정
+- docs/01_plan·02_design HTML 산출물 및 index.md 삭제 (구버전 구조 정리)
+- eacct_mcp .gitignore: docs/* 로컬 전용 제외 → 추적 대상으로 변경
+- `sync-docs.yml` CI 경로 오류 수정: 리팩터링 후 변경된 경로 5곳 갱신
+- CLAUDE.md 운영 정책 11번 추가: 경로 변경 시 `.github/workflows/` 영향도 검토 필수
+
+### 산출물
+
+- `projects/eacct_mcp/docs/SEC_REVIEW_REQUEST_20260527_mcp-chatbot-security.md` (신규)
+- `projects/eacct_mcp/docs/SEC_REVIEW_REQUEST_20260527_mcp-chatbot-security.html` (신규, 보안팀 제출용)
+
+---
+
 ## 2026-05-27 — eacct_chatbot 챗봇 임시전표 저장 API POC 완료 (09:34)
 
 ### 작업 내용
