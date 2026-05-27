@@ -7,6 +7,18 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-27 — eacct_mcp 보안 거버넌스 문서 전환 + 지침 등록 (16:07)
+
+### 작업 내용
+
+- `eacct_mcp/docs/SECURITY_GOVERNANCE.md` 거버넌스 문서 전환
+  - `SEC_REVIEW_REQUEST_20260527_mcp-chatbot-security.md` → `SECURITY_GOVERNANCE.md` 이름 변경
+  - `§0 불변 원칙` 섹션 추가: collab `20260514-1554` 합의 기준선 (5대 설계 원칙·SEC 요구사항·10단계 hook·응답 분리·audit fail-closed)
+- `eacct_mcp/CLAUDE.md` 보안 거버넌스 섹션 추가: 작업 전 필수 확인·§0 위배 경고 트리거·신규 tool 체크리스트
+- eacct_mcp 서브모듈 포인터 갱신
+
+---
+
 ## 2026-05-27 — collab 폴더명 명확화 — 10_direction · 40_testcase (15:16)
 
 ### 작업 내용
