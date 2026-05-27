@@ -7,6 +7,33 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-27 — eacct_chatbot 위젯 UX 개선 (17:12)
+
+- 헤더 드래그로 패널 이동 (postMessage relay), 반대쪽 상·하단 코너 리사이즈 핸들 추가
+
+---
+
+## 2026-05-27 — 웹뷰 사이드바 전면 갱신 + index.html 경로 수정 (16:53)
+
+### 작업 내용
+
+- `generate_sidebar.py` 버그 수정
+  - `platform/processes/collab` 경로가 `platform/processes` 보다 먼저 매칭되도록 FOLDER_TO_SECTION 순서 재정렬 → 협업 프로세스 섹션 복원
+  - `platform/setup/` → 가이드 섹션 매핑 추가
+- `index.html` 구 경로 3종 수정
+  - `loadSidebar`: `platform/services/webview/` → `platform/extensions/services/webview/`
+  - 아이콘 네비 가이드 링크: `platform/guides/SETUP` → `platform/setup/SETUP`
+  - 아이콘 네비 히스토리 링크: `platform/history/` → `platform/_manage/history/`
+  - 홈 스플래시·nameLink 동일 수정
+- `.github/workflows/notify_update.yml` 경로 갱신
+  - `platform/config/**` → `platform/setup/config/**` (a60942c 재편 반영)
+  - `platform/guides/**` 제거 (존재하지 않는 경로)
+- 신규 프로젝트 3개(eacct_chatbot·eacct_source_analyzer·eacct) CLAUDE.md + `_manage/` sidebar 메타데이터 추가
+- eacct_mcp 히스토리 파일 메타데이터 추가
+- `_sidebar.md` 재생성 — 모든 경로 현행화 완료
+
+---
+
 ## 2026-05-27 — eacct_mcp 보안 거버넌스 문서 전환 + 지침 등록 (16:07)
 
 ### 작업 내용

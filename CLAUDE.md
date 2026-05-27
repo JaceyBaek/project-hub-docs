@@ -52,8 +52,12 @@
 
 - 현황: `PROJECTS_GLOBAL.md` (섹션: 진행중 / 보류 / 활성 / 서비스종료)
 - 상태 표기: 각 프로젝트 CLAUDE.md 상단 → `상태: 진행중 | 코드: {코드} | 담당: {이름} | 시작일: YYYY-MM-DD`
-- 단위 관리: `_manage/` — `history/YYYYMM.md` / `todo.md` / `issues.md` / `meetings/` / `decisions.md` / `changelog.md` / `lessons.md`
+- 단위 관리: `_manage/` — `history/YYYYMM.md` / `todo.md` / `issues.md` / `meetings/` / `decisions.md` / `changelog.md` / `lessons.md` / `brainstorm/`
 - 우선순위: 높음·보통·낮음 / 상태: 대기·진행중·완료·보류 / 이슈유형: 버그·변경요청·리스크
+- **todo vs brainstorm 분류 기준**
+  - `todo.md`: 실행 가능한 단위 태스크 ("A 프로젝트 테스트 진행" 등 완료·진행중·대기·보류 상태로 추적)
+  - `brainstorm/`: 탐색·논의 중인 아이디어 ("A1 기능 방향 논의" 등 아직 결정 전) — 확정 시 `decisions.md`로 승격
+  - brainstorm 파일명: `YYYYMMDD_주제.md` / 아이다가 세션 중·마무리 시 기록 / 기존 파일에 논의 추가(누적) 방식
 
 **필요 시 로드할 상세 지침:**
 - 상태 전환·서비스종료 절차 → `platform/processes/project/project_lifecycle.md`
