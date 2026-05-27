@@ -7,6 +7,32 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-27 — eacct_chatbot 신규 기능 브레인스톰 2건 등록 (19:03)
+
+- `eacct_chatbot/_manage/brainstorm/20260527_세금계산서_XML_파싱_DB저장.md` — 국세청 XML 첨부→파싱→DB 저장, 선결 조건 5개 식별
+- `eacct_chatbot/_manage/brainstorm/20260527_마크다운_집계데이터_차트_렌더링.md` — Chart.js 차트 렌더링 (미소 마크다운 테이블 → 시각화), 미결 5개
+- `eacct_mcp/_manage/brainstorm/` 6개 신규 등록 (sabun 주입·오류모니터링·route_intent·날짜파싱·JWT전환·DB계정)
+- `eacct_mcp/_manage/todo.md` T017~T019 브레인스톰으로 전환
+
+---
+
+## 2026-05-27 — eacct_chatbot 기능 로드맵 확정 (19:02)
+
+- `eacct_chatbot/_manage/brainstorm/20260527_chatbot_기능_로드맵.md` 생성
+  - F001~F015 기능 목록, P1/P2/P3 우선순위, 선행관계, MCP·Chatbot 영역 구분
+- `CLAUDE.md` brainstorm 아카이브 규칙 추가
+- `eacct_chatbot/_manage/issues.md` I001 등록 (payload_store TTL 보안 협의)
+- `eacct_chatbot/_manage/brainstorm/archive/` 신설
+
+---
+
+## 2026-05-27 — 미커밋 변경 (18:48)
+
+- `CLAUDE.md` brainstorm 아카이브 규칙 추가 — 설계 결정 완료 항목 `brainstorm/archive/` 이동 기준 명문화
+- `eacct_chatbot/_manage/issues.md` I001 등록 — payload_store TTL·읽기 제한 보안 협의 리스크 (TTL 5분·5회 읽기 운영 적합성 검토 필요)
+
+---
+
 ## 2026-05-27 — eacct_chatbot 위젯 UX 개선 (17:12)
 
 - 헤더 드래그로 패널 이동 (postMessage relay), 반대쪽 상·하단 코너 리사이즈 핸들 추가
