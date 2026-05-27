@@ -7,6 +7,60 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-27 — collab 폴더명 명확화 — 10_direction · 40_testcase (15:16)
+
+### 작업 내용
+
+- `10_dir/` → `10_direction/` (dir = directory 오해 방지, 파일명 TYPE-CODE DIR과 명확히 구분)
+- `40_tc/` → `40_testcase/` (tc 약어 직관성 부족)
+- 물리 폴더 rename: `archive/PLATFORM/20260514-1554_mcp-chatbot-security-ops/` 내 2개 폴더
+- 문서 전수 갱신: README·USAGE·_template_design·_template_dev·_template_testcase·MAP·TRIGGERS (replace_all)
+- archive DEV 파일 9개 내 상대 링크 `../40_tc/` → `../40_testcase/` 수정 (링크 깨짐 방지)
+
+### 최종 폴더 구조
+
+```
+{ts}_{slug}/
+├── 10_direction/   (방향성·계획)
+├── 20_detail/      (상세설계)
+├── 30_dev/         (개발확인서)
+└── 40_testcase/    (테스트케이스)
+```
+
+---
+
+## 2026-05-27 — collab 네이밍 마이그레이션 완료 — D01·ts 제거·10_dir·ORC 통일 (14:53)
+
+### 작업 내용
+
+**파일 시스템 마이그레이션 (archive/ 3개 번들)**
+- 번들 폴더: `DIR_{ts}_{slug}/` → `{ts}_{slug}/` (DIR_ 접두사 제거)
+- 내부 폴더: `10_brief/` → `10_dir/`
+- orchestration: `20_O001_...` → `20_ORC_...` (번호 제거)
+- detail: `D001` → `D01` (2자리로 통일)
+- 모든 파일명에서 `_{ts}_` 제거 (slug만 유지)
+- 1554 번들: REQ/DIR/ORC/D01~D06/DEV_D01·D02+D04·D06-1~7/TC 전체 rename
+- 1846 번들: `DEV_DIR_20260514-1925_...` → `30_DEV_DIR_implementation-workorder.md`
+- 0836 번들: `D001_20260515-1011_...` → `20_D01_...`, `DEV_D001_...` → `30_DEV_D01_...`
+
+**문서 갱신 (5개 파일)**
+- `MAP.md`: 전수 경로 갱신 + DEV 항목에 `dev_started` 날짜 추가
+- `archive/INDEX.md`: 번들 경로 갱신 (DIR_ 제거, D001→D01, O001→ORC)
+- `README.md`: §2 구조도·stage prefix·파일명 패턴·식별 테이블·§3·§5·§9·§10·§12·§16 갱신
+- `USAGE.md`: §3 개념 표·§5 Quick Start·§6 시나리오 B/C·§8 구조도·FAQ Q7 갱신
+- `_template_design.md`: frontmatter 코멘트·파일명 패턴 주석·방향성 계획표 예시 갱신
+- `TRIGGERS.md`: 리뷰 요청·리뷰 종료 트리거 경로 패턴 갱신
+
+### 규칙 확정 (이번 마이그레이션으로 최종 정립)
+
+- 파일명 패턴: `{sub-prefix}_{TYPE-CODE}{id?}_{slug}.md` (개별 파일 ts 없음)
+- 번들 폴더: `{YYYYMMDD-HHmm}_{slug}/` (ts는 번들 폴더만)
+- TYPE-CODE: `REQ` / `DIR` / `ORC` / `D{nn}` / `DEV` / `TC`
+- ID: 2자리 D01~D99, ORC 번호 없음
+- 생성 시각: frontmatter `created` 보존, DEV 시작일 MAP.md `dev_started` 기록
+
+---
+
 ## 2026-05-27 — eacct_mcp 보안 검토 요청서 작성 + CI 경로 수정 (14:48)
 
 ### 작업 내용
