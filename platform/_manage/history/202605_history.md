@@ -7,6 +7,40 @@ sidebar_order: 1
 
 ---
 
+## 2026-05-29 — eacct_chatbot·mcp 프로젝트 구조 정렬 (19:29)
+
+- `source/프로그램파일` → `source/src/프로그램파일` 구조로 정렬 (init_project.py 템플릿 기준)
+- 루트 `tests/` 파일 → `source/tests/`로 이동·통일 (CI와 일치)
+- 서버 재기동 (eacct_mcp:8000, eacct_chatbot:7000)
+- 플러그인 이중 구조(`plugin_name/plugin_name/`) 이유 정리 — pip 패키지 표준, 프로젝트 구조와 의도적으로 다름
+
+---
+
+## 2026-05-29 — wiki_mbo_builder 분기면담 참고 자료 3종 등록 (18:36)
+
+- `refs/gs_way.md` — GS Way 4개 키워드 행동 지침
+- `refs/quarterly_note_guide.md` — 분기면담 노트 작성 가이드 (3개 항목·원칙·예시)
+- `refs/interview_guide.md` — 면담 진행 가이드 (단계별 질문 유형·행동 해설·적합성 판단 기준)
+
+---
+
+## 2026-05-28 — eacct_chatbot·mcp 브레인스톰 재편성 + K8s 배포 전략 + 기능 갭 분석 (14:48)
+
+- eacct_chatbot·mcp 브레인스톰 17개 파일 → 유형별 5개 파일로 통합 재편성 (기존 삭제)
+- K8s 배포 전략: IDC K8s(타 팀 인프라) vs AWS EKS 투트랙 비교 필요. DB가 AWS에 있어 EKS도 유력 후보
+- 대기업 업계 표준 대비 기능 갭 분석: A·B·C·F 총 28개 항목 도출
+
+---
+
+## 2026-05-28 — eAcct Java 챗봇 레이어 분리 + 서버 기동 (11:47)
+
+- eAcct 시스템 챗봇 전용 Java 레이어 신규 분리 (`aspn.hello.eacc.chatbot.*`) — Common* 파일 복원 완료
+  - 신규: `ChatBotMapper`, `ChatBot_SQL.xml`, `ChatBotService`, `ChatBotServiceImpl`, `ChatBotController`
+  - `Interceptor.java` 보안 수정 — broad `uri.contains("test")` → `uri.contains("/hello/com/chatBot")`
+- eacct_mcp REST 서버 (localhost:8000) · eacct_chatbot FastAPI 서버 (localhost:7000) 백그라운드 기동 확인
+
+---
+
 ## 2026-05-27 — eacct_chatbot 신규 기능 브레인스톰 2건 등록 (19:03)
 
 - `eacct_chatbot/_manage/brainstorm/20260527_세금계산서_XML_파싱_DB저장.md` — 국세청 XML 첨부→파싱→DB 저장, 선결 조건 5개 식별
