@@ -59,6 +59,11 @@ AGENTS.md 자체는 런타임 모델을 직접 전환하지 못한다. 실제 �
 - 체크리스트 항목을 실제 코드 변경으로 수행하는 것은 `GPT-5.3-codex` 영역이다.
 - 구현 후 결함 분석, 회귀 리스크 판단, 운영 리스크 재평가는 `GPT-5.5`를 우선한다.
 
+## 규칙 선독 체인 (고위험 작업 필수)
+
+collab 상태 전이·플랫폼 규칙 변경·프로젝트 생성/종료 등 고위험 작업 진입 전 `platform/processes/rule_loading_policy.md`를 확인한다.
+세부 로딩 체인(Level 0–3)·Rule Context 선언 형식·Hard/Soft Block 기준·상태 전이 게이트는 해당 문서가 단일 SoT이며, 이 파일에 전문을 중복하지 않는다.
+
 ## Collab 문서 우선순위
 
 `platform/processes/collab/` 아래 문서이거나 collab 리뷰 형식을 따르는 문서는 collab 프로세스 지침을 최우선으로 따른다.

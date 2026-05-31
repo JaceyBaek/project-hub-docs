@@ -7,6 +7,88 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-01 — lessons_learned 반영 위치 필드 추가 + 지침 정비 (01:01)
+
+**lessons_learned.md 항목 형식 개선**
+- 항목 형식에 `**반영 위치**:` 필드 추가 — 재발방지 내용이 실제 기록된 파일·섹션 명시
+- 기존 7개 항목 소급 적용 완료
+- CLAUDE.md 교훈 기록 안내에 "등록 시 반영 위치 필드 필수" 추가
+
+**CLAUDE.md 응답규칙 추가**
+- 18번: 변명 금지 (잘못은 사실 그대로 인정, 추측→번복 금지, 백그라운드 완료 즉시 알림)
+
+---
+
+## 2026-06-01 — CLAUDE.md 메모리 vs 지침 구분 원칙 재정비 (00:44)
+
+**배경**
+- wiki_mbo 작업 중 발생한 '백그라운드 미알림 + 변명' 이슈 처리 과정에서 비서 행동 지침을 개인 메모리에 저장하는 CLAUDE.md 14번 위반 발견
+
+**조치**
+- 개인 메모리 feedback 파일 전수 검토: 17개 중 16개가 지침성 내용으로 판별
+- 16개 전량 삭제 (모두 CLAUDE.md/platform에 이미 있는 내용)
+- CLAUDE.md 응답규칙 17번 추가: 파일 위치 표기(링크+경로 함께) — 메모리에만 있던 유일한 미등록 규칙
+
+**원칙 재확인**
+- 메모리 = 개인 스팟성 기록 (다른 사용자·머신에 공유 불필요한 것)
+- 지침/규칙 = CLAUDE.md 또는 platform/processes/ 에만 기록
+- 판단 기준: "다른 사용자에게도 같은 효력을 가져야 하나?" → YES면 hub
+
+---
+
+## 2026-05-31 — rule_loading_policy 3자 합의 완료 + 플랫폼 코어 문서 반영 + bundle archive (23:25)
+
+- `20260530-0239_rule-loading-chain` collab bundle 전체 처리 완료
+  - `10_DIR_rule-loading-chain.md`: Claude R1·Antigravity R1·Codex R1·Antigravity R2·Claude R2 거쳐 3자 합의 완료. resolved_by: claude / verified_by: antigravity / jacey_approved: 03:27
+  - `20_D01_...gates.md` 신규: D1-I-001~006 R1→R2 합의 완료. resolved_by: claude / verified_by: antigravity / jacey_approved: 04:26
+- V-001~V-007 플랫폼 코어 문서 반영 완료
+  - `platform/processes/rule_loading_policy.md` 보완: jacey_approved_by 필수 파일 6종 목록 + 선언 경량화 예외 조항
+  - `AGENTS.md` 규칙 선독 체인 섹션 신설 (참조 링크, 전문 중복 없음)
+  - `platform/processes/collab/README.md` §7 jacey_approved_by + §11 결재 헤더 2-tier
+  - `platform/processes/collab/USAGE.md` Q11 Rule Context 선언 FAQ 추가
+  - `platform/TRIGGERS.md` 4개 collab 트리거 선독 preflight 추가
+  - `platform/processes/collab/_template_design.md` jacey_approved_by 컬럼 (이전 세션 완료)
+- 리뷰 종료: bundle → `archive/PLATFORM/`, INDEX 등록, MAP 갱신, PLATFORM 빈 폴더 삭제
+
+---
+
+## 2026-05-30 — eacct_chatbot ORC R1 리뷰 + collab 상태 전이 오류 발견 (03:08)
+
+- P2605121 `20_ORC_brainstorm-triage.md` Claude R1 리뷰 작성 완료
+  - ORC-I-001 합의, ORC-I-002/ORC-I-005 조건부 합의, ORC-I-003/ORC-I-004 합의+보완 제안
+  - 추가 우려: D04 기능-계약 의존 매핑 미명시, 회귀 매트릭스 활용 기준 미명시
+- Codex R1 응답 완료(status: responding) — Claude 재검토 대기
+- Codex collab 상태 전이 오류 발견: reviewing 단계에서 resolved_by·verified_by 미검토 상태로 채움 → Codex 자체 정정 완료
+- rule_loading_policy 재논의: 방향 제안 완료(3파일 구현 예정), G-027로 등록
+
+---
+
+## 2026-05-30 — wiki_mbo_builder 분기별면담 정상화 / 미소 wiki 전용 에이전트 신설 (02:41)
+
+- `wiki_mbo_builder` 분기별면담 페이지 생성 디버깅 완료 — 미소 AI 응답 Max Tokens 잘림 + 기존 Claude 모델 Bedrock EOL이 원인
+- 미소 플랫폼에 wiki 전용 에이전트 신설 (`us.anthropic.claude-sonnet-4-6`, Max Tokens 4096, Temp 0.3) — wiki_mbo_builder·wiki_faq_builder 공통 사용
+- 에이전트 시스템 프롬프트: 수치 보존·형식 임의 변경 금지 원칙 추가
+- 1Q·2Q 분기면담 페이지 정상 생성 확인
+
+---
+
+## 2026-05-30 — 에이전트 규칙 상속 및 로딩 정책 설계 논의 및 롤백 (02:24)
+
+- 에이전트들이 도메인별 규칙(collab, 프로젝트 생성, 개별 소스 수정 등)을 오처리하고 누락하는 현상을 해결하기 위한 '규칙 흐름 및 상속 체인(Rule Loading Chain)' 도입 설계안 논의
+- 시니어 아키텍트 및 검증 전문가 관점에서 컨텍스트 오버플로우(Lost in the Middle), 규칙 충돌 리스크, 형식적 로딩 문제 등의 한계를 짚고 개선 대안(지연 로딩, 오버라이딩 정책, 계획서 내 자가 검증 명시) 제안
+- 사용자의 피드백을 거쳐 논의된 의견을 취합하였으며, 실제 파일 반영 건은 원상태로 롤백 완료
+
+---
+
+## 2026-05-30 — eacct_chatbot 브레인스톰 트리아지 collab direction 합의 + 운영 개선 (01:18)
+
+- 브레인스톰 5개 유형별 파일 우선순위 분석 및 collab 없이 단독 처리 가능 항목 선별 (Codex 검토 연계)
+- collab direction `10_DIR_brainstorm-triage.md` R1 리뷰 작성 → Codex 응답 수용 → `verified_by: claude` 완료 (`status: resolved`)
+- PostToolUse hook 설정 (`.claude/settings.json`) — collab 파일 Edit/Write 후 미채워진 타임스탬프(`| ~ |`) 자동 감지
+- CLAUDE.md 규칙 8-3 위반(타임스탬프 임의 작성) → `lessons_learned.md` 기록 + `feedback_timestamp_rule.md` 메모리 저장
+
+---
+
 ## 2026-05-29 — eacct_chatbot·mcp 프로젝트 구조 정렬 (19:29)
 
 - `source/프로그램파일` → `source/src/프로그램파일` 구조로 정렬 (init_project.py 템플릿 기준)
