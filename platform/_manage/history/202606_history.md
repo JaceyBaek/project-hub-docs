@@ -7,6 +7,71 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-01 — CLAUDE.md brainstorm 자동 아카이브 규칙 추가 (19:00)
+
+**작업 내용**
+- `CLAUDE.md` 브레인스톰 아카이브 규칙에 타이밍 트리거 명문화: 마지막 `[ ]` 체크 즉시 → Jacey 알림 + 상태 `closed` + `brainstorm/archive/` 자동 이동 (별도 지시 없어도 자동 선행)
+
+**변경 파일**
+- `CLAUDE.md` (brainstorm 아카이브 규칙 섹션)
+
+---
+
+## 2026-06-01 — collab 설계 완료 아카이브 절차 등록 + brainstorm-triage bundle 이동 (14:20)
+
+**작업 내용**
+- `20260529-2010_brainstorm-triage` bundle: 모든 design 문서(DIR·ORC·D01~D04) approved 완료, 설계 마무리 → `archive/eacct_chatbot/20260529-2010_brainstorm-triage/`로 이동 (DEV_D01 파일 포함 bundle 전체)
+- MAP.md: 설계 문서 플래그 `[resolved · verified · approved · archived]`, DEV_D01 경로 + 플래그 `[active · verified(codex) · archived]`로 갱신
+- `archive/INDEX.md`: brainstorm-triage bundle 항목 추가
+- **설계 완료 즉시 아카이브 절차 신규 등록**:
+  - `platform/processes/collab/README.md` §12: "설계 완료 즉시 아카이브 이동 — DEV 진행 중이어도 예외 없음" 규칙 추가
+  - `platform/TRIGGERS.md`: "마지막 design 문서 `approved_by: jacey` 기재 감지 → 설계 완료 아카이브 자동 트리거" 행 추가
+
+**변경 파일**
+- `platform/processes/collab/archive/eacct_chatbot/20260529-2010_brainstorm-triage/` (bundle 이동)
+- `platform/processes/collab/MAP.md`
+- `platform/processes/collab/archive/INDEX.md`
+- `platform/processes/collab/README.md` (§12)
+- `platform/TRIGGERS.md`
+
+---
+
+## 2026-06-01 — collab AI 명칭 전면 변수화 완료 (14:11)
+
+**작업 내용**
+- collab 다중 사용자 적합성 감사 브레인스톰 (`platform/_manage/brainstorm/20260601_platform-multiuser-audit.md`) 기반 A-03·A-04 잔존 이슈 전면 처리
+- **[A-03] `Jacey` 하드코딩 제거**: README 서두·§4·§4-1·§5·§7·§8·§9·§15·footer + 템플릿 주석 4곳 → `{user_name}` 치환
+- **[A-04] `Codex`/`Antigravity` 하드코딩 제거**: README §4·§5·§7·§8·§9·§15·footer + `_template_testcase.md` 주석 → `{collab_verified_by}`/`{collab_tested_by}` 치환
+- 브레인스톰 파일 A-03·A-04 완료 처리 및 파생 이슈 2건 등록 (USAGE.md Codex 잔존, TC-ID TC-C/TC-A 접두어 명칭 결정)
+- 감사 추적 원칙 적용: README §16 날짜 기반 이력·MAP.md 이력 기록 내 AI명은 소급 변경 없이 보존
+
+**변경 파일**
+- `platform/processes/collab/README.md` (16건)
+- `platform/processes/collab/_template_design.md`
+- `platform/processes/collab/_template_dev.md`
+- `platform/processes/collab/_template_testcase.md`
+- `platform/_manage/brainstorm/20260601_platform-multiuser-audit.md`
+
+---
+
+## 2026-06-01 — collab DEV·TC 파일명 규칙 수정 + 레슨런 등록 (13:50)
+
+**작업 내용**
+- collab DEV·TC 파일명 source-id 오류 수정: ORC 번들 레이블(DEV-A) → detail ID(D01)
+  - `30_DEV_A_security-auth-ops.md` → `30_DEV_D01_security-auth-ops.md`
+  - `40_TC_DEV-A_security-auth-ops.md` → `40_TC_D01_security-auth-ops.md`
+- 파일 내부 상호 참조 및 MAP.md 경로 갱신
+- 레슨런 등록: DEV·TC 파일명 source-id = detail ID (ORC 번들 레이블과 혼용 금지)
+
+**변경 파일**
+- `platform/processes/collab/eacct_chatbot/20260529-2010_brainstorm-triage/30_dev/30_DEV_D01_security-auth-ops.md` (파일명 변경)
+- `platform/processes/collab/eacct_chatbot/20260529-2010_brainstorm-triage/40_testcase/40_TC_D01_security-auth-ops.md` (파일명 변경)
+- `platform/processes/collab/MAP.md`
+- `platform/processes/lessons_learned.md`
+- `projects/eacct_chatbot/_manage/lessons.md`
+
+---
+
 ## 2026-06-01 — collab AI 역할 변수화 + TC 파일 프로세스 정비 + 레슨런 등록 (13:27)
 
 **작업 내용**
