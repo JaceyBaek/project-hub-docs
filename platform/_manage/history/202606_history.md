@@ -7,6 +7,48 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-01 — collab AI 역할 변수화 + TC 파일 프로세스 정비 + 레슨런 등록 (13:27)
+
+**작업 내용**
+- collab 협업 AI 역할 변수화: `personal.yml` `collab` 섹션 신규 등록 (`author`/`verified_by`/`tested_by` 3개 역할)
+- 템플릿 3개(`_template_dev.md`·`_template_design.md`·`_template_testcase.md`) AI명 하드코딩 → `{collab_author}`·`{collab_verified_by}`·`{collab_tested_by}` 플레이스홀더로 전면 교체
+- collab README §6 역할표·TC 섹션·§14 도구별 차이 동일 변수화, 협업 AI 등록/변경 프로세스 서브섹션 신규 추가
+- CLAUDE.md 운영 정책 13번 추가: collab 작업 시작 전 AI 역할 확인 + 변경 프로세스
+- TC 파일 프로세스 레슨런 2건 등록 + CLAUDE.md 운영 정책 12번 추가 (DEV §2 완료 즉시 TC 작성, 템플릿 준수 필수)
+- `platform/processes/lessons_learned.md` 협업/프로세스 섹션 상단에 2건 승격
+
+**변경 파일**
+- `platform/setup/config/personal.yml`
+- `platform/processes/collab/_template_dev.md`
+- `platform/processes/collab/_template_design.md`
+- `platform/processes/collab/_template_testcase.md`
+- `platform/processes/collab/README.md`
+- `platform/processes/collab/MAP.md`
+- `platform/processes/lessons_learned.md`
+- `CLAUDE.md`
+
+---
+
+## 2026-06-01 — D04 ui-eacct-integration 리뷰·합의·승인 완료 + CLAUDE.md 규칙 정비 (11:45)
+
+**작업 내용**
+- D04 ui-eacct-integration Claude R1 리뷰(§2) 작성: 동의 5건, 우려 5건(UI-B 진입기준 불일치·fill-form schema 소유권·에러 보정 기준·export 형태·structured output 참조), 역질문 3건
+- Codex §3 응답 확인 후 전 항목 합의 → resolved_by: claude (11:33)
+- Codex verified_by (11:37) / Jacey approved_by (11:42) 완료
+- D01~D04 전체 `jacey_approved` 완료, DEV-D 진입 게이트 해제
+- MAP.md D04 상태 `[active · resolved · verified · jacey_approved]` 갱신
+- CLAUDE.md 규칙 19 신규 추가: 작업 흐름 유지 (범위 명확 시 끝까지 완수 후 다음 스텝 안내)
+- CLAUDE.md 규칙 14 보강: 메모리 도구 호출 직전 판단 게이트 명시
+- lessons_learned 메모리/플랫폼 분리 항목 재발(2026-06-01) 사실 및 강화 대책 추가
+
+**변경 파일 (git 추적)**
+- `platform/processes/collab/eacct_chatbot/20260529-2010_brainstorm-triage/20_detail/20_D04_ui-eacct-integration.md`
+- `platform/processes/collab/MAP.md`
+- `CLAUDE.md`
+- `platform/processes/lessons_learned.md`
+
+---
+
 ## 2026-06-01 — collab 문서 규칙 정비 및 D02·DIR·ORC 승인 (10:16)
 
 **작업 내용**
