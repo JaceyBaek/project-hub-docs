@@ -7,6 +7,49 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-01 — 플랫폼 전수검토 이슈 처리 (19:33)
+
+**작업 내용**
+
+### google_drive_backup 전수검토 이슈 4건 완료
+- `main.py`: `BACKUP_SOURCE_PATH` 기본값 절대경로 제거 → 미설정 시 `ValueError`
+- `wiki_publisher.py`: `DOCS_DIR`·`GUIDE_FILE_PATH` → `Path(__file__)` 기반 상대 경로 + `MANUAL_HTML` → `_build_manual_html()` 동적 함수 전환 (env var 반영)
+- `apps/catalog.yml` repo 필드: `JaceyBaek/google_drive_backup` → `JaceyBaek-GSRetail/project-hub`
+- 정책 결정 `P-DEC-002`: `apps/`는 `PROJECTS_GLOBAL.md` 제외, `apps/catalog.yml`이 source of truth (분사 가능성 고려)
+- `PROJECTS_GLOBAL.md` 활성 섹션에 apps 범위 제외 주석 추가
+
+### 플랫폼 전수검토 이슈 4건 완료 → 아카이브
+- `plugins/catalog.yml` mcp_platform 버전 `0.1.0` → `0.5.1`
+- `plugins/catalog.yml` mcp_router 항목 제거 (mcp_platform router/ 서브패키지로 통합)
+- `plugins/catalog.yml` secrets_loader v0.1.0 추가 (dependents: wiki_faq_builder·wiki_mbo_builder·eacct_chatbot)
+- `scripts/` 폴더 구조 정리: `credentials/`·`install_app.py` → `platform/setup/`으로 이동. 경로 참조 12개 파일 전수 갱신
+
+### platform-multiuser-audit 5건 처리 (3건 설계 결정 필요로 보류)
+- `hub_init.py` B-01: `paths.hub_root`·`paths.plugins` 경로 구분자 백슬래시 → 슬래시 수정
+- `collab/README.md` §16: 해제 표기 추가 (DEV_D01 종료 봉인으로 2026-05-15 자동 해제)
+- `platform/setup/config/hub_config.yml` B-05: 개인 정보 없음 확인
+- `collab/USAGE.md`: `Codex` 6곳 → `{collab_author}`·`{collab_verified_by}`·`{collab_tested_by}` 역할 변수 치환
+- 보류: 구조적 핵심 질문 1~4 / A-01 CLAUDE_global.template.md 개인 정보 / A-04 TC-ID 접두어
+
+**변경 파일**
+- `apps/google_drive_backup/source/src/main.py`
+- `apps/google_drive_backup/source/src/wiki_publisher.py`
+- `apps/google_drive_backup/source/.env.example`
+- `apps/google_drive_backup/CLAUDE.md`
+- `apps/catalog.yml`
+- `PROJECTS_GLOBAL.md`
+- `platform/extensions/plugins/catalog.yml`
+- `platform/hub_init.py`
+- `platform/processes/collab/README.md`
+- `platform/processes/collab/USAGE.md`
+- `platform/setup/install_app.py` (이동: `extensions/scripts/` → `setup/`)
+- `platform/setup/credentials/` (이동: `extensions/scripts/` → `setup/`)
+- `platform/setup/secrets_guide.md`, `platform/processes/project/project_creation.md`, `platform/setup/new_mcp_server_setup.md`, `apps/README.md`, `README.md`, `platform/init_project.py`, `platform/extensions/plugins/secrets_loader/secrets_loader/loader.py`, `platform/extensions/plugins/secrets_loader/CLAUDE.md`, `projects/eacct_mcp/source/src/db.py`, `projects/eacct_mcp/dist/md/02_FLW_eacct_mcp_프로세스흐름도.md` (경로 참조 갱신)
+- `platform/_manage/decisions.md` (P-DEC-002 추가)
+- 브레인스톰 아카이브: `apps/google_drive_backup/_manage/brainstorm/archive/20260601_전수검토_이슈.md`, `platform/_manage/brainstorm/archive/20260601_전수검토_플랫폼이슈.md`
+
+---
+
 ## 2026-06-01 — CLAUDE.md brainstorm 자동 아카이브 규칙 추가 (19:00)
 
 **작업 내용**

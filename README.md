@@ -1,4 +1,4 @@
-# project-hub
+﻿# project-hub
 
 > **AI 비서와 함께 일하는 개발자를 위한 프로젝트 라이프사이클·플러그인 통합 플랫폼**
 
@@ -154,7 +154,7 @@ git merge upstream/main
 |---|---|
 | `platform/scripts/manage/wiki_sync.py` | `_manage/` md 파일 → Confluence 동기화 |
 | `platform/scripts/manage/deploy_record.py` | 배포 내역 기록 |
-| `platform/scripts/install_app.py` | apps/catalog.yml 기반 팀 공용 앱 설치·등록 |
+| `platform/setup/install_app.py` | apps/catalog.yml 기반 팀 공용 앱 설치·등록 |
 
 ---
 
