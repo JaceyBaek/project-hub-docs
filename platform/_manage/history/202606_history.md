@@ -7,6 +7,29 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-02 — 서브모듈 flake8 lint 수정 + CI auto-fix 스텝 추가 (09:56)
+
+**작업 내용**
+
+### 기존 미커밋 수정 내역 푸시
+- 전수검토 이슈 플랫폼 처리 완료 (scripts/ → setup/ 이동, collab 역할 변수화 등) 커밋·푸시
+
+### 3개 서브모듈 flake8 lint 오류 수정 (5월 27일~6월 1일부터 누적)
+- **eacct_source_analyzer**: F401 (os, rich.text.Text), F841 (pattern 미사용 변수) 수정
+- **eacct_chatbot**: F401 (field), E306 (중첩 함수 전 빈 줄), E501 (줄 길이 7곳), E221·E251 (공백 정렬), F541 (f-string placeholder 없음) 수정
+- **gmail_cleaner**: F401 (GmailCleanerConfig, pytest, MailItem), `.flake8` 설정 파일 추가 (flake8이 pyproject.toml 미지원)
+
+### CI auto-fix 스텝 추가 (3개 레포 공통)
+- lint 실패 시 `autoflake --remove-all-unused-imports` + `autopep8` 자동 수정·커밋 (`[skip ci]`) 후 재검사
+- 수동 수정 불가 오류만 CI 빨간불 표시
+
+**변경 파일**
+- `projects/eacct_source_analyzer/source/analyze.py`, `source/src/finder.py`, `.github/workflows/ci.yml`
+- `projects/eacct_chatbot/source/src/payload_store.py`, `pii_masker.py`, `chat_handler.py`, `server.py`, `tests/test_bill_save.py`, `.github/workflows/ci.yml`
+- `projects/gmail_cleaner/source/tests/test_cleaner.py`, `source/tests/test_config.py`, `.flake8`, `.github/workflows/ci.yml`
+
+---
+
 ## 2026-06-01 — 플랫폼 전수검토 이슈 처리 (19:33)
 
 **작업 내용**
