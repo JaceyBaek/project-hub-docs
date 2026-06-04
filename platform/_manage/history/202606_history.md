@@ -7,6 +7,45 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-04 — collab 구조 리팩터링: _templates/·_archive/·namespace MAP 분리 (11:31)
+
+**작업 내용**
+
+### 1. 템플릿 파일 `_templates/` 폴더로 이동
+- `_template_design.md` / `_template_dev.md` / `_template_testcase.md` → `_templates/design.md` / `dev.md` / `testcase.md`
+- 경로 참조 업데이트: `CLAUDE.md`, `README.md`, `USAGE.md`, `rule_loading_policy.md`, `lessons_learned.md`, `eacct_chatbot/_manage/lessons.md`
+
+### 2. collab MAP.md namespace별 분리
+- 루트 `MAP.md` → namespace별 인덱스로 전환
+- `collab/eacct_chatbot/MAP.md`, `collab/PLATFORM/MAP.md` 신규 생성
+
+### 3. `archive/` → `_archive/` 이름 변경 + namespace MAP.md 이동
+- `collab/archive/` → `collab/_archive/`
+- namespace MAP.md → `_archive/{namespace}/MAP.md` 이동 (INDEX.md와 동일 방식으로 `_archive/` 내 계속 갱신)
+- 루트 namespace 폴더(`eacct_chatbot/`, `PLATFORM/`) 삭제 — active bundle 없을 때 루트 폴더 불필요
+- `.gitignore` 업데이트: `!_archive/*/`, `!_archive/*/MAP.md` 화이트리스트 추가
+
+### 경로 참조 전수 업데이트
+- **규칙 파일**: `CLAUDE.md`, `TRIGGERS.md`
+- **collab 내**: `README.md` (§2·§3·§12·§15·SoT 표), `USAGE.md`, `_templates/design.md`, `_templates/dev.md`, namespace `MAP.md` 2개
+- **외부**: `ENHANCEMENTS.md`, `projects/eacct_mcp/docs/SECURITY_GOVERNANCE.md`
+- **검증**: `archive/` 잔여 참조 0건 (md·yml·py 전수 확인)
+
+**변경 파일**
+- `platform/processes/collab/.gitignore`
+- `platform/processes/collab/MAP.md`
+- `platform/processes/collab/_archive/eacct_chatbot/MAP.md` (신규)
+- `platform/processes/collab/_archive/PLATFORM/MAP.md` (신규)
+- `platform/processes/collab/_templates/design.md` / `dev.md` / `testcase.md`
+- `platform/processes/collab/README.md`
+- `platform/processes/collab/USAGE.md`
+- `platform/TRIGGERS.md`
+- `CLAUDE.md`
+- `ENHANCEMENTS.md`
+- `projects/eacct_mcp/docs/SECURITY_GOVERNANCE.md`
+
+---
+
 ## 2026-06-04 — DEV 문서 변경이력 순서 정책 확정 및 전체 반영 (11:17)
 
 **작업 내용**

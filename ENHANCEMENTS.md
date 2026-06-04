@@ -56,7 +56,7 @@ DEV_D001 마이그레이션 후 신규 collab 문서·템플릿에 `## 0. 문서
 - 등록일: 2026-05-15
 - 우선순위: 낮음
 - 상태: 부분 완료 (MAP 분리 구현 완료 2026-06-04 — `{namespace}/MAP.md` 구조 도입. collab 문서 위치 분산·마이그레이션은 트리거 조건 충족 시 진행)
-- 관련: `platform/processes/collab/MAP.md`, `platform/processes/collab/archive/INDEX.md`
+- 관련: `platform/processes/collab/MAP.md`, `platform/processes/collab/_archive/INDEX.md`
 
 ### 배경
 현재 collab은 단일 글로벌 MAP/INDEX로 운영한다 (모든 프로젝트 collab 문서를 `platform/processes/collab/` 한 곳에서 관리). 성숙기(프로젝트 20~30개·산출물 다수)에는 글로벌 MAP이 비대해져 가독성·관리성이 떨어진다.
