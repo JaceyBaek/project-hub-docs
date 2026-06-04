@@ -7,6 +7,53 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-04 — DEV_D04 C2 재개발·승인 + bundle 20260529-2010 아카이브 이동 (10:39)
+
+**작업 내용**
+
+### DEV_D04 검토 및 C2 재개발
+- Codex C1 검증 결과(TC-C01 FAIL) 검토 — `ALLOWED_PARENT_ORIGINS` 미설정 시 운영 postMessage wildcard 진입 가능 문제 확인
+- C2 재개발 2개 파일 수정:
+  - `projects/eacct_chatbot/deploy/manifest.yml` — `env_required`에 `APP_ENV`, `ALLOWED_PARENT_ORIGINS` 추가
+  - `projects/eacct_chatbot/source/src/server.py` — `APP_ENV=production` 시 `ALLOWED_PARENT_ORIGINS` 미설정이면 RuntimeError 기동 차단 게이트 추가
+
+### DEV_D04 승인
+- Codex C2 재검증 전항목 PASS (TC-C01·TC-C08 포함)
+- Antigravity 제3자 테스트 27/27 PASS (TC-A01~A03 추가 도출)
+- DEV_D04 §5 체크리스트 확인 후 Jacey 승인 완료 (10:39)
+
+### bundle 20260529-2010 최종 완료 및 아카이브 이동
+- DEV_D01~D04 전항목 3-way 검증·승인 완료 확인
+- DEV_D03 `resolved_by: ~` 누락 수정 (jacey)
+- MAP.md DEV_D04·TC_D04 항목 갱신, bundle 헤더 `archived` 플래그 추가
+- archive/INDEX.md — bundle 전체 완료 반영으로 항목 갱신
+
+**변경 파일**
+- `platform/processes/collab/MAP.md`
+- `projects/eacct_chatbot/deploy/manifest.yml`
+- `projects/eacct_chatbot/source/src/server.py`
+
+---
+
+## 2026-06-04 — DEV 템플릿 변경이력 양식 통일 (08:34)
+
+**작업 내용**
+
+### DEV_D04 변경이력 blockquote 양식 이슈 확인
+- `30_DEV_D04_ui-eacct-integration.md`에 D01~D03에 없던 blockquote 안내문 존재 발견
+- 원인: 이전 세션에서 `_template_dev.md`를 수정(HTML 주석 → blockquote 전환)했으나 미커밋 상태로 방치 → D04 작성 시 변경된 템플릿 반영되어 양식 불일치 발생
+
+### 템플릿 커밋 (63fa760)
+- `## 문서 변경이력` 수행자 의무 안내: `<!-- -->` → blockquote 전환 (AI 협업자가 문서 열람 시 실제로 보이도록)
+- §2/§3-1/§3-2 각 섹션 완료 게이트 blockquote 추가
+- §5 체크리스트에 변경이력 승인 행 추가 항목 반영
+- D01~D03(resolved)은 소급 수정 없음 — 작성 시점 템플릿 기준으로 인정
+
+**변경 파일**
+- `platform/processes/collab/_template_dev.md`
+
+---
+
 ## 2026-06-02 — 서브모듈 flake8 lint 수정 + CI auto-fix 스텝 추가 (09:56)
 
 **작업 내용**

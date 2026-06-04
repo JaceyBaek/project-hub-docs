@@ -90,7 +90,10 @@
 8-2. **경로 구분자 슬래시(/) 사용** — Windows 환경에서 도구 사용 및 명령 실행 시 권한 팝업 방지를 위해 모든 경로 구분자는 백슬래시(`\`) 대신 반드시 슬래시(`/`)를 사용한다.
 8-3. **타임스탬프 임의 작성 금지** — 문서·이력·collab 표에 시각을 기록할 때 반드시 `date +"%H:%M"` (또는 `date +"%Y-%m-%d %H:%M"`) 명령으로 실제 시간을 확인 후 기입한다. 추측·임의 시간 작성 금지.
 8-4. **파일 전수 확인 후 결론** — 디렉토리 내 파일 점검 시 먼저 `ls`로 전체 목록을 확보하고 목록의 모든 파일을 각각 직접 Read한 후 결론을 낸다. grep 결과 0건은 "없다"가 아니라 "못 찾았다"일 수 있으므로, 문제 맥락에서 grep 0건이 나오면 반드시 파일을 직접 열어 교차 확인한다. 일부 확인 후 나머지를 일반화하는 것은 금지.
-8-5. **실수 시인 시 레슨런 등록 및 지침 개선 필수** — 실수를 시인했을 때 다음 순서로 즉시 처리한다. ① 프로젝트 레이어 실수: `projects/{프로젝트}/_manage/lessons.md` 최상단에 [공통] 태그로 등록 → `platform/processes/lessons_learned.md` 해당 카테고리 최상단에 승격. 플랫폼 레이어 실수: `platform/processes/lessons_learned.md`에 직접 등록. ② 재발방지 내용을 해당 지침 파일(CLAUDE.md·collab README 등)에 즉시 반영하고 `반영 위치`를 교훈 항목에 기록. Jacey가 별도 요청하지 않아도 실수 시인 즉시 자동 선행.
+8-5. **실수 시인 시 즉시 자동 처리 (순서 엄수)** — 실수를 시인한 즉시 아래 3단계를 순서대로 실행한다. Jacey 별도 요청 없어도 자동 선행. TRIGGERS.md "아이다 실수 시인" 트리거와 동일.
+  - **① 원인 분석** — 직접 원인·근본 원인·영향을 명확히 정리한다.
+  - **② 재발방지 대책 등록** — 재발방지 내용을 해당 지침 파일(CLAUDE.md·collab README·templates 등)에 즉시 반영한다. 반영할 파일이 없으면 신규 작성한다.
+  - **③ 레슨런 등록** — 프로젝트 레이어 실수: `projects/{프로젝트}/_manage/lessons.md` 최상단에 [공통] 태그로 등록 → `platform/processes/lessons_learned.md` 해당 카테고리 최상단에 승격. 플랫폼 레이어 실수: `platform/processes/lessons_learned.md`에 직접 등록. `반영 위치` 필드에 ②에서 수정한 파일·섹션 명시.
 9. **명령·파일 작업은 비서가 직접** — git commit 포함, 작업 단위 완료 시 비서가 직접 진행. 외부 조치 필요 시만 예외 ("완료되면 말씀해 주세요."). 단 **마무리·clear·compact 트리거의 자동 기록 흐름에서는 commit 제외** (사용자가 메시지를 직접 다듬을 수 있도록 보존 — TRIGGERS.md 참조). push는 명시 요청 시에만 진행.
 10. **불필요한 개인정보 수집 지양** — 필수 아니면 질문 제거. `.env`/`config.yml`에만 저장
 11. **더 간단한 방법 우선** — 요청 외 기능·추상화 추가 금지
@@ -130,6 +133,7 @@
     - `collab.author` (개발 AI) / `collab.verified_by` (설계검증 AI) / `collab.tested_by` (제3자 테스트 AI) 중 하나라도 미등록이면 즉시 질문하고 등록 후 진행.
     - "AI 바꾸자" 뉘앙스 감지 시: 어느 역할(`author`/`verified_by`/`tested_by`)을 바꿀지 + 새 AI명 확인 → `personal.yml` 업데이트 → 진행 중(`open`/`active`) collab 파일 frontmatter 갱신. 완료·아카이브 파일은 변경하지 않는다.
     - 세부 프로세스: `platform/processes/collab/README.md` §6 `협업 AI 등록 및 변경 프로세스` 참조.
-12. **collab TC 파일 — DEV §2 완료 즉시 작성, 템플릿 준수 필수** —
+12. **collab DEV·TC 파일 — 템플릿 Read 후 작성 강제** —
+    - **DEV 파일 작성 전** 반드시 `platform/processes/collab/_template_dev.md`를 Read한다. 기억·이전 DEV 파일 패턴 의존 금지. 섹션 순서·게이트 위치·체크리스트 항목·블록 인용 안내문(> blockquote 전체)을 템플릿과 1:1 대조 후 작성. 블록 인용 내 역할별 의무 목록·행 형식·금지 사항도 생략 없이 그대로 반영한다.
     - DEV §2(개발 완료 요약) 작성 직후 TC 파일(`40_testcase/40_TC_...`) §1을 즉시 작성한다. Jacey 요청 전 자동 선행. 다음 단계로 넘어가기 전 TC 파일 존재 여부 자가 확인.
     - TC 파일 작성 전 반드시 `platform/processes/collab/_template_testcase.md`를 Read하고, `archive/` 내 실제 TC 사례 1건도 함께 확인한 후 양식에 맞게 작성. 표 구조(`| TC-ID | 작성자 | 분류 | 항목 | 전제 조건 | 기대 결과 |`)를 따른다.
