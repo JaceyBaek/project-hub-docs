@@ -7,6 +7,25 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-04 — DEV 문서 변경이력 순서 정책 확정 및 전체 반영 (11:17)
+
+**작업 내용**
+
+### DEV 문서 변경이력 삽입 방향 결정
+- 문제 발견: `20260514-1554` 번들 DEV 파일(오름차순)과 `20260529-2010` 번들 DEV 파일(내림차순) 방향 불일치
+- 원인: `_templates/dev.md`에 삽입 방향 명시 없어 AI마다 다르게 기입
+- 결정: **오름차순(과거→최신, append)** — 감사 추적 목적·결재 흐름과 일치, append라 AI 실수 여지 없음
+
+### 템플릿·가이드 수정
+- `platform/processes/collab/_templates/dev.md` — 삽입 방향 명시: `표 최하단 append — 시간 흐름 순서(과거→최신)로 유지`
+- `platform/processes/collab/README.md` — 문서 변경이력 예시 표 오름차순 정렬 + 강제 규칙에 삽입 방향 항목 추가
+
+### 아카이브 DEV 파일 소급 수정
+- `archive/eacct_chatbot/20260529-2010_brainstorm-triage/30_dev/` D01~D04 — 내림차순 → 오름차순 수정
+- `archive/PLATFORM/20260514-1554_mcp-chatbot-security-ops/30_dev/` 전체 — 이미 오름차순 ✓ (변경 없음)
+
+---
+
 ## 2026-06-04 — DEV_D04 C2 재개발·승인 + bundle 20260529-2010 아카이브 이동 (10:39)
 
 **작업 내용**
