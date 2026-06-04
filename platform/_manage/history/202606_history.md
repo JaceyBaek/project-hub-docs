@@ -7,6 +7,27 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-04 — 자동화 스케줄 관리 체계 구축 + 즉시 착수 가능 작업 완료 (11:44)
+
+**플랫폼**
+- `platform/_manage/schedules.md` 신규 생성 — 등록 목록·상태 확인·PC 변경 시 재등록·일정 수정·즉시 실행·삭제 명령 통합 관리
+- `generate_sidebar.py` 수정 + 사이드바 재생성 — "플랫폼 현황 > 자동화 스케줄" 메뉴 추가
+
+**wiki_mbo_builder (P2604281)**
+- `run.bat` 실행 조건 변경: 월말 → 매월 1~3일 12:00
+- Windows Task Scheduler 등록 완료 (`wiki_mbo_builder`, 매일 12:00, 1~3일만 실행)
+- 수동 실행 완료 — 신규 2건·갱신 2건·스킵 2건, 2026-06 MBO 페이지 신규 생성, 2Q 분기면담 갱신
+
+**eacct_mcp (P2605081)** — 이미 서브모듈 커밋 반영
+- F003 `get_slip_detail` tool 구현 (slip.py·tools.yml·__init__.py·redactor.py·response_builder.py)
+- DOM-4 `nominee_email` 확인 — EacctRedactor llm_safe_summary에서 이미 제외, 수정 불필요
+
+**eacct_chatbot (P2605121)** — 이미 서브모듈 커밋 반영
+- UX-24 `widget.html` 표 수평 스크롤 수정 (`_buildTable` overflow-x:auto 래퍼)
+- CX-4 `mcp_client.py` httpx.Timeout 명시 (connect 5s / read 30s, `MCP_TIMEOUT_SECONDS` env 지원)
+
+---
+
 ## 2026-06-04 — collab 구조 리팩터링: _templates/·_archive/·namespace MAP 분리 (11:31)
 
 **작업 내용**
