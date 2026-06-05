@@ -7,6 +7,55 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-05 — eacct_chatbot D02 PII 토큰화 경계 완료 (09:00)
+
+- `eacct_chatbot` `chat_handler.py` D02 chatbot 레이어 토큰화 경계 구현 완료
+  - pii_masker LLM 경로 제거, tokenize_object·역토큰화 분리, 보호 문구 적용
+  - collab `20260604-1550_pii-tokenization-boundary` bundle archive 이동 완료
+  - codex + antigravity 전수 검증 통과, Jacey 최종 승인
+
+---
+
+## 2026-06-04 — wiki_builder 통합 + atlassian_client 리팩터링 (20:55)
+
+**배경**
+- wiki_faq_builder·wiki_mbo_builder가 동일 `source_roots` 공유 → 두 도구 모두 `move_page()` 호출 → 선실행 도구가 페이지를 아카이브로 이동하면 후실행 도구가 해당 페이지를 검출하지 못하는 충돌 구조 확인
+- 스케줄러 경로 오류 (`D:\05.Claude\...` → Last Result: -2147024894 파일 없음)로 5/19 이후 모든 자동 실행 실패. 4·5월 FAQ·MBO 데이터 누락 발생
+
+**데이터 복구**
+- 스케줄러 경로 수정 및 재등록 (`D:\03.project-hub\...`)
+- `wiki_faq_builder --auto` 수동 실행 → 19·20주차 아카이브 이동 완료, 23주차 FAQ 신규 생성
+- `wiki_faq_builder --force` 수동 실행 → 27페이지 전체 재처리 (22주차 포함 신규 1·갱신 23)
+- `wiki_mbo_builder --force` 수동 실행 → 4·5월 MBO 전체 재처리
+
+**atlassian_client v0.2.0 → v0.3.0**
+- `ConfluenceAnalyzerBase` → `WikiSourceBase` 이름 변경 (하위 호환 별칭 유지)
+- 비즈니스 로직 제거: `should_archive()` / `is_korean_holiday()` utils에서 삭제
+- 대체 훅 추가: `should_skip_today() → bool` / `should_move_to_archive(source) → bool` (기본값 False, 프로젝트에서 오버라이드)
+- 테스트 89 passed ✓
+
+**프로젝트 통합**
+- wiki_builder (P2606041) 신규 생성 — FAQ·MBO 통합 빌더 (일별 FAQ, 매월 1~3일 MBO)
+- wiki_faq_builder (P2604221) 서비스종료 — 종료일 2026-06-04
+- wiki_mbo_builder (P2604281) 서비스종료 — 종료일 2026-06-04
+
+**스케줄러**
+- `wiki_mbo_builder` 삭제
+- `wiki_faq_builder_auto` → `wiki_builder_auto`로 전환 예정 (wiki_builder 구현 완료 후)
+
+---
+
+## 2026-06-04 — collab direction 파일 번호 체계 변경 (17:30)
+
+**플랫폼**
+- collab `10_direction/` 폴더 내 파일 번호 체계 개선 — 폴더 단계 번호(10/20/30/40)와 파일 순서 번호 충돌 문제 해결
+- 새 규칙: `11_REQ_` / `12_DIR_` / `13_ORC_` (폴더 10의 하위임을 번호로 표현)
+- 파일 rename 8개 완료 (active bundle 2 + archive eacct_chatbot 2 + archive PLATFORM 4)
+- 내부 링크 참조 수정 14개 파일 (MAP.md 2, DEV 4, ORC/DIR, README/USAGE/템플릿 포함)
+- 커밋은 현재 작업 완료 후 별도 예정
+
+---
+
 ## 2026-06-04 — 자동화 스케줄 관리 체계 구축 + 즉시 착수 가능 작업 완료 (11:44)
 
 **플랫폼**

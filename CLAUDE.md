@@ -133,6 +133,11 @@
     - `collab.author` (개발 AI) / `collab.verified_by` (설계검증 AI) / `collab.tested_by` (제3자 테스트 AI) 중 하나라도 미등록이면 즉시 질문하고 등록 후 진행.
     - "AI 바꾸자" 뉘앙스 감지 시: 어느 역할(`author`/`verified_by`/`tested_by`)을 바꿀지 + 새 AI명 확인 → `personal.yml` 업데이트 → 진행 중(`open`/`active`) collab 파일 frontmatter 갱신. 완료·아카이브 파일은 변경하지 않는다.
     - 세부 프로세스: `platform/processes/collab/README.md` §6 `협업 AI 등록 및 변경 프로세스` 참조.
+12-1. **collab design 합의/동의 기입 전 README §7·§8 필수 Read (하드 게이트)** —
+    - `resolved_by`·`verified_by`·트래킹 상태 기입 직전 반드시 `platform/processes/collab/README.md` §7을 Read한다. 기억·직관 의존 금지.
+    - **역할 원칙 (§7 요약)**: 기안자 §3 수용 응답 → 검토자가 §3 확인 후 이상 없음 선언 → `resolved_by`: 검토자, `verified_by`: 기안자. **기안자 수용 응답만으로 resolved 처리 금지.**
+    - **동일인 기록 절대 금지**: `verified_by`는 `resolved_by`와 반드시 다른 참여자.
+    - **트래킹 상태값 한국어 필수**: 트래킹 테이블·최종 상태 요약의 상태 컬럼은 `검토 대기`·`응답 대기`·`합의`·`동의`·`보류` 등 **한국어만** 사용. `resolved`·`verified` 등 영어 상태값 사용 금지.
 12. **collab DEV·TC 파일 — 템플릿 Read 후 작성 강제** —
     - **DEV 파일 작성 전** 반드시 `platform/processes/collab/_templates/dev.md`를 Read한다. 기억·이전 DEV 파일 패턴 의존 금지. 섹션 순서·게이트 위치·체크리스트 항목·블록 인용 안내문(> blockquote 전체)을 템플릿과 1:1 대조 후 작성. 블록 인용 내 역할별 의무 목록·행 형식·금지 사항도 생략 없이 그대로 반영한다.
     - DEV §2(개발 완료 요약) 작성 직후 TC 파일(`40_testcase/40_TC_...`) §1을 즉시 작성한다. Jacey 요청 전 자동 선행. 다음 단계로 넘어가기 전 TC 파일 존재 여부 자가 확인.
