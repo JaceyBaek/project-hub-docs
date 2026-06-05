@@ -7,6 +7,15 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-05 — SEC-25 브레인스톰 등록 + pii-tokenization-boundary direction 합의·승인 + eacct_mcp docs 구조 재편 (13:23)
+
+- **SEC-25 브레인스톰 등록**: `eacct_chatbot/_manage/brainstorm/20260528_보안_인증_컴플라이언스.md`에 SEC-25 항목 추가 — MCP 결과 내 개인식별 필드 토큰화 후 미소 전달, 역매핑 후 UI 표시 방향 확정
+- **collab direction 합의·승인**: `20260604-1550_pii-tokenization-boundary` — SEC-21·24·25 단일 direction, D01(TokenStore/contract) + D02(chatbot boundary) 2-detail + ORC 필수 구조. claude R1 리뷰 → codex 응답 → 합의·동의·Jacey 승인 완료
+- **eacct_mcp docs 구조 재편 커밋·푸시**: `SECURITY_GOVERNANCE.md` 프로젝트 루트 이동, `docs/security-review/`·`docs/specs/` 신설. hub 서브모듈 포인터·schedules.md 갱신 커밋·푸시
+- **레슨런·재발방지**: 아카이브 이동 후 빈 폴더 삭제 누락 → `platform/TRIGGERS.md` 44·45번 행에 빈 폴더 삭제 단계 추가 + `platform/processes/lessons_learned.md` 등록
+
+---
+
 ## 2026-06-05 — eacct_chatbot D02 PII 토큰화 경계 완료 (09:00)
 
 - `eacct_chatbot` `chat_handler.py` D02 chatbot 레이어 토큰화 경계 구현 완료
