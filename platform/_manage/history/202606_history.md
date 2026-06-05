@@ -7,6 +7,21 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-05 — mcp_platform extractors_common 날짜 파싱 버그 수정 (16:32)
+
+- **`_RE_YEAR_QUARTER` / `_RE_YEAR_HALF` 수정**: `년?` → `년도?` — "25년도 1분기" 입력 시 연도를 분기 prefix로 묶지 못하고 연도 없이 분기만 매칭 → 현재 연도 기본값(2026)으로 오판하던 문제 해소
+- **대상 파일**: `platform/extensions/plugins/mcp_platform/mcp_platform/router/extractors_common.py`
+
+---
+
+## 2026-06-05 — ITGC 점검 체크리스트 작성 및 보안 문서 일원화 (16:30)
+
+- **ITGC 체크리스트 작성** (eacct_mcp·eacct_chatbot): ITGC 관점 15개 항목 — 현재 적용여부·보완 대책 포함
+- **보안 문서 일원화**: `eacct_chatbot/_manage/security_review_checklist.md` → `eacct_mcp/docs/security-review/`로 이동. 보안/ITGC 관련 문서 eacct_mcp 한 곳으로 집중
+- **SEC_REVIEW_REQUEST v0.3 현행화 (MD + HTML)**: §7 ITGC 챕터 추가, 기존 §7·§8 → §8·§9로 번호 조정
+
+---
+
 ## 2026-06-05 — SEC-25 브레인스톰 등록 + pii-tokenization-boundary direction 합의·승인 + eacct_mcp docs 구조 재편 (13:23)
 
 - **SEC-25 브레인스톰 등록**: `eacct_chatbot/_manage/brainstorm/20260528_보안_인증_컴플라이언스.md`에 SEC-25 항목 추가 — MCP 결과 내 개인식별 필드 토큰화 후 미소 전달, 역매핑 후 UI 표시 방향 확정
