@@ -7,6 +7,15 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-08 — wiki_builder FAQ 처리 완료 + 아카이브 이동 + 스케줄러 등록 (14:01)
+
+- **wiki_builder 통합 완료**: wiki_faq_builder + wiki_mbo_builder → wiki_builder(P2606041) 소스 파일 구현 완료
+- **FAQ 전체 처리**: 2025-11 ~ 2026-05 (25건) 월별 순차 처리 및 검증
+- **소스 페이지 아카이브 이동**: 25건 Confluence 아카이브 폴더 이동
+- **Task Scheduler 등록**: `wiki_builder_auto` (월~금 12:00) — `wiki_faq_builder_auto` 삭제·대체
+
+---
+
 ## 2026-06-05 — mcp_platform extractors_common 날짜 파싱 버그 수정 (16:32)
 
 - **`_RE_YEAR_QUARTER` / `_RE_YEAR_HALF` 수정**: `년?` → `년도?` — "25년도 1분기" 입력 시 연도를 분기 prefix로 묶지 못하고 연도 없이 분기만 매칭 → 현재 연도 기본값(2026)으로 오판하던 문제 해소
