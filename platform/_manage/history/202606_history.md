@@ -7,6 +7,25 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-08 — 전체 폴더 구조 정리 (17:31)
+
+- **빌드 아티팩트 삭제**: 루트 `.pytest_cache/`, `platform/__pycache__`, `projects/eacct_mcp/__pycache__`, `platform/extensions/tools/rag/node_modules/`
+- **중복 파일 삭제**: `platform/ENHANCEMENTS.md` (루트 통합)
+- **venv 정리**: `projects/wiki_builder/.venv` (루트 잔재) 삭제 / `projects/video_clipper/source/venv` → `.venv` 재생성 (명칭 일관성)
+- **video_clipper 미커밋 정리**: STT 스크립트 5종·requirements.txt·gitignore 커밋
+- **TODO_GLOBAL.md 구조 개선**: 미해결(12개) 상단 / 완료(14개) 하단 분리, G-010 현행화
+- **rag 도구 백업**: `platform/extensions/tools/rag/` → `platform/archive/rag/` 이동 (구 HTML 산출물 기반, MD 전환 후 재설계 예정)
+
+---
+
+## 2026-06-08 — wiki_builder 활성 전환 + 서비스종료 서브모듈 archived/ 이동 (16:03)
+
+- **wiki_builder(P2606041) 상태 전환**: 진행중 → 활성 (단계: 운영) — Task Scheduler 자동 실행 중
+- **서브모듈 구조 정리**: `projects/wiki_faq_builder`, `projects/wiki_mbo_builder` → `archived/` 이동
+  - GitHub 레포 보존, `projects/`는 진행중·활성 프로젝트만 유지
+
+---
+
 ## 2026-06-08 — wiki_builder FAQ 처리 완료 + 아카이브 이동 + 스케줄러 등록 (14:01)
 
 - **wiki_builder 통합 완료**: wiki_faq_builder + wiki_mbo_builder → wiki_builder(P2606041) 소스 파일 구현 완료
