@@ -142,3 +142,11 @@
     - **DEV 파일 작성 전** 반드시 `platform/processes/collab/_templates/dev.md`를 Read한다. 기억·이전 DEV 파일 패턴 의존 금지. 섹션 순서·게이트 위치·체크리스트 항목·블록 인용 안내문(> blockquote 전체)을 템플릿과 1:1 대조 후 작성. 블록 인용 내 역할별 의무 목록·행 형식·금지 사항도 생략 없이 그대로 반영한다.
     - DEV §2(개발 완료 요약) 작성 직후 TC 파일(`40_testcase/40_TC_...`) §1을 즉시 작성한다. Jacey 요청 전 자동 선행. 다음 단계로 넘어가기 전 TC 파일 존재 여부 자가 확인.
     - TC 파일 작성 전 반드시 `platform/processes/collab/_templates/testcase.md`를 Read하고, `_archive/` 내 실제 TC 사례 1건도 함께 확인한 후 양식에 맞게 작성. 표 구조(`| TC-ID | 작성자 | 분류 | 항목 | 전제 조건 | 기대 결과 |`)를 따른다.
+14. **서브모듈 push 전 SSH 호스트 별칭 자동 확인·설정** — `projects/` 하위 서브모듈을 처음 push하기 직전 `git remote -v`로 URL 확인. HTTPS(`https://github.com/...`) 또는 별칭 없음이면 아래 매핑으로 즉시 교정 후 push. 확인 없이 push 금지.
+    | 계정 | 적용 대상 | SSH 별칭 형식 |
+    |---|---|---|
+    | `JaceyBaek` | `projects/` 하위 개인 프로젝트 | `github-personal:JaceyBaek/{repo}.git` |
+    | `JaceyBaek-GSRetail` | project-hub 본체 | `github-gsretail:gsr-ax/{repo}.git` |
+    ```bash
+    git remote set-url origin github-personal:JaceyBaek/{repo}.git
+    ```
