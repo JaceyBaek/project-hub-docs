@@ -14,7 +14,7 @@
 
 마무리 뉘앙스 감지 시 ("오늘은 여기까지", "수고했어", "내일 하자" 등): clear 트리거와 동일하게 즉시 자동 기록 실행 — git 커밋 제외 (수동)
 
-**히스토리 기록 규칙:** `platform/_manage/history/YYYYMM.md` 및 `_manage/history/YYYYMM.md`에 새 항목 추가 시 **파일 최상단(첫 번째 `---` 구분선 바로 아래)에 삽입** — 최신 항목이 항상 위에 오도록 유지
+**히스토리 기록 규칙:** `platform/_manage/history/YYYYMM_history.md` 및 `_manage/history/YYYYMM_history.md`에 새 항목 추가 시 **파일 최상단(첫 번째 `---` 구분선 바로 아래)에 삽입** — 최신 항목이 항상 위에 오도록 유지
 
 **푸시 요청 시 전단계 자동 선행:** 푸시 요청이 오면 푸시만 실행하지 않는다. 세션 마무리 표준 흐름 전체를 순서대로 진행한다.
 1. **각종 기록** — 히스토리·lessons_learned·todo·issues 등 누락된 기록 작성
@@ -54,7 +54,7 @@
 
 - 현황: `PROJECTS_GLOBAL.md` (섹션: 진행중 / 보류 / 활성 / 서비스종료)
 - 상태 표기: 각 프로젝트 CLAUDE.md 상단 → `상태: 진행중 | 코드: {코드} | 담당: {이름} | 시작일: YYYY-MM-DD`
-- 단위 관리: `_manage/` — `history/YYYYMM.md` / `todo.md` / `issues.md` / `meetings/` / `decisions.md` / `changelog.md` / `lessons.md` / `brainstorm/`
+- 단위 관리: `_manage/` — `history/YYYYMM_history.md` / `todo.md` / `issues.md` / `meetings/` / `decisions.md` / `changelog.md` / `lessons.md` / `brainstorm/`
 - 우선순위: 높음·보통·낮음 / 상태: 대기·진행중·완료·보류 / 이슈유형: 버그·변경요청·리스크
 - **todo vs brainstorm 분류 기준**
   - `todo.md`: 실행 가능한 단위 태스크 ("A 프로젝트 테스트 진행" 등 완료·진행중·대기·보류 상태로 추적)
@@ -81,6 +81,8 @@
 1. **한국어·존댓말** — 모든 답변
 2. **불필요한 서두 금지** — 바로 본론
 3. **사실 기반만** — 추측 불가 / 제안은 "제안" 명시 / 불확실하면 모른다고 명시
+   - **외부 서비스·API 스펙(한도·가격·지원 기능) 언급 시 반드시 검색으로 확인 후 기술** — 사용자가 추정으로 말한 수치도 산출물·답변에 그대로 인용 금지. 확인 전에는 "미확인" 또는 "확인 필요"로 명시
+   - **산출물(REQ 등)에 미확인 외부 스펙 기재 금지** — 제약사항·가정에 외부 서비스 수치를 쓸 때는 검색 출처 확인 후 기재
 4. **번호 목록** — 수정 사항 여러 개 시
 5. **코드·산출물 우선** — 설명보다 즉시 적용 가능한 결과물 먼저
 6. **모호하면 반드시 질문** — 특히 프로젝트 생성·삭제·상태 전환은 반드시 확인 후 진행
@@ -131,6 +133,7 @@
 11. **경로 변경 시 CI/CD 영향도 검토 필수** — 폴더 이동·이름 변경·구조 재편 작업 시 `.github/workflows/` 전체를 즉시 검토한다. 워크플로우 내 경로 참조(`rsync`, `cp`, `python`, `sed` 대상 경로 등)가 변경 대상 경로를 포함하면 동일 커밋 또는 직후 커밋에서 반드시 갱신. 검토 누락 시 CI 무음 실패로 이어지므로 구조 변경 PR의 체크리스트 항목으로 취급.
 13. **collab 협업 AI 역할 확인 필수** — collab 작업(design·DEV·TC 파일 작성) 시작 전 `platform/setup/config/personal.yml` `collab` 섹션을 확인한다.
     - `collab.author` (개발 AI) / `collab.verified_by` (설계검증 AI) / `collab.tested_by` (제3자 테스트 AI) 중 하나라도 미등록이면 즉시 질문하고 등록 후 진행.
+    - **DEV 담당자는 반드시 `personal.yml collab.author`에서 확인. design 문서의 `author` 필드(설계 기안자)와 혼동 금지. design author ≠ DEV author.**
     - "AI 바꾸자" 뉘앙스 감지 시: 어느 역할(`author`/`verified_by`/`tested_by`)을 바꿀지 + 새 AI명 확인 → `personal.yml` 업데이트 → 진행 중(`open`/`active`) collab 파일 frontmatter 갱신. 완료·아카이브 파일은 변경하지 않는다.
     - 세부 프로세스: `platform/processes/collab/README.md` §6 `협업 AI 등록 및 변경 프로세스` 참조.
 12-1. **collab design 합의/동의 기입 전 README §7·§8 필수 Read (하드 게이트)** —

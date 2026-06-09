@@ -7,6 +7,50 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-09 — transit_finder 개발 완성·API 키 설정 시도 (11:22)
+
+- **P2606081 transit_finder**: 백엔드·프론트엔드 코드 완성, API 키 발급·등록까지 진행
+  - 카카오 JS SDK·TMAP·서울시 버스 API 키 발급 및 keyring 등록 완료
+  - 서울시 버스 API 인증 실패(에러코드 30), TMAP SSL 오류(회사 프록시) — 테스트 보류
+  - 재개 시 우선 `data.seoul.go.kr` 직접 키 발급 시도 필요
+  - 상세 이슈·TODO → `projects/transit_finder/_manage/`
+
+---
+
+## 2026-06-09 — DEV_D02 최종 승인 완료 및 bundle 아카이브 (16:13)
+
+- **H-006 C4 수정 (git 명령 최적화)**:
+  - `git ls-files --others` + `git diff --name-only --cached` 2회 호출 → `git status --porcelain --ignore-submodules=all` 단일 호출로 교체
+  - timeout 5 → 30 / perf_test.py cwd를 repo root로 수정
+  - 결과: avg=0.419s, p95=0.728s (기준 ≤1s/≤2s) PASS
+- **DEV_D02 최종 승인 (Jacey, 2026-06-09 14:59)**:
+  - codex §3-1 C3 통과(13:35) → antigravity §3-2 C4 통과(14:26) → Jacey 승인(14:59)
+  - H-001·H-006 pilot warn-only 운영 개시
+- **재발방지 등록 (결재 헤더 날짜 권한 침범)**:
+  - `platform/processes/collab/README.md` §11, `_templates/dev.md` 각 섹션 게이트, `lessons_learned.md`에 규칙 등록
+- **bundle `20260608-1855_claude-settings-hooks-migration` 아카이브**:
+  - `collab/PLATFORM/` → `collab/_archive/PLATFORM/` 이동
+  - D03/D04/ORC → `20260609-1316_collab-process-read-gate-hooks` 이관 명시
+  - MAP.md 전체 경로·상태 플래그 갱신
+
+---
+
+## 2026-06-09 — DEV_D02 시크릿·민감파일 보호 훅 구현 완료 (10:42)
+
+- **PLATFORM collab DEV_D02 §2 완료**: H-001/H-006 훅 어댑터 구현 및 26/26 테스트 통과
+- **신규 파일**:
+  - `platform/processes/security/hooks_policy_d02.md` — 정책 SoT
+  - `platform/extensions/scripts/hooks/h001_secret_detect.py` — Edit|Write `.env` 시크릿 감지 (pilot warn)
+  - `platform/extensions/scripts/hooks/h006_sensitive_file.py` — Bash git add/commit/push 민감파일 감지 (pilot warn)
+  - `.claude/settings.json` — H-001·H-006 PreToolUse·PostToolUse 훅 등록
+  - `test_samples/run_tests.py` + 샘플 파일 17종
+  - `test_results/20260609-0939-T001-T006-obs/summary.md` — obs 증적 정식 기록
+  - `30_dev/30_DEV_D02_...md`, `40_testcase/40_TC_D02_...md` — collab 문서
+- **주요 결과**: T-002~T-009 전원 통과. T-008 성능 avg=0.746s(≤1s). H-006 `git ls-files`로 전환(untracked 폴더 내 파일 개별 감지). cwd 대소문자 `.lower()` 처리 적용.
+- **다음**: codex §3-1(설계검증) + antigravity §3-2(제3자 테스트) 대기
+
+---
+
 ## 2026-06-08 — 전체 폴더 구조 정리 (17:31)
 
 - **빌드 아티팩트 삭제**: 루트 `.pytest_cache/`, `platform/__pycache__`, `projects/eacct_mcp/__pycache__`, `platform/extensions/tools/rag/node_modules/`

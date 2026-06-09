@@ -4,6 +4,7 @@
 
 | 상태 | 코드 | 프로젝트명 | 폴더 | 담당 | 시작일 | 단계 | 요약 |
 |---|---|---|---|---|---|---|---|
+| 진행중 | P2606081 | transit_finder | projects/transit_finder | Jacey | 2026-06-08 | 기획 | 시율이와 함께하는 대중교통 귀가 경로 탐색 도구 |
 | 진행중 | P2606021 | video_clipper | projects/video_clipper | Jacey | 2026-06-02 | 개발 | 인터뷰 영상 STT 기반 장면 추출·편집 도구 |
 | 진행중 | P2605262 | eacct | projects/eacct | Jacey | 2026-05-26 | 개발 | e-Acct 시스템 소스 수정·기능개선 작업 관리 — API 추가, 버그픽스, 리팩토링 이력 통합 |
 | 진행중 | P2605261 | eacct_source_analyzer | projects/eacct_source_analyzer | Jacey | 2026-05-26 | 개발 | eAcct 소스 분석·리뷰·API 생성 |
