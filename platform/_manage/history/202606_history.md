@@ -7,6 +7,127 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-12 — eacct_chatbot quick-win-batch D01~D03 collab bundle 완료 (10:22)
+
+- **collab bundle 완료:** `20260610-1826_quick-win-batch` (D01·D02·D03) 3-way 검증 통과·승인 완료
+  - **DEV_D01** (help 커맨드 discoverability) — `showHelp()` 3단계 구분 표시
+  - **DEV_D02** (표 가독성) — `_isDateKey()` + `_fmtCell(val, isDateCol)` 헤더 기반 날짜 컬럼 감지
+    - C1: 유효 범위 검사(연도 1900~2099, 월 01~12, 일 01~31) 추가
+    - C2: `_isDateKey()` 헤더 키워드 기반 YYYYMMDD 변환 제한 (회계 식별자 오변환 차단)
+  - **DEV_D03** (피드백 최소 루프) — `feedback_store.py` 신규 + `POST /feedback` 엔드포인트
+    - C1: `source/.gitignore` 신규(`*.db` 포함), msgRef fallback hex 32자 수정, `.env.*.example` 문서화
+  - collab 3-way: claude(개발) / codex(설계검증) / antigravity(제3자 테스트) / Jacey(최종 승인)
+- **bundle 아카이브 이동:** `collab/eacct_chatbot/20260610-1826_quick-win-batch/` → `collab/_archive/eacct_chatbot/`
+  - 빈 `collab/eacct_chatbot/` 폴더 삭제
+  - MAP.md 헤더 `[active]` → `[archived]`, TC 섹션(TC_D01~D04) 추가
+
+---
+
+## 2026-06-11 — MCP 가이드 보완 및 서비스 로드맵 확정 (19:27)
+
+- **MCP 가이드 내용 보정** (`projects/eacct_mcp/docs/guides/`)
+  - D003 응답 분리 예시: 매입세금계산서 → 전표조회, 기안자명 마스킹(`홍*동`) 예시로 교체
+  - 헤더 작성자 Jacey 추가, 풋터 경로 갱신 (`platform/docs/guides/` → `projects/eacct_mcp/docs/guides/`)
+- **eacct_mcp/chatbot 서비스 배포 로드맵 확정**
+  - 1차 (2026-07 말): chatbot 단독 배포 — MCP 불필요, Miso 기반 Q&A
+  - 2차 (2026-08 말): chatbot + eacct_mcp — 전표·매입세금계산서 실시간 DB 조회
+  - 3차 (2026-10 말): e-Acct API 연동 추가 — 전표 자동화 등, MCP DB read-only 유지
+  - 주요 결정: 공통코드는 테스트 기능으로 로드맵 제외 / 3차 쓰기는 e-Acct API 경유
+- **로드맵 문서화** (4개 파일 동시 반영)
+  - `mcp_guide.md/.html` §11 서비스 배포 로드맵 섹션 추가 (단계별 아키텍처 다이어그램 포함)
+  - `eacct_mcp/CLAUDE.md`, `eacct_chatbot/CLAUDE.md` 서비스 배포 로드맵 표 추가
+- **S5 다이어그램 오류 수정**: Mermaid subgraph+direction 구문 오류 → CSS 플로우 블록으로 교체
+
+## 2026-06-11 — eAcct 챗봇 AI 비용 산정 및 임원 보고서 작성 (19:22)
+
+- **실제 Miso 사용량 데이터 분석** (경영지원본부 64명, 2026-03~06-10)
+  - 누계: 91,876 API 호출 / 340M 입력 토큰 / 10.5M 출력 토큰 / $333.13
+  - 대시보드 토큰(7M, 에이전트만) ≠ 실제 청구 토큰(340M, 전체) 확인
+  - 입출력 비율 실측: 전체 97:3 / 최근(Sonnet) 기간 99:1
+  - 모델 전환 이력: Gemini → Claude Sonnet 4.6 (최근 전환)
+- **비용 산정 방법론 확립**
+  - 기준 기간: 3~4월 (5~6월은 테스트 집중 기간으로 제외)
+  - Sonnet 단가 재산정: 3월 $36.27 / 4월 $179.61 / 평균 **$107.94/월 (64명 기준)**
+  - 전사 확대(4,300명) — 기본: **$7,256/월** / 최대(4월 기준): **$12,069/월**
+- **임원 보고서 작성 및 최종 저장**
+  - MD + HTML 2종 (`projects/eacct_chatbot/_manage/reports/20260611_cost-estimate-exec.*`)
+  - HTML: SVG 차트 내장(외부 의존성 없음), 이메일 첨부 단독 공유 가능
+  - brainstorm → `_manage/reports/` 신규 폴더 생성 후 이동
+
+## 2026-06-11 — MCP 완전 가이드 작성 및 eacct_mcp 이관 (15:34)
+
+- **MCP 개념 Q&A**: eacct_mcp 아키텍처 기준으로 MCP 정의·구조·통신방식 설명
+  - "DB 직접 연결 vs API 경유" 논쟁 정리 — 둘 다 유효한 MCP, 프로토콜은 내부 구현 미규정
+  - "웹서버 하나 더 두는 것과 같다" 주장 반박 — AI 자기기술 인터페이스(tools/list) 차이 명확화
+  - Anthropic 공식 PostgreSQL·SQLite MCP가 DB 직접 연결 사례임을 근거로 제시
+- **MCP 완전 가이드 문서 작성**
+  - MD + HTML 2종 생성 (총 2057줄): 10개 섹션, Mermaid 다이어그램, FAQ 6개
+  - 초기 위치 `platform/docs/guides/` → `projects/eacct_mcp/docs/guides/`로 이관
+- **가이드 내용 보정**:
+  - D003 응답 분리 예시: 매입세금계산서 → 전표조회, 기안자명 마스킹(`홍*동`) 예시로 교체
+  - 헤더에 작성자 Jacey 추가, 풋터 경로 갱신
+
+## 2026-06-11 — DEV_D02 최종 승인 완료, bundle 아카이브 (09:44)
+
+- **PLATFORM collab DEV_D02 종료 승인**: H-GIT-REMOTE + H-DOC-QUALITY 훅 warn 모드 운영 투입 확정
+  - C1→C2→C3→C4 재개발 끝에 antigravity C4 재검증 26개 TC 전원 통과 (09:01)
+  - Jacey 종료 승인 (2026-06-11 09:02) — status: closed
+  - TC-013 관찰 게이트: 1주 운영 후 오탐 0건 확인 시 block DEV 착수 가능 → `platform/_manage/todo.md` T-001 등록 (기한 2026-06-18)
+- **bundle `20260609-1316_collab-process-read-gate-hooks` 아카이브 이동 완료**
+  - direction + D01·D02 + DEV_D01·D02 + TC_D01·D02 전체 `_archive/PLATFORM/`으로 이동
+  - MAP.md 전 항목 `[archived]` 갱신, INDEX.md 항목 추가, 원본 PLATFORM 빈 폴더 삭제
+  - `platform/_manage/todo.md` 신규 생성 (T-001 첫 항목)
+
+---
+
+## 2026-06-10 — CI 전체 점검 + 이벤트 기반 자동 복구 에이전트 브레인스톰 등록 (16:34)
+
+- **wiki_builder CI 복구**: flake8 에러 4건(E501·F401×2·F541) 수정·푸시 → CI success 확인
+- **전체 CI 상태 점검**: wiki_builder·gmail_cleaner·eacct_chatbot·eacct_source_analyzer 모두 green
+  - 6월 1~2일 실패 이력은 당일 자체 수정 완료 상태로 확인
+- **이벤트 기반 자동 복구 에이전트 브레인스톰 등록**
+  - 파일: `platform/_manage/brainstorm/20260610_event-driven-auto-remediation.md`
+  - 컨셉: Gmail CI 실패 알림 → 원인 분석(Claude API) → 자동 수정·커밋·푸시 에이전트
+  - 방향: 독립 프로젝트로 먼저 구현 후 플랫폼 승격 심사
+  - 결정 사항: Gmail 1차 / 폴링 하루 2회 Task Scheduler / Windows Toast + 로그 알림
+  - 미결 사항(collab 설계에서 결정): 다중 레포 관리 방식·API 비용 상한·detail 분리 기준·수정기 로컬 운영 방식
+  - 다음 단계: collab direction 초안 작성(codex 담당) → 합의 후 프로젝트 생성
+
+---
+
+## 2026-06-10 — DEV_D01 read-gate 훅 운영 투입 승인 및 bundle 아카이브 (13:41)
+
+- **PLATFORM collab DEV_D01 종료 승인**: H-RG-001~003 운영 투입 확정
+  - C1 미통과 → C2 수정(정규식 오탐·경로 정규화) → codex/antigravity C2 21개 전원 통과
+  - Jacey 종료 승인(2026-06-10 13:41) — H-RG-001~003 즉시 운영
+  - bundle `20260609-1316_collab-process-read-gate-hooks` → `_archive/PLATFORM/` 이동 완료
+  - MAP.md(collab 루트·PLATFORM) 상태 `archived` 갱신 완료
+
+---
+
+## 2026-06-10 — DEV_D01 read-gate 훅 구현 착수 완료 (11:01)
+
+- **PLATFORM collab DEV_D01**: H-RG-001~003 read-gate 훅 구현 완료
+  - G-01 PASS: hook input 필드 목록 확인 (`_obs_results/20260609_*_pre_Write/Edit.json` 증적)
+  - G-03 PASS: 기존 H-001 PreToolUse 동작으로 출력 채널 검증됨
+  - `platform/extensions/scripts/hooks/read_gate.py` 신규 구현 (H-RG-001~003)
+  - `.claude/settings.json` PreToolUse `Edit|Write` 매처에 H-RG 훅 등록
+  - `30_DEV_D01_20260610-1058_read-gate-hooks.md` §2 개발 완료 요약 작성
+  - `40_TC_D01_20260610-1058_read-gate-hooks.md` §1 TC-001~012 작성
+  - 다음 단계: codex §3-1 설계검증 → antigravity §3-2 → Jacey dev 종료 승인
+
+---
+
+## 2026-06-10 — D01 read-gate 설계 최종 승인 (10:27)
+
+- **PLATFORM collab D01 `20_D01_read-gate-hooks.md`**: 전 사이클 완료
+  - claude R1 리뷰 → codex R1 응답 → claude R2 재검토 → codex V1 동의 → Jacey 승인
+  - H-RG-001/002 block 대상: 신규 Write 한정 / H-RG-003: hook payload 확인 후 block 여부 확정
+  - G-01~G-04 선행 게이트 도입 합의
+  - §5 이슈 트래킹 ID별 묶음·R1→R2→V1 순서 정렬 완료
+
+---
+
 ## 2026-06-09 — transit_finder 개발 완성·API 키 설정 시도 (11:22)
 
 - **P2606081 transit_finder**: 백엔드·프론트엔드 코드 완성, API 키 발급·등록까지 진행
