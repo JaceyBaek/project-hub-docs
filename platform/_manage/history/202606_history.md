@@ -7,6 +7,24 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-12 — gmail_cleaner 서비스종료 + GAS 스크립트 대폭 개선 (13:04)
+
+- **gmail_cleaner 프로젝트 서비스종료 처리 완료**
+  - CLAUDE.md 상태 → `서비스종료`, PROJECTS_GLOBAL.md 이동
+  - 종료 사유: Python/MCP 방식 → 기존 GAS 스크립트로 운영 유지 결정
+- **훅 경로 버그 수정** (`.claude/settings.json`)
+  - 서브모듈 내 CWD 불일치로 훅 스크립트 못 찾던 문제 → PowerShell + `git rev-parse --show-superproject-working-tree` 패턴으로 동적 허브 루트 탐지
+  - lessons_learned.md 등록
+- **GAS 스크립트 전면 개선** (gmail_cleaner/archive/Code.js 기준)
+  - `in:promotions` 주석 해제, `[광고]` 패턴 추가, 금융/증권/SNS 쿼리 추가
+  - 웹앱 기반 검토 페이지 구현: `doGet()` → 체크박스 목록 + 삭제 버튼 (`google.script.run` 연동)
+  - `reviewAndSendApproval()`: 삭제 후보를 Gmail로 발송 → 링크 클릭 → 확인 후 삭제
+  - `autoDeleteQueries` / `reviewQueries` 분리: 즉시 삭제 vs 검토 후 삭제
+  - `runDailyCleanup()`: 자동삭제 → 검토 메일 발송 순서로 통합 실행 (트리거 대상)
+  - 검토 완료 후 알림 메일 자동 삭제
+
+---
+
 ## 2026-06-12 — eacct_chatbot quick-win-batch D01~D03 collab bundle 완료 (10:22)
 
 - **collab bundle 완료:** `20260610-1826_quick-win-batch` (D01·D02·D03) 3-way 검증 통과·승인 완료
