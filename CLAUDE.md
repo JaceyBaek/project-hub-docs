@@ -140,6 +140,7 @@
 12-1. **collab design 합의/동의 기입 전 README §7·§8 필수 Read (하드 게이트)** —
     - `resolved_by`·`verified_by`·트래킹 상태 기입 직전 반드시 `platform/processes/collab/README.md` §7을 Read한다. 기억·직관 의존 금지.
     - **역할 원칙 (§7 요약)**: `resolved_by`는 "해당 라운드에서 미해결 이슈가 없다고 선언한 쪽"을 기록. **이슈 없음 경우**: 검토자가 §2에서 이슈 없이 동의 → 검토자가 바로 합의 선언 가능 (`resolved_by`: 검토자). **이슈 있음 경우**: 기안자 §3 수용 응답 → 검토자가 §3 확인 후 이상 없음 선언 → `resolved_by`: 검토자, `verified_by`: 기안자. **기안자 수용 응답만으로 resolved 처리 금지.** 어느 경우든 `verified_by`는 기안자가 V 행으로 추가.
+    - **반사 확인 (절대 금지 패턴)**: 리뷰 결론에 "상대 AI(기안자)가 resolved 선언한다"고 쓰는 것은 오류다. 리뷰어인 claude가 이상 없음을 선언하는 순간이 곧 `resolved_by: claude` 기입 시점이다. "기안자 resolved 선언 대기"라는 문구가 나오면 즉시 §7을 다시 읽고 수정한다.
     - **동일인 기록 절대 금지**: `verified_by`는 `resolved_by`와 반드시 다른 참여자.
     - **트래킹 상태값 한국어 필수**: 트래킹 테이블·최종 상태 요약의 상태 컬럼은 `검토 대기`·`응답 대기`·`합의`·`동의`·`보류` 등 **한국어만** 사용. `resolved`·`verified` 등 영어 상태값 사용 금지.
 12. **collab DEV·TC 파일 — 템플릿 Read 후 작성 강제** —
