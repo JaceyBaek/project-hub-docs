@@ -7,6 +7,23 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-15 — eacct_chatbot 브레인스톰 완료 항목 분리 + 1차 배포 체크리스트 보완 (14:02)
+
+- 브레인스톰 5개 파일 구조 재편: 완료 항목 전체 내용을 하단으로 분리 (미완료 항목만 본문에 잔류)
+- deployment_roadmap·production_deployment 1차 배포 코드 준비 체크리스트에 보안 필수 항목 5개 추가
+- .gitignore docs/guides/ 예외 추가 (배포 가이드 추적 복구)
+- 상세: [202606_history.md](../../projects/eacct_chatbot/_manage/history/202606_history.md)
+
+---
+
+## 2026-06-15 — eacct_chatbot 브레인스톰 카테고리1 직접 처리 5건 완료 (09:32)
+
+- B1-3·SEC-8·SEC-22·SEC-23·INF-13 직접 처리 + SEC-15 checkout 이슈 재적용
+- 브레인스톰 5개 파일 현행화 (2026-06-15 현행화 테이블 + 완료 항목 섹션)
+- 상세: [202606_history.md](../../projects/eacct_chatbot/_manage/history/202606_history.md)
+
+---
+
 ## 2026-06-12 — gmail_cleaner 서비스종료 + GAS 스크립트 대폭 개선 (13:04)
 
 - **gmail_cleaner 프로젝트 서비스종료 처리 완료**
