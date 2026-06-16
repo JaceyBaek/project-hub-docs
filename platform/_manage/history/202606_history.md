@@ -7,6 +7,24 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-16 — eacct_mcp Containerfile 생성 (09:25)
+
+- `projects/eacct_mcp/Containerfile` 신규 생성 — Phase 3 운영 서버 배포 대비
+- 상세: [202606_history.md](../../projects/eacct_mcp/_manage/history/202606_history.md)
+
+---
+
+## 2026-06-15 — Lessons Learned 분석 보고서 + 8-5 완료 게이트 강화 (21:04)
+
+- 전체 레슨런 파일 6개 분석 → 유형별 건수·재발 패턴·인사이트 도출
+- `platform/docs/reports/` 폴더 신설 — 보고서 전용 위치 분리
+  - `20260615_lessons-analysis.md / .html` 생성
+  - 기존 `_manage/` 내 `20260601_team-intro-pt.*` 함께 이동
+- `CLAUDE.md` 8-5 완료 게이트 강화 — 각 단계에 산출물 기준 명시 + [완료 게이트] 추가
+- `platform/processes/lessons_learned.md` 신규 항목 등록 (8-5 미완료 재발 패턴)
+
+---
+
 ## 2026-06-15 — eacct_chatbot 브레인스톰 완료 항목 분리 + 1차 배포 체크리스트 보완 (14:02)
 
 - 브레인스톰 5개 파일 구조 재편: 완료 항목 전체 내용을 하단으로 분리 (미완료 항목만 본문에 잔류)

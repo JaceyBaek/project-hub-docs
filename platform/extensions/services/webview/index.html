@@ -448,8 +448,8 @@
 
     /* ── 노션 스타일 본문 ── */
     .markdown-section {
-      max-width: 860px !important;
-      padding: 40px 48px !important;
+      max-width: 1100px !important;
+      padding: 32px 40px !important;
       font-size: 15px !important;
       line-height: 1.75 !important;
       color: #37352f !important;
@@ -778,9 +778,9 @@
         },
         function(hook) {
           function dpwsGet() {
-            try { return JSON.parse(localStorage.getItem('dpws3') || '{}'); } catch(e) { return {}; }
+            try { return JSON.parse(localStorage.getItem('dpws4') || '{}'); } catch(e) { return {}; }
           }
-          function dpwsSet(c) { localStorage.setItem('dpws3', JSON.stringify(c)); }
+          function dpwsSet(c) { localStorage.setItem('dpws4', JSON.stringify(c)); }
           function dpwsSlug(t) {
             return t.toLowerCase()
               .replace(/[^a-z0-9가-힣一-龥]/g, '-')
@@ -883,7 +883,7 @@
                   dpwsSet(c);
                   if (headings.length) {
                     dpwsInject();
-                    document.dispatchEvent(new Event('dpws3-updated'));
+                    document.dispatchEvent(new Event('dpws4-updated'));
                   }
                 })
                 .catch(function() {});
@@ -962,10 +962,50 @@
           });
         }
         ,function(hook) {
+          /* 문서 현황 — 파일 인라인 펼치기 */
+          function mdToHtml(md) {
+            if (typeof window.marked === 'function') return window.marked(md);
+            if (window.marked && typeof window.marked.parse === 'function') return window.marked.parse(md);
+            return '<pre style="white-space:pre-wrap;font-size:13px">' + md.replace(/&/g,'&amp;').replace(/</g,'&lt;') + '</pre>';
+          }
+          function loadDocContent(details) {
+            var srcEl = details.querySelector('.dsrc');
+            var src = srcEl ? srcEl.textContent.trim() : null;
+            if (!src) return;
+            var container = details.querySelector('.doc-content');
+            if (!container || container._loaded) return;
+            container.innerHTML = '<em style="color:#aaa;font-size:13px">로딩 중...</em>';
+            fetch('/' + src)
+              .then(function(r) { return r.ok ? r.text() : Promise.reject(r.status); })
+              .then(function(md) {
+                md = md.replace(/^---[\s\S]*?---\s*/m, '');
+                md = md.replace(/^<!--[\s\S]*?-->\s*/m, '');
+                container.innerHTML = mdToHtml(md);
+                container._loaded = true;
+              })
+              .catch(function(err) {
+                container.innerHTML = '<em style="color:#e00">로드 실패 (' + err + ')</em>';
+              });
+          }
+          hook.doneEach(function() {
+            setTimeout(function() {
+              var section = document.querySelector('.markdown-section');
+              if (!section) return;
+              section.querySelectorAll('details.doc-details').forEach(function(details) {
+                if (details._listenerAttached) return;
+                details._listenerAttached = true;
+                details.addEventListener('toggle', function() {
+                  if (details.open) loadDocContent(details);
+                });
+              });
+            }, 50);
+          });
+        }
+        ,function(hook) {
           var sections = [];
 
           hook.mounted(function() {
-            document.addEventListener('dpws3-updated', function() { addSubToggles(); });
+            document.addEventListener('dpws4-updated', function() { addSubToggles(); });
           });
 
           hook.doneEach(function() {
