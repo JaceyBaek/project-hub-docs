@@ -138,12 +138,14 @@
 11. **경로 변경 시 CI/CD 영향도 검토 필수** — 폴더 이동·이름 변경·구조 재편 작업 시 `.github/workflows/` 전체를 즉시 검토한다. 워크플로우 내 경로 참조(`rsync`, `cp`, `python`, `sed` 대상 경로 등)가 변경 대상 경로를 포함하면 동일 커밋 또는 직후 커밋에서 반드시 갱신. 검토 누락 시 CI 무음 실패로 이어지므로 구조 변경 PR의 체크리스트 항목으로 취급.
 13. **collab 협업 AI 역할 확인 필수** — collab 작업(design·DEV·TC 파일 작성) 시작 전 `platform/setup/config/personal.yml` `collab` 섹션을 확인한다.
     - `collab.author` (개발 AI) / `collab.verified_by` (설계검증 AI) / `collab.tested_by` (제3자 테스트 AI) 중 하나라도 미등록이면 즉시 질문하고 등록 후 진행.
-    - **DEV 담당자는 반드시 `personal.yml collab.author`에서 확인. design 문서의 `author` 필드(설계 기안자)와 혼동 금지. design author ≠ DEV author.**
+    - **DEV 담당자는 반드시 `personal.yml collab.author`에서 확인. design 문서의 `author` 필드(설계 기안자)와 혼동 금지. design author ≠ DEV author. DEV 파일 작성뿐 아니라 "다음 단계 누가 무엇을 해야 한다"는 안내를 할 때도 동일하게 personal.yml 확인 의무.**
     - "AI 바꾸자" 뉘앙스 감지 시: 어느 역할(`author`/`verified_by`/`tested_by`)을 바꿀지 + 새 AI명 확인 → `personal.yml` 업데이트 → 진행 중(`open`/`active`) collab 파일 frontmatter 갱신. 완료·아카이브 파일은 변경하지 않는다.
     - 세부 프로세스: `platform/processes/collab/README.md` §6 `협업 AI 등록 및 변경 프로세스` 참조.
 12-1. **collab design 합의/동의 기입 전 README §7·§8 필수 Read (하드 게이트)** —
     - `resolved_by`·`verified_by`·트래킹 상태 기입 직전 반드시 `platform/processes/collab/README.md` §7을 Read한다. 기억·직관 의존 금지.
     - **역할 원칙 (§7 요약)**: `resolved_by`는 "해당 라운드에서 미해결 이슈가 없다고 선언한 쪽"을 기록. **이슈 없음 경우**: 검토자가 §2에서 이슈 없이 동의 → 검토자가 바로 합의 선언 가능 (`resolved_by`: 검토자). **이슈 있음 경우**: 기안자 §3 수용 응답 → 검토자가 §3 확인 후 이상 없음 선언 → `resolved_by`: 검토자, `verified_by`: 기안자. **기안자 수용 응답만으로 resolved 처리 금지.** 어느 경우든 `verified_by`는 기안자가 V 행으로 추가.
+    - **blocking 없으면 즉시 합의 선언 (강제)**: 리뷰 완료 시 blocking 이슈가 없으면 그 자리에서 `resolved_by: claude` 기입 + 트래킹 테이블·최종 상태 요약·코드블록·MAP을 같은 액션에서 모두 갱신. "역질문 응답 확인 후 합의 선언"은 역질문이 blocking일 때만 허용. 역질문이 명확화 요청(non-blocking)이면 합의 선언 후 역질문을 기입한다. "응답 후 합의 선언 가능하다"는 문구가 나오면 즉시 blocking 여부를 재판단하고 blocking이 아니면 그 자리에서 합의 선언으로 대체한다.
+    - **합의 선언 시 필수 처리 목록 (한 번에)**: ① frontmatter `status: resolved` + `resolved_by: claude` + 시각 ② 헤더 행 시각 ③ 합의 섹션 결론 ④ 최종 상태 요약 전 항목 `합의 (claude)` ⑤ 트래킹 테이블 R{N} 합의 행 추가 ⑥ 코드블록 상태 갱신 ⑦ MAP 상태 플래그 + 다음 단계. 하나라도 누락하면 합의 처리 미완료.
     - **반사 확인 (절대 금지 패턴)**: 리뷰 결론에 "상대 AI(기안자)가 resolved 선언한다"고 쓰는 것은 오류다. 리뷰어인 claude가 이상 없음을 선언하는 순간이 곧 `resolved_by: claude` 기입 시점이다. "기안자 resolved 선언 대기"라는 문구가 나오면 즉시 §7을 다시 읽고 수정한다.
     - **동일인 기록 절대 금지**: `verified_by`는 `resolved_by`와 반드시 다른 참여자.
     - **트래킹 상태값 한국어 필수**: 트래킹 테이블·최종 상태 요약의 상태 컬럼은 `검토 대기`·`응답 대기`·`합의`·`동의`·`보류` 등 **한국어만** 사용. `resolved`·`verified` 등 영어 상태값 사용 금지.

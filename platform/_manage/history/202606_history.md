@@ -7,6 +7,13 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-16 — eacct_chatbot 1단계 단독 배포 준비 완료 (14:05)
+
+- MCP optional 처리, 4개 Miso 에이전트 keyring 등록, UI 텍스트 1단계 배포용 변경
+- 상세: [202606_history.md](../../projects/eacct_chatbot/_manage/history/202606_history.md)
+
+---
+
 ## 2026-06-16 — eacct_mcp Containerfile 생성 (09:25)
 
 - `projects/eacct_mcp/Containerfile` 신규 생성 — Phase 3 운영 서버 배포 대비
