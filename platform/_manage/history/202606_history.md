@@ -7,6 +7,22 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-17 — wiki_builder 스케줄러 오류 수정 (12:55)
+
+- `wiki_builder_auto.bat` LF→CRLF 변환 + `pushd` 따옴표 오류 수정 — 6/8 최초 등록 이후 한 번도 실행되지 않은 근본 원인
+- `atlassian_client/base.py` stdout 설정 방식 수정 — `TextIOWrapper` 교체 → `reconfigure()` 방식으로 변경 (FAQ→MBO 연속 실행 시 buffer 이중 닫힘으로 `ValueError` 발생 방지)
+- 수정 후 정상 실행 확인: FAQ 3건 처리 (신규 1 / 갱신 2), MBO 정상 진입
+
+---
+
+## 2026-06-16 — collab 아카이브 번들 11_REQ 문서 7건 일괄 생성 (17:24)
+
+- collab 아카이브(eacct_chatbot 3건 + PLATFORM 3건) 및 active 번들(eacct_chatbot 1건) 대상
+- DIR/ORC 역설계로 요구사항정의서(11_REQ_*.md) 신규 생성
+- 생성 목록: brainstorm-triage, pii-tokenization-boundary, quick-win-batch, rule-loading-chain, claude-settings-hooks-migration, collab-process-read-gate-hooks, first-open-dev-goals-review
+
+---
+
 ## 2026-06-16 — eacct_chatbot 1단계 단독 배포 준비 완료 (14:05)
 
 - MCP optional 처리, 4개 Miso 에이전트 keyring 등록, UI 텍스트 1단계 배포용 변경
