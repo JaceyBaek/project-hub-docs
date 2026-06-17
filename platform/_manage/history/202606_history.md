@@ -7,6 +7,13 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-17 — eacct_chatbot·eacct_mcp 배포 경로 정비 (14:24)
+
+- **eacct_chatbot**: `deploy/build_wheels.ps1` PLUGINS_PATH env fallback 추가, Miso `user` 파라미터 `"chatbot"` → `"chatbotTester"`
+- **eacct_mcp**: `platform/plugins/` 경로 오류 3곳 (`setup.py`, `config_validate.py`, `CLAUDE.md`) → `platform/extensions/plugins/` 수정 + build_wheels.ps1 env fallback
+
+---
+
 ## 2026-06-17 — eacct_chatbot first-open DEV_D05 최종 승인 완료 (13:11)
 
 - DEV_D05 acceptance-test-matrix C1~C3 수정 완료 (AC 총량 29개 정정·G1 증적 케이스 추가·g1_smoke 폴더 설명 보완)
