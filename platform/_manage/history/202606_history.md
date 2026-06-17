@@ -7,6 +7,15 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-17 — eacct_chatbot first-open DEV_D05 최종 승인 완료 (13:11)
+
+- DEV_D05 acceptance-test-matrix C1~C3 수정 완료 (AC 총량 29개 정정·G1 증적 케이스 추가·g1_smoke 폴더 설명 보완)
+- codex C3 재검증 통과 (12:57) + antigravity 제3자 검증 통과 (13:05, TC-A01~A02 추가)
+- Jacey 최종 승인 완료 (13:11)
+- first-open-dev-goals-review DEV/TC D01~D05 전 완료 — 다음 단계: codex ORC+D01~D05 (persistent-audit-context-store direction)
+
+---
+
 ## 2026-06-17 — wiki_builder 스케줄러 오류 수정 (12:55)
 
 - `wiki_builder_auto.bat` LF→CRLF 변환 + `pushd` 따옴표 오류 수정 — 6/8 최초 등록 이후 한 번도 실행되지 않은 근본 원인
