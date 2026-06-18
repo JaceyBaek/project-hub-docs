@@ -7,6 +7,63 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-18 — AGENTS.md 승인 팝업 최소화 규칙 추가 (17:03)
+
+- 승인 팝업 최소화: 단일 명령(`rg`, `Get-Content`, `git diff` 등) 우선, 복합 파이프라인·스크립트 블록·`pwsh.exe -Command` 래핑 최소화
+- 파일 일부 확인 방식: `rg -n` → `Get-Content -TotalCount/-Tail` 단계 확인, 복합 명령 불가피 시 사전 설명 의무
+
+---
+
+## 2026-06-18 — eacct_chatbot g1-deployment-readiness D02·D03 리뷰 완료 (16:46)
+
+- **D02 integration-security-boundary**: claude R1 리뷰 완료(16:13) — D02-I-001~010 전 합의. codex 동의 대기
+- **D03 runtime-reliability-and-degraded-ops**: claude R1 리뷰 완료(16:46) — D03-I-001~012 전 합의(D03-I-001 eacct_mcp/Miso 실행 구조 명시 권고 포함, non-blocking). codex 동의 대기
+
+---
+
+## 2026-06-18 — eacct_chatbot DEV_D04 session-lifecycle C2 보완 완료 (16:26)
+
+- codex C1 설계검증 미통과(14:53) 3항목 대응 완료
+  - `server.py` TC-C04: `is_context_blocked` 체크 + `reset_marker` 해제 구현버그 수정
+  - `server.py` TC-C05: `storage_degraded` 처리 로그 추가
+  - `test_d04_server_endpoints.py` 5개 신규 + `conftest.py` plugin 경로 수정
+- 전체 93 passed — codex C2 설계검증 대기
+
+---
+
+## 2026-06-18 — eacct_chatbot DEV_D05 privacy-and-acceptance-matrix 개발 완료 (16:06)
+
+- D05 설계 승인(jacey 15:20) 직후 DEV_D05 착수 완료
+- privacy_gate.py 신규(PrivacyGateResult 7종·RAW_PII_FIELDS 18종·check_evidence_redaction) + 9 테스트 전 통과 + .env.example D05 섹션 + accepted_risk.md D05 리스크 6종
+
+---
+
+## 2026-06-18 — eAcct feature/chatbot_1st ← release/GSR_QA 머지 (16:52)
+
+- `release/GSR_QA` 최신 643개 커밋 로컬 반영, `main.jsp` 충돌 해소
+- QA 대비 변경 파일: `main.jsp` 1건 — PR 준비 완료
+
+---
+
+## 2026-06-18 — eAcct RSA 오류·챗봇 Mixed Content 수정 (14:51)
+
+- **eAcct QA `config.properties`**: `production_mode = local` → `dev` + `git skip-worktree` 적용 — RSA 공개키 로드 오류(`InvalidKeyException`) 해소
+- **eAcct `main.jsp`**: 챗봇 위젯 모드 `local` → `dev` 로 명칭 변경 (dev→localhost, stage→dev-chatbot, prod→운영)
+- **eacct_chatbot `server.py`**: `ProxyHeadersMiddleware` 추가 — K8s/nginx 리버스 프록시 뒤에서 `request.base_url` HTTPS scheme 미인식으로 인한 Mixed Content 오류 해소
+
+---
+
+## 2026-06-17 — eAcct 챗봇 위젯 삽입 + 브랜치 신설 (18:51)
+
+- **`feature/chatbot_1st` 브랜치 신설**: `release/GSR_PROD` 기준으로 생성 — 챗봇 1단계 배포 개발 전용 브랜치
+- **`main.jsp` 챗봇 위젯 삽입**: 기존 Miso 위젯 유지 + eAcct 챗봇 위젯 추가 (3환경 분기)
+  - `local` → `http://localhost:7000/widget.js`
+  - `stage` → `https://dev-chatbot-eacct.gsretail.com/widget.js`
+  - `prod` (otherwise) → `https://chatbot-eacct.gsretail.com/widget.js`
+- **로컬 환경 설정**: `config.properties` `production_mode = local` 변경 + `git update-index --assume-unchanged` 적용 (커밋 제외)
+
+---
+
 ## 2026-06-17 — eacct_chatbot·eacct_mcp 배포 경로 정비 (14:24)
 
 - **eacct_chatbot**: `deploy/build_wheels.ps1` PLUGINS_PATH env fallback 추가, Miso `user` 파라미터 `"chatbot"` → `"chatbotTester"`
