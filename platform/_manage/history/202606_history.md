@@ -7,6 +7,14 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-19 — eacct_chatbot 20260616-1736 persistent-audit-context-store 번들 아카이브 (14:41)
+
+- `20260616-1736_persistent-audit-context-store` 번들 전 항목 완료 (DEV_D01~D05 Jacey 승인 완료)
+- 18개 파일(direction + ORC + D01~D05 + DEV_D01~D05 + TC_D01~D05) `_archive/eacct_chatbot/20260616-1736_persistent-audit-context-store/` 이동
+- collab MAP 상태 플래그 `[archived]` 갱신
+
+---
+
 ## 2026-06-18 — AGENTS.md 승인 팝업 최소화 규칙 추가 (17:03)
 
 - 승인 팝업 최소화: 단일 명령(`rg`, `Get-Content`, `git diff` 등) 우선, 복합 파이프라인·스크립트 블록·`pwsh.exe -Command` 래핑 최소화
