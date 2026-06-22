@@ -74,6 +74,7 @@
 - 교훈 기록·에스컬레이션 흐름 → `platform/processes/lessons_learned.md` (프로젝트별 `_manage/lessons.md` → `[공통]` 태그 → 플랫폼 승격) / **등록 시 `반영 위치` 필드 필수** — 재발방지 내용이 실제 기록된 파일·섹션 명시
 - 플랫폼 승격 심사 절차 → `platform/processes/project/platform_promotion.md` (미구현, 추후 설계)
 - **collab bundle 아카이브 절차** (bundle 이동·빈 폴더 삭제·MAP 갱신 포함) → `platform/processes/collab/README.md` §15
+  - **아카이브 이동 전 하드 체크 (위반 시 즉시 중단):** ① README §12 Read 후 진행. ② `_archive/eacct_chatbot/MAP.md`(또는 해당 namespace MAP)에서 해당 bundle의 `### Dev` 섹션 유무 확인 — `### Dev` 섹션이 존재하면 MAP에 DEV 항목이 있다는 뜻이며, `[active]` 항목이 하나라도 있으면 이동 금지. ③ 30_dev 폴더 없음 = DEV 없음으로 단정 금지 — MAP이 SoT. ④ "DEV 착수 가능" 문구가 MAP에 있으면 DEV 미착수·진행 중 상태이므로 이동 금지.
 
 ---
 
@@ -145,7 +146,7 @@
     - `resolved_by`·`verified_by`·트래킹 상태 기입 직전 반드시 `platform/processes/collab/README.md` §7을 Read한다. 기억·직관 의존 금지.
     - **역할 원칙 (§7 요약)**: `resolved_by`는 "해당 라운드에서 미해결 이슈가 없다고 선언한 쪽"을 기록. **이슈 없음 경우**: 검토자가 §2에서 이슈 없이 동의 → 검토자가 바로 합의 선언 가능 (`resolved_by`: 검토자). **이슈 있음 경우**: 기안자 §3 수용 응답 → 검토자가 §3 확인 후 이상 없음 선언 → `resolved_by`: 검토자, `verified_by`: 기안자. **기안자 수용 응답만으로 resolved 처리 금지.** 어느 경우든 `verified_by`는 기안자가 V 행으로 추가.
     - **blocking 없으면 즉시 합의 선언 (강제)**: 리뷰 완료 시 blocking 이슈가 없으면 그 자리에서 `resolved_by: claude` 기입 + 트래킹 테이블·최종 상태 요약·코드블록·MAP을 같은 액션에서 모두 갱신. "역질문 응답 확인 후 합의 선언"은 역질문이 blocking일 때만 허용. 역질문이 명확화 요청(non-blocking)이면 합의 선언 후 역질문을 기입한다. "응답 후 합의 선언 가능하다"는 문구가 나오면 즉시 blocking 여부를 재판단하고 blocking이 아니면 그 자리에서 합의 선언으로 대체한다.
-    - **합의 선언 시 필수 처리 목록 (한 번에)**: ① frontmatter `status: resolved` + `resolved_by: claude` + 시각 ② 헤더 행 시각 ③ 합의 섹션 결론 ④ 최종 상태 요약 전 항목 `합의 (claude)` ⑤ 트래킹 테이블 R{N} 합의 행 추가 ⑥ 코드블록 상태 갱신 ⑦ MAP 상태 플래그 + 다음 단계. 하나라도 누락하면 합의 처리 미완료.
+    - **합의 선언 시 필수 처리 목록 (한 번에)**: ① frontmatter `status: resolved` + `resolved_by: claude` + 시각 ② 헤더 테이블 이름 행·시각 행 모두 갱신 (이름 행의 합의자 칸 → `claude`, 시각 행의 합의자 칸 → 합의 시각; 두 행 독립 갱신 필수 — 이름 행 누락 또는 시각 행에 이름 혼기 금지) ③ 합의 섹션 결론 ④ 최종 상태 요약 전 항목 `합의 (claude)` ⑤ 트래킹 테이블 R{N} 합의 행 추가 ⑥ 코드블록 상태 갱신 ⑦ MAP 상태 플래그 + 다음 단계. 하나라도 누락하면 합의 처리 미완료.
     - **반사 확인 (절대 금지 패턴)**: 리뷰 결론에 "상대 AI(기안자)가 resolved 선언한다"고 쓰는 것은 오류다. 리뷰어인 claude가 이상 없음을 선언하는 순간이 곧 `resolved_by: claude` 기입 시점이다. "기안자 resolved 선언 대기"라는 문구가 나오면 즉시 §7을 다시 읽고 수정한다.
     - **동일인 기록 절대 금지**: `verified_by`는 `resolved_by`와 반드시 다른 참여자.
     - **트래킹 상태값 한국어 필수**: 트래킹 테이블·최종 상태 요약의 상태 컬럼은 `검토 대기`·`응답 대기`·`합의`·`동의`·`보류` 등 **한국어만** 사용. `resolved`·`verified` 등 영어 상태값 사용 금지.
@@ -153,6 +154,11 @@
     - **DEV 파일 작성 전** 반드시 `platform/processes/collab/_templates/dev.md`를 Read한다. 기억·이전 DEV 파일 패턴 의존 금지. 섹션 순서·게이트 위치·체크리스트 항목·블록 인용 안내문(> blockquote 전체)을 템플릿과 1:1 대조 후 작성. 블록 인용 내 역할별 의무 목록·행 형식·금지 사항도 생략 없이 그대로 반영한다.
     - DEV §2(개발 완료 요약) 작성 직후 TC 파일(`40_testcase/40_TC_...`) §1을 즉시 작성한다. Jacey 요청 전 자동 선행. 다음 단계로 넘어가기 전 TC 파일 존재 여부 자가 확인.
     - TC 파일 작성 전 반드시 `platform/processes/collab/_templates/testcase.md`를 Read하고, `_archive/` 내 실제 TC 사례 1건도 함께 확인한 후 양식에 맞게 작성. 표 구조(`| TC-ID | 작성자 | 분류 | 항목 | 전제 조건 | 기대 결과 |`)를 따른다.
+12-2. **collab DEV 병행 착수 전 산출물 종속성 사전 점검 (하드 게이트)** — {user_name}이/가 복수 DEV 병행을 요청하더라도, 착수 전 반드시 아래를 점검한다.
+    - **점검 기준**: 후속 DEV 산출물(코드·문서·가이드)이 선행 DEV 산출물의 내용을 직접 참조·소비하는가? (예: 섹션 번호 참조, 정의된 기준·목록 인용, 매핑 표 소비)
+    - **종속 확인 시**: 선행 DEV가 {user_name} 승인 완료 전까지 후속 DEV 착수 불가. {user_name}에게 종속 사유와 권장 착수 순서를 보고 후 승인받은 경우에만 예외.
+    - **설계 depends_on 완료 ≠ DEV 병행 착수 허용**: detail 단계의 `depends_on` 해소는 설계 선행 조건 충족이며, DEV 산출물 내용 종속성 해소의 충분조건이 아니다.
+    - 세부 규칙: `platform/processes/collab/README.md` §4 핵심 원칙 — DEV 병행 착수 금지 조건 참조
 14. **서브모듈 push 전 SSH 호스트 별칭 자동 확인·설정** — `projects/` 하위 서브모듈을 처음 push하기 직전 `git remote -v`로 URL 확인. HTTPS(`https://github.com/...`) 또는 별칭 없음이면 아래 매핑으로 즉시 교정 후 push. 확인 없이 push 금지.
     | 계정 | 적용 대상 | SSH 별칭 형식 |
     |---|---|---|

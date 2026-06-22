@@ -7,6 +7,41 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-22 — G1-deployment-readiness 번들 완결 + 프로세스 갭 보완 (15:34)
+
+- **DEV_D05 최종 승인**: `30_DEV_D05_deployment-pipeline-and-data-ops` §5 전건 PASS + Jacey 최종 승인 완료 (15:00)
+- **번들 아카이브**: `collab/eacct_chatbot/20260617-1936_g1-deployment-readiness/` → `collab/_archive/eacct_chatbot/20260617-1936_g1-deployment-readiness/` 이동 완료 (15:08)
+  - namespace MAP·root MAP 상태 플래그 `[archived]` 갱신 + 경로 전수 업데이트
+- **collab DEV 병행 착수 프로세스 갭 보완 (Rule 8-5 3단계 완수)**:
+  - `platform/processes/collab/README.md` §4 — DEV 병행 착수 금지 하드 게이트 신규 등록
+  - `CLAUDE.md` 12-2 — collab DEV 병행 착수 전 산출물 종속성 사전 점검 규칙 추가
+  - `platform/processes/lessons_learned.md` — DEV 병행 착수 레슨런 등록
+- **archive 내 교차 참조 정리**: DEV_D01~D05·TC_D01~D05 내 `g1_*.md` 참조 → 새 파일명으로 전수 갱신
+
+---
+
+## 2026-06-22 — PLATFORM D02 설계 검증 + 승인 완료 (14:12)
+
+- **D02 설계 검증**: `20_D02_ai-agent-onboarding-role-switch-tc-id` — D2-I-001~013 전건 claude R1 리뷰 완료, blocking 이슈 없음, 즉시 합의 선언 (resolved_by: claude 13:23)
+- **codex V1 동의 완료** (verified_by: codex 13:35) — DoD 15건 전수 [x] 확인
+- **Jacey 최종 승인** (approved_by: jacey 13:43) — 설계 종료 승인 섹션 추가, MAP `[active · resolved · verified · jacey_approved]` 갱신
+- **다음 단계**: 현재 진행 중인 collab DEV 마무리 후 DEV_D01(COMMON.md 분리·ai_agents/ 구조·entrypoint sync) + DEV_D02(README/USAGE/템플릿 개정·kimi.md 초안) 순차 착수
+- **논의**: 루트 collab MAP 상태 불일치 반복 문제 — A안(루트 MAP 역할 단순화) 다음 기회에 collab direction으로 처리 예정
+
+---
+
+## 2026-06-19 — CI 자동 감시 훅 구축 + eacct_chatbot·video_clipper CI 실패 수정 (15:28)
+
+- **CI 실패 원인 분석**: eacct_chatbot 5회(6/15~6/18)·video_clipper 2회(6/12·6/18) 실패 — flake8 E741/E501/F541/F401 등 수동 수정 필요 오류 방치
+- **코드 수정**: `chat_handler.py`·`context_builder.py`·`privacy_acceptance_index.py`·`server.py`·`test_d04_server_endpoints.py`·`test_d05_privacy_gate.py` flake8 오류 전수 수정 + `video_clipper` 전 소스 flake8 통과
+- **병합 충돌 해소**: `test_d05_privacy_gate.py` upstream vs stash 충돌 수동 해결
+- **CI 자동 감시 훅 구축**: `git push` 감지 시 자동으로 GitHub Actions CI 감시 → 실패 시 Claude 즉시 재기동 (`asyncRewake: true`)
+  - `.claude/settings.json` PostToolUse Bash 훅 추가
+  - `platform/extensions/scripts/hooks/ci_watch_hook.ps1` 신규 생성
+- **8-5 실수 시인 3단계 완수**: 원인분석 + 재발방지 + `platform/processes/lessons_learned.md` 레슨런 등록
+
+---
+
 ## 2026-06-19 — eacct_chatbot 20260616-1736 persistent-audit-context-store 번들 아카이브 (14:41)
 
 - `20260616-1736_persistent-audit-context-store` 번들 전 항목 완료 (DEV_D01~D05 Jacey 승인 완료)
