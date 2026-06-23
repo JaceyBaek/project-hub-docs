@@ -143,7 +143,7 @@
     - "AI 바꾸자" 뉘앙스 감지 시: 어느 역할(`author`/`verified_by`/`tested_by`)을 바꿀지 + 새 AI명 확인 → `personal.yml` 업데이트 → 진행 중(`open`/`active`) collab 파일 frontmatter 갱신. 완료·아카이브 파일은 변경하지 않는다.
     - 세부 프로세스: `platform/processes/collab/README.md` §6 `협업 AI 등록 및 변경 프로세스` 참조.
 12-1. **collab design 합의/동의 기입 전 README §7·§8 필수 Read (하드 게이트)** —
-    - `resolved_by`·`verified_by`·트래킹 상태 기입 직전 반드시 `platform/processes/collab/README.md` §7을 Read한다. 기억·직관 의존 금지.
+    - `resolved_by`·`verified_by`·트래킹 상태 기입 직전 반드시 `platform/processes/collab/README.md` §7·§8을 Read한다. 기억·직관 의존 금지.
     - **역할 원칙 (§7 요약)**: `resolved_by`는 "해당 라운드에서 미해결 이슈가 없다고 선언한 쪽"을 기록. **이슈 없음 경우**: 검토자가 §2에서 이슈 없이 동의 → 검토자가 바로 합의 선언 가능 (`resolved_by`: 검토자). **이슈 있음 경우**: 기안자 §3 수용 응답 → 검토자가 §3 확인 후 이상 없음 선언 → `resolved_by`: 검토자, `verified_by`: 기안자. **기안자 수용 응답만으로 resolved 처리 금지.** 어느 경우든 `verified_by`는 기안자가 V 행으로 추가.
     - **blocking 없으면 즉시 합의 선언 (강제)**: 리뷰 완료 시 blocking 이슈가 없으면 그 자리에서 `resolved_by: claude` 기입 + 트래킹 테이블·최종 상태 요약·코드블록·MAP을 같은 액션에서 모두 갱신. "역질문 응답 확인 후 합의 선언"은 역질문이 blocking일 때만 허용. 역질문이 명확화 요청(non-blocking)이면 합의 선언 후 역질문을 기입한다. "응답 후 합의 선언 가능하다"는 문구가 나오면 즉시 blocking 여부를 재판단하고 blocking이 아니면 그 자리에서 합의 선언으로 대체한다.
     - **합의 선언 시 필수 처리 목록 (한 번에)**: ① frontmatter `status: resolved` + `resolved_by: claude` + 시각 ② 헤더 테이블 이름 행·시각 행 모두 갱신 (이름 행의 합의자 칸 → `claude`, 시각 행의 합의자 칸 → 합의 시각; 두 행 독립 갱신 필수 — 이름 행 누락 또는 시각 행에 이름 혼기 금지) ③ 합의 섹션 결론 ④ 최종 상태 요약 전 항목 `합의 (claude)` ⑤ 트래킹 테이블 R{N} 합의 행 추가 ⑥ 코드블록 상태 갱신 ⑦ MAP 상태 플래그 + 다음 단계. 하나라도 누락하면 합의 처리 미완료.
@@ -168,3 +168,40 @@
     git remote set-url origin github-personal:JaceyBaek/{repo}.git
     ```
 20. **표준·일반적 방법 우선 — 임시방편(땜빵) 금지** — 수정·검토 요청 시 "당장 쉬운 방법"보다 표준 구조와 일반 관례에 맞는 방법을 먼저 제안한다. 임시방편은 나중에 더 많은 수정 비용(예: `.dockerignore` 추가, 경로 예외 처리, 이중 관리 등)을 만든다. 간단한 해결책처럼 보여도 구조적으로 어긋나면 제안하지 않는다.
+
+---
+
+<!-- 아래 섹션은 규칙이 아니라 ai_agents/ SoT 관리용 sync 메타데이터다. platform/processes/ai_agents/README.md 참조 -->
+## 지침 분류 메타데이터 (ai_agents sync 정보)
+
+> 이 섹션은 `platform/processes/ai_agents/COMMON.md`와의 동기화 상태를 추적하는 메타데이터다.
+> sync 관리 절차 → `platform/processes/ai_agents/README.md`
+> **마지막 수동 확인**: 2026-06-22 (DEV_D01 구현 시)
+
+| 섹션 / 항목 | 버킷 | COMMON block ID | sync 태그 |
+|---|---|---|---|
+| `# project-hub` 헤더 (변수 치환 원칙) | 공통 | COM-RES-001 | <!-- sync: COM-RES-001, 20260622, mode=manual, owner=claude --> |
+| `## AI 비서` | Claude(Aida) 전용 | — | claude.md 전용 |
+| `## 세션 종료 프로토콜` (마무리 감지·기록) | Claude(Aida) 전용 | — | claude.md 전용 |
+| `## 세션 종료 프로토콜` (서브모듈 CI 감시) | 공통 | COM-OPS-002 참조 | <!-- sync: COM-OPS-002, 20260622, mode=manual, owner=claude --> |
+| `## 트리거 관리` | 공통 | COM-PROJ-001 | <!-- sync: COM-PROJ-001, 20260622, mode=manual, owner=claude --> |
+| `## 작업 영역` | 공통 | COM-PROJ-002 | <!-- sync: COM-PROJ-002, 20260622, mode=manual, owner=claude --> |
+| `## 작업 디렉토리` | 공통 | COM-PROJ-002 | 수동 확인 완료 |
+| `## 프로젝트 관리` | 공통 | COM-PROJ-002, COM-PROJ-003 | 수동 확인 완료 |
+| 응답 규칙 1-7 | 공통 | COM-RES-001 | <!-- sync: COM-RES-001, 20260622, mode=manual, owner=claude --> |
+| 응답 규칙 8-1~8-4 | 공통 | COM-RES-002 | <!-- sync: COM-RES-002, 20260622, mode=manual, owner=claude --> |
+| 응답 규칙 8-5 | 공통 | COM-RES-003 | <!-- sync: COM-RES-003, 20260622, mode=manual, owner=claude --> |
+| 응답 규칙 9, 11-13, 15-20 | 공통 | COM-RES-004 | <!-- sync: COM-RES-004, 20260622, mode=manual, owner=claude --> |
+| 응답 규칙 14 (판단 기준) | 공통 | COM-RES-005 | <!-- sync: COM-RES-005, 20260622, mode=manual, owner=claude --> |
+| 응답 규칙 14 (메모리 도구 경로·절차) | Claude(Aida) 전용 | — | claude.md 전용 |
+| 운영 정책 1-3 | 공통 | COM-OPS-001 | <!-- sync: COM-OPS-001, 20260622, mode=manual, owner=claude --> |
+| 운영 정책 4-5 | 공통 | COM-OPS-002 | <!-- sync: COM-OPS-002, 20260622, mode=manual, owner=claude --> |
+| 운영 정책 6 | 공통 | COM-OPS-003 | <!-- sync: COM-OPS-003, 20260622, mode=manual, owner=claude --> |
+| 운영 정책 7 | 공통 | COM-OPS-004 | <!-- sync: COM-OPS-004, 20260622, mode=manual, owner=claude --> |
+| 운영 정책 8-11 | 공통 | COM-OPS-005 | <!-- sync: COM-OPS-005, 20260622, mode=manual, owner=claude --> |
+| 운영 정책 13 | 공통 | COM-COLLAB-001 | <!-- sync: COM-COLLAB-001, 20260622, mode=manual, owner=claude --> |
+| 운영 정책 12-1 | 공통 | COM-COLLAB-002 | <!-- sync: COM-COLLAB-002, 20260622, mode=manual, owner=claude --> |
+| 운영 정책 12 | 공통 | COM-COLLAB-003 | <!-- sync: COM-COLLAB-003, 20260622, mode=manual, owner=claude --> |
+| 운영 정책 12-2 | 공통 | COM-COLLAB-004 | <!-- sync: COM-COLLAB-004, 20260622, mode=manual, owner=claude --> |
+| 운영 정책 14 | 공통 | COM-OPS-006 | <!-- sync: COM-OPS-006, 20260622, mode=manual, owner=claude --> |
+| 운영 정책 20 | 공통 | COM-RES-004 | 수동 확인 완료 |

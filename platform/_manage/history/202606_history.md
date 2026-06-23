@@ -7,6 +7,23 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-23 — 20260619-1718 PLATFORM bundle 전 범위 완결 + 아카이브 이동 (10:20)
+
+- **DEV_D01 Jacey 최종 승인** (08:35): AI 지침 SoT 분리·bootstrap 구조 구현 완료 — TC 25건 전건 통과. `ai_agents/` 6개 파일 신규 생성, AGENTS.md·CLAUDE.md·rule_loading_policy.md 개정 완료.
+- **DEV_D02 C1~C5 구현 완료** (claude 08:57): 신규 AI 온보딩·역할 전환·TC-ID 호환성 구현
+  - README.md §6: 신규 AI 온보딩 절차(A-01~A-09), 파일럿 범위 레벨 4개, 파일럿 상태값 5종, role switch 절차(S-01~S-08), bootstrap 확인 명세(K-01~K-05)
+  - README.md §9: TC-ID 호환성 브릿지 정책 (TC-C/TC-A 불변, archive 소급 변환 금지)
+  - README.md §14: 신규 AI 파일럿 override 조건 (D02 승인 + bootstrap-verified 이상)
+  - USAGE.md §6: 시나리오 F (신규 AI 파일럿 착수) 추가, FAQ Q6 보강, §12 ai_agents/ 링크
+  - `_templates/testcase.md`: TC-ID 호환성 브릿지 주석 추가
+- **DEV_D02 codex 설계검증 통과** (10:06): TC-001~026 + TC-C01~C04 전건 통과
+- **DEV_D02 antigravity 제3자 테스트 통과** (10:17): 기본 TC 26건 + TC-C 4건 + TC-A 2건 전건 통과 (TC-A01: 파일럿 상태 전이 우회 차단, TC-A02: 4-eyes 무력화 차단)
+- **DEV_D02 Jacey 최종 승인** (10:20): TC 32건 전건 통과
+- **bundle 아카이브**: `collab/PLATFORM/20260619-1718_ai-agent-instruction-profiles/` → `collab/_archive/PLATFORM/` 이동 완료 — INDEX.md 등록, MAP 전체 `[archived]` 갱신, 빈 폴더 삭제
+- **결과**: 멀티 AI 등록·파일럿·역할 전환 절차 collab 프로세스에 완전 반영. D01(57건 TC 전건 통과) + D02(32건 TC 전건 통과) 합산 TC 89건.
+
+---
+
 ## 2026-06-22 — G1-deployment-readiness 번들 완결 + 프로세스 갭 보완 (15:34)
 
 - **DEV_D05 최종 승인**: `30_DEV_D05_deployment-pipeline-and-data-ops` §5 전건 PASS + Jacey 최종 승인 완료 (15:00)

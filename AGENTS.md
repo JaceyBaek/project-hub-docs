@@ -23,14 +23,30 @@
 
 문서 편집은 허용된다. Markdown 문서, 설계 문서, 리뷰 문서, 오케스트레이션 계획, 마이그레이션 계획, 검증 노트, 테스트 전략, 인수 기준, 프로세스 문서, 구현 체크리스트 편집은 코딩으로 간주하지 않는다.
 
-## 공통 운영 규칙 참조
+## 공통 운영 규칙
 
-루트 `CLAUDE.md`는 이 저장소의 공통 운영·응답·기록·프로세스 규칙 SoT다.
+> **[SoT 구조 변경 — D01]**: `platform/processes/ai_agents/COMMON.md`가 공통 규칙의 유지·편집용 SoT다.
+> `AGENTS.md`는 Codex 런타임 entrypoint로서 핵심 공통 규칙을 아래에 인라인으로 포함한다.
+> 기존 `CLAUDE.md` 단독 위임 선언은 이 구조로 대체된다.
 
-- Codex 계열 에이전트도 작업 시작 시 루트 `CLAUDE.md`의 응답 규칙과 운영 정책을 적용한다.
-- `AGENTS.md`에는 Codex 역할 경계, 모델 라우팅, 설계·검증·테스트 리뷰 특화 규칙만 둔다. `CLAUDE.md`의 공통 규칙을 이 파일에 반복 복사하지 않는다.
-- `CLAUDE.md`와 `AGENTS.md`가 충돌하면, 코딩 금지·문서 리뷰 전용 역할처럼 Codex 역할 경계를 정의하는 항목은 `AGENTS.md`를 우선한다. 그 외 공통 응답·기록·운영 규칙은 `CLAUDE.md`를 우선한다.
-- collab 상태 전이·플랫폼 규칙 변경·문서 승인·리뷰 종료처럼 고위험 작업을 수행할 때는 `CLAUDE.md`와 아래 규칙 선독 체인을 함께 확인한다.
+<!-- sync: COM-RES-001, 20260622, mode=manual, owner=codex -->
+**기본 응답 규칙** (COM-RES-001): 한국어·존댓말, 사실 기반, 외부 스펙 확인 후 기술(미확인 시 "미확인" 표기), 코드·산출물 우선, 모호하면 질문, step-by-step. 전문: `platform/processes/ai_agents/COMMON.md` §COM-RES-001
+
+<!-- sync: COM-RES-002, 20260622, mode=manual, owner=codex -->
+**경로·타임스탬프 안전 규칙** (COM-RES-002): 절대경로 금지, 경로 구분자 슬래시(/) 사용, `date +"%Y-%m-%d %H:%M"` 명령으로 실제 시각 확인(임의 작성 금지), 파일 전수 확인 후 결론(grep 0건 = "없다" 단정 금지). 전문: `platform/processes/ai_agents/COMMON.md` §COM-RES-002
+
+<!-- sync: COM-COLLAB-001, 20260622, mode=manual, owner=codex -->
+**collab AI 역할 확인** (COM-COLLAB-001): collab 작업 시작 전 `personal.yml collab` 섹션 확인. DEV 담당자는 `personal.yml collab.author` 기준 확인 (design 문서 `author` 필드와 혼동 금지). 전문: `platform/processes/ai_agents/COMMON.md` §COM-COLLAB-001
+
+<!-- sync: COM-COLLAB-002, 20260622, mode=manual, owner=codex -->
+**collab design 합의/동의 하드 게이트** (COM-COLLAB-002): `resolved_by`·`verified_by`·트래킹 상태 기입 직전 반드시 collab README §7·§8 Read. 기억·직관 의존 금지. blocking 없으면 즉시 합의 선언. 전문: `platform/processes/ai_agents/COMMON.md` §COM-COLLAB-002
+
+<!-- sync: COM-OPS-003, 20260622, mode=manual, owner=codex -->
+**collab 문서·MAP 즉시 갱신** (COM-OPS-003): 재수정 완료 시 DEV §2·§4·MAP.md 동일 작업 범위 즉시 갱신. `approved_by` 기입 즉시 `_archive/{ns}/MAP.md` + `collab/MAP.md` 양쪽 갱신. 편집 전 반드시 Read. 전문: `platform/processes/ai_agents/COMMON.md` §COM-OPS-003
+
+**충돌 우선순위**: Codex 역할 경계(코딩 금지 등)는 `AGENTS.md`가 우선한다. 공통 응답·기록·운영 규칙은 entrypoint 인라인을 우선 적용하고, COMMON.md와 drift 발견 시 review-blocking으로 처리한다.
+
+고위험 작업(collab 상태 전이·플랫폼 규칙 변경·문서 승인·리뷰 종료) 시 `platform/processes/rule_loading_policy.md` 확인.
 
 ## 모델 라우팅 정책
 
