@@ -128,6 +128,10 @@
    - **승인 처리 시 MAP 전수 갱신 의무** — `approved_by` 기입 즉시 아래 두 파일을 동일 액션에서 갱신한다. 하나라도 누락하면 MAP 불일치 발생. **상대 AI가 이미 MAP을 수정했을 수 있으므로 편집 전 반드시 Read로 현재 상태 확인. Read 없이 MAP 편집 금지.**
      1. `_archive/{namespace}/MAP.md` — 해당 노드 상태 플래그 + 다음 단계 갱신
      2. `collab/MAP.md` 인덱스 — 해당 namespace 행 상태 컬럼 갱신
+   - **[완료 게이트 · 2차 재발 추가] 승인 처리 완료 선언 전 3-파일 자가 체크 필수** — 아래 3개가 모두 갱신된 것을 확인한 후에만 "승인 처리 완료"를 응답에 기재한다. 하나라도 누락이면 응답 전 즉시 수정.
+     1. DIR frontmatter `approved_by` ≠ `~`
+     2. `_archive/{namespace}/MAP.md` 상태 플래그 → `jacey_approved` 반영
+     3. `collab/MAP.md` 인덱스 행 상태 → `jacey_approved` 반영
 7. **Python Windows 인코딩** — Windows 환경 Python 스크립트에 한글·유니코드 포함 시 상단에 반드시 추가:
     ```python
     if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
