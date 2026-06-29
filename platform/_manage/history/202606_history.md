@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 sidebar_title: 2026년 6월
 sidebar_order: 1
 -->
@@ -7,17 +7,85 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-29 — eacct_chatbot 미카 체험 개선 6종 + 버그 수정 4건 (11:05)
+
+- 폰트 5단계 확장(13-18px) + greeting·제안 문구 폰트 연동 / 답변 복사 버튼 / 로딩 문구 priority map 전면 재작성 / greeting 랜덤 다양화(32개) / /설정 UX 개선(설명·사용법·레이블)
+- 버그 4건: 빠른 클릭 멈춤·greeting 폰트 미적용·리사이즈 후 스크롤 먹통·게임 버튼 레이블 원복
+- 세부 내용: `projects/eacct_chatbot/_manage/history/202606_history.md`
+
+---
+
+## 2026-06-29 — eacct-client-side-adapter-g1 D04 승인 + DEV 착수 준비 (11:02)
+
+- `eacct_chatbot` collab `20260626-1710_eacct-client-side-adapter-g1` D04 `g1-client-verification-and-rollout` Jacey 최종 승인 완료 (10:03)
+  - D01~D04 전건 합의·동의·승인 완료 → DEV_D01/DEV_D02 착수 가능, DEV_D03은 DEV_D02 종료 승인 후, DEV_D04는 D01~D03 증적 소비 조건 포함
+- origin profile 관리 방식 결정: `properties/chatbot_{dev|stage|prod}.properties` — 기존 `sap_` 패턴과 동일
+  - `chatbot_dev.properties` / `chatbot_stage.properties` / `chatbot_prod.properties` 생성 완료 (D:/eAcct_QA 기준)
+  - `frame_policy_status=not-checked` — CSP/sandbox 점검 후 `pass` 갱신 필요 (DEV_D01 DoD 조건)
+- feature flag(auto apply) 관리: G1 단계는 config 파일 방식 유지, DB 구축 후 전환 예정
+- 세부 내용: `projects/eacct_chatbot/_manage/history/202606_history.md`
+
+---
+
+## 2026-06-26 — eacct_chatbot 3환경 분리 + 프로파일 자동 설정 구조 도입 (19:25)
+
+- `eacct_chatbot`: DEV/QA/PROD 3환경 분리 + `EACCT_CHATBOT_RUNTIME_PROFILE` 하나로 전체 자동 전환 구조 확립
+- `_PROFILE_DEFAULTS` 테이블: 프로파일별 MISO_API_URL·MISO_AGENTS·MISO_AGENT_DEFAULT·DEV_AUTH_ENABLED 자동 적용
+- DEV: 미소 DEV 서버(`atapi.ax.gsretail.com`) + `dev` 에이전트 + `miso_agent_dev_key` 자동 연결
+- QA·PROD: 미소 운영 서버(`api.ax.gsretail.com`) + `all,cvs,super,hbu` 에이전트 자동 연결
+- session-init DEV bypass: `DEV_AUTH_ENABLED=1` + `signed_jwt` 미제공 시 합성 세션 반환
+- `.env` 최소화: `EACCT_CHATBOT_RUNTIME_PROFILE=dev` + 로컬 전용값만 유지
+- 세부 내용: `projects/eacct_chatbot/_manage/history/202606_history.md`
+
+---
+
+## 2026-06-26 — eacct_chatbot Feature Flag + 개발자 모드 시스템 구현 (16:38)
+
+- `eacct_chatbot` 프로젝트: Feature Flag 3-state(`public`/`dev`/`hidden`) + 개발자 모드(httpOnly cookie) 설계·구현
+- 슬래시 커맨드 그룹 재편(대화/게임/테스트/개발/개발자), PLANNED_FEATURES 클라이언트 Set 도입
+- 개발자 모드 인터랙티브 토큰 입력, 부분 검색(includes) 적용
+- 세부 내용: `projects/eacct_chatbot/_manage/history/202606_history.md`
+
+---
+
+## 2026-06-26 — Antigravity → Gemini 전면 교체 + AI 이름 대문자 통일 + TC-ID 정정 (15:02)
+
+- **Antigravity → Gemini 전면 교체**: collab 프로세스 제3자 테스터를 AI IDE 툴(Antigravity)에서 AI 모델(Gemini)로 정정
+  - `personal.yml` `tested_by: "gemini"` 변경, `ai_agents/antigravity.md` → `gemini.md` 파일명 변경
+  - 약 130개 파일 내용 변경, `test_results/` 하위 13개 디렉토리명 변경
+- **AI 에이전트·사용자 이름 대문자 통일**: `claude`→`Claude`, `codex`→`Codex`, `jacey`→`Jacey`
+  - 약 235개 파일 변경 (경로·파일명·CLI 명령어·이메일 제외)
+  - `CLAUDE.md` 응답 규칙 21번 추가 (대문자 표기 원칙 명문화)
+- **TC-ID 정정**: `TC-A\d+` → `TC-G\d+` (Antigravity 약자 'A' → Gemini 약자 'G')
+  - 113개 파일 변경 (DEV·TC 문서, MAP.md, summary.md, 히스토리, 소스 코드 주석 포함)
+
+---
+
+## 2026-06-25 — eacct_chatbot 슬래시 커맨드 UX 개선 (08:33)
+
+- 슬래시 커맨드 키보드·마우스 선택 스타일 통합, 다크 hover 버그 수정, 높이 제한·스크롤 추가
+- 세부 내용: `projects/eacct_chatbot/_manage/history/202606_history.md` 참조
+
+---
+
+## 2026-06-24 — eacct_chatbot widget.html 멀티 테마 구현 (19:06)
+
+- CSS 변수 기반 3종 테마(오션·다크·애플) 구현, `/theme` 슬래시 커맨드, localStorage 영속성 적용
+- 세부 내용: `projects/eacct_chatbot/_manage/history/202606_history.md` 참조
+
+---
+
 ## 2026-06-23 — 20260619-1718 PLATFORM bundle 전 범위 완결 + 아카이브 이동 (10:20)
 
 - **DEV_D01 Jacey 최종 승인** (08:35): AI 지침 SoT 분리·bootstrap 구조 구현 완료 — TC 25건 전건 통과. `ai_agents/` 6개 파일 신규 생성, AGENTS.md·CLAUDE.md·rule_loading_policy.md 개정 완료.
-- **DEV_D02 C1~C5 구현 완료** (claude 08:57): 신규 AI 온보딩·역할 전환·TC-ID 호환성 구현
+- **DEV_D02 C1~C5 구현 완료** (Claude 08:57): 신규 AI 온보딩·역할 전환·TC-ID 호환성 구현
   - README.md §6: 신규 AI 온보딩 절차(A-01~A-09), 파일럿 범위 레벨 4개, 파일럿 상태값 5종, role switch 절차(S-01~S-08), bootstrap 확인 명세(K-01~K-05)
   - README.md §9: TC-ID 호환성 브릿지 정책 (TC-C/TC-A 불변, archive 소급 변환 금지)
   - README.md §14: 신규 AI 파일럿 override 조건 (D02 승인 + bootstrap-verified 이상)
   - USAGE.md §6: 시나리오 F (신규 AI 파일럿 착수) 추가, FAQ Q6 보강, §12 ai_agents/ 링크
   - `_templates/testcase.md`: TC-ID 호환성 브릿지 주석 추가
-- **DEV_D02 codex 설계검증 통과** (10:06): TC-001~026 + TC-C01~C04 전건 통과
-- **DEV_D02 antigravity 제3자 테스트 통과** (10:17): 기본 TC 26건 + TC-C 4건 + TC-A 2건 전건 통과 (TC-A01: 파일럿 상태 전이 우회 차단, TC-A02: 4-eyes 무력화 차단)
+- **DEV_D02 Codex 설계검증 통과** (10:06): TC-001~026 + TC-C01~C04 전건 통과
+- **DEV_D02 Gemini 제3자 테스트 통과** (10:17): 기본 TC 26건 + TC-C 4건 + TC-A 2건 전건 통과 (TC-G01: 파일럿 상태 전이 우회 차단, TC-G02: 4-eyes 무력화 차단)
 - **DEV_D02 Jacey 최종 승인** (10:20): TC 32건 전건 통과
 - **bundle 아카이브**: `collab/PLATFORM/20260619-1718_ai-agent-instruction-profiles/` → `collab/_archive/PLATFORM/` 이동 완료 — INDEX.md 등록, MAP 전체 `[archived]` 갱신, 빈 폴더 삭제
 - **결과**: 멀티 AI 등록·파일럿·역할 전환 절차 collab 프로세스에 완전 반영. D01(57건 TC 전건 통과) + D02(32건 TC 전건 통과) 합산 TC 89건.
@@ -39,9 +107,9 @@ sidebar_order: 1
 
 ## 2026-06-22 — PLATFORM D02 설계 검증 + 승인 완료 (14:12)
 
-- **D02 설계 검증**: `20_D02_ai-agent-onboarding-role-switch-tc-id` — D2-I-001~013 전건 claude R1 리뷰 완료, blocking 이슈 없음, 즉시 합의 선언 (resolved_by: claude 13:23)
-- **codex V1 동의 완료** (verified_by: codex 13:35) — DoD 15건 전수 [x] 확인
-- **Jacey 최종 승인** (approved_by: jacey 13:43) — 설계 종료 승인 섹션 추가, MAP `[active · resolved · verified · jacey_approved]` 갱신
+- **D02 설계 검증**: `20_D02_ai-agent-onboarding-role-switch-tc-id` — D2-I-001~013 전건 Claude R1 리뷰 완료, blocking 이슈 없음, 즉시 합의 선언 (resolved_by: Claude 13:23)
+- **Codex V1 동의 완료** (verified_by: Codex 13:35) — DoD 15건 전수 [x] 확인
+- **Jacey 최종 승인** (approved_by: Jacey 13:43) — 설계 종료 승인 섹션 추가, MAP `[active · resolved · verified · jacey_approved]` 갱신
 - **다음 단계**: 현재 진행 중인 collab DEV 마무리 후 DEV_D01(COMMON.md 분리·ai_agents/ 구조·entrypoint sync) + DEV_D02(README/USAGE/템플릿 개정·kimi.md 초안) 순차 착수
 - **논의**: 루트 collab MAP 상태 불일치 반복 문제 — A안(루트 MAP 역할 단순화) 다음 기회에 collab direction으로 처리 예정
 
@@ -76,24 +144,24 @@ sidebar_order: 1
 
 ## 2026-06-18 — eacct_chatbot g1-deployment-readiness D02·D03 리뷰 완료 (16:46)
 
-- **D02 integration-security-boundary**: claude R1 리뷰 완료(16:13) — D02-I-001~010 전 합의. codex 동의 대기
-- **D03 runtime-reliability-and-degraded-ops**: claude R1 리뷰 완료(16:46) — D03-I-001~012 전 합의(D03-I-001 eacct_mcp/Miso 실행 구조 명시 권고 포함, non-blocking). codex 동의 대기
+- **D02 integration-security-boundary**: Claude R1 리뷰 완료(16:13) — D02-I-001~010 전 합의. Codex 동의 대기
+- **D03 runtime-reliability-and-degraded-ops**: Claude R1 리뷰 완료(16:46) — D03-I-001~012 전 합의(D03-I-001 eacct_mcp/Miso 실행 구조 명시 권고 포함, non-blocking). Codex 동의 대기
 
 ---
 
 ## 2026-06-18 — eacct_chatbot DEV_D04 session-lifecycle C2 보완 완료 (16:26)
 
-- codex C1 설계검증 미통과(14:53) 3항목 대응 완료
+- Codex C1 설계검증 미통과(14:53) 3항목 대응 완료
   - `server.py` TC-C04: `is_context_blocked` 체크 + `reset_marker` 해제 구현버그 수정
   - `server.py` TC-C05: `storage_degraded` 처리 로그 추가
   - `test_d04_server_endpoints.py` 5개 신규 + `conftest.py` plugin 경로 수정
-- 전체 93 passed — codex C2 설계검증 대기
+- 전체 93 passed — Codex C2 설계검증 대기
 
 ---
 
 ## 2026-06-18 — eacct_chatbot DEV_D05 privacy-and-acceptance-matrix 개발 완료 (16:06)
 
-- D05 설계 승인(jacey 15:20) 직후 DEV_D05 착수 완료
+- D05 설계 승인(Jacey 15:20) 직후 DEV_D05 착수 완료
 - privacy_gate.py 신규(PrivacyGateResult 7종·RAW_PII_FIELDS 18종·check_evidence_redaction) + 9 테스트 전 통과 + .env.example D05 섹션 + accepted_risk.md D05 리스크 6종
 
 ---
@@ -134,9 +202,9 @@ sidebar_order: 1
 ## 2026-06-17 — eacct_chatbot first-open DEV_D05 최종 승인 완료 (13:11)
 
 - DEV_D05 acceptance-test-matrix C1~C3 수정 완료 (AC 총량 29개 정정·G1 증적 케이스 추가·g1_smoke 폴더 설명 보완)
-- codex C3 재검증 통과 (12:57) + antigravity 제3자 검증 통과 (13:05, TC-A01~A02 추가)
+- Codex C3 재검증 통과 (12:57) + Gemini 제3자 검증 통과 (13:05, TC-G01~G02 추가)
 - Jacey 최종 승인 완료 (13:11)
-- first-open-dev-goals-review DEV/TC D01~D05 전 완료 — 다음 단계: codex ORC+D01~D05 (persistent-audit-context-store direction)
+- first-open-dev-goals-review DEV/TC D01~D05 전 완료 — 다음 단계: Codex ORC+D01~D05 (persistent-audit-context-store direction)
 
 ---
 
@@ -225,7 +293,7 @@ sidebar_order: 1
     - C2: `_isDateKey()` 헤더 키워드 기반 YYYYMMDD 변환 제한 (회계 식별자 오변환 차단)
   - **DEV_D03** (피드백 최소 루프) — `feedback_store.py` 신규 + `POST /feedback` 엔드포인트
     - C1: `source/.gitignore` 신규(`*.db` 포함), msgRef fallback hex 32자 수정, `.env.*.example` 문서화
-  - collab 3-way: claude(개발) / codex(설계검증) / antigravity(제3자 테스트) / Jacey(최종 승인)
+  - collab 3-way: Claude(개발) / Codex(설계검증) / Gemini(제3자 테스트) / Jacey(최종 승인)
 - **bundle 아카이브 이동:** `collab/eacct_chatbot/20260610-1826_quick-win-batch/` → `collab/_archive/eacct_chatbot/`
   - 빈 `collab/eacct_chatbot/` 폴더 삭제
   - MAP.md 헤더 `[active]` → `[archived]`, TC 섹션(TC_D01~D04) 추가
@@ -279,7 +347,7 @@ sidebar_order: 1
 ## 2026-06-11 — DEV_D02 최종 승인 완료, bundle 아카이브 (09:44)
 
 - **PLATFORM collab DEV_D02 종료 승인**: H-GIT-REMOTE + H-DOC-QUALITY 훅 warn 모드 운영 투입 확정
-  - C1→C2→C3→C4 재개발 끝에 antigravity C4 재검증 26개 TC 전원 통과 (09:01)
+  - C1→C2→C3→C4 재개발 끝에 Gemini C4 재검증 26개 TC 전원 통과 (09:01)
   - Jacey 종료 승인 (2026-06-11 09:02) — status: closed
   - TC-013 관찰 게이트: 1주 운영 후 오탐 0건 확인 시 block DEV 착수 가능 → `platform/_manage/todo.md` T-001 등록 (기한 2026-06-18)
 - **bundle `20260609-1316_collab-process-read-gate-hooks` 아카이브 이동 완료**
@@ -300,14 +368,14 @@ sidebar_order: 1
   - 방향: 독립 프로젝트로 먼저 구현 후 플랫폼 승격 심사
   - 결정 사항: Gmail 1차 / 폴링 하루 2회 Task Scheduler / Windows Toast + 로그 알림
   - 미결 사항(collab 설계에서 결정): 다중 레포 관리 방식·API 비용 상한·detail 분리 기준·수정기 로컬 운영 방식
-  - 다음 단계: collab direction 초안 작성(codex 담당) → 합의 후 프로젝트 생성
+  - 다음 단계: collab direction 초안 작성(Codex 담당) → 합의 후 프로젝트 생성
 
 ---
 
 ## 2026-06-10 — DEV_D01 read-gate 훅 운영 투입 승인 및 bundle 아카이브 (13:41)
 
 - **PLATFORM collab DEV_D01 종료 승인**: H-RG-001~003 운영 투입 확정
-  - C1 미통과 → C2 수정(정규식 오탐·경로 정규화) → codex/antigravity C2 21개 전원 통과
+  - C1 미통과 → C2 수정(정규식 오탐·경로 정규화) → Codex/Gemini C2 21개 전원 통과
   - Jacey 종료 승인(2026-06-10 13:41) — H-RG-001~003 즉시 운영
   - bundle `20260609-1316_collab-process-read-gate-hooks` → `_archive/PLATFORM/` 이동 완료
   - MAP.md(collab 루트·PLATFORM) 상태 `archived` 갱신 완료
@@ -323,14 +391,14 @@ sidebar_order: 1
   - `.claude/settings.json` PreToolUse `Edit|Write` 매처에 H-RG 훅 등록
   - `30_DEV_D01_20260610-1058_read-gate-hooks.md` §2 개발 완료 요약 작성
   - `40_TC_D01_20260610-1058_read-gate-hooks.md` §1 TC-001~012 작성
-  - 다음 단계: codex §3-1 설계검증 → antigravity §3-2 → Jacey dev 종료 승인
+  - 다음 단계: Codex §3-1 설계검증 → Gemini §3-2 → Jacey dev 종료 승인
 
 ---
 
 ## 2026-06-10 — D01 read-gate 설계 최종 승인 (10:27)
 
 - **PLATFORM collab D01 `20_D01_read-gate-hooks.md`**: 전 사이클 완료
-  - claude R1 리뷰 → codex R1 응답 → claude R2 재검토 → codex V1 동의 → Jacey 승인
+  - Claude R1 리뷰 → Codex R1 응답 → Claude R2 재검토 → Codex V1 동의 → Jacey 승인
   - H-RG-001/002 block 대상: 신규 Write 한정 / H-RG-003: hook payload 확인 후 block 여부 확정
   - G-01~G-04 선행 게이트 도입 합의
   - §5 이슈 트래킹 ID별 묶음·R1→R2→V1 순서 정렬 완료
@@ -354,7 +422,7 @@ sidebar_order: 1
   - timeout 5 → 30 / perf_test.py cwd를 repo root로 수정
   - 결과: avg=0.419s, p95=0.728s (기준 ≤1s/≤2s) PASS
 - **DEV_D02 최종 승인 (Jacey, 2026-06-09 14:59)**:
-  - codex §3-1 C3 통과(13:35) → antigravity §3-2 C4 통과(14:26) → Jacey 승인(14:59)
+  - Codex §3-1 C3 통과(13:35) → Gemini §3-2 C4 통과(14:26) → Jacey 승인(14:59)
   - H-001·H-006 pilot warn-only 운영 개시
 - **재발방지 등록 (결재 헤더 날짜 권한 침범)**:
   - `platform/processes/collab/README.md` §11, `_templates/dev.md` 각 섹션 게이트, `lessons_learned.md`에 규칙 등록
@@ -377,7 +445,7 @@ sidebar_order: 1
   - `test_results/20260609-0939-T001-T006-obs/summary.md` — obs 증적 정식 기록
   - `30_dev/30_DEV_D02_...md`, `40_testcase/40_TC_D02_...md` — collab 문서
 - **주요 결과**: T-002~T-009 전원 통과. T-008 성능 avg=0.746s(≤1s). H-006 `git ls-files`로 전환(untracked 폴더 내 파일 개별 감지). cwd 대소문자 `.lower()` 처리 적용.
-- **다음**: codex §3-1(설계검증) + antigravity §3-2(제3자 테스트) 대기
+- **다음**: Codex §3-1(설계검증) + Gemini §3-2(제3자 테스트) 대기
 
 ---
 
@@ -427,7 +495,7 @@ sidebar_order: 1
 ## 2026-06-05 — SEC-25 브레인스톰 등록 + pii-tokenization-boundary direction 합의·승인 + eacct_mcp docs 구조 재편 (13:23)
 
 - **SEC-25 브레인스톰 등록**: `eacct_chatbot/_manage/brainstorm/20260528_보안_인증_컴플라이언스.md`에 SEC-25 항목 추가 — MCP 결과 내 개인식별 필드 토큰화 후 미소 전달, 역매핑 후 UI 표시 방향 확정
-- **collab direction 합의·승인**: `20260604-1550_pii-tokenization-boundary` — SEC-21·24·25 단일 direction, D01(TokenStore/contract) + D02(chatbot boundary) 2-detail + ORC 필수 구조. claude R1 리뷰 → codex 응답 → 합의·동의·Jacey 승인 완료
+- **collab direction 합의·승인**: `20260604-1550_pii-tokenization-boundary` — SEC-21·24·25 단일 direction, D01(TokenStore/contract) + D02(chatbot boundary) 2-detail + ORC 필수 구조. Claude R1 리뷰 → Codex 응답 → 합의·동의·Jacey 승인 완료
 - **eacct_mcp docs 구조 재편 커밋·푸시**: `SECURITY_GOVERNANCE.md` 프로젝트 루트 이동, `docs/security-review/`·`docs/specs/` 신설. hub 서브모듈 포인터·schedules.md 갱신 커밋·푸시
 - **레슨런·재발방지**: 아카이브 이동 후 빈 폴더 삭제 누락 → `platform/TRIGGERS.md` 44·45번 행에 빈 폴더 삭제 단계 추가 + `platform/processes/lessons_learned.md` 등록
 
@@ -438,7 +506,7 @@ sidebar_order: 1
 - `eacct_chatbot` `chat_handler.py` D02 chatbot 레이어 토큰화 경계 구현 완료
   - pii_masker LLM 경로 제거, tokenize_object·역토큰화 분리, 보호 문구 적용
   - collab `20260604-1550_pii-tokenization-boundary` bundle archive 이동 완료
-  - codex + antigravity 전수 검증 통과, Jacey 최종 승인
+  - Codex + Gemini 전수 검증 통과, Jacey 최종 승인
 
 ---
 
@@ -573,12 +641,12 @@ sidebar_order: 1
 
 ### DEV_D04 승인
 - Codex C2 재검증 전항목 PASS (TC-C01·TC-C08 포함)
-- Antigravity 제3자 테스트 27/27 PASS (TC-A01~A03 추가 도출)
+- Gemini 제3자 테스트 27/27 PASS (TC-G01~G03 추가 도출)
 - DEV_D04 §5 체크리스트 확인 후 Jacey 승인 완료 (10:39)
 
 ### bundle 20260529-2010 최종 완료 및 아카이브 이동
 - DEV_D01~D04 전항목 3-way 검증·승인 완료 확인
-- DEV_D03 `resolved_by: ~` 누락 수정 (jacey)
+- DEV_D03 `resolved_by: ~` 누락 수정 (Jacey)
 - MAP.md DEV_D04·TC_D04 항목 갱신, bundle 헤더 `archived` 플래그 추가
 - archive/INDEX.md — bundle 전체 완료 반영으로 항목 갱신
 
@@ -688,11 +756,11 @@ sidebar_order: 1
 
 **작업 내용**
 - `20260529-2010_brainstorm-triage` bundle: 모든 design 문서(DIR·ORC·D01~D04) approved 완료, 설계 마무리 → `archive/eacct_chatbot/20260529-2010_brainstorm-triage/`로 이동 (DEV_D01 파일 포함 bundle 전체)
-- MAP.md: 설계 문서 플래그 `[resolved · verified · approved · archived]`, DEV_D01 경로 + 플래그 `[active · verified(codex) · archived]`로 갱신
+- MAP.md: 설계 문서 플래그 `[resolved · verified · approved · archived]`, DEV_D01 경로 + 플래그 `[active · verified(Codex) · archived]`로 갱신
 - `archive/INDEX.md`: brainstorm-triage bundle 항목 추가
 - **설계 완료 즉시 아카이브 절차 신규 등록**:
   - `platform/processes/collab/README.md` §12: "설계 완료 즉시 아카이브 이동 — DEV 진행 중이어도 예외 없음" 규칙 추가
-  - `platform/TRIGGERS.md`: "마지막 design 문서 `approved_by: jacey` 기재 감지 → 설계 완료 아카이브 자동 트리거" 행 추가
+  - `platform/TRIGGERS.md`: "마지막 design 문서 `approved_by: Jacey` 기재 감지 → 설계 완료 아카이브 자동 트리거" 행 추가
 
 **변경 파일**
 - `platform/processes/collab/archive/eacct_chatbot/20260529-2010_brainstorm-triage/` (bundle 이동)
@@ -708,7 +776,7 @@ sidebar_order: 1
 **작업 내용**
 - collab 다중 사용자 적합성 감사 브레인스톰 (`platform/_manage/brainstorm/20260601_platform-multiuser-audit.md`) 기반 A-03·A-04 잔존 이슈 전면 처리
 - **[A-03] `Jacey` 하드코딩 제거**: README 서두·§4·§4-1·§5·§7·§8·§9·§15·footer + 템플릿 주석 4곳 → `{user_name}` 치환
-- **[A-04] `Codex`/`Antigravity` 하드코딩 제거**: README §4·§5·§7·§8·§9·§15·footer + `_template_testcase.md` 주석 → `{collab_verified_by}`/`{collab_tested_by}` 치환
+- **[A-04] `Codex`/`Gemini` 하드코딩 제거**: README §4·§5·§7·§8·§9·§15·footer + `_template_testcase.md` 주석 → `{collab_verified_by}`/`{collab_tested_by}` 치환
 - 브레인스톰 파일 A-03·A-04 완료 처리 및 파생 이슈 2건 등록 (USAGE.md Codex 잔존, TC-ID TC-C/TC-A 접두어 명칭 결정)
 - 감사 추적 원칙 적용: README §16 날짜 기반 이력·MAP.md 이력 기록 내 AI명은 소급 변경 없이 보존
 
@@ -765,7 +833,7 @@ sidebar_order: 1
 
 **작업 내용**
 - D04 ui-eacct-integration Claude R1 리뷰(§2) 작성: 동의 5건, 우려 5건(UI-B 진입기준 불일치·fill-form schema 소유권·에러 보정 기준·export 형태·structured output 참조), 역질문 3건
-- Codex §3 응답 확인 후 전 항목 합의 → resolved_by: claude (11:33)
+- Codex §3 응답 확인 후 전 항목 합의 → resolved_by: Claude (11:33)
 - Codex verified_by (11:37) / Jacey approved_by (11:42) 완료
 - D01~D04 전체 `jacey_approved` 완료, DEV-D 진입 게이트 해제
 - MAP.md D04 상태 `[active · resolved · verified · jacey_approved]` 갱신
@@ -785,7 +853,7 @@ sidebar_order: 1
 
 **작업 내용**
 - D02 트래킹 테이블 교정: V-행을 별도 이슈로 잘못 분리한 것 수정, 상태값 비표준 제거
-- D02·DIR·ORC Jacey 승인 완료 (approved_by: jacey)
+- D02·DIR·ORC Jacey 승인 완료 (approved_by: Jacey)
 - `jacey_approved_by` → `approved_by` 전체 통일 (README·USAGE·template·detail 6개 파일)
 - `## 설계 종료 승인` 섹션 신규 도입: README 스펙 추가 + template + 승인 완료 4개 문서 적용
 - collab 결재 헤더 컬럼 통일
