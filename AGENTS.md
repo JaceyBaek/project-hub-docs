@@ -1,4 +1,4 @@
-# AGENTS.md
+﻿# AGENTS.md
 
 이 저장소에서 Codex 계열 에이전트는 설계, 검증, 테스트, 문서 리뷰 중심으로 동작한다.
 
@@ -29,19 +29,19 @@
 > `AGENTS.md`는 Codex 런타임 entrypoint로서 핵심 공통 규칙을 아래에 인라인으로 포함한다.
 > 기존 `CLAUDE.md` 단독 위임 선언은 이 구조로 대체된다.
 
-<!-- sync: COM-RES-001, 20260622, mode=manual, owner=codex -->
+<!-- sync: COM-RES-001, 20260622, mode=manual, owner=Codex -->
 **기본 응답 규칙** (COM-RES-001): 한국어·존댓말, 사실 기반, 외부 스펙 확인 후 기술(미확인 시 "미확인" 표기), 코드·산출물 우선, 모호하면 질문, step-by-step. 전문: `platform/processes/ai_agents/COMMON.md` §COM-RES-001
 
-<!-- sync: COM-RES-002, 20260622, mode=manual, owner=codex -->
+<!-- sync: COM-RES-002, 20260622, mode=manual, owner=Codex -->
 **경로·타임스탬프 안전 규칙** (COM-RES-002): 절대경로 금지, 경로 구분자 슬래시(/) 사용, `date +"%Y-%m-%d %H:%M"` 명령으로 실제 시각 확인(임의 작성 금지), 파일 전수 확인 후 결론(grep 0건 = "없다" 단정 금지). 전문: `platform/processes/ai_agents/COMMON.md` §COM-RES-002
 
-<!-- sync: COM-COLLAB-001, 20260622, mode=manual, owner=codex -->
+<!-- sync: COM-COLLAB-001, 20260622, mode=manual, owner=Codex -->
 **collab AI 역할 확인** (COM-COLLAB-001): collab 작업 시작 전 `personal.yml collab` 섹션 확인. DEV 담당자는 `personal.yml collab.author` 기준 확인 (design 문서 `author` 필드와 혼동 금지). 전문: `platform/processes/ai_agents/COMMON.md` §COM-COLLAB-001
 
-<!-- sync: COM-COLLAB-002, 20260622, mode=manual, owner=codex -->
-**collab design 합의/동의 하드 게이트** (COM-COLLAB-002): `resolved_by`·`verified_by`·트래킹 상태 기입 직전 반드시 collab README §7·§8 Read. 기억·직관 의존 금지. blocking 없으면 즉시 합의 선언. 전문: `platform/processes/ai_agents/COMMON.md` §COM-COLLAB-002
+<!-- sync: COM-COLLAB-002, 20260622, mode=manual, owner=Codex -->
+**collab design 합의/동의 하드 게이트** (COM-COLLAB-002): `resolved_by`·`verified_by`·트래킹 상태 기입 직전 반드시 collab README §7·§8 Read. 기억·직관 의존 금지. blocking 없으면 즉시 합의 선언. 사용자가 `동의 검토`·`동의만`을 요청하면 최신 합의/미결/DoD/상태/MAP만 확인하는 fast-path를 기본 적용하고, 전체 재리뷰는 명시 요청 또는 불일치 감지 시에만 수행. 전문: `platform/processes/ai_agents/COMMON.md` §COM-COLLAB-002
 
-<!-- sync: COM-OPS-003, 20260622, mode=manual, owner=codex -->
+<!-- sync: COM-OPS-003, 20260622, mode=manual, owner=Codex -->
 **collab 문서·MAP 즉시 갱신** (COM-OPS-003): 재수정 완료 시 DEV §2·§4·MAP.md 동일 작업 범위 즉시 갱신. `approved_by` 기입 즉시 `_archive/{ns}/MAP.md` + `collab/MAP.md` 양쪽 갱신. 편집 전 반드시 Read. 전문: `platform/processes/ai_agents/COMMON.md` §COM-OPS-003
 
 **충돌 우선순위**: Codex 역할 경계(코딩 금지 등)는 `AGENTS.md`가 우선한다. 공통 응답·기록·운영 규칙은 entrypoint 인라인을 우선 적용하고, COMMON.md와 drift 발견 시 review-blocking으로 처리한다.
@@ -50,7 +50,7 @@
 
 ## 모델 라우팅 정책
 
-목표는 설계와 검증 품질이 필요한 구간에는 `GPT-5.5`를 사용하고, 설계 승인 이후 구현 실행 구간에는 `GPT-5.3-codex`를 사용하는 것이다.
+목표는 설계와 검증 품질이 필요한 구간에는 `GPT-5.5`를 사용하고, 설계 승인 이후 구현 실행 구간에는 `GPT-5.3-Codex`를 사용하는 것이다.
 
 AGENTS.md 자체는 런타임 모델을 직접 전환하지 못한다. 실제 자동 전환은 UI, API 호출자, Codex 실행 설정, 또는 외부 오케스트레이터에서 수행해야 한다. 이 문서는 모델 선택 기준과 전환 게이트를 정의한다.
 
@@ -60,12 +60,12 @@ AGENTS.md 자체는 런타임 모델을 직접 전환하지 못한다. 실제 �
 | 설계 리뷰 | 아키텍처, 데이터 흐름, 인터페이스, 상태 전이, 운영 경계 검토 | `GPT-5.5` | 중대 설계 리스크가 resolved 또는 accepted-risk로 정리됨 |
 | 검증 설계 | 테스트 전략, 인수 기준, 실패 모드, 롤백, 관측성, 보안 검증 정의 | `GPT-5.5` | 검증 기준과 종료 기준이 명확해짐 |
 | 구현 준비 | 구현 체크리스트, 작업 분해, 변경 범위, 비기능 요구 매핑 | `GPT-5.5` | `Implementation Ready` 또는 동등한 승인 상태가 기록됨 |
-| 구현 실행 | 코드 작성, 리팩터링, 테스트 코드 작성, 빌드/배포 자동화 수정 | `GPT-5.3-codex` | 설계/검증 게이트 통과 후 별도 구현 세션 또는 구현 담당 에이전트가 수행 |
+| 구현 실행 | 코드 작성, 리팩터링, 테스트 코드 작성, 빌드/배포 자동화 수정 | `GPT-5.3-Codex` | 설계/검증 게이트 통과 후 별도 구현 세션 또는 구현 담당 에이전트가 수행 |
 | 구현 검토 | 구현 결과의 요구사항 충족, 회귀 리스크, 테스트 결과 리뷰 | `GPT-5.5` 권장 | 구현 산출물과 테스트 결과가 준비됨 |
 
 ### 전환 게이트
 
-`GPT-5.5`에서 `GPT-5.3-codex`로 넘어가기 전에는 다음 조건을 충족해야 한다.
+`GPT-5.5`에서 `GPT-5.3-Codex`로 넘어가기 전에는 다음 조건을 충족해야 한다.
 
 - 목표, 범위, 비범위가 문서화되어 있음
 - 주요 인터페이스와 데이터 명세가 식별되어 있음
@@ -79,9 +79,9 @@ AGENTS.md 자체는 런타임 모델을 직접 전환하지 못한다. 실제 �
 ### 경계 사례
 
 - 테스트 전략 작성은 `GPT-5.5` 영역이다.
-- 테스트 코드 작성과 실행 자동화 수정은 `GPT-5.3-codex` 영역이다.
+- 테스트 코드 작성과 실행 자동화 수정은 `GPT-5.3-Codex` 영역이다.
 - 구현 체크리스트 작성은 `GPT-5.5` 영역이다.
-- 체크리스트 항목을 실제 코드 변경으로 수행하는 것은 `GPT-5.3-codex` 영역이다.
+- 체크리스트 항목을 실제 코드 변경으로 수행하는 것은 `GPT-5.3-Codex` 영역이다.
 - 구현 후 결함 분석, 회귀 리스크 판단, 운영 리스크 재평가는 `GPT-5.5`를 우선한다.
 
 ## 규칙 선독 체인 (고위험 작업 필수)
@@ -100,7 +100,7 @@ collab 상태 전이·플랫폼 규칙 변경·프로젝트 생성/종료 등 �
 - 일반 문서 편집 지침과 collab 프로세스 형식이 충돌하면 collab 프로세스 형식을 우선한다.
 - 이 우선순위는 코딩이나 구현 작업을 허용하지 않는다.
 - **DEV/TC 문서 동시 업데이트 의무:** 개발(DEV, `30_dev/` 등) 문서와 테스트 케이스(TC, `40_testcase/` 등) 문서처럼 상호 의존하거나 쌍으로 관리되는 collab 문서들의 경우, 하나의 파일에 대한 리뷰/검증 요청만 명시되어 있더라도 **동일 식별자를 가진 관련 문서를 모두 스캔하여 판정 결과와 피드백을 동시에 업데이트하고 동기화** 상태를 유지해야 한다.
-- **소유권 및 역할 경계 준수 (서명란 침범 금지):** 타 수행자나 승인권자의 고유 작성 영역(예: 승인자 `Jacey` 전용 최종 결론 및 승인 서명란, 개발자 `claude` 전용 작성 섹션 등)은 어떠한 경우에도 침범하여 임의로 편집하지 않는다. 피드백이나 검증 의견은 오직 본인의 담당 섹션(예: `antigravity` 제3자 검증란)에만 작성해야 한다.
+- **소유권 및 역할 경계 준수 (서명란 침범 금지):** 타 수행자나 승인권자의 고유 작성 영역(예: 승인자 `Jacey` 전용 최종 결론 및 승인 서명란, 개발자 `Claude` 전용 작성 섹션 등)은 어떠한 경우에도 침범하여 임의로 편집하지 않는다. 피드백이나 검증 의견은 오직 본인의 담당 섹션(예: `Gemini` 제3자 검증란)에만 작성해야 한다.
 
 ## 문서 리뷰 및 업데이트 동작
 

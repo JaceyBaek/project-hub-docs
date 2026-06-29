@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 sidebar_title: 2026년 5월
 sidebar_order: 1
 -->
@@ -39,8 +39,8 @@ sidebar_order: 1
 ## 2026-05-31 — rule_loading_policy 3자 합의 완료 + 플랫폼 코어 문서 반영 + bundle archive (23:25)
 
 - `20260530-0239_rule-loading-chain` collab bundle 전체 처리 완료
-  - `10_DIR_rule-loading-chain.md`: Claude R1·Antigravity R1·Codex R1·Antigravity R2·Claude R2 거쳐 3자 합의 완료. resolved_by: claude / verified_by: antigravity / jacey_approved: 03:27
-  - `20_D01_...gates.md` 신규: D1-I-001~006 R1→R2 합의 완료. resolved_by: claude / verified_by: antigravity / jacey_approved: 04:26
+  - `10_DIR_rule-loading-chain.md`: Claude R1·Gemini R1·Codex R1·Gemini R2·Claude R2 거쳐 3자 합의 완료. resolved_by: Claude / verified_by: Gemini / jacey_approved: 03:27
+  - `20_D01_...gates.md` 신규: D1-I-001~006 R1→R2 합의 완료. resolved_by: Claude / verified_by: Gemini / jacey_approved: 04:26
 - V-001~V-007 플랫폼 코어 문서 반영 완료
   - `platform/processes/rule_loading_policy.md` 보완: jacey_approved_by 필수 파일 6종 목록 + 선언 경량화 예외 조항
   - `AGENTS.md` 규칙 선독 체인 섹션 신설 (참조 링크, 전문 중복 없음)
@@ -83,7 +83,7 @@ sidebar_order: 1
 ## 2026-05-30 — eacct_chatbot 브레인스톰 트리아지 collab direction 합의 + 운영 개선 (01:18)
 
 - 브레인스톰 5개 유형별 파일 우선순위 분석 및 collab 없이 단독 처리 가능 항목 선별 (Codex 검토 연계)
-- collab direction `10_DIR_brainstorm-triage.md` R1 리뷰 작성 → Codex 응답 수용 → `verified_by: claude` 완료 (`status: resolved`)
+- collab direction `10_DIR_brainstorm-triage.md` R1 리뷰 작성 → Codex 응답 수용 → `verified_by: Claude` 완료 (`status: resolved`)
 - PostToolUse hook 설정 (`.claude/settings.json`) — collab 파일 Edit/Write 후 미채워진 타임스탬프(`| ~ |`) 자동 감지
 - CLAUDE.md 규칙 8-3 위반(타임스탬프 임의 작성) → `lessons_learned.md` 기록 + `feedback_timestamp_rule.md` 메모리 저장
 
@@ -279,12 +279,12 @@ sidebar_order: 1
 
 ### 작업 내용
 
-- mcp_platform 보안·운영 설계(D001~D006) + eacct_mcp/chatbot 7단계 DEV·TC 전 범위 3-way 검증(Claude·Codex·Antigravity) + Jacey 승인 완료
+- mcp_platform 보안·운영 설계(D001~D006) + eacct_mcp/chatbot 7단계 DEV·TC 전 범위 3-way 검증(Claude·Codex·Gemini) + Jacey 승인 완료
   - mcp_platform v0.6.0: signed context · LLM-safe response · audit fail-closed · deploy manifest · config validation
   - DEV_D006-7 최종 승인 (2026-05-26 22:13) — deploy smoke 전 범위 PASS, 운영 배포 핸드오프 승인
 - collab bundle `PLATFORM/DIR_20260514-1554_mcp-chatbot-security-ops/` → `archive/PLATFORM/DIR_20260514-1554_mcp-chatbot-security-ops/` 이동
 - MAP.md: direction·O001·D001~D006·DEV(10개)·TC(10개) 전체 `[resolved · verified · archived]` + 경로 archive/ 접두사 갱신
-- INDEX.md: bundle 항목 추가 (resolved_by: claude+jacey / verified_by: codex+antigravity)
+- INDEX.md: bundle 항목 추가 (resolved_by: Claude+Jacey / verified_by: Codex+Gemini)
 - eacct_mcp T020, eacct_chatbot T009: 산출물 반영 항목 등록 (착수 가능 상태)
 
 ---
@@ -371,7 +371,7 @@ sidebar_order: 1
 
 - server.py per-request token refresh (DevSignedContextIssuer → McpTokenIssuer.issue() → mcp.set_auth() 자동 갱신)
 - widget.html + index.html: items_ref 버튼 렌더링 + /payload/{ref} fetch + 테이블 표시 + X-Session-ID 헤더
-- C1 TC-001~014 전원 PASS (14/14). Codex·Antigravity 검증 대기.
+- C1 TC-001~014 전원 PASS (14/14). Codex·Gemini 검증 대기.
 - MAP.md: DEV_D006-6·TC_D006-6 [active] 등록
 
 ---
@@ -380,7 +380,7 @@ sidebar_order: 1
 
 ### 작업 내용
 
-- 3-way 검증(Claude 18/18 + Codex TC-C01~C06 포함 24/24 + Antigravity TC-C01~C06 포함 24/24) 전원 통과
+- 3-way 검증(Claude 18/18 + Codex TC-C01~C06 포함 24/24 + Gemini TC-C01~C06 포함 24/24) 전원 통과
 - Jacey 승인 (16:52). DEV_D006-6 진입 가능.
 - MAP.md: DEV_D006-5·TC_D006-5 [resolved · verified], DEV_D006-6 진입 게이트 해제
 
@@ -395,7 +395,7 @@ sidebar_order: 1
 - `projects/eacct_mcp/source/policies/tools.yml`: policy_name·audit_required·max_rows·sensitive·required_roles 보완 (route_intent 신규 추가), 6개 tool 전체 선언
 - `projects/eacct_mcp/source/policies/field_classification.yml`: 신규 (8개 kind: sensitive 5개 + internal 3개)
 - collab 문서 신규: `30_DEV_D006-5`, `40_TC_D006-5`
-- Claude 자체 검증 18/18 통과. Codex·Antigravity 검증 대기.
+- Claude 자체 검증 18/18 통과. Codex·Gemini 검증 대기.
 
 ---
 
@@ -406,7 +406,7 @@ sidebar_order: 1
 - `projects/eacct_mcp/source/tools/commcode.py`: 3개 tool(`list_comcd_groups`·`get_comcd_group`·`search_comcd`) 성공 반환 → `ToolResponseBuilder.build_generic_response` 경유 전환, 비민감 공개 데이터
 - `projects/eacct_mcp/source/tools/__init__.py`: `register_all` 6개 tool에 `policy_name`·`llm_exposure`·`audit_required` 메타데이터 선언 (commcode=allow, slip/taxbill=summary_only, route_intent=deny)
 - collab 문서: `30_DEV_D006-4_20260522-1558_llm-safe-response.md`, `40_TC_D006-4_20260522-1558_llm-safe-response.md` 신규 생성
-- 3-way 검증(Claude·Codex·Antigravity) 21/21 전원 통과 — Jacey 승인(2026-05-22 16:35)
+- 3-way 검증(Claude·Codex·Gemini) 21/21 전원 통과 — Jacey 승인(2026-05-22 16:35)
 - MAP.md: DEV_D006-4·TC_D006-4 [resolved · verified], DEV_D006-5 진입 게이트 해제
 
 ---
@@ -429,7 +429,7 @@ sidebar_order: 1
 - `projects/eacct_mcp/source/tools/__init__.py`: `register_all(registry)` 함수 신규 추가 (명시 registry 등록 단일 진입점)
 - `projects/eacct_mcp/source/tools/slip.py·taxbill.py·commcode.py·router.py`: `@tool` 데코레이터 전량 제거, `tool` import 제거
 - collab 문서: `30_DEV_D006-2_20260522-1053_eacct-registry-transition.md`, `40_TC_D006-2_20260522-1053_eacct-registry-transition.md` 신규 생성 및 3-way 검증 완료
-- 3-way 검증(Claude·Codex·Antigravity) 18/18 전원 통과 — Jacey 승인(2026-05-22 11:25)
+- 3-way 검증(Claude·Codex·Gemini) 18/18 전원 통과 — Jacey 승인(2026-05-22 11:25)
 - MAP.md: DEV_D006-2 `[resolved · verified]`, DEV_D006-3 진입 게이트 해제
 
 ### 결과
@@ -448,10 +448,10 @@ sidebar_order: 1
 
 **collab 문서 변경 이력 표기 개선**
 - `문서 변경 이력` 표 일시 컬럼: 날짜(YYYY-MM-DD) → 날짜+시간(YYYY-MM-DD HH:MM) 형식으로 통일
-- 수정자 컬럼 역할 표기 추가: `claude (개발)` / `codex (설계)` / `antigravity (테스터)` / `jacey (승인)`
-- README.md §9 예시 표: Antigravity 행 추가 + 역할 표기 반영
+- 수정자 컬럼 역할 표기 추가: `Claude (개발)` / `Codex (설계)` / `Gemini (테스터)` / `Jacey (승인)`
+- README.md §9 예시 표: Gemini 행 추가 + 역할 표기 반영
 - README.md §9 TC 섹션: TC §2 append 완료 시 MAP.md 갱신 의무 및 상태 전환 기준 명시
-- MAP.md: TC_D004 `[active]` → `[resolved · verified]` 갱신 (Antigravity TC-A01~A03 기완료 반영)
+- MAP.md: TC_D004 `[active]` → `[resolved · verified]` 갱신 (Gemini TC-G01~G03 기완료 반영)
 - USAGE.md: 아이다 → Claude 명칭 정리 (3곳)
 - DEV_D002·DEV_D004 문서 변경 이력 표: 역할 표기 소급 적용
 
@@ -473,10 +473,10 @@ sidebar_order: 1
 
 ### 작업 내용
 
-- DEV_D001 문서 보정: `## 문서 변경이력` 섹션 신설(헤더 표·증적 타임스탬프·§5 텍스트 복원), frontmatter `resolved_by: jacey → claude` + `approved_by: jacey` + `approved_at: 2026-05-20` + `status: approved` 패턴 통일, MAP.md `approved_by: jacey (2026-05-20)` 추가
-- DEV_D002(+D003) 승인: Codex C3(2026-05-22 09:40) + Antigravity A1(2026-05-22 10:00) 전원 통과 확인 후 Jacey 승인
-  - Antigravity Gap 3건(고위험 소비 API 트리거 누락, JWKS Negative Caching 미구현, PolicyEngine 런타임 검증 부재) 차기 마일스톤 이관 — DoD 충족에 영향 없음
-  - frontmatter `status: approved`, `verified_by: codex+antigravity`, `approved_by: jacey`, `approved_at: 2026-05-22`
+- DEV_D001 문서 보정: `## 문서 변경이력` 섹션 신설(헤더 표·증적 타임스탬프·§5 텍스트 복원), frontmatter `resolved_by: Jacey → Claude` + `approved_by: Jacey` + `approved_at: 2026-05-20` + `status: approved` 패턴 통일, MAP.md `approved_by: Jacey (2026-05-20)` 추가
+- DEV_D002(+D003) 승인: Codex C3(2026-05-22 09:40) + Gemini A1(2026-05-22 10:00) 전원 통과 확인 후 Jacey 승인
+  - Gemini Gap 3건(고위험 소비 API 트리거 누락, JWKS Negative Caching 미구현, PolicyEngine 런타임 검증 부재) 차기 마일스톤 이관 — DoD 충족에 영향 없음
+  - frontmatter `status: approved`, `verified_by: Codex+Gemini`, `approved_by: Jacey`, `approved_at: 2026-05-22`
 
 ### 결과
 
@@ -501,8 +501,8 @@ sidebar_order: 1
 
 - DEV_D004 C3 재수정: `projects/eacct_mcp/deploy/config_validate.py` em dash → ASCII 교체 + stdout reconfigure 적용
 - Codex C3 재테스트 통과 (자동화 31/31, 전체 회귀 154/154, TC-C01~C03 PASS)
-- Antigravity A1 제3자 검증 통과 (KillSwitch 방어·금지 플래그 대소문자 처리 확인)
-- Jacey 승인 — DEV_D004 frontmatter `status: approved`, `verified_by: codex+antigravity`, `approved_by: jacey`
+- Gemini A1 제3자 검증 통과 (KillSwitch 방어·금지 플래그 대소문자 처리 확인)
+- Jacey 승인 — DEV_D004 frontmatter `status: approved`, `verified_by: Codex+Gemini`, `approved_by: Jacey`
 - O001 §G 게이트 해제: DEV_D006-5 (audit·policy fail-closed 통합) 진입 가능
 
 ### 결과
@@ -624,7 +624,7 @@ DEV_D001 승인 직후 `DEV_D002(+D003)` 개발 착수 및 자체 검증 완료.
 pytest 122/122 통과, 1 warning (의도된 InsecureKeyLengthWarning). 신규 23건 모두 통과, 기존 99건 회귀 없음.
 
 ### 다음 단계
-C1 3-way 검증 (Codex + Antigravity) → TC 문서 작성 → Jacey 승인 → DEV_D004(+D005) 진입
+C1 3-way 검증 (Codex + Gemini) → TC 문서 작성 → Jacey 승인 → DEV_D004(+D005) 진입
 
 ---
 
@@ -634,22 +634,22 @@ C1 3-way 검증 (Codex + Antigravity) → TC 문서 작성 → Jacey 승인 → 
 collab 프로세스의 테스트 역할을 3-way 검증 체계로 전환하고, DEV_D001 최종 승인까지 완료했다.
 
 ### 프로세스 변경
-- **3-way 검증 체계 확립**: 개발(Claude) → 테스트-설계검증(Codex) + 테스트-제3자(Antigravity) → 승인(Jacey)
+- **3-way 검증 체계 확립**: 개발(Claude) → 테스트-설계검증(Codex) + 테스트-제3자(Gemini) → 승인(Jacey)
 - **TC 파일 분리**: 테스트 케이스를 DEV 문서에서 `40_tc/40_TC_{source-id}_{ts}_{slug}.md`로 독립 분리
 - **bundle 폴더 구조 정비**: `20_detail/` · `30_dev/` · `40_tc/` 역할별 분리, prefix `_` 통일
-- **승인자 변경**: `claude` → `jacey` (최종 dev 종료 승인은 Jacey가 직접)
+- **승인자 변경**: `Claude` → `Jacey` (최종 dev 종료 승인은 Jacey가 직접)
 - **승인 일시 형식**: 날짜만 → `YYYY-MM-DD HH:mm` 포함 기록. 아이다가 "승인" 트리거 즉시 처리.
 
 ### 변경 파일
 - `platform/processes/collab/README.md` — 기본 역할·파이프라인·§6·§9·§14·§16 갱신
-- `platform/processes/collab/_template_dev.md` — 결재 헤더 4컬럼, `approver: jacey`, §3 재구성, §5 형식
+- `platform/processes/collab/_template_dev.md` — 결재 헤더 4컬럼, `approver: Jacey`, §3 재구성, §5 형식
 - `platform/processes/collab/_template_testcase.md` — 신규 (TC 파일 템플릿)
 - `PLATFORM/DIR_.../30_dev/30_DEV_D001_...md` — 3-way 검증 소급 적용, Jacey 승인 완료
 - `PLATFORM/DIR_.../40_tc/40_TC_D001_...md` — §1 TC-001~027 Claude 작성 완료
 - `platform/processes/collab/MAP.md` — TC 섹션 추가, DEV_D001 [resolved·verified] 반영
 
 ### DEV_D001 승인
-- **2026-05-20 16:52 Jacey 승인** — C1 3-way 검증(Claude·Codex·Antigravity) 전원 통과
+- **2026-05-20 16:52 Jacey 승인** — C1 3-way 검증(Claude·Codex·Gemini) 전원 통과
 - O001 §G 게이트 해제 — 후속 `DEV_D002(+D003)` / `DEV_D004(+D005)` / `DEV_D006-*` 진입 가능
 
 ---
@@ -669,7 +669,7 @@ collab 프로세스의 테스트 역할을 3-way 검증 체계로 전환하고, 
 ## 2026-05-18 (33) — DEV_D001 mcp-platform-common-contracts 개발·자체 테스트 완료 (v0.4.0)
 
 ### 개요
-D001 detail design 합의 내용을 `mcp_platform` 패키지에 구현하고 자체 검증(Claude 기본 검증, 99 passed)을 완료했다. **DEV_D001 `status: dev_selfcheck`** — codex 공식 cycle은 §3·§4에서 진행 예정.
+D001 detail design 합의 내용을 `mcp_platform` 패키지에 구현하고 자체 검증(Claude 기본 검증, 99 passed)을 완료했다. **DEV_D001 `status: dev_selfcheck`** — Codex 공식 cycle은 §3·§4에서 진행 예정.
 
 ### 신규 모듈 (`platform/plugins/mcp_platform/mcp_platform/`)
 - **`registry.py`** — `ToolEntry`(frozen, policy_name·audit_required·llm_exposure·input_schema 메타 슬롯) / `ToolRegistry`(server-scoped) / `default_registry()` (전역 `@tool` 호환 계층)
@@ -698,7 +698,7 @@ D001 detail design 합의 내용을 `mcp_platform` 패키지에 구현하고 자
 - `DEV_D001` frontmatter `status: dev_selfcheck`, DoD 9개 `[x]`, §2 개발 완료 요약 작성.
 
 ### 알려진 deferred
-- codex 공식 테스트 cycle (§3·§4) 미진행. dev 종료 승인(§5 `status: resolved`)은 cycle 완료 후 처리.
+- Codex 공식 테스트 cycle (§3·§4) 미진행. dev 종료 승인(§5 `status: resolved`)은 cycle 완료 후 처리.
 - stdio envelope 통일·`/metrics` Prometheus 포맷·auth_verifier 본 구현·fail-closed audit·kill switch 저장소는 D002~D006.
 
 ---
@@ -706,10 +706,10 @@ D001 detail design 합의 내용을 `mcp_platform` 패키지에 구현하고 자
 ## 2026-05-15 (32) — 1554 collab 진행: O001 verified · D001 verified · D002/D004 R1 + 결재 헤더 표준 + 트래킹 정렬 정책
 
 ### 1554 direction 진행 상태 갱신
-- **O001 1414** — R2 합의 + V2 동의 마감. `status: resolved` / `resolved_by: claude` / `verified_by: codex`. R2이관 5건(I-004 회귀 매트릭스 보강, I-005 narrative ID 폐기, I-007 정책 문구 정정, I-011 §F.3 O001 verified 명시, I-012 archive bundle 위치) 모두 합의. codex 본문 갱신 완료(§E 7개 행 추가, §F.1 narrative ID 폐기, §F.2 정책 문구 정정, §F.3 O001 verified 공통 게이트 명시, § 합의 archive 위치 bundle 단위).
-- **D001 mcp_platform 공통 모듈** — R1 → R2 → V2 마감. `status: resolved` / `resolved_by: claude` / `verified_by: codex`. R1 합의 4건(D1-I-001/003/004/006), R2 합의 2건(D1-I-002 auth_verifier·kill_switch 별도 슬롯 / D1-I-005 1554 §11 hook 슬롯 매핑). 본문 갱신 5건(§4 호출순서 8단계, PlatformServer 시그니처 auth_verifier·kill_switch 추가, 제외 범위 hook deferral 매핑, stdio envelope deferral, DoD 보강) 모두 반영. **DEV_D001 진입 가능 게이트 통과.**
-- **D002 인증/세션/signed context** — R1 claude 검토 완료. 합의 3건(D2-I-001 JWT claim·TTL·rotation / D2-I-003 세션·RequestContext 경계 / D2-I-004 role·purpose 교차검증). R2이관 3건(D2-I-002 JWKS grace + dual-key rotation / D2-I-005 dev_auth 운영 차단 책임 위치 / D2-I-006 claude 신규: chatbot↔MCP mTLS 책임 위치).
-- **D004 audit/fail-closed/kill switch** — R1 claude 검토 완료. 합의 3건(D4-I-002 hash chain / D4-I-004 컴포넌트별 fail 정책 / D4-I-005 redacted+hash). R2이관 2건(D4-I-001 audit 2-phase 강제 — ITGC 증적 공백 차단 / D4-I-003 kill switch config 변경 경로 1차 구현 표준).
+- **O001 1414** — R2 합의 + V2 동의 마감. `status: resolved` / `resolved_by: Claude` / `verified_by: Codex`. R2이관 5건(I-004 회귀 매트릭스 보강, I-005 narrative ID 폐기, I-007 정책 문구 정정, I-011 §F.3 O001 verified 명시, I-012 archive bundle 위치) 모두 합의. Codex 본문 갱신 완료(§E 7개 행 추가, §F.1 narrative ID 폐기, §F.2 정책 문구 정정, §F.3 O001 verified 공통 게이트 명시, § 합의 archive 위치 bundle 단위).
+- **D001 mcp_platform 공통 모듈** — R1 → R2 → V2 마감. `status: resolved` / `resolved_by: Claude` / `verified_by: Codex`. R1 합의 4건(D1-I-001/003/004/006), R2 합의 2건(D1-I-002 auth_verifier·kill_switch 별도 슬롯 / D1-I-005 1554 §11 hook 슬롯 매핑). 본문 갱신 5건(§4 호출순서 8단계, PlatformServer 시그니처 auth_verifier·kill_switch 추가, 제외 범위 hook deferral 매핑, stdio envelope deferral, DoD 보강) 모두 반영. **DEV_D001 진입 가능 게이트 통과.**
+- **D002 인증/세션/signed context** — R1 Claude 검토 완료. 합의 3건(D2-I-001 JWT claim·TTL·rotation / D2-I-003 세션·RequestContext 경계 / D2-I-004 role·purpose 교차검증). R2이관 3건(D2-I-002 JWKS grace + dual-key rotation / D2-I-005 dev_auth 운영 차단 책임 위치 / D2-I-006 Claude 신규: chatbot↔MCP mTLS 책임 위치).
+- **D004 audit/fail-closed/kill switch** — R1 Claude 검토 완료. 합의 3건(D4-I-002 hash chain / D4-I-004 컴포넌트별 fail 정책 / D4-I-005 redacted+hash). R2이관 2건(D4-I-001 audit 2-phase 강제 — ITGC 증적 공백 차단 / D4-I-003 kill switch config 변경 경로 1차 구현 표준).
 - **D003/D005** — D002/D004 의존 → P2 묶음 R1은 D002/D004 verified 후 진행 결정 (회귀 부담 회피).
 - **D006** — D001~D005 verified 후 진입.
 
@@ -724,7 +724,7 @@ D001 detail design 합의 내용을 `mcp_platform` 패키지에 구현하고 자
 - **D001 트래킹 테이블 14행 ID 순 재정렬** (O001은 codex가 이미 ID 순 정렬해 별도 작업 없음). archive 트래킹 정렬은 보류 (감사 보존 측면).
 
 ### MAP.md 갱신
-- D001 [active] → [resolved · verified] (resolved_by: claude / verified_by: codex)
+- D001 [active] → [resolved · verified] (resolved_by: Claude / verified_by: Codex)
 - D002 [active] → [active · R1 reviewing], D004 [active] → [active · R1 reviewing]
 - O001 → resolved 완료 상태 갱신
 
@@ -778,7 +778,7 @@ D001 detail design 합의 내용을 `mcp_platform` 패키지에 구현하고 자
 
 ### 결정 배경
 
-- §29 직후 0903 O001 orchestration이 D001(1011) 합의 + DEV_D001 마이그레이션 **전에** 작성된 점이 드러남. R2까지 codex 응답이 진행됐으나 새 규칙(파일명·합의 단위 vs 검증 단위 분리·dev 묶음 파일 단위) 미인지 상태라 verified 진행 시 누락 위험.
+- §29 직후 0903 O001 orchestration이 D001(1011) 합의 + DEV_D001 마이그레이션 **전에** 작성된 점이 드러남. R2까지 Codex 응답이 진행됐으나 새 규칙(파일명·합의 단위 vs 검증 단위 분리·dev 묶음 파일 단위) 미인지 상태라 verified 진행 시 누락 위험.
 - archive 정리: 직전 §29에서 0836 bundle은 archive 통째 이동했으나, 구 평면(1846 direction + 1925 dev)이 여전히 `archive/design/`·`archive/dev/` 평면 분류로 남아 있어 bundle 표준과 불일치.
 
 ### 작업
@@ -787,7 +787,7 @@ D001 detail design 합의 내용을 `mcp_platform` 패키지에 구현하고 자
 
 - 기존 0903(`O001_20260515-0903_security-ops.md`) fs rm 폐기 (collab .gitignore로 git 미추적, 본 채팅 이력만 historical)
 - MAP의 1554 노드 Orchestration 섹션을 "재작성 대기"로 갱신
-- codex 작성 명세 정리·전달 (1554 direction + D001~D006 본문 base + 새 규칙 인지 + dev 묶음 narrative·파일 단위·sub-DEV 명시 필수)
+- Codex 작성 명세 정리·전달 (1554 direction + D001~D006 본문 base + 새 규칙 인지 + dev 묶음 narrative·파일 단위·sub-DEV 명시 필수)
 
 #### 2 — archive bundle 통합 재구성 (1846 + 1925)
 
@@ -798,20 +798,20 @@ D001 detail design 합의 내용을 `mcp_platform` 패키지에 구현하고 자
 - `archive/INDEX.md` Bundle 섹션 통합 (1846 + 0836 bundle 2건, 구 평면 섹션 폐기)
 - MAP의 1846 노드를 bundle 경로로 갱신 + Workorder 섹션 → Dev 섹션
 
-#### 3 — 새 O001 1414 작성 (codex) + R1 리뷰 (claude)
+#### 3 — 새 O001 1414 작성 (Codex) + R1 리뷰 (Claude)
 
 - 신 파일: `PLATFORM/DIR_20260514-1554_mcp-chatbot-security-ops/O001_20260515-1414_security-ops-execution-plan.md`
-- §1 codex 본문: 의존성 그래프(D001 → {D002,D004} → {D003,D005} → D006), 임계 경로 Path A/B, 병행 묶음 P0~P3, 회귀 영향 매트릭스(9개 cross-detail 계약 행), dev 묶음 narrative·파일 단위 정책·D006 sub-DEV 7단계, 진입 게이트
-- claude R1 리뷰 결과:
+- §1 Codex 본문: 의존성 그래프(D001 → {D002,D004} → {D003,D005} → D006), 임계 경로 Path A/B, 병행 묶음 P0~P3, 회귀 영향 매트릭스(9개 cross-detail 계약 행), dev 묶음 narrative·파일 단위 정책·D006 sub-DEV 7단계, 진입 게이트
+- Claude R1 리뷰 결과:
   - **합의 7건**: I-001 의존성 / I-002 임계 경로 / I-003 병행 묶음 / I-006 단일 source-id 정책 / I-008 D006 sub-DEV / I-009 진입 판정 / I-010 O001 verified gate
   - **R2 이관 5건**:
     - I-004 — §E 회귀 매트릭스에 1554 §11 추가 통제 7개(prompt injection/tool abuse/DB read-only/mTLS/데이터 보존/변경관리/보안 산출물) 흡수만 되어 별도 행 미표기
     - I-005 — narrative ID(DEV-NNN) ↔ source-id 번호 불일치(DEV-003=DEV_D004, DEV-004=DEV_D006) → narrative ID 폐기 권장
     - I-007 — §F.2 정책 문구 "후행 또는 더 좁은" 모순(실제 적용은 둘 다 선행) → "선행 또는 더 좁은"으로 정정
-    - I-011 (claude 신규) — §F.3 dev 생성 순서 표에 O001 verified 미명시
-    - I-012 (claude 신규) — § 합의 결론 "아카이브 위치" 옛 평면 분류 표기 → bundle 단위로 갱신
+    - I-011 (Claude 신규) — §F.3 dev 생성 순서 표에 O001 verified 미명시
+    - I-012 (Claude 신규) — § 합의 결론 "아카이브 위치" 옛 평면 분류 표기 → bundle 단위로 갱신
 
-#### 4 — D001~D006 §0 블록 갱신 (codex 자율)
+#### 4 — D001~D006 §0 블록 갱신 (Codex 자율)
 
 - 본 세션 진행 중 codex가 D001~D006의 §0 "다음 단계" 항목에 "O001 orchestration verified 후 R1 검토" 명시 추가 — R1 진입 흐름 명확화
 
@@ -823,7 +823,7 @@ D001 detail design 합의 내용을 `mcp_platform` 패키지에 구현하고 자
 
 ### 후속 (미완료)
 
-- **1414 O001 R2** — codex 응답 차례 (5건 R2이관). 응답 후 claude 합의 검증 → verified_by 마감
+- **1414 O001 R2** — Codex 응답 차례 (5건 R2이관). 응답 후 Claude 합의 검증 → verified_by 마감
 - **1554 D001~D006 R1** — O001 verified 후 진입 (D001~D006 모두 본문 §1 작성 완료, R1 검토 시작 전)
 - **DEV 진입** — D001 verified 후 DEV_D001 → 이후 묶음 순차/병행
 - **ENHANCEMENTS E-001 옵트인 자동화 / E-002 MAP 분산** — 대기
@@ -845,7 +845,7 @@ D001 detail design 합의 내용을 `mcp_platform` 패키지에 구현하고 자
 #### 1 — D001 detail 합의 (`D001_20260515-1011_naming-rules-and-platform-project-separation`)
 
 - 부모 direction: `DIR_20260515-0836` (collab v2 보강 메타) 사후 후속 detail
-- R1 13 이슈 (codex 10 + claude 신규 3) — 모두 합의·V1 동의 마감 (resolved_by: codex / verified_by: claude)
+- R1 13 이슈 (Codex 10 + Claude 신규 3) — 모두 합의·V1 동의 마감 (resolved_by: Codex / verified_by: Claude)
 - 핵심 결정:
   - **bundle 구조**: `collab/{project}/DIR_{ts}_{slug}/` — 부모-자식 관계는 path가 표현, basename은 종류·정렬·식별만
   - **파일명 패턴**: direction `00_DIRECTION.md` (고정), detail `D{nnn}_{ts}_{slug}.md`, orchestration `O{nnn}_{ts}_{slug}.md`, dev `dev/DEV_{source-id}[-{sub-id}]_{ts}_{slug}.md` (sub-id 옵셔널)
@@ -856,7 +856,7 @@ D001 detail design 합의 내용을 `mcp_platform` 패키지에 구현하고 자
 
 #### 2 — DEV_D001 마이그레이션 실행 (`DEV_D001_20260515-1233_collab-bundle-naming-migration`)
 
-- 본 건 한정 예외: tester=claude / approver=claude (mechanical 마이그레이션, 일반 원칙 README §6 그대로 유효)
+- 본 건 한정 예외: tester=Claude / approver=Claude (mechanical 마이그레이션, 일반 원칙 README §6 그대로 유효)
 - Phase 1·2·3 — 9개 active 파일 fs mv (collab .gitignore로 git 미추적, history 영향 없음) + frontmatter 갱신 + 본문 cross-reference sed 일괄 치환 (`D-XXX→DXXX`, `O-001→O001`, 평면 파일명→신 파일명)
 - Phase 4 — README / `_template_design.md` / `_template_dev.md` / `platform/TRIGGERS.md` / `MAP.md` / `ENHANCEMENTS.md` 일괄 개정
 - Phase 5 — T-001 (path 패턴) / T-002 (project ↔ namespace) / T-003 (parent_design ↔ bundle) / T-004 (MAP ↔ 실파일) / T-005 (평면 잔존) — **5/5 통과** (단일 C1, 미통과 없음)
@@ -886,7 +886,7 @@ D001 detail design 합의 내용을 `mcp_platform` 패키지에 구현하고 자
 ### 후속
 
 - ENHANCEMENTS E-001 (옵트인 자동화), E-002 (MAP 분산) — 트리거 충족 시 진행
-- 0903 O001 orchestration R2 claude verified_by 진행 — collab 일반 흐름 복귀
+- 0903 O001 orchestration R2 Claude verified_by 진행 — collab 일반 흐름 복귀
 - 1554 D001~D006 detail R1 진행 — 0903 verified 후 dev 진입 게이트 충족
 - DEV-001 ~ DEV-004 (D006은 7단계 sub-DEV) 순차/병행 진입
 
@@ -918,7 +918,7 @@ D001 detail design 합의 내용을 `mcp_platform` 패키지에 구현하고 자
 
 #### 1 — collab 프로세스 v2 합의 (`20260514-1846-collab-process-design`)
 
-- direction 11개 이슈 — R1 합의 5 / R2 합의 6 후 codex `verified_by`까지 완료 (resolved_by: claude / verified_by: codex)
+- direction 11개 이슈 — R1 합의 5 / R2 합의 6 후 Codex `verified_by`까지 완료 (resolved_by: Claude / verified_by: Codex)
 - 핵심 결정: `design_level: direction | detail` 분리, 파생 상세설계 계획 표, 4-eyes 흐름(개발 Claude ↔ 테스트 Codex), `dev 종료 승인 = Claude 봉인`, 모든 design `verified_by` 개발 진입 게이트
 - Cycle 임계 정책: C1~C3 자유 / C4 원인 분류 필수(`implementation_bug`·`test_bug`·`design_gap`·`scope_change`) / C5+ 설계 회귀 + Jacey 승인
 - 테스트 증적 표준 경로: CI artifact → `projects/{p}/_manage/test_results/{YYYYMMDD-HHmm}-{...}/` → 요약 표
@@ -930,7 +930,7 @@ D001 detail design 합의 내용을 `mcp_platform` 패키지에 구현하고 자
 - `_template_design.md` direction/detail 공통 템플릿으로 재작성. detail 전용 frontmatter(`parent_design`·`detail_id`·`task_ids`·`depends_on`·`blocks`) + §1 구현 범위·인터페이스 계약·DoD·테스트 항목
 - `_template_dev.md` 개발완료·테스트완료 확인서로 축소 — 5섹션(개발 범위·완료 요약·테스트 요약·Cycle 표·dev 종료 승인) + frontmatter(`design_ref`·`detail_design_ref`·`tester`·`approver`)
 - `platform/TRIGGERS.md` collab 4개 트리거 갱신 — direction/detail/dev 구분, V 행 자동 누적 룰 명시, 모든 design `verified_by` 필수, INDEX 새 형식
-- 1차 검증: README·템플릿 통과 / TRIGGERS 부분 통과 → 2차 보완에서 codex 권장 문구 반영 → 최종 통과
+- 1차 검증: README·템플릿 통과 / TRIGGERS 부분 통과 → 2차 보완에서 Codex 권장 문구 반영 → 최종 통과
 
 #### 3 — `platform/processes/` 카테고리 신설 + 폴더 이동
 
@@ -1086,7 +1086,7 @@ D001 detail design 합의 내용을 `mcp_platform` 패키지에 구현하고 자
 ### 결정 배경
 
 - (21) 보류 항목인 "mcp_platform v0.2.0/v0.2.1 흡수 산출물" 일괄 마감 세션
-- codex 1차 리뷰(`platform/collab/20260513-1724-mcp-platform-router-integration-review.md`) 6건 → claude 응답에서 v0.2.0 정합(1·2·6번) + v0.2.1 후속(3·4·5번)으로 분리 합의
+- Codex 1차 리뷰(`platform/collab/20260513-1724-mcp-platform-router-integration-review.md`) 6건 → Claude 응답에서 v0.2.0 정합(1·2·6번) + v0.2.1 후속(3·4·5번)으로 분리 합의
 - "이건 나중에 하고 collab 내용 검토 해줘" → "수정하고 문서도 업데이트" → "남은 건 후속 패치로 합의" → "1(지금 이어서 적용)" → "미완료건 추가 작업" → 마무리 push 순서로 진행
 
 ### 작업
@@ -1563,11 +1563,11 @@ D001 detail design 합의 내용을 `mcp_platform` 패키지에 구현하고 자
 
 **커밋 흐름 (push 완료, eacct_mcp 서브모듈은 별도 작업 중이라 보류)**
 - `e8aa0e8` feat(lifecycle): 단계 도입 + 형상관리 통합 + 권한 정책
-- `282e400` docs(claude): §9 commit/push 정책 명문화
+- `282e400` docs(Claude): §9 commit/push 정책 명문화
 - `dbd8f7f` chore(templates): 산출물 템플릿 단계 폴더 구조 통일
 - `49e2517` chore(templates): 단계 폴더 구조 일관성 정비
 - `eb7476c` docs(history): 라이프사이클 통합 재설계 기록
-- `b99bc50` docs(claude): §13·§14 신설 — 확장성 우선 + 메모리/지침 구분
+- `b99bc50` docs(Claude): §13·§14 신설 — 확장성 우선 + 메모리/지침 구분
 - 서브모듈 4개 push: gmail_cleaner `692132e` · wiki_mbo_builder `34c224c` · wiki_faq_builder `b4ddf76` · google_drive_backup `6b84eba`
 
 ---
@@ -1945,11 +1945,11 @@ if password is None:
 
 **1. CLAUDE.md — MCP 등록 절차 섹션 신규 추가**
 - `진행중 → 운영중` 전환 시 MCP 등록 여부 확인 단계 추가
-- `## MCP 등록 절차` 섹션: 정보 수집(서버명·전송방식·실행 명령·환경변수·노출 tool) → `claude mcp add` 실행 → 프로젝트 CLAUDE.md 기록
+- `## MCP 등록 절차` 섹션: 정보 수집(서버명·전송방식·실행 명령·환경변수·노출 tool) → `Claude mcp add` 실행 → 프로젝트 CLAUDE.md 기록
 
 **2. TRIGGERS.md — MCP 관련 트리거 3개 추가**
 - `"MCP 등록"` — 등록 절차 전체 실행
-- `"MCP 목록"` — `claude mcp list` 실행
+- `"MCP 목록"` — `Claude mcp list` 실행
 - `"MCP 삭제"` — 등록 제거
 
 **3. 프로젝트별 관리 문서 일괄 업데이트 (아이다)**

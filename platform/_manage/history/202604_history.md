@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 sidebar_title: 2026년 4월
 sidebar_order: 2
 -->
@@ -321,7 +321,7 @@ sidebar_order: 2
 **5. project-hub 단위 테스트 케이스 산출물 작성**
 - `docs/project_hub_UTC_20260427.html` 생성
 - 총 28개 TC: UTC-A(init_project.py 21개) / UTC-B(hub_init.py 5개) / UTC-C(deploy_record.py 3개)
-- 상세 스펙 3개: UTC-A01, UTC-A20, UTC-B03
+- 상세 스펙 3개: UTC-G01, UTC-G20, UTC-B03
 
 **6. init_project.py — CLAUDE.md 비서명 자동 동기화**
 - `import re` 추가

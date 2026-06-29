@@ -1,4 +1,4 @@
-# project-hub 환경 설정 가이드
+﻿# project-hub 환경 설정 가이드
 
 > 이 문서는 project-hub 환경 초기 설정부터 GitHub 연동, 개발 환경 구성까지 전 과정을 기술합니다.
 > 문서만 보고 동일한 환경을 처음부터 재현할 수 있도록 모든 단계를 빠짐없이 기술합니다.
@@ -74,7 +74,7 @@
 | Python | 3.x 이상 | `python --version` |
 | Git | 최신 | `git --version` |
 | VS Code | 최신 | — |
-| Claude Code | 최신 | `claude --version` |
+| Claude Code | 최신 | `Claude --version` |
 
 ### Claude Code 설치
 
