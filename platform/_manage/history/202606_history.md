@@ -7,6 +7,13 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-29 — eacct_chatbot 사다리게임 색상 중복 버그 수정 (12:55)
+
+- `ladder.js` 고정 팔레트 셔플 방식 → `_pickColors(n)` HSL 균등 분할 방식으로 교체. 플레이어 수에 관계없이 항상 시각적으로 구별되는 고유 색상 보장
+- 세부 내용: `projects/eacct_chatbot/_manage/history/202606_history.md`
+
+---
+
 ## 2026-06-29 — eacct_chatbot 미카 체험 개선 6종 + 버그 수정 4건 (11:05)
 
 - 폰트 5단계 확장(13-18px) + greeting·제안 문구 폰트 연동 / 답변 복사 버튼 / 로딩 문구 priority map 전면 재작성 / greeting 랜덤 다양화(32개) / /설정 UX 개선(설명·사용법·레이블)
