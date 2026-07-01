@@ -20,9 +20,10 @@
 1. **각종 기록** — 히스토리·lessons_learned·todo·issues 등 누락된 기록 작성
 2. **커밋** — 기록 파일 포함하여 커밋
 3. **푸시**
+4. **CI 감시** — 서브모듈 포함 시 아래 CI 감시 규칙 적용
 각 단계에서 범위가 불명확하거나 confirm이 필요한 사항이 있으면 진행 전 질문한다.
 
-**서브모듈 커밋·푸시 후 CI 감시 필수:** `projects/` 하위 서브모듈에 커밋·푸시 완료 즉시 CI 결과를 감시한다. 실패 감지 시 로그 분석 → 코드 수정 → 재커밋·재푸시를 그 자리에서 완수. CI 통과 확인 후 project-hub 서브모듈 포인터 갱신. 성공 확인 없이 다음 작업으로 넘어가지 않는다.
+**서브모듈 커밋·푸시 후 CI 감시 필수:** 훅(ci_watch_hook.ps1)은 보조 수단 (레포 추출 실패 가능). 아이다가 `gh run list --repo JaceyBaek/{repo} --limit 1`로 수동 확인 병행. 실패 시 로그 분석 → 코드 수정 → 재커밋·재푸시 완수 → project-hub 서브모듈 포인터 갱신. 성공 확인 없이 다음 작업 금지.
 
 ## 트리거 관리
 
@@ -56,12 +57,7 @@
 - 상태 표기: 각 프로젝트 CLAUDE.md 상단 → `상태: 진행중 | 코드: {코드} | 담당: {이름} | 시작일: YYYY-MM-DD`
 - 단위 관리: `_manage/` — `history/YYYYMM_history.md` / `todo.md` / `issues.md` / `meetings/` / `decisions.md` / `changelog.md` / `lessons.md` / `brainstorm/`
 - 우선순위: 높음·보통·낮음 / 상태: 대기·진행중·완료·보류 / 이슈유형: 버그·변경요청·리스크
-- **todo vs brainstorm 분류 기준**
-  - `todo.md`: 실행 가능한 단위 태스크 ("A 프로젝트 테스트 진행" 등 완료·진행중·대기·보류 상태로 추적)
-  - `brainstorm/`: 탐색·논의 중인 아이디어 ("A1 기능 방향 논의" 등 아직 결정 전) — 확정 시 `decisions.md`로 승격
-  - brainstorm 파일명: `YYYYMMDD_주제.md` / 아이다가 세션 중·마무리 시 기록 / 기존 파일에 논의 추가(누적) 방식
-  - **brainstorm 아카이브 규칙:** 설계 결정이 완료된 항목(핵심 결정 확정·요구사항 도출·구현 방향 합의)은 `brainstorm/archive/`로 이동. 이동 기준: 파일 내 "미결 사항"이 없거나 "다음 단계 → 구현 진행"으로 종결된 경우. `open` 상태(미결 사항 잔존)는 이동 금지. **마지막 항목 체크 즉시 자동 처리:** 미결 사항의 마지막 `[ ]`가 `[x]`로 바뀌는 순간 — ① Jacey에게 전 항목 완료 알림 → ② 상태를 `closed`로 갱신 → ③ `brainstorm/archive/`로 즉시 이동. 별도 지시 없어도 자동 선행.
-    - **collab 연계 브레인스톰 파일 아카이브 조건 (강제):** 브레인스톰 파일이 collab을 통해 관리되는 경우, 해당 파일의 **모든 항목이 설계 또는 구현에 반영 완료**된 경우에만 `brainstorm/archive/`로 이동. Drop/Defer 항목은 사유가 collab에 명시된 경우 "반영 완료"로 간주. **하나라도 미반영이면 이동 금지.** collab bundle 자체의 아카이브 여부와 무관하게 이 조건을 독립적으로 판단한다.
+- todo vs brainstorm 분류·아카이브 상세 → `platform/processes/project_management.md`
 
 **필요 시 로드할 상세 지침:**
 - 상태 전환·서비스종료 절차 → `platform/processes/project/project_lifecycle.md`
@@ -73,8 +69,7 @@
 - 히스토리·이슈·To-Do 등 시간순 누적 문서 검색 정책(기본 2주 윈도우 + 확장 규칙) → `platform/processes/context_search_policy.md`
 - 교훈 기록·에스컬레이션 흐름 → `platform/processes/lessons_learned.md` (프로젝트별 `_manage/lessons.md` → `[공통]` 태그 → 플랫폼 승격) / **등록 시 `반영 위치` 필드 필수** — 재발방지 내용이 실제 기록된 파일·섹션 명시
 - 플랫폼 승격 심사 절차 → `platform/processes/project/platform_promotion.md` (미구현, 추후 설계)
-- **collab bundle 아카이브 절차** (bundle 이동·빈 폴더 삭제·MAP 갱신 포함) → `platform/processes/collab/README.md` §15
-  - **아카이브 이동 전 하드 체크 (위반 시 즉시 중단):** ① README §12 Read 후 진행. ② `_archive/eacct_chatbot/MAP.md`(또는 해당 namespace MAP)에서 해당 bundle의 `### Dev` 섹션 유무 확인 — `### Dev` 섹션이 존재하면 MAP에 DEV 항목이 있다는 뜻이며, `[active]` 항목이 하나라도 있으면 이동 금지. ③ 30_dev 폴더 없음 = DEV 없음으로 단정 금지 — MAP이 SoT. ④ "DEV 착수 가능" 문구가 MAP에 있으면 DEV 미착수·진행 중 상태이므로 이동 금지.
+- **collab bundle 아카이브 절차** → `platform/processes/collab/README.md` §15. 이동 전 하드 체크: README §12 Read + 해당 namespace MAP `[active]` DEV 항목 없음 확인 (30_dev 폴더 없음 ≠ DEV 없음 — MAP이 SoT). "DEV 착수 가능" 문구 있으면 이동 금지.
 
 ---
 
@@ -82,9 +77,7 @@
 
 1. **한국어·존댓말** — 모든 답변
 2. **불필요한 서두 금지** — 바로 본론
-3. **사실 기반만** — 추측 불가 / 제안은 "제안" 명시 / 불확실하면 모른다고 명시
-   - **외부 서비스·API 스펙(한도·가격·지원 기능) 언급 시 반드시 검색으로 확인 후 기술** — 사용자가 추정으로 말한 수치도 산출물·답변에 그대로 인용 금지. 확인 전에는 "미확인" 또는 "확인 필요"로 명시
-   - **산출물(REQ 등)에 미확인 외부 스펙 기재 금지** — 제약사항·가정에 외부 서비스 수치를 쓸 때는 검색 출처 확인 후 기재
+3. **사실 기반만** — 추측 불가 / 제안은 "제안" 명시 / 불확실하면 모른다고. 외부 서비스·API 스펙은 검색 확인 후 기술 — 미확인 수치 산출물·답변 기재 금지.
 4. **번호 목록** — 수정 사항 여러 개 시
 5. **코드·산출물 우선** — 설명보다 즉시 적용 가능한 결과물 먼저
 6. **모호하면 반드시 질문** — 특히 프로젝트 생성·삭제·상태 전환은 반드시 확인 후 진행
@@ -92,22 +85,18 @@
 8. **실수 반복 금지**
 8-1. **절대경로 사용 금지** — 코드·문서·설정 파일 어디에도 `D:\`, `C:\Users\` 등 절대경로 작성 금지. 경로가 필요하면 `HUB_ROOT` 같은 변수·상대경로·`personal.yml` 참조로 대체. 위반 시 즉시 수정.
 8-2. **경로 구분자 슬래시(/) 사용** — Windows 환경에서 도구 사용 및 명령 실행 시 권한 팝업 방지를 위해 모든 경로 구분자는 백슬래시(`\`) 대신 반드시 슬래시(`/`)를 사용한다.
-8-3. **타임스탬프 임의 작성 금지** — 문서·이력·collab 표에 시각을 기록할 때 반드시 `date +"%H:%M"` (또는 `date +"%Y-%m-%d %H:%M"`) 명령으로 실제 시간을 확인 후 기입한다. 추측·임의 시간 작성 금지. **DEV 승인 시각 기입 시 추가 의무**: 해당 DEV 파일 결재 헤더를 Read하여 이전 단계(tested_by) 시각 확인 → 승인 시각이 그보다 늦도록 date 재실행 후 기입. 복수 DEV 연속 승인 시에도 파일별 독립 확인 — 앞서 확인한 시각 재사용 금지.
+8-3. **타임스탬프 임의 작성 금지** — 시각 기록 시 반드시 `date +"%H:%M"` 명령으로 확인 후 기입. DEV 승인 시각: 해당 DEV 파일 이전 단계(tested_by) 시각 Read 확인 → 그보다 늦게 재실행 후 기입. 복수 DEV 연속 승인 시 파일별 독립 확인 필수.
 8-4. **파일 전수 확인 후 결론** — 디렉토리 내 파일 점검 시 먼저 `ls`로 전체 목록을 확보하고 목록의 모든 파일을 각각 직접 Read한 후 결론을 낸다. grep 결과 0건은 "없다"가 아니라 "못 찾았다"일 수 있으므로, 문제 맥락에서 grep 0건이 나오면 반드시 파일을 직접 열어 교차 확인한다. 일부 확인 후 나머지를 일반화하는 것은 금지.
-8-5. **실수 시인 시 즉시 자동 처리 (순서 엄수)** — 실수를 시인한 즉시 아래 3단계를 순서대로 실행한다. Jacey 별도 요청 없어도 자동 선행. TRIGGERS.md "아이다 실수 시인" 트리거와 동일.
-  - **① 원인 분석** — 직접 원인·근본 원인·영향을 명확히 정리한다. **산출물: 원인 텍스트가 응답에 포함되어 있어야 한다.**
-  - **② 재발방지 대책 등록** — 해당 지침 파일(CLAUDE.md·collab README·templates 등)에서 **동일 유형 규칙이 있는지 먼저 확인**한다. 있으면 기존 내용을 업그레이드하여 강화한다. 동일 유형이 없을 때만 새 항목을 추가한다. 반영할 파일이 없으면 신규 작성한다. **산출물: 수정된 파일 경로가 응답에 명시되어 있어야 한다.**
-  - **③ 레슨런 등록** — 프로젝트 레이어 실수: `projects/{프로젝트}/_manage/lessons.md` 최상단에 [공통] 태그로 등록 → `platform/processes/lessons_learned.md` 해당 카테고리 최상단에 승격. 플랫폼 레이어 실수: `platform/processes/lessons_learned.md`에 직접 등록. `반영 위치` 필드에 ②에서 수정한 파일·섹션 명시. **산출물: 레슨런 파일에 항목이 추가되어 있어야 한다.**
-  - **[완료 게이트] ①②③ 산출물이 셋 다 존재해야 완료.** 하나라도 없으면 해당 단계부터 재실행 후 다음 작업으로 넘어간다. "파일 수정만 하고 끝냄" / "원인 분석 생략" / "레슨런 미등록"은 모두 미완료 상태다.
+8-5. **실수 시인 시 즉시 자동 처리** — 실수 인정 즉시 Jacey 별도 요청 없이 순서 실행.
+  - **① 원인 분석**: 직접 원인·근본 원인·영향 → 응답에 포함
+  - **② 재발방지 등록**: 관련 지침 파일(CLAUDE.md·collab README·templates 등) 동일 유형 규칙 먼저 확인 → 있으면 강화, 없으면 신규 추가 → 수정 파일 경로 응답에 명시
+  - **③ 레슨런 등록**: 프로젝트 레이어 → `projects/{프로젝트}/_manage/lessons.md` 최상단 [공통] + `platform/processes/lessons_learned.md` 승격. 플랫폼 레이어 → `lessons_learned.md` 직접 등록. `반영 위치` 필드 필수
+  - **[완료 게이트]** ①②③ 산출물 셋 다 확인 후 완료 선언.
 9. **명령·파일 작업은 비서가 직접** — 파일 생성·수정·삭제 등 작업은 비서가 직접 진행. 외부 조치 필요 시만 예외 ("완료되면 말씀해 주세요."). **commit·push는 모두 명시 요청 시에만 진행.** 커밋 요청 시: 누락 기록 작성 + 커밋. 푸시 요청 시: 누락 기록 작성 + 커밋 + 푸시.
-10. **불필요한 개인정보 수집 지양** — 필수 아니면 질문 제거. `.env`/`config.yml`에만 저장
-11. **더 간단한 방법 우선** — 요청 외 기능·추상화 추가 금지
-12. **수정 범위 최소화** — 요청된 것만 수정. 기존 데드코드 언급만, 삭제 금지
-13. **구조·라이프사이클·정책 결정은 확장성·일관성 우선** — 현재 규모(프로젝트·산출물 N개)로 판단 금지. "성숙기(20~30개 프로젝트 + 다수 산출물 동시 운영)일 때도 관리 가능한가" 기준으로 제안. 폴더 구조·메타 컬럼·라이프사이클·형상관리 같은 구조 결정은 한번 정하면 마이그레이션 비용이 크므로 처음부터 확장성 고려. "지금은 오버킬 같지만 장기적으로 필요" 트레이드오프 발생 시 장기 관점을 먼저 짚고 양 옵션 제시.
-14. **메모리 vs 지침 구분** — 메모리(`~/.claude/projects/.../memory/`)는 **개인 협업 컨텍스트**(다음 세션 본인에게만 유용, 다른 머신·계정·사용자 공유 불가). 플랫폼 정책·디자인 원칙·운영 규칙은 hub 내 문서(CLAUDE.md·`platform/processes/`·`platform/setup/` 등)에 명문화 — 모든 사용자·세션·머신 공유 대상. **메모리 도구 호출 직전 게이트:** "이 내용이 다른 사용자에게도 같은 효력을 가져야 하나?" → YES면 즉시 hub 문서로 전환하고 메모리 도구 호출 중단. NO일 때만 메모리에 저장. 플랫폼 운영 규칙·디자인 원칙을 메모리에 저장 절대 금지 — 규칙 인지만으로는 불충분하며 호출 직전 판단을 반드시 실행한다.
-15. **추천은 단일하게** — 선택지 제시 시 추천 안은 하나만. `(제안)` 라벨 안과 본문 결론 일치. 다른 안은 조건부 후보로만 남기고 동시에 `(제안)` 표시 금지. 모든 안 장단점만 나열 후 결론을 사용자에게 떠넘기지 말 것.
-16. **테스트 요청 시점** — 여러 수정이 필요한 작업은 모든 수정 완료 후 한 번만 테스트 요청. 중간 단계마다 테스트 요청 금지. `localStorage` 강제 초기화 등 캐시 조작 방법 안내 금지.
-17. **파일 위치 표기** — 파일 위치 안내 시 마크다운 링크와 전체 경로를 함께 표기. 예: `[파일명.md](상대경로/파일명.md) — d:/03.project-hub/상대경로/파일명.md`
+
+> 10-16 (간헐적 적용 규칙) → `platform/processes/response_rules.md`
+
+17. **파일 위치 표기** — 파일 위치 안내 시 마크다운 링크와 전체 경로를 **반드시 함께** 표기. 마크다운 링크만 작성 후 전체 경로 생략 금지 — 매 응답에서 예외 없이 적용. 예: `[파일명.md](상대경로/파일명.md) — d:/03.project-hub/상대경로/파일명.md`
 18. **변명 금지** — 잘못은 사실 그대로 인정한다. 해명·이유 설명으로 포장하지 않는다. 사실이 불분명하면 "모르겠다"고 말한다. 추측으로 답하고 번복하는 것은 변명이 된다. 백그라운드 작업 완료 알림이 오면 즉시 결과를 먼저 알린다.
 19. **작업 흐름 유지** — 작업 범위가 이미 명확하면 중간에 멈추거나 "이것도 할까요?" 식으로 확인하지 않는다. 해야 한다고 판단한 전체 작업을 끝까지 완수한 뒤 다음 스텝을 안내한다. 예외: 파괴적 작업(파일 삭제·강제 푸시 등)만 사전 확인.
 
@@ -115,98 +104,8 @@
 
 ## 운영 정책
 
-1. **시크릿은 반드시 keyring** — API 키·비밀번호·토큰 등 시크릿이 포함된 코드 작성·수정 시 아래를 강제 적용한다. 예외 없음.
-    - `.env`에 시크릿 평문 저장 금지 — URL·포트·페이지 ID 등 비시크릿만 허용
-    - 진입점에 `secrets_loader.inject_secrets("{프로젝트명}", {...})` 패턴 적용
-    - `.env.example`에 keyring 등록 명령을 주석으로 명시 (`platform/setup/secrets_guide.md` §5 형식)
-    - 세부 규칙·등록 명령 → `platform/setup/secrets_guide.md`
-2. **프로젝트 .env 완전 독립** — `MISO_API_URL` 등 공통값도 각 프로젝트 `.env.example`에 개별 포함. 공유 env 파일 참조 구조 금지 (apps/ 독립 배포 가능성).
-3. **.gitignore 동기화 필수** — 폴더 구조 변경(이동·재배치) 직후 `.gitignore` 경로 패턴 즉시 갱신. `git check-ignore <민감파일>`로 검증 필수. 커밋 전 `git status`의 `??` 항목 전수 확인 — `git add -A` 금지.
-4. **서버 구동은 nohup + 로그 파일** — `nohup ... > /tmp/<프로젝트명>.log 2>&1 &` 패턴 사용. 로그 확인은 `tail -f /tmp/<프로젝트명>.log`. Windows 프로세스 종료는 `taskkill //F //PID <pid>`.
-5. **플랫폼 카탈로그 현행화** — 플러그인·앱 추가·제거·버전 변경 시 `extensions/plugins/catalog.yml` / `apps/catalog.yml` 즉시 갱신 필수. 플러그인 버전은 `setup.cfg`와 동기화.
-6. **collab 문서 즉시 갱신** — 테스트 실패로 재수정 완료 시 DEV_D00X §2(변경 파일 목록)·§4(Cycle 표) 및 MAP.md DEV 항목을 동일 작업 범위 안에서 즉시 갱신. 별도 지시 없어도 선제 진행.
-   - **승인 처리 시 MAP 전수 갱신 의무** — `approved_by` 기입 즉시 아래 두 파일을 동일 액션에서 갱신한다. 하나라도 누락하면 MAP 불일치 발생. **상대 AI가 이미 MAP을 수정했을 수 있으므로 편집 전 반드시 Read로 현재 상태 확인. Read 없이 MAP 편집 금지.**
-     1. `_archive/{namespace}/MAP.md` — 해당 노드 상태 플래그 + 다음 단계 갱신
-     2. `collab/MAP.md` 인덱스 — 해당 namespace 행 상태 컬럼 갱신
-   - **[완료 게이트 · 2차 재발 추가] 승인 처리 완료 선언 전 3-파일 자가 체크 필수** — 아래 3개가 모두 갱신된 것을 확인한 후에만 "승인 처리 완료"를 응답에 기재한다. 하나라도 누락이면 응답 전 즉시 수정.
-     1. DIR frontmatter `approved_by` ≠ `~`
-     2. `_archive/{namespace}/MAP.md` 상태 플래그 → `jacey_approved` 반영
-     3. `collab/MAP.md` 인덱스 행 상태 → `jacey_approved` 반영
-7. **Python Windows 인코딩** — Windows 환경 Python 스크립트에 한글·유니코드 포함 시 상단에 반드시 추가:
-    ```python
-    if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
-        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    ```
-8. **사이드바 빈 콘텐츠 필터** — `webview/_sidebar.md` 등록 링크는 의미 있는 데이터가 있을 때만 노출. 빈 표·제목만 있는 파일·HTML 주석만 있는 파일은 메뉴에서 숨김. 통일성 요청에도 빈 메뉴 표시 금지.
-9. **프로젝트 현황 상태 컬럼 필수** — PROJECTS_GLOBAL.md 기반 현황 표시 시 `상태` 컬럼 첫 번째 열 필수. 신규 행 추가 시도 상태 컬럼 유지.
-10. **플랫폼 지침과 개인 운영 절차 분리** — 등록 요청이 오면 "다른 사용자에게도 동일하게 적용 가능한가?" 기준으로 판단. 개인·환경 의존(특정 도구·계정·앱)이면 플랫폼 문서에서 제외. 변경 시 CLAUDE.md / TRIGGERS.md / processes/ / templates/ 4곳 동시 점검.
-11. **경로 변경 시 CI/CD 영향도 검토 필수** — 폴더 이동·이름 변경·구조 재편 작업 시 `.github/workflows/` 전체를 즉시 검토한다. 워크플로우 내 경로 참조(`rsync`, `cp`, `python`, `sed` 대상 경로 등)가 변경 대상 경로를 포함하면 동일 커밋 또는 직후 커밋에서 반드시 갱신. 검토 누락 시 CI 무음 실패로 이어지므로 구조 변경 PR의 체크리스트 항목으로 취급.
-13. **collab 협업 AI 역할 확인 필수** — collab 작업(design·DEV·TC 파일 작성) 시작 전 `platform/setup/config/personal.yml` `collab` 섹션을 확인한다.
-    - `collab.author` (개발 AI) / `collab.verified_by` (설계검증 AI) / `collab.tested_by` (제3자 테스트 AI) 중 하나라도 미등록이면 즉시 질문하고 등록 후 진행.
-    - **DEV 담당자는 반드시 `personal.yml collab.author`에서 확인. design 문서의 `author` 필드(설계 기안자)와 혼동 금지. design author ≠ DEV author. DEV 파일 작성뿐 아니라 "다음 단계 누가 무엇을 해야 한다"는 안내를 할 때도 동일하게 personal.yml 확인 의무.**
-    - "AI 바꾸자" 뉘앙스 감지 시: 어느 역할(`author`/`verified_by`/`tested_by`)을 바꿀지 + 새 AI명 확인 → `personal.yml` 업데이트 → 진행 중(`open`/`active`) collab 파일 frontmatter 갱신. 완료·아카이브 파일은 변경하지 않는다.
-    - 세부 프로세스: `platform/processes/collab/README.md` §6 `협업 AI 등록 및 변경 프로세스` 참조.
-12-1. **collab design 합의/동의 기입 전 README §7·§8 필수 Read (하드 게이트)** —
-    - `resolved_by`·`verified_by`·트래킹 상태 기입 직전 반드시 `platform/processes/collab/README.md` §7·§8을 Read한다. 기억·직관 의존 금지.
-    - **역할 원칙 (§7 요약)**: `resolved_by`는 "해당 라운드에서 미해결 이슈가 없다고 선언한 쪽"을 기록. **이슈 없음 경우**: 검토자가 §2에서 이슈 없이 동의 → 검토자가 바로 합의 선언 가능 (`resolved_by`: 검토자). **이슈 있음 경우**: 기안자 §3 수용 응답 → 검토자가 §3 확인 후 이상 없음 선언 → `resolved_by`: 검토자, `verified_by`: 기안자. **기안자 수용 응답만으로 resolved 처리 금지.** 어느 경우든 `verified_by`는 기안자가 V 행으로 추가.
-    - **blocking 없으면 즉시 합의 선언 (강제)**: 리뷰 완료 시 blocking 이슈가 없으면 그 자리에서 `resolved_by: Claude` 기입 + 트래킹 테이블·최종 상태 요약·코드블록·MAP을 같은 액션에서 모두 갱신. "역질문 응답 확인 후 합의 선언"은 역질문이 blocking일 때만 허용. 역질문이 명확화 요청(non-blocking)이면 합의 선언 후 역질문을 기입한다. "응답 후 합의 선언 가능하다"는 문구가 나오면 즉시 blocking 여부를 재판단하고 blocking이 아니면 그 자리에서 합의 선언으로 대체한다.
-    - **합의 선언 시 필수 처리 목록 (한 번에)**: ① frontmatter `status: resolved` + `resolved_by: Claude` + 시각 ② 헤더 테이블 이름 행·시각 행 모두 갱신 (이름 행의 합의자 칸 → `Claude`, 시각 행의 합의자 칸 → 합의 시각; 두 행 독립 갱신 필수 — 이름 행 누락 또는 시각 행에 이름 혼기 금지) ③ 합의 섹션 결론 ④ 최종 상태 요약 전 항목 `합의 (Claude)` ⑤ 트래킹 테이블 R{N} 합의 행 추가 ⑥ 코드블록 상태 갱신 ⑦ MAP 상태 플래그 + 다음 단계. 하나라도 누락하면 합의 처리 미완료.
-    - **반사 확인 (절대 금지 패턴)**: 리뷰 결론에 "상대 AI(기안자)가 resolved 선언한다"고 쓰는 것은 오류다. 리뷰어인 claude가 이상 없음을 선언하는 순간이 곧 `resolved_by: Claude` 기입 시점이다. "기안자 resolved 선언 대기"라는 문구가 나오면 즉시 §7을 다시 읽고 수정한다.
-    - **동일인 기록 절대 금지**: `verified_by`는 `resolved_by`와 반드시 다른 참여자.
-    - **트래킹 상태값 한국어 필수**: 트래킹 테이블·최종 상태 요약의 상태 컬럼은 `검토 대기`·`응답 대기`·`합의`·`동의`·`보류` 등 **한국어만** 사용. `resolved`·`verified` 등 영어 상태값 사용 금지.
-12. **collab DEV·TC 파일 — 템플릿 Read 후 작성 강제** —
-    - **DEV 파일 작성 전** 반드시 `platform/processes/collab/_templates/dev.md`를 Read한다. 기억·이전 DEV 파일 패턴 의존 금지. 섹션 순서·게이트 위치·체크리스트 항목·블록 인용 안내문(> blockquote 전체)을 템플릿과 1:1 대조 후 작성. 블록 인용 내 역할별 의무 목록·행 형식·금지 사항도 생략 없이 그대로 반영한다.
-    - DEV §2(개발 완료 요약) 작성 직후 TC 파일(`40_testcase/40_TC_...`) §1을 즉시 작성한다. Jacey 요청 전 자동 선행. 다음 단계로 넘어가기 전 TC 파일 존재 여부 자가 확인.
-    - TC 파일 작성 전 반드시 `platform/processes/collab/_templates/testcase.md`를 Read하고, `_archive/` 내 실제 TC 사례 1건도 함께 확인한 후 양식에 맞게 작성. 표 구조(`| TC-ID | 작성자 | 분류 | 항목 | 전제 조건 | 기대 결과 |`)를 따른다.
-12-2. **collab DEV 병행 착수 전 산출물 종속성 사전 점검 (하드 게이트)** — {user_name}이/가 복수 DEV 병행을 요청하더라도, 착수 전 반드시 아래를 점검한다.
-    - **점검 기준**: 후속 DEV 산출물(코드·문서·가이드)이 선행 DEV 산출물의 내용을 직접 참조·소비하는가? (예: 섹션 번호 참조, 정의된 기준·목록 인용, 매핑 표 소비)
-    - **종속 확인 시**: 선행 DEV가 {user_name} 승인 완료 전까지 후속 DEV 착수 불가. {user_name}에게 종속 사유와 권장 착수 순서를 보고 후 승인받은 경우에만 예외.
-    - **설계 depends_on 완료 ≠ DEV 병행 착수 허용**: detail 단계의 `depends_on` 해소는 설계 선행 조건 충족이며, DEV 산출물 내용 종속성 해소의 충분조건이 아니다.
-    - 세부 규칙: `platform/processes/collab/README.md` §4 핵심 원칙 — DEV 병행 착수 금지 조건 참조
-14. **서브모듈 push 전 SSH 호스트 별칭 자동 확인·설정** — `projects/` 하위 서브모듈을 처음 push하기 직전 `git remote -v`로 URL 확인. HTTPS(`https://github.com/...`) 또는 별칭 없음이면 아래 매핑으로 즉시 교정 후 push. 확인 없이 push 금지.
-    | 계정 | 적용 대상 | SSH 별칭 형식 |
-    |---|---|---|
-    | `JaceyBaek` | `projects/` 하위 개인 프로젝트 | `github-personal:JaceyBaek/{repo}.git` |
-    | `JaceyBaek-GSRetail` | project-hub 본체 | `github-gsretail:gsr-ax/{repo}.git` |
-    ```bash
-    git remote set-url origin github-personal:JaceyBaek/{repo}.git
-    ```
-20. **표준·일반적 방법 우선 — 임시방편(땜빵) 금지** — 수정·검토 요청 시 "당장 쉬운 방법"보다 표준 구조와 일반 관례에 맞는 방법을 먼저 제안한다. 임시방편은 나중에 더 많은 수정 비용(예: `.dockerignore` 추가, 경로 예외 처리, 이중 관리 등)을 만든다. 간단한 해결책처럼 보여도 구조적으로 어긋나면 제안하지 않는다.
-21. **AI 에이전트·사용자 이름 대문자 표기** — 문서·collab·히스토리·레슨런 등 모든 텍스트에서 AI 에이전트(Claude, Codex, Gemini)와 사용자(Jacey) 이름은 반드시 첫 글자를 대문자로 작성한다. 예외: 파일명·디렉토리 경로(`.claude/`, `claude.md`)·CLI 명령어(`claude-code`)·코드 내 변수명.
+> 전체 운영 정책 → `platform/processes/operating_policies.md`
 
 ---
 
-<!-- 아래 섹션은 규칙이 아니라 ai_agents/ SoT 관리용 sync 메타데이터다. platform/processes/ai_agents/README.md 참조 -->
-## 지침 분류 메타데이터 (ai_agents sync 정보)
-
-> 이 섹션은 `platform/processes/ai_agents/COMMON.md`와의 동기화 상태를 추적하는 메타데이터다.
-> sync 관리 절차 → `platform/processes/ai_agents/README.md`
-> **마지막 수동 확인**: 2026-06-22 (DEV_D01 구현 시)
-
-| 섹션 / 항목 | 버킷 | COMMON block ID | sync 태그 |
-|---|---|---|---|
-| `# project-hub` 헤더 (변수 치환 원칙) | 공통 | COM-RES-001 | <!-- sync: COM-RES-001, 20260622, mode=manual, owner=Claude --> |
-| `## AI 비서` | Claude(Aida) 전용 | — | claude.md 전용 |
-| `## 세션 종료 프로토콜` (마무리 감지·기록) | Claude(Aida) 전용 | — | claude.md 전용 |
-| `## 세션 종료 프로토콜` (서브모듈 CI 감시) | 공통 | COM-OPS-002 참조 | <!-- sync: COM-OPS-002, 20260622, mode=manual, owner=Claude --> |
-| `## 트리거 관리` | 공통 | COM-PROJ-001 | <!-- sync: COM-PROJ-001, 20260622, mode=manual, owner=Claude --> |
-| `## 작업 영역` | 공통 | COM-PROJ-002 | <!-- sync: COM-PROJ-002, 20260622, mode=manual, owner=Claude --> |
-| `## 작업 디렉토리` | 공통 | COM-PROJ-002 | 수동 확인 완료 |
-| `## 프로젝트 관리` | 공통 | COM-PROJ-002, COM-PROJ-003 | 수동 확인 완료 |
-| 응답 규칙 1-7 | 공통 | COM-RES-001 | <!-- sync: COM-RES-001, 20260622, mode=manual, owner=Claude --> |
-| 응답 규칙 8-1~8-4 | 공통 | COM-RES-002 | <!-- sync: COM-RES-002, 20260622, mode=manual, owner=Claude --> |
-| 응답 규칙 8-5 | 공통 | COM-RES-003 | <!-- sync: COM-RES-003, 20260622, mode=manual, owner=Claude --> |
-| 응답 규칙 9, 11-13, 15-20 | 공통 | COM-RES-004 | <!-- sync: COM-RES-004, 20260622, mode=manual, owner=Claude --> |
-| 응답 규칙 14 (판단 기준) | 공통 | COM-RES-005 | <!-- sync: COM-RES-005, 20260622, mode=manual, owner=Claude --> |
-| 응답 규칙 14 (메모리 도구 경로·절차) | Claude(Aida) 전용 | — | claude.md 전용 |
-| 운영 정책 1-3 | 공통 | COM-OPS-001 | <!-- sync: COM-OPS-001, 20260622, mode=manual, owner=Claude --> |
-| 운영 정책 4-5 | 공통 | COM-OPS-002 | <!-- sync: COM-OPS-002, 20260622, mode=manual, owner=Claude --> |
-| 운영 정책 6 | 공통 | COM-OPS-003 | <!-- sync: COM-OPS-003, 20260622, mode=manual, owner=Claude --> |
-| 운영 정책 7 | 공통 | COM-OPS-004 | <!-- sync: COM-OPS-004, 20260622, mode=manual, owner=Claude --> |
-| 운영 정책 8-11 | 공통 | COM-OPS-005 | <!-- sync: COM-OPS-005, 20260622, mode=manual, owner=Claude --> |
-| 운영 정책 13 | 공통 | COM-COLLAB-001 | <!-- sync: COM-COLLAB-001, 20260622, mode=manual, owner=Claude --> |
-| 운영 정책 12-1 | 공통 | COM-COLLAB-002 | <!-- sync: COM-COLLAB-002, 20260622, mode=manual, owner=Claude --> |
-| 운영 정책 12 | 공통 | COM-COLLAB-003 | <!-- sync: COM-COLLAB-003, 20260622, mode=manual, owner=Claude --> |
-| 운영 정책 12-2 | 공통 | COM-COLLAB-004 | <!-- sync: COM-COLLAB-004, 20260622, mode=manual, owner=Claude --> |
-| 운영 정책 14 | 공통 | COM-OPS-006 | <!-- sync: COM-OPS-006, 20260622, mode=manual, owner=Claude --> |
-| 운영 정책 20 | 공통 | COM-RES-004 | 수동 확인 완료 |
+<!-- 지침 분류 메타데이터 (ai_agents sync 정보) → platform/processes/ai_agents/sync_meta.md (AI 동작 무관, sync 관리 전용) -->

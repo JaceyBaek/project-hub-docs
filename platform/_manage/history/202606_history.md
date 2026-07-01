@@ -7,6 +7,43 @@ sidebar_order: 1
 
 ---
 
+## 2026-06-30 — eacct_chatbot G1 보안·안정성 코드 구현 5건 완료 (11:21)
+
+- G1 오픈 전 필수/권장 코드 구현 5건 직접 착수 (collab 없이)
+  - **D-3** `server.py` fail-fast env 검증 — `qa`/`prod` 프로파일 시작 시 `MISO_API_KEY` 누락 → `sys.exit(1)`
+  - **H-1** `chat_handler.py` Prompt Injection 필터 — 8개 패턴 탐지, `ClaudeChatHandler`·`MisoChatHandler` 양쪽 적용
+  - **L-3** `widget.html` DOMPurify 적용 — CDN 추가 + `_safe()` wrapper + 6곳 innerHTML sanitize
+  - **INF-9** `server.py` structlog 교체 — stdlib 브릿지 모드, 기존 `%s` 포맷 호환 유지
+  - **INF-4** K8s deployment manifest `terminationGracePeriodSeconds: 30` — dev·prod 양쪽 추가
+- 브레인스톰 현행화: `20260617_G1배포준비_persistent-storage.md`, `20260528_인프라_운영_배포.md`
+- 세부 내용: `projects/eacct_chatbot/_manage/history/202606_history.md`
+
+---
+
+## 2026-06-30 — DEV_D01 Jacey 종료 승인 · collab MAP 3-파일 갱신 완료 (09:59)
+
+- `DEV_D01` (`taxBillItemWriteLayout.jsp` OnAfterLoad hook) — Codex C6 통과(08:57) → Gemini §3-2 통과(09:11) → Jacey 종료 승인(09:17). 감사 이력 복원 완결.
+- collab MAP 3-파일(`30_DEV_D01`, `_archive/eacct_chatbot/MAP.md`, `collab/MAP.md`) `jacey_approved` 반영 완료
+- DEV_D02 착수 가능 상태 확인
+- 세부 내용: `projects/eacct_chatbot/_manage/history/202606_history.md`
+
+---
+
+## 2026-06-30 — CI 감시 훅 개선 · CLAUDE.md 푸시 흐름 4단계 추가 (09:17)
+
+- `ci_watch_hook.ps1` 레포 추출 로직 개선 — cmd 패턴 → git remote get-url → tool_response 3단계 fallback으로 강화
+- `CLAUDE.md` 세션 종료 프로토콜 수정 — 푸시 흐름에 4번째 단계(CI 감시 직접 수동 확인) 추가, 훅은 보조 수단 명시
+- `platform/processes/lessons_learned.md` 운영 항목 강화 — 2차 재발(2026-06-30) 기록
+
+---
+
+## 2026-06-29 — eacct_chatbot 퀴즈 UX · 전자세금계산서 카테고리 · 로딩 타이머 (17:39)
+
+- 퀴즈 카테고리 선택 UI → 스크롤 칩 리스트 (동적 추출). 전자(세금)계산서 카테고리 13문제 추가 (52→65문제). 로딩 중 `Working for Xs` 실시간 타이머 추가. 브레인스톰 `20260624_미카_체험개선.md` 전 항목 완결·아카이브
+- 세부 내용: `projects/eacct_chatbot/_manage/history/202606_history.md`
+
+---
+
 ## 2026-06-29 — eacct_chatbot 사다리게임 색상 중복 버그 수정 (12:55)
 
 - `ladder.js` 고정 팔레트 셔플 방식 → `_pickColors(n)` HSL 균등 분할 방식으로 교체. 플레이어 수에 관계없이 항상 시각적으로 구별되는 고유 색상 보장
