@@ -7,6 +7,88 @@ sidebar_order: 1
 
 ---
 
+## 2026-07-06 — CLAUDE.md collab 게이트 동적 로드 전환 완료 (16:25)
+
+**목표**: collab 사용 세션에서만 규칙 로드, 일반 작업 세션에서 토큰 절감
+
+- **이전 구조**: collab 하드게이트 14줄(1,311자) 상시 로드 → 매 요청마다 18.8% 오버헤드
+- **변경 사항**: 
+  - collab 하드게이트 14줄 → 3줄로 축약 (1,156자 절감, ~771 토큰/요청)
+  - 감지 조건: "collab 시작/진행" 선언, "리뷰 요청" 트리거, collab 경로 파일 작업 요청
+  - 감지 시 즉시 `platform/processes/collab/README.md` Read 강제 + 해당 세션 내내 전체 규칙 적용
+  - "기억·이전 패턴 의존 금지" 명시 → 트리거 미사용 경로(DEV 승인·합의)에서도 Read 강제화
+
+**시뮬레이션 검증**:
+- ✓ 트리거 방식 규칙 발동 확인
+- ✓ 비트리거 승인 작업 규칙 발동 확인
+- ✓ 일반 작업 토큰 절감 확인
+
+**제약**: 세션 압축 시간에 상대 AI(Codex 등) 수정 가능하므로 완벽 보장은 불가, 기존 방식과 동일 조건
+
+**파일**: `d:/03.project-hub/CLAUDE.md`
+
+---
+
+## 2026-07-06 — eacct_chatbot widget.html UI 3개 이슈 최종 수정 + To-Do T027 등록
+
+**위치**: `projects/eacct_chatbot/source/src/templates/widget.html`
+
+- **Send/Stop 버튼 수직 정렬** (Tailwind CDN preflight 영향 대응)
+  - 원인: Tailwind CDN이 런타임에 `*` 셀렉터로 `transform:translateY(0)` 주입 → 모든 flex/absolute 정렬 무효화
+  - 수정: `display:grid;grid-template-columns:1fr auto;align-items:center;gap:6px` (CSS grid는 cross-origin preflight 영향 덜함)
+  - 상태: 코드 적용 완료, Jacey 테스트 대기
+
+- **피드백 제출 버튼 테마 미적용** (CSS 변수 미반환 대응)
+  - 원인: `getComputedStyle` CSS 변수 반환값 공백 (Tailwind CDN 환경)
+  - 수정: `openFbModal`에서 `html.dataset.theme` 직접 읽음 → 테마별 hex 맵 조회 → JS `setProperty('background-color', '#...', '!important')` 적용
+  - 상태: 코드 적용 완료, Jacey 테스트 대기
+
+- **Progress 메시지 위치 및 중복** ✅ 완료
+  - `__loading-status` 말풍선 위로 이동, agent name 레이블 제거
+  - 말풍선 안 랜덤 메시지와 중복 제거
+
+**To-Do 신규**: T027 — FB_TAG_MAP → cb_comcd 이관 (T025 완료 후, 낮음 우선순위)
+
+---
+
+## 2026-07-06 — eacct_chatbot 역할 기반 접근제어 브레인스톰 + 개발자 모드 보안 정책 정리 (13:59)
+
+- 개발자 토큰(`.env` `DEV_TOKEN`) 노출 정책 정리: 로컬 dev-only 토큰은 허용, 운영 credential(MISO_API_KEY 등)은 위치 안내만 제공
+- 개발자 모드 진입 절차 확인: `/개발자모드` 슬래시 커맨드 → 토큰 입력 → `POST /api/dev-login` → `dev_token` 쿠키 30일 발급 → 페이지 리로드 → `__isDev = true` (`widget.html` fetchConfig 응답 기준)
+- 현재 구조 한계 확인: 단일 `DEV_TOKEN` 공유 — 값 아는 사람 누구나 전체 설정 접근, 사용자별 구분 없음
+- **역할 기반 접근제어 브레인스톰 작성** — `projects/eacct_chatbot/_manage/brainstorm/20260706_역할기반_접근제어_설정UI.md`
+  - 역할 정의: `sys`(시스템 담당자, 전체 설정) / `biz`(현업 담당자, 감성편의·게임 public만, 개발 영역 숨김)
+  - 비밀번호 외 진입 방안 4가지: A(사번 화이트리스트) · B(역할별 별도 토큰) · C(관리자 초대 코드 1회용) · D(IP/세션 기반)
+  - 권장 로드맵: 단기(Phase 2) 방안 B or C → 중기(Phase 3 SEC-5 완료 후) 방안 A
+  - 프론트엔드: `__userRole` 변수 도입, `roles: ['sys']` 배열로 `devOnly` 플래그 대체
+  - 서버: fetchConfig 응답에 `user_role: 'sys'|'biz'|null` 추가
+  - 아이다 제안 5건 포함 (biz 범위 사전 확정, B+A 혼합 전략, 쿠키 수명 재검토, 비로그인 `/설정` 범위 명시, SEC-5 JWT `roles` 클레임 선포함)
+- 구현 미착수 — Jacey 검토 후 진행 예정
+
+---
+
+## 2026-07-03 — PRES 템플릿 Apple 디자인 적용 + 사이드바 접기·Teams 호환성 수정 + 버전 규칙 정비 (14:24)
+
+- Apple 스타일(색상·타이포) 적용 — `PRES_presentation_template.html` · `PRES-authoring-guide.md` · 실문서 동기화. 디자인 시안(AWS 콘솔 네이티브 등)은 `platform/templates/html/design-drafts/`로 격리
+- 사이드바 접기/펼치기(`#sidebar-toggle`) 신규 추가 — `body.sb-collapsed` 클래스로 `--sidebar-w` 재정의. 접힘 시 버튼이 화면 밖으로 잘리는 `calc()` 음수 오프셋 버그 수정(`left:10px` 고정값 별도 지정)
+- 미사용 `.scroll-hint` 장식 요소 제거 (사이드바 내비로 대체 가능 판단, Jacey 확인)
+- **Teams 첨부파일 미리보기 호환성 수정**: `.rv` 스크롤 reveal 애니메이션이 정적 `opacity:0`에 의존하던 구조 → JS가 `.pre` 클래스를 붙이는 방식으로 전환(JS 차단 환경에서 기본 노출 폴백) / 사이드바 `nav-item`의 `href="#id"` 네이티브 fragment 이동이 Teams 자체 라우팅과 충돌해 빈 페이지로 튀는 버그 → `href` 완전 제거, `data-target` + JS `scrollIntoView()`로 전환해 근본 해결. 단 Teams가 스크립트를 전면 차단하는 경우 사이드바 클릭 이동은 no-op — 버그가 아닌 구조적 제약으로 가이드에 명시
+- 버전 규칙 신설: `v0.1`(초안) → `v1.0`(대상자 최종 확인 시 승격) → `v1.1`… 마이너 증가, 재작성 시 `v2.0`. 작성자 표기는 `personal.yml` 참조 제거, `Jacey(AX전략팀)` 고정값으로 변경
+- 세부 내용: `projects/eacct_mcp/_manage/history/202607_history.md`
+
+---
+
+## 2026-07-03 — bitbucket_repo_guide.html PRES 템플릿 전면 재적용 (14:22)
+
+- 문제: 사이드바 `.md` 링크 제거만 진행되고 실제 `PRES_presentation_template.html` 비주얼 템플릿은 미적용 상태였던 것을 Jacey 피드백으로 확인
+- `platform/setup/bitbucket_repo_guide.html` 전체 재작성 — Apple 스타일 디자인(사이드바·Hero·divider·챕터칩·스크롤 reveal) 구조로 전환, 원본 §1~§8 콘텐츠·표·명령어·체크리스트 100% 보존
+- 단일 파일 유지 제약 반영 — 인페이지 앵커(`#s1`~`#s8`, `#checklist`)만 사용, 폴더 이동 시 끊길 수 있는 파일 간 링크 배제
+- 사이드바 상단 타이틀 "⚙️ Platform Setup" → 실제 문서 제목("Bitbucket 리포지토리 생성 & GitHub 듀얼 remote")으로 수정
+- 작성자 표기 3곳(사이드바 하단·Hero 메타 태그·푸터) "Jacey" → "Jacey(AX전략팀)"으로 변경 (`JaceyBaek` GitHub 계정명 예시는 대상 아니므로 유지)
+- 커밋·푸시 미진행 (요청 시 진행)
+
+---
+
 ## 2026-07-02 — eacct_chatbot Aurora DDL 전면 개편 완료 (17:16)
 
 - `eacct_chatbot.sql` → `eacct_ai.sql` 단일 스키마(cb_/mcp_ prefix)로 재편

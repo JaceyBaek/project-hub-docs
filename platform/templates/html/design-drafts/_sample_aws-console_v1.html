@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[번외 시안] AWS 콘솔 네이티브 디자인 샘플 — INFRA_ARCH 템플릿</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --squid:#232f3e;--squid-dk:#16191f;--orange:#ff9900;--orange-dk:#ec7211;
+  --bg:#f2f3f3;--card:#ffffff;--ink:#16191f;--muted:#5f6b7a;--line:#d5dbdb;
+  --sidebar-w:236px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR','Amazon Ember',-apple-system,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+.topbar{background:var(--squid-dk);color:#fff;padding:10px 24px;font-size:13px;display:flex;align-items:center;gap:10px}
+.topbar .logo{font-weight:800;color:var(--orange);letter-spacing:.02em}
+.topbar .crumb{color:#9ba7b4}
+.layout{display:flex}
+.main-content{margin-left:var(--sidebar-w);flex:1;min-width:0}
+.sidebar{
+  width:var(--sidebar-w);min-width:var(--sidebar-w);background:var(--squid);
+  position:fixed;top:41px;left:0;height:calc(100vh - 41px);
+  overflow-y:auto;z-index:100;display:flex;flex-direction:column;
+}
+.sb-brand{padding:20px 18px 14px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sb-brand .sb-lbl{font-size:10px;font-weight:700;letter-spacing:.15em;color:var(--orange)}
+.sb-brand .sb-title{font-size:14px;font-weight:700;color:#fff;margin-top:6px;line-height:1.4}
+.sb-brand .sb-ver{display:inline-block;margin-top:9px;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:3px;background:rgba(255,153,0,.18);color:var(--orange)}
+.sb-nav{padding:8px;flex:1}
+.nav-item{
+  display:flex;align-items:center;gap:9px;padding:9px 12px;margin-bottom:1px;
+  font-size:13px;font-weight:500;color:rgba(255,255,255,.75);text-decoration:none;border-radius:3px;
+  transition:all .15s;
+}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav-item.active{background:var(--card);color:var(--squid);font-weight:700}
+.nav-item .ni-n{font-size:10.5px;font-weight:700;opacity:.6;width:20px;flex-shrink:0}
+.sb-foot{padding:14px 18px;border-top:1px solid rgba(255,255,255,.1);font-size:10.5px;color:rgba(255,255,255,.5);line-height:1.7}
+
+.notice{background:#16191f;color:var(--orange);text-align:center;font-size:12px;padding:8px 16px;letter-spacing:.02em;border-bottom:1px solid #2a2f38}
+.wrap{max-width:960px;margin:0 auto;padding:0 28px}
+
+.hero{padding:32px 0 24px;border-bottom:1px solid var(--line)}
+.hero .crumbtrail{font-size:12px;color:var(--muted);margin-bottom:10px}
+.hero h1{font-size:26px;font-weight:700;margin-bottom:8px}
+.hero .sub{font-size:14px;color:var(--muted);max-width:640px;margin-bottom:16px}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:3px}
+.tag-status{background:#e9f6ec;color:#1d8102;border:1px solid #b7e0b0}
+.tag-info{background:#e6f2fb;color:#0972d3;border:1px solid #b3d7f0}
+.tag-plain{background:#f2f3f3;color:var(--muted);border:1px solid var(--line)}
+
+section{padding:32px 0}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+h2{font-size:18px;font-weight:700}
+.section-head .cnt{font-size:12px;color:var(--muted)}
+
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:16px 18px}
+.card .c-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.card h4{font-size:14px;font-weight:700}
+.card p{font-size:12.5px;color:var(--muted);line-height:1.65}
+.status-dot{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600}
+.status-dot .d{width:8px;height:8px;border-radius:50%}
+.d-green{background:#1d8102}
+.d-blue{background:#0972d3}
+.d-gray{background:#8d99a8}
+
+.tbl-wrap{background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead tr{background:#fafbfb}
+thead th{padding:11px 16px;text-align:left;font-weight:700;color:var(--ink);font-size:12px;border-bottom:1px solid var(--line)}
+tbody tr{border-bottom:1px solid var(--line)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#fafbfb}
+tbody td{padding:12px 16px;vertical-align:top}
+tbody td.m{color:var(--muted)}
+
+.checklist{display:grid;gap:8px}
+.check-item{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:13px 16px}
+.check-box{width:16px;height:16px;border-radius:3px;border:1.5px solid #8d99a8;flex-shrink:0}
+.check-item .t{font-size:13.5px;flex:1}
+.check-item .t b{font-weight:700}
+
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 9px;border-radius:3px}
+.b-todo{background:#f2f3f3;color:var(--muted);border:1px solid var(--line)}
+.b-done{background:#e9f6ec;color:#1d8102;border:1px solid #b7e0b0}
+.b-block{background:#fdf3f1;color:#d13212;border:1px solid #f2b0a4}
+
+footer{padding:28px 0 48px;font-size:11.5px;color:var(--muted)}
+
+@media(max-width:860px){.grid3{grid-template-columns:1fr}}
+@media(max-width:760px){:root{--sidebar-w:0px}.sidebar{display:none}.hero h1{font-size:20px}}
+</style>
+</head>
+<body>
+
+<div class="topbar"><span class="logo">AWS</span><span class="crumb">eacct-infra / architecture-request</span></div>
+<div class="notice">🔀 번외 시안 — AWS 콘솔 네이티브 디자인 샘플 · 실제 산출물 아님 · 검토 후 채택 시 정식 버전 적용</div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-lbl">DESIGN SAMPLE</div>
+      <div class="sb-title">AWS 콘솔 네이티브<br>디자인 시안</div>
+      <span class="sb-ver">v1 · SAMPLE</span>
+    </div>
+    <nav class="sb-nav">
+      <a href="#s-hero" class="nav-item active"><span class="ni-n">▸</span>Overview</a>
+      <a href="#s-spec" class="nav-item"><span class="ni-n">▸</span>Service spec</a>
+      <a href="#s-net" class="nav-item"><span class="ni-n">▸</span>Network ACL</a>
+      <a href="#s-check" class="nav-item"><span class="ni-n">▸</span>Checklist</a>
+    </nav>
+    <div class="sb-foot">2026-07-03 시안<br>Jacey(AX전략팀)</div>
+  </aside>
+
+  <div class="main-content">
+    <div class="wrap">
+      <section id="s-hero" class="hero">
+        <div class="crumbtrail">Architecture / Infra Request / Design Sample</div>
+        <h1>e-Acct AI 챗봇/MCP 인프라 아키텍처 및 구축 요청서</h1>
+        <p class="sub">AWS Management Console 색상·컴포넌트 톤(스퀴드 잉크 + 오렌지 accent)을 재현한 스타일. 인프라팀이 실제로 보는 화면과 유사한 톤입니다.</p>
+        <div class="tags">
+          <span class="tag tag-status">● Active</span>
+          <span class="tag tag-info">Region: ap-northeast-2</span>
+          <span class="tag tag-plain">2026-07-03 · SAMPLE v1</span>
+        </div>
+      </section>
+
+      <section id="s-spec">
+        <div class="section-head">
+          <h2>서비스별 구성 명세</h2>
+          <span class="cnt">3 resources</span>
+        </div>
+        <div class="grid3">
+          <div class="card">
+            <div class="c-top"><h4>chatbot-task</h4><span class="status-dot"><span class="d d-green"></span>running</span></div>
+            <p>ALB HTTPS 경유만 허용. 포트 7000, health check /health/live·/ready.</p>
+          </div>
+          <div class="card">
+            <div class="c-top"><h4>mcp-task</h4><span class="status-dot"><span class="d d-blue"></span>internal</span></div>
+            <p>내부망 전용, 외부 접근 전면 차단. 포트 8000, chatbot에서만 접근.</p>
+          </div>
+          <div class="card">
+            <div class="c-top"><h4>aurora-eacct_ai</h4><span class="status-dot"><span class="d d-gray"></span>pending</span></div>
+            <p>chatbot·MCP 공용 schema. 세션·감사 로그 테이블 신규 생성.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="s-net">
+        <div class="section-head">
+          <h2>네트워크 경계 (발췌)</h2>
+          <span class="cnt">3 rules</span>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>경로</th><th>허용</th><th>금지</th></tr></thead>
+            <tbody>
+              <tr><td><b>browser → chatbot</b></td><td>ALB HTTPS(443) → :7000</td><td class="m">Task 직접 외부 노출</td></tr>
+              <tr><td><b>chatbot → MCP</b></td><td>ECS Service Connect (internal)</td><td class="m">외부 DNS 경유 hairpin</td></tr>
+              <tr><td><b>MCP Task SG</b></td><td>chatbot SG → :8000만 인바운드</td><td class="m">그 외 소스 전면 차단 <span class="badge b-block">P0</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="s-check">
+        <div class="section-head">
+          <h2>인프라팀 요청 체크리스트</h2>
+          <span class="cnt">3 items</span>
+        </div>
+        <div class="checklist">
+          <div class="check-item"><div class="check-box"></div><div class="t"><b>ECS Cluster 신규 생성</b> — QA/PROD 분리</div><span class="badge b-todo">인프라팀</span></div>
+          <div class="check-item"><div class="check-box"></div><div class="t"><b>Secrets Manager 경로 확정</b></div><span class="badge b-done">완료</span></div>
+          <div class="check-item"><div class="check-box"></div><div class="t"><b>Aurora 신규 schema DDL 전달</b></div><span class="badge b-block">blocked</span></div>
+        </div>
+      </section>
+
+      <footer>
+        번외 디자인 시안 · 2026-07-03 · 실제 문서 채택 여부 미확정
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+const navItems=document.querySelectorAll('.nav-item');
+const sections=document.querySelectorAll('section[id]');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  sections.forEach(s=>{ if(scrollY>=s.offsetTop-120) cur=s.id; });
+  navItems.forEach(n=>n.classList.toggle('active', n.getAttribute('href')==='#'+cur));
+});
+</script>
+</body>
+</html>

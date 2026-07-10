@@ -112,81 +112,18 @@ HTML 파일 안에서 다른 문서를 참조하는 곳은 두 가지다.
 
 ## 3. HTML 파일 구조 (표준 템플릿)
 
-```html
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- frontmatter → meta 태그 변환 -->
-<meta name="doc-id" content="{PROJECT}-{TYPE}-01">
-<meta name="doc-type" content="{TYPE}">
-<meta name="project" content="{PROJECT}">
-<meta name="version" content="X.X.X">
-<meta name="status" content="draft|review|approved">
-<meta name="owner" content="담당자">
-<meta name="updated" content="YYYY-MM-DD">
-<title>[{PROJECT}-{TYPE}-01] 문서제목</title>
-<style>
-  /* 공통 CSS 전체 인라인 임베드 (example/assets/style.css 내용) */
-</style>
-</head>
-<body>
+**HTML 템플릿은 `platform/templates/html/PRES_presentation_template.html` 파일을 따른다.**
 
-<nav class="sidebar">
-  <!-- 사이드바 네비게이션 (모든 16개 문서 링크, 현재 페이지 active) -->
-</nav>
+이 템플릿에는 다음 요소가 포함되어 있다:
 
-<main class="main">
-
-  <!-- 문서 헤더 -->
-  <div class="doc-header">
-    <div class="meta-row">
-      <span class="doc-id">{PROJECT}-{TYPE}-01</span>
-      <span class="badge st-{status}">status</span>
-      <span class="badge ph-{phase}">phase</span>
-      <span class="badge req-yes|req-cond">필수|조건부</span>
-    </div>
-    <div class="doc-title">문서 제목</div>
-    <div class="doc-info">
-      <span>👤 담당: XXX</span>
-      <span>📌 버전: vX.X.X</span>
-      <span>📅 수정: YYYY-MM-DD</span>
-    </div>
-    <!-- trace.up / trace.down 링크 -->
-    <div class="trace-bar">
-      <div class="trace-col">
-        <div class="trace-label">↑ 상위 문서</div>
-        <div class="trace-links"><!-- 링크 또는 trace-none --></div>
-      </div>
-      <div class="trace-col">
-        <div class="trace-label">↓ 하위 문서</div>
-        <div class="trace-links"><!-- 링크 --></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 본문 섹션 (card 컴포넌트 사용) -->
-  <div class="card">
-    <h2>§1 개요</h2>
-    ...
-  </div>
-
-  <!-- 검증 체크리스트 -->
-  <div class="checklist-card">
-    <h2>✅ 검증 체크리스트</h2>
-    <div class="cl-item">
-      <input type="checkbox" checked> <span class="cl-done">doc_id 형식: {PROJECT}-{TYPE}-01</span>
-    </div>
-    <div class="cl-item">
-      <input type="checkbox"> <span>미완료 항목...</span>
-    </div>
-  </div>
-
-</main>
-</body>
-</html>
-```
+- `<head>`: frontmatter 데이터를 meta 태그로 변환 (doc-id, doc-type, project, version, status, owner, updated)
+- `<title>`: `[{PROJECT}-{TYPE}-01] 문서제목` 형식
+- `<style>`: 공통 CSS 전체 인라인 임베드 (외부 파일 참조 금지)
+- `<nav class="sidebar">`: 모든 16개 문서 링크 포함, 현재 페이지에만 `active` 클래스 추가
+- `<div class="doc-header">`: meta-row (doc-id, 상태 배지, 단계 배지, 필수 여부), 문서 제목, 문서 정보, trace-bar
+- `<div class="trace-bar">`: 상위 문서(trace.up)와 하위 문서(trace.down) 링크
+- `<div class="card">`: 본문 섹션 (card 컴포넌트 사용)
+- `<div class="checklist-card">`: 검증 체크리스트
 
 ---
 
@@ -273,3 +210,38 @@ HTML 파일 생성 또는 갱신 시 확인:
 - [ ] 검증 체크리스트 포함 (현실적인 checked/unchecked 상태)
 - [ ] `<meta name="doc-id">` 등 frontmatter 메타 태그 포함
 - [ ] 브라우저에서 열었을 때 레이아웃 깨짐 없음 확인
+
+---
+
+## 9. Haiku 서브에이전트 위임 기준
+
+MD → HTML 생성 작업 중 **판단이 필요 없는 순수 반복 하위작업만** `Agent(model:"haiku")`로 위임할 수 있다. 메인(Sonnet)이 매 하위작업마다 아래 표로 스스로 판단하며, 애매하면 위임하지 않고 직접 처리한다.
+
+### 9.1 위임 가능 (무판정 기계작업)
+
+| 하위작업 | 근거 |
+|---|---|
+| `<style>` 블록에 `style.css` 전체 복붙/갱신 | §6 — 규칙이 "그대로 복붙"으로 고정 |
+| 사이드바 16개 링크 삽입/갱신 (신규 파일명 1개 추가 시 기존 파일들에 동일 링크 일괄 반영) | §2.3① — 목록·형식 고정, `active` 클래스 위치는 메인이 지정한 파일명 기준으로 기계적 결정 |
+| §2.2 상대경로 표에 따른 경로 문자열 치환 | 표에 입출력이 완전히 정의됨 |
+| `<meta>` 태그에 frontmatter 값 그대로 매핑 | §3 — 값 복사, 해석 불필요 |
+| 여러 기존 HTML 파일에 동일 패턴 일괄 치환 (예: CSS 갱신 후 N개 파일 `<style>` 블록 동시 교체) | 반복 작업, 판단 대상 없음 |
+
+### 9.2 위임 금지 (판단 필요 — 메인 직접 처리)
+
+| 하위작업 | 이유 |
+|---|---|
+| MD 본문 → 카드/섹션 구조 재구성·요약 | 콘텐츠 해석 필요 |
+| PII 필드 판별 및 `.pii` 배지 위치 결정 | 오탐·누락 시 개인정보 노출 리스크 |
+| 본문 cross-reference 탐지 및 링크 대상 결정 | 문서 간 의미적 연관 판단 필요 |
+| trace.up/down 정확성 확인 (frontmatter ↔ 실제 문서 매칭) | 추적 무결성 판단 필요 |
+| §8 생성 체크리스트의 최종 PASS/FAIL 판정 | **판정은 항상 메인이 직접** — `rule_loading_policy.md` §5 Hard Block(타인/서브 판정 대리 금지)과 동일 원칙 |
+| 최초 신규 문서 생성(콘텐츠 최초 작성) | 판단 작업이 대부분을 차지 — 위임 대상 아님 |
+
+### 9.3 위임 절차
+
+1. 메인이 MD를 읽고 1차 HTML을 생성한다 — 9.2의 판단 작업을 전부 직접 처리.
+2. 남은 하위작업 중 9.1 표에 정확히 해당하는 것만 골라 위임 대상으로 확정한다.
+3. `Agent(model:"haiku")`로 위임한다. 프롬프트에 대상 파일 경로, 적용할 규칙(9.1 근거 열 원문), 완료 기준을 명시한다 — Haiku는 규칙 해석이 아니라 규칙 적용만 하도록 프롬프트를 구체적으로 작성한다.
+4. Haiku 결과를 §8 체크리스트 전체로 메인이 재검증한다. 실패 항목은 메인이 직접 수정한다(재위임 금지 — 소환 비용 대비 이득 없음).
+5. 검증 통과분만 최종 반영한다. 위임 여부·대상은 별도 보고 불필요하나, 체크리스트 검증 결과는 기존 규칙대로 보고한다.
