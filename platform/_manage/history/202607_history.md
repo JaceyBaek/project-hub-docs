@@ -7,6 +7,34 @@ sidebar_order: 1
 
 ---
 
+## 2026-07-15 — eacct_chatbot collab 20260701-1838 bundle 모든 DEV 승인 완료 (16:17)
+
+**대상 bundle**: `eacct_chatbot/20260701-1838_ecs-fargate-aurora-deployment`
+
+**완료 단계**:
+- **DEV_D01~D07**: 모두 Jacey 최종 승인 완료
+  - DEV_D01 (11:27), DEV_D02 (13:16), DEV_D03 (14:02), DEV_D04 (15:11), DEV_D05 (15:34), DEV_D06 (16:36), DEV_D07 (16:17)
+- **DIR/ORC**: 모두 `approved` 상태
+- **Detail D01~D07**: 모두 `resolved` 또는 `approved` 상태
+- **테스트 결과**: 
+  - DEV_D01~D06: Opus 설계검증 + Gemini 제3자 테스트 (또는 해당 provider) 전건 PASS
+  - DEV_D07: Opus 설계검증(TC-001~009 + TC-C01) + GPT-5.6 Terra 제3자 테스트(사용자 명시 단일 문서 예외, 13/13 PASS)
+
+**아카이브 조건 충족**:
+1. ✅ Details: 미착수·`[planned]` 항목 0건
+2. ✅ DEV: 모두 `[resolved · jacey_approved]` 상태
+3. ✅ TC: 모두 테스트 완료(각 DEV 문서에 기록)
+
+**다음 단계**: 
+- 아카이브 이동 준비 — 외부 blocker(T-D01~T-D07)는 별도 라운드로 진행
+- 프로젝트 산출물 반영 예정 (projects/eacct_chatbot REQ/FLW/FUNC/TC)
+
+**참고 파일**:
+- DEV 파일: `30_dev/30_DEV_D01~D07_*.md` (7개 전건 `approved_by: Jacey` 기입)
+- MAP.md: active 섹션에 전체 workflow 기록 — DEV_D01~D07 완료 사항 표시
+
+---
+
 ## 2026-07-06 — CLAUDE.md collab 게이트 동적 로드 전환 완료 (16:25)
 
 **목표**: collab 사용 세션에서만 규칙 로드, 일반 작업 세션에서 토큰 절감

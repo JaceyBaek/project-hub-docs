@@ -87,7 +87,9 @@
 8-2. **경로 구분자 슬래시(/) 사용** — Windows 환경에서 도구 사용 및 명령 실행 시 권한 팝업 방지를 위해 모든 경로 구분자는 백슬래시(`\`) 대신 반드시 슬래시(`/`)를 사용한다.
 8-3. **타임스탬프 임의 작성 금지** — 시각 기록 시 반드시 `date +"%H:%M"` 명령으로 확인 후 기입. DEV 승인 시각: 해당 DEV 파일 이전 단계(tested_by) 시각 Read 확인 → 그보다 늦게 재실행 후 기입. 복수 DEV 연속 승인 시 파일별 독립 확인 필수.
 8-4. **파일 전수 확인 후 결론** — 디렉토리 내 파일 점검 시 먼저 `ls`로 전체 목록을 확보하고 목록의 모든 파일을 각각 직접 Read한 후 결론을 낸다. grep 결과 0건은 "없다"가 아니라 "못 찾았다"일 수 있으므로, 문제 맥락에서 grep 0건이 나오면 반드시 파일을 직접 열어 교차 확인한다. 일부 확인 후 나머지를 일반화하는 것은 금지.
-8-5. **실수 시인 시 즉시 자동 처리** — 실수 인정 즉시 Jacey 별도 요청 없이 순서 실행.
+8-5. **실수 시인 시 즉시 자동 처리** — 아래 "적용 대상"에 해당하는 실수만 대상. 해당 시 Jacey 별도 요청 없이 순서 실행.
+  - **적용 대상 (절대 해서는 안 되는 것만)**: 없는 사실을 지어냄(추측을 사실처럼 제시) · 모르는 것을 아는 것처럼 답변 · 과거에 지적된 동일 실수 반복 · 명시된 지침 위반 · 엉뚱한 파일/문서 수정 등.
+  - **비대상**: 개발 중 발생한 일반 코딩 오류·버그·오탈자 등 통상적인 구현 과정의 실수. 원인 파악 후 조용히 수정하면 충분 — ①②③ 게이트 불필요.
   - **① 원인 분석**: 직접 원인·근본 원인·영향 → 응답에 포함
   - **② 재발방지 등록**: 관련 지침 파일(CLAUDE.md·collab README·templates 등) 동일 유형 규칙 먼저 확인 → 있으면 강화, 없으면 신규 추가 → 수정 파일 경로 응답에 명시
   - **③ 레슨런 등록**: 프로젝트 레이어 → `projects/{프로젝트}/_manage/lessons.md` 최상단 [공통] + `platform/processes/lessons_learned.md` 승격. 플랫폼 레이어 → `lessons_learned.md` 직접 등록. `반영 위치` 필드 필수
@@ -110,14 +112,18 @@
 **collab 게이트**: 다음 감지 즉시 `platform/processes/collab/README.md` Read 필수 — 기억·이전 패턴 의존 금지. Read 완료 후 해당 세션 내내 README 전체 규칙 적용.
 - "collab 시작/진행하자" 선언, "리뷰 요청" 트리거
 - collab 경로 파일 생성·편집·승인·합의 작업 요청
-- **design 파일(DIR·detail·ORC) 기안 = `{collab_verified_by}` 담당** (`personal.yml collab.verified_by` 값이 SoT).
-  - `verified_by`가 **외부 AI(Codex 등)**이면: 아이다가 직접 생성 금지 — 요청 시 "{verified_by}에게 기안 요청해주세요"로 안내만. 접근성·속도 등 어떤 이유로도 대신 생성 불가.
-  - **[임시 · 2026-07-09~] `verified_by`가 `Opus`이면** (Codex 부재 대체 기간): 운영 구조는 **Sonnet 메인 세션 + Opus 서브에이전트(surgical)**. Sonnet 메인이 오케스트레이션·스캐폴딩·MAP·트래킹·DEV 개발·설계 검토·아카이브 등 **기계적/개발/검토 작업을 전부 직접** 수행하고, **Opus는 딱 2가지에만 `Agent(model:"opus")`로 소환** — ① 설계 기안(DIR/detail/ORC 초안 작성 + 검토 응답·수정) ② §3-1 설계검증 테스트. `'{ID}' 설계 시작하자` 트리거 자동 흐름:
-    - (설계) Opus 서브 기안 → Sonnet 메인 적대적 검토 → Opus 서브 응답·수정 → 미해결 0까지 반복 → 합의 resolved_by=Sonnet(검토자)·동의 verified_by=Opus(기안자) 무정지.
-    - (DEV) Sonnet 메인이 구현+§2+DoD+TC §1 직접 → Opus 서브 §3-1 설계검증 → 통과 시 verified_by=Opus → **[자동] verified_by 봉인 직후 Sonnet 메인이 `platform/processes/collab/_templates/tested_by_handoff.md` 형식으로 제3자 테스터(Gemini) 제출 패키지를 복사 가능한 블록으로 즉시 출력**(= 모든 서브에이전트 작업 완료 신호). scope 분리·baseline 무관 실패 제외·TC-G prefix 반영 필수. 이후 §3-2(Gemini)·승인은 수동 정지.
-    - 각 참여자는 **본인 섹션·서명을 본인 컨텍스트에서 직접 기입**(§8 대리 기입 금지). Opus 서브가 기안 본문·응답·verified_by·§3-1을, Sonnet 메인이 검토 섹션·resolved_by·DEV §2·TC §1·스캐폴딩·MAP을 각각 기입.
-    - **정지 지점**: `approved_by`(Jacey)·DEV 착수 게이트·§3-2 제3자 테스트(Gemini). 상세: `platform/TRIGGERS.md`. **Codex 복구 시 `verified_by` 원복 → 본 임시 예외 자동 폐기, 상단 외부 AI 규칙 재적용.**
-    - **Haiku 3번째 티어 (무판정 기계작업)**: **서명(결재 헤더 날짜·`resolved_by`/`verified_by`/`approved_by`)·MAP 상태 플래그 판정·트래킹 최종 상태(합의/동의) 판정은 owner 고정 — Haiku 위임 절대 금지**(§8 대리 기입·`rule_loading_policy.md §5` Hard Block). **맥락·판정·서명이 전혀 없는 순수 기계작업만** `Agent(model:"haiku")`로 위임 — 아카이브 bundle 파일 이동·INDEX.md 한 줄 추가·사이드바 메타삽입/재생성·대량 포맷 정리·다중 파일 find-replace·경로 참조 일괄 갱신. MAP 노드·문서 변경이력 행은 owner가 정확한 최종 문자열·플래그를 확정한 뒤 **대량일 때만** Haiku 전사(옮겨 적기)로 위임. 단일 소소 편집은 소환비용>이득이므로 Sonnet 메인이 직접. 티어 요약: **Opus=기안·§3-1 / Sonnet=개발·검토·오케스트레이션 / Haiku=무판정 전사·파일조작.**
+- **역할별 대행 조건** (`personal.yml` `collab.author`/`collab.verified_by`/`collab.tested_by` 값이 SoT — README §6 역할표). 세 역할 모두 동일 카테고리 판정 적용 — **design 기안·§3-1 검증(`{collab_verified_by}`) · 개발·검토(`{collab_author}`) · §3-2 제3자 테스트(`{collab_tested_by}`)**. 값이 아래 두 카테고리 중 어디에 속하는지로만 자동 판정하므로, 카테고리 내에서 값이 바뀌어도 이 문서는 수정 불필요.
+  - **외부 AI(Codex·Gemini 등, 세션 내 소환 불가)인 역할**: 아이다가 해당 역할을 대신 수행 금지 — 요청 시 "{해당 AI}에게 {기안/개발/제3자 테스트}를 요청해주세요"로 안내만, §3-2는 `_templates/tested_by_handoff.md` 형식 제출 패키지 출력으로 대체. 접근성·속도 등 어떤 이유로도 아이다가 대신 처리 불가.
+  - **세션 내 서브에이전트로 소환 가능한 Claude 계열 모델(Opus·Sonnet·Haiku·Fable 등)인 역할**: 운영 구조는 **Sonnet 메인 세션 + 해당 역할 서브에이전트(surgical)**. 값이 Sonnet 메인 자신이면 소환 없이 그대로 직접 수행, 다른 Claude 계열 모델이면 `Agent(model:"{역할 소문자}")`로 소환. Sonnet 메인은 오케스트레이션·스캐폴딩·MAP·트래킹·아카이브 등 기계적 작업을 역할 배정과 무관하게 항상 직접 수행.
+  - **미등록(신규) AI가 지정된 경우**: 위 두 카테고리로 자동 판정 불가 — `collab/README.md` §6 "신규 AI 온보딩 절차"(A-01~A-09) 선행 필수. `personal.yml` 값 교체만으로는 자동 반영되지 않음.
+  - `'{ID}' 설계 시작하자` 트리거 자동 흐름 (`{collab_verified_by}`가 Claude 계열일 때 활성 — 이하 각 단계도 해당 역할이 Claude 계열/외부 중 무엇인지에 따라 위 조건이 개별 적용됨):
+    - (설계) `{collab_verified_by}` 서브 기안 → `{collab_author}` 적대적 검토 → `{collab_verified_by}` 서브 응답·수정 → 미해결 0까지 반복 → 합의 resolved_by={collab_author}(검토자)·동의 verified_by={collab_verified_by}(기안자) 무정지.
+    - (DEV) `{collab_author}` 구현+§2+DoD+TC §1 → `{collab_verified_by}` 서브 §3-1 설계검증 → 통과 시 verified_by={collab_verified_by} → **[자동] verified_by 봉인 직후, `{collab_tested_by}`가 외부 AI면 Sonnet 메인이 `platform/processes/collab/_templates/tested_by_handoff.md` 형식으로 제출 패키지를 복사 가능한 블록으로 즉시 출력, Claude 계열이면 README §6 S-03 역할 독립성(author·verified_by와 동일 AI 겸직 금지) 확인 후 직접 소환해 §3-2 수행**(= 역할별 작업 완료 신호). scope 분리·baseline 무관 실패 제외·TC-G prefix 반영 필수. 이후 승인 및 §3-2 외부 제출 결과 반영은 수동 정지.
+    - **§3-1 비판적 수행 의무(대리 신뢰 금지 실질화)**: `{collab_verified_by}` 서브에이전트 소환 시 "TC §1 재현 + DoD 확인"만 지시하지 않는다. README §7 원칙("TC 파일 기반 테스트 수행 + 설계 대비 누락·변경 항목 추가 체크")을 소환 프롬프트에 명시적으로 포함해, `{collab_verified_by}`가 Sonnet이 작성한 TC §1을 통과 여부 확인 대상이 아니라 **1차 검토 결과물(가설)**로 취급하고 스스로 누락·경계값·설계 원본 대비 빠진 케이스를 탐색하도록 요구한다. 발견 시 TC §2에 `TC-C01~N`으로 append. 추가할 것이 없다고 판단해도 §3-1 본문에 "무엇을 검토했는지"를 남긴다. **여러 라운드 연속 TC-C 추가 0건이 나오면 이를 "설계가 완벽하다"는 근거로 받아들이지 않고, Sonnet 메인이 소환 프롬프트 강도를 재점검하거나 Jacey에게 보고한다.**
+    - 각 참여자는 **본인 섹션·서명을 본인 컨텍스트에서 직접 기입**(§8 대리 기입 금지). `{collab_verified_by}`가 기안 본문·응답·verified_by·§3-1을, `{collab_author}`가 검토 섹션·resolved_by·DEV §2·TC §1을, `{collab_tested_by}`가 §3-2를, Sonnet 메인이 스캐폴딩·MAP·오케스트레이션을 각각 기입.
+    - **정지 지점**: `approved_by`(Jacey)·DEV 착수 게이트·§3-2 외부 제출 결과 반영. 상세: `platform/TRIGGERS.md`. **역할별 독립 판정 — `verified_by`·`author`·`tested_by` 중 어느 것이든 외부 AI(Codex·Gemini 등)로 전환되면 해당 역할만 즉시 비활성화되고 위 외부 AI 기본 규칙(대행 금지·안내만)이 그대로 재적용된다. 나머지 역할이 Claude 계열로 유지되면 그 역할의 in-session subagent 모드는 그대로 유지된다 — 별도 문서 수정 불필요.**
+    - **Haiku 3번째 티어 (무판정 기계작업)**: **서명(결재 헤더 날짜·`resolved_by`/`verified_by`/`approved_by`)·MAP 상태 플래그 판정·트래킹 최종 상태(합의/동의) 판정은 owner 고정 — Haiku 위임 절대 금지**(§8 대리 기입·`rule_loading_policy.md §5` Hard Block). **맥락·판정·서명이 전혀 없는 순수 기계작업만** `Agent(model:"haiku")`로 위임 — 아카이브 bundle 파일 이동·INDEX.md 한 줄 추가·사이드바 메타삽입/재생성·대량 포맷 정리·다중 파일 find-replace·경로 참조 일괄 갱신. MAP 노드·문서 변경이력 행은 owner가 정확한 최종 문자열·플래그를 확정한 뒤 **대량일 때만** Haiku 전사(옮겨 적기)로 위임. 단일 소소 편집은 소환비용>이득이므로 Sonnet 메인이 직접. 티어 요약: **`{collab_verified_by}`(Claude 계열)=기안·§3-1 / `{collab_author}`=개발·검토 / `{collab_tested_by}`(Claude 계열인 경우)=§3-2 / Sonnet 메인=오케스트레이션·스캐폴딩·MAP(역할 배정과 무관하게 항상 직접) / Haiku=무판정 전사·파일조작.**
+    - **현재 상태 (2026-07-15)**: `personal.yml` → `verified_by=Codex`(외부, 기안·§3-1 대행 금지)·`author=Claude`(=Sonnet 메인 자신, in-session 직접 수행 중)·`tested_by=Gemini`(외부, §3-2는 핸드오프 패키지만) — verified_by·tested_by는 외부 AI 기본 규칙 적용 중, author만 in-session 모드로 활성.
 
 ---
 
