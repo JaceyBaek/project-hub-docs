@@ -7,6 +7,22 @@ sidebar_order: 1
 
 ---
 
+## 2026-07-21 — eacct_chatbot K8s 배포 코드·문서 전체 제거 / ECS Fargate 전환 확정 (16:36)
+
+**대상 프로젝트**: `eacct_chatbot`
+
+**변경 내용**:
+- `k8s/` 폴더 전체 삭제 (11개 파일)
+- `internal_k8s` 런타임 프로필 alias 제거 → `dev | qa | prod` 직접 허용값만 사용
+- `server.py`, `chatbot_store.py`, `eacct_resolve_client.py`, `eacct_session.py`, `privacy_gate.py` 수정
+- 테스트 코드 (`test_chatbot_store.py`, `test_d04_profile_gate.py`, `test_d05_privacy_gate.py`) 수정
+- `production_deployment.md` ECS Fargate 기반으로 전면 재작성, `deployment_roadmap.md` K8s → ECS 전환
+- `CLAUDE.md` 환경변수 허용값·로드맵 설명 수정
+
+**ECS 전환 결과**: `EACCT_CHATBOT_RUNTIME_PROFILE=qa` (또는 `prod`) 직접 설정으로 운영 환경 구분
+
+---
+
 ## 2026-07-15 — eacct_chatbot collab 20260701-1838 bundle 모든 DEV 승인 완료 (16:17)
 
 **대상 bundle**: `eacct_chatbot/20260701-1838_ecs-fargate-aurora-deployment`
