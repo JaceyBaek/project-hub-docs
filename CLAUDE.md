@@ -123,7 +123,7 @@
     - 각 참여자는 **본인 섹션·서명을 본인 컨텍스트에서 직접 기입**(§8 대리 기입 금지). `{collab_verified_by}`가 기안 본문·응답·verified_by·§3-1을, `{collab_author}`가 검토 섹션·resolved_by·DEV §2·TC §1을, `{collab_tested_by}`가 §3-2를, Sonnet 메인이 스캐폴딩·MAP·오케스트레이션을 각각 기입.
     - **정지 지점**: `approved_by`(Jacey)·DEV 착수 게이트·§3-2 외부 제출 결과 반영. 상세: `platform/TRIGGERS.md`. **역할별 독립 판정 — `verified_by`·`author`·`tested_by` 중 어느 것이든 외부 AI(Codex·Gemini 등)로 전환되면 해당 역할만 즉시 비활성화되고 위 외부 AI 기본 규칙(대행 금지·안내만)이 그대로 재적용된다. 나머지 역할이 Claude 계열로 유지되면 그 역할의 in-session subagent 모드는 그대로 유지된다 — 별도 문서 수정 불필요.**
     - **Haiku 3번째 티어 (무판정 기계작업)**: **서명(결재 헤더 날짜·`resolved_by`/`verified_by`/`approved_by`)·MAP 상태 플래그 판정·트래킹 최종 상태(합의/동의) 판정은 owner 고정 — Haiku 위임 절대 금지**(§8 대리 기입·`rule_loading_policy.md §5` Hard Block). **맥락·판정·서명이 전혀 없는 순수 기계작업만** `Agent(model:"haiku")`로 위임 — 아카이브 bundle 파일 이동·INDEX.md 한 줄 추가·사이드바 메타삽입/재생성·대량 포맷 정리·다중 파일 find-replace·경로 참조 일괄 갱신. MAP 노드·문서 변경이력 행은 owner가 정확한 최종 문자열·플래그를 확정한 뒤 **대량일 때만** Haiku 전사(옮겨 적기)로 위임. 단일 소소 편집은 소환비용>이득이므로 Sonnet 메인이 직접. 티어 요약: **`{collab_verified_by}`(Claude 계열)=기안·§3-1 / `{collab_author}`=개발·검토 / `{collab_tested_by}`(Claude 계열인 경우)=§3-2 / Sonnet 메인=오케스트레이션·스캐폴딩·MAP(역할 배정과 무관하게 항상 직접) / Haiku=무판정 전사·파일조작.**
-    - **현재 상태 (2026-07-15)**: `personal.yml` → `verified_by=Codex`(외부, 기안·§3-1 대행 금지)·`author=Claude`(=Sonnet 메인 자신, in-session 직접 수행 중)·`tested_by=Gemini`(외부, §3-2는 핸드오프 패키지만) — verified_by·tested_by는 외부 AI 기본 규칙 적용 중, author만 in-session 모드로 활성.
+    - **현재 상태**: `platform/setup/config/personal.yml` `collab` 섹션을 SoT로 참조. 현재 설정값(`verified_by`/`author`/`tested_by`)에 따라 외부 AI 대행 금지 규칙 또는 in-session 서브에이전트 모드 자동 판정.
 
 ---
 

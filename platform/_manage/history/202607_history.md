@@ -7,6 +7,24 @@ sidebar_order: 1
 
 ---
 
+## 2026-07-22 — collab 프로세스 문서 구조 개선 + 플랫폼 잡무 정리 (챗봇/MCP 무관 건, 20:01)
+
+**대상**: 플랫폼 레이어 (`platform/`) — eacct_chatbot·eacct_mcp 소스·서브모듈은 이번 커밋에서 제외 (별도 진행 중)
+
+**변경 내용**:
+- `platform/processes/collab/README.md`·`USAGE.md`: 신규 AI 온보딩 절차(A-01~A-09, K-01~K-05, S-01~S-08) 상세 표를 `platform/processes/collab/ai_onboarding.md`로 이관, 본문은 요약 참조로 축약 (토큰 절감)
+- `platform/processes/collab/MAP.md`: §15 재정의 — 활성 MAP(`{namespace}/MAP.md`)과 아카이브 MAP(`_archive/{namespace}/MAP.md`) 쓰기 책임 분리, 루트 MAP.md에 eacct_chatbot 활성 인덱스 상태(D01~D04 승인 이력) 갱신 반영
+- `platform/processes/collab/.gitignore`: 활성 namespace MAP.md(`!*/`, `!*/MAP.md`) 화이트리스트 추가
+- `platform/processes/lessons_learned.md`: 협업/프로세스 섹션 중복 교훈 정리, 상세 이력을 `platform/processes/collab/lessons.md`로 위임
+- `platform/TRIGGERS.md`: "리뷰 요청" 트리거 설명 축약(상세는 README 참조로 분리)
+- `platform/setup/bitbucket_repo_guide.md`·`.html`: 가이드 내용 보강
+- `platform/setup/config/collab_hooks.json` 신규: collab 타임스탬프 검증 훅 설정 분리 (README §17 참조용)
+- `platform/_manage/brainstorm/20260716_disk-cleanup-automation-project.md` 신규: Windows 디스크 정리 자동화 프로젝트 구상 기록
+- `projects/eacct/_manage/scripts/build_ifmap_temp_voucher.py` 신규: eacct IF-MAP 임시 전표 빌드 스크립트
+- **제외 항목**: `platform/extensions/plugins/miso_client/miso_client/client.py`(`user` 파라미터 추가 — eacct_chatbot 라우팅 작업 연관 의심으로 제외), `projects/eacct_chatbot`·`projects/wiki_builder` 서브모듈(각 프로젝트 자체 진행 중 작업, 미커밋 상태 유지)
+
+---
+
 ## 2026-07-21 — eacct_chatbot K8s 배포 코드·문서 전체 제거 / ECS Fargate 전환 확정 (16:36)
 
 **대상 프로젝트**: `eacct_chatbot`
