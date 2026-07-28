@@ -7,6 +7,22 @@ sidebar_order: 1
 
 ---
 
+## 2026-07-28 — `confluence_reader` 플러그인 신설 + keyring 자격증명 재구성 (19:18)
+
+**배경**: Confluence 특정 페이지(ID/URL)를 대화 중 즉시 읽어야 하는 요청이 반복되어, 임시 스크립트 대신 재사용 플러그인으로 분리. 기존 `atlassian_client`의 `ConfluenceClient`/`ContentParser`를 상속이 아닌 **조합(import+호출)**으로 재사용 — Jacey 확인.
+
+**변경 내용**:
+- 신규 플러그인 `platform/extensions/plugins/confluence_reader/` 생성 — `extract_page_id()`(ID/URL 겸용 파서), `read_page()`(조회+파싱), `cli.py`(`python -m confluence_reader read <id_or_url>` `--raw`/`--json`)
+- `platform/extensions/plugins/catalog.yml`에 `confluence_reader` 엔트리 추가
+- **keyring 자격증명 재구성**: Jacey 지시("wiki_builder 값을 가져다 쓰는 게 이상해서, 필요하면 platform 스코프에 직접 셋팅") — `wiki_builder` 스코프의 `confluence_api_token` 값을 `platform` 스코프로 복사, `.credential_index.json`에 `{project: platform, key: confluence_api_token}` 등록. 동일 토큰이 두 스코프에 중복 보관되므로 PAT 재발급 시 양쪽 모두 갱신 필요(Jacey 인지 완료)
+- `platform/TRIGGERS.md`에 신규 트리거 등록 — "confluence_reader 이용해"/"위키 페이지 읽어줘" 뉘앙스 감지 시 CLI 즉시 호출
+- 실제 페이지 ID `444626382`로 종단간 검증 완료 (env 로드 → keyring 인증 → REST 호출 → HTML 파싱 → 콘솔 출력) — 검증 중 발견한 통상 코딩 버그 2건 즉시 수정: `.env` 자동로드 누락(`_bootstrap_env()` 추가, `python-dotenv` 의존성 추가), Windows 콘솔 `cp949` `UnicodeEncodeError`(`_fix_console_encoding()` 추가) — 두 건 모두 CLAUDE.md 8-5 비대상(통상 구현 오류)으로 판단, 레슨런 미등록
+- 별개로 진행 중 발견한 운영 이슈 2건을 `lessons_learned.md`에 등록: Confluence 로컬 인용 문서를 라이브 위키 원본과 동일시한 오류(→ CLAUDE.md 3번 규칙 강화), 여러 파일에 흩어진 버전 번호 값을 교차 재확인 없이 단정한 오류(→ CLAUDE.md 8-4 규칙 강화)
+
+**검증**: `pytest platform/extensions/plugins/confluence_reader/tests -q` 14 passed. 실제 페이지 444626382 조회 성공.
+
+---
+
 ## 2026-07-28 — git 백업 정책 전환: docs·히스토리·가이드·브레인스톰 전체 추적 대상화 (12:17)
 
 **배경**: Jacey 결정 — git(GitHub)은 이후 개인용 백업 용도로 전환, 실제 사내 서버 배포는 Bitbucket(사내 온프레미스)이 담당. 이에 따라 문서류를 로컬 전용으로 막아두던 `.gitignore` 규칙을 플랫폼·전체 프로젝트에서 제거.
