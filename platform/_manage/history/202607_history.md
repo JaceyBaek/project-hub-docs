@@ -7,6 +7,17 @@ sidebar_order: 1
 
 ---
 
+## 2026-07-28 — git 백업 정책 전환: docs·히스토리·가이드·브레인스톰 전체 추적 대상화 (12:17)
+
+**배경**: Jacey 결정 — git(GitHub)은 이후 개인용 백업 용도로 전환, 실제 사내 서버 배포는 Bitbucket(사내 온프레미스)이 담당. 이에 따라 문서류를 로컬 전용으로 막아두던 `.gitignore` 규칙을 플랫폼·전체 프로젝트에서 제거.
+
+**변경 내용**:
+- root `.gitignore`: `platform/docs/deliverables/*`·`platform/docs/archive/*`·`projects/*/docs/*`·`projects/*/refs/*`·`projects/*/archive/*` 제외 규칙 삭제(로그 제외만 유지)
+- 각 서브모듈(`eacct_chatbot`·`gmail_cleaner`·`wiki_faq_builder`·`wiki_mbo_builder`) `.gitignore`의 `docs/*` 제외 규칙 삭제 (`eacct_mcp`는 이미 전체 추적 중이라 변경 불필요)
+- 예외(영구 유지): `platform/docs/mds_governance/GS리테일_MDS_API명세서_v1_1.xlsx` — 사내망 외부(GitHub.com) 반출 보류로 계속 제외
+- Bitbucket 이중 remote는 기존과 동일하게 `eacct_chatbot`·`eacct_mcp` 두 프로젝트로만 한정 유지 — 확대 없음
+- 새로 편입된 내용: `projects/eacct/docs/`(배포·가이드·jwt_revocation·reports·temp_voucher_api 등 4.3MB)·`projects/eacct/refs/`·`platform/_manage/brainstorm/`·`projects/eacct/_manage/brainstorm/` — 민감정보(실제 계정·비밀번호·토큰) 포함 여부 확인 완료, 실값 노출 없음
+
 ## 2026-07-28 — mds_governance 플러그인 신설 + eacct_ai_v3.sql 실시간 API 검증 반영 (11:36)
 
 **대상**: 플랫폼 레이어(`platform/extensions/plugins/mds_governance/` 신설) + 프로젝트 레이어(`projects/eacct_chatbot` DDL·문서)
