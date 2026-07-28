@@ -7,6 +7,21 @@ sidebar_order: 1
 
 ---
 
+## 2026-07-28 — 자격증명 인덱스(.credential_index.json) 위치 통합 + secrets_loader 자동 갱신 (09:27)
+
+**대상**: 플랫폼 레이어 (`platform/`)
+
+**배경**: Jacey가 실제 보유한 eacct_chatbot keyring 키 목록(12건)과 `.credential_index.json` 기록(당시 eacct_chatbot 1건)이 불일치한다고 제보. 원인 조사 결과 `secrets_loader`의 `get_secret`/`inject_secrets`가 keyring을 직접 조회만 하고 인덱스 파일을 갱신하지 않아, `set_credential.ps1`을 거치지 않고 등록된 시크릿이 인덱스에서 누락되는 구조적 문제로 확인.
+
+**변경 내용**:
+- `platform/.venv` python으로 keyring 실제 상태 전수 확인(20건 대상) → `eacct_chatbot.miso_api_key`는 keyring에 더 이상 없는 고아 항목으로 판명(삭제), `eacct_chatbot`의 실제 11개 키(`miso_agent_all_key` 등)는 FOUND 확인 후 인덱스에 추가
+- 인덱스 파일 위치 이동: `platform/.credential_index.json` → `platform/setup/credentials/.credential_index.json` (자격증명 관리 파일 한 폴더 통합) — [set_credential.py](../../setup/credentials/set_credential.py) 경로 계산 수정, `.gitignore` 경로 갱신
+- [secrets_loader/loader.py](../../extensions/plugins/secrets_loader/secrets_loader/loader.py): `_keyring_get`이 값을 찾을 때마다 공용 인덱스에 자동 등록하도록 수정 (`set_credential.ps1` 미경유 등록 시크릿도 `list`에 반영) — 기능 추가로 `v0.1.0 → v0.2.0` 버전업, `CHANGELOG.md`·`CLAUDE.md` 반영
+- `set_credential.py`의 `get` 명령에 `--show` 플래그 추가 (마스킹 없이 평문 확인)
+- `platform/setup/secrets_guide.md`: 인덱스 경로·자동 갱신 동작 반영해 §6 안내와 §7 트러블슈팅 표 갱신
+
+---
+
 ## 2026-07-22 — collab 프로세스 문서 구조 개선 + 플랫폼 잡무 정리 (챗봇/MCP 무관 건, 20:01)
 
 **대상**: 플랫폼 레이어 (`platform/`) — eacct_chatbot·eacct_mcp 소스·서브모듈은 이번 커밋에서 제외 (별도 진행 중)
