@@ -7,6 +7,21 @@ sidebar_order: 1
 
 ---
 
+## 2026-07-28 — mds_governance 플러그인 신설 + eacct_ai_v3.sql 실시간 API 검증 반영 (11:36)
+
+**대상**: 플랫폼 레이어(`platform/extensions/plugins/mds_governance/` 신설) + 프로젝트 레이어(`projects/eacct_chatbot` DDL·문서)
+
+**배경**: `eacct_ai_v2.sql`은 `mds_governance` 플러그인이 만들어지기 전, 가이드 문서 + 로컬 `classifier-words.json`(115단어)만으로 사람이 대조해 만든 초안이었다. GS리테일 MDS 표준사전 API(STD-001~004)를 실시간 조회·검증하는 `mds_governance` 플러그인을 신설해, `eacct_ai.sql`(v1) 기반 최종 `v3`를 만들고 v1/v2/v3 3-way 비교 문서로 정리했다.
+
+**변경 내용**:
+- `mds_governance` 플러그인 신규 작성(v0.1.0) — `MDSClient`(Basic Auth + 디스크 캐시 24h), `checker`(테이블/컬럼명 표준 준수 체크), `cli`(`check-name`/`check-ddl`/`refresh-cache`). `platform/docs/mds_governance/data-standard-design-guide-for-ai.md` 체크리스트를 코드화. `platform/extensions/plugins/catalog.yml` 등록.
+- `checker.py` 버그 수정(v0.1.1) — STD-001에 동일 물리약어(예: `DT`)가 여러 논리단어로 중복 등록된 경우 API 응답 순서에 따라 분류어 판정이 달라지던 결함 수정(list 기반 재구성, 후보 중 Y가 하나라도 있으면 분류어 판정). 단위테스트 추가(20/20 pass).
+- `eacct_ai_v3.sql`([source](../../../projects/eacct_chatbot/source/db_schema/eacct_ai_v3.sql)) 작성 — v2가 문서 대조만으로 추정했던 분류어 접미사 4건이 실시간 API 대조 결과 오류로 확인되어 정정: `_cn`(내용)→`_cntnt`, `_dtm`(일시)→`_dttm`, `_ord`(순서)→`_seq`, `feedback_score`(점수)→`feedback_scor`. 추가로 v2 문서에서 누락됐던 `RESET`(STD-001)·`ROUTE_CD`(STD-004)도 실시간 조회로 확인해 반영.
+- `MDS_MAPPING_20260728_eacct-ai_v0.3.md`·`.html`([docs](../../../projects/eacct_chatbot/docs/db_schema/)) 신규 — v1/v2/v3 3-way 컬럼 매핑, v2→v3 정정 근거 상세, 데이터거버넌스 신규 등록 요청 목록(STD-001 39건/STD-004 18건/STD-002 72건) 정리.
+- 임시 검증 산출물(`_v2_ddl_check.tmp.json`, `_v3_ddl_check.tmp.json`, `_v2_ddl_summary.tmp.txt`) 정리.
+
+---
+
 ## 2026-07-28 — 자격증명 인덱스(.credential_index.json) 위치 통합 + secrets_loader 자동 갱신 (09:27)
 
 **대상**: 플랫폼 레이어 (`platform/`)
