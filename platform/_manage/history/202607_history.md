@@ -7,6 +7,44 @@ sidebar_order: 1
 
 ---
 
+## 2026-07-29 — Bamboo 배포 원격 실행·감시 자동화 (atlassian_client v0.4.0 + bamboo_deploy CLI) (18:57)
+
+**배경**: "아이다가 푸시 → 배포까지 자동으로 할 수 있나" 질문. 실측 조사 결과 ① push는 가능(Windows 자격증명에 `git:https://code.gsretail.com` 저장) ② QA 배포 결과 검증도 가능(`https://qa-chatbot.eacct.gsretail.com/aliveCheck.do` → HTTP 200 실측) ③ **Bamboo 트리거·상태 조회는 불가**(저장소에 Bamboo URL 기록 없음, keyring·Windows 자격증명 모두 PAT 없음) ④ AWS CLI 미설치·자격증명 없음. Bamboo Triggers는 수동 실행만(Jacey 확인). → **B안 채택: 자동 트리거 없이 REST API로 실행·감시**.
+
+**정정**: 최초 안내에서 "`bamboo_client` 플러그인 신설"이라 했으나, `atlassian_client` 플러그인에 **`BambooClient`가 이미 구현되어 있었음**(플랜·결과 조회·`trigger_build`·배포 프로젝트). 신규 플러그인 대신 기존 클라이언트 확장으로 진행.
+
+**변경 내용**:
+- `platform/extensions/plugins/atlassian_client` **v0.4.0** — `BambooClient`에 `wait_for_build()`(완료까지 폴링, deadline 초과 대기 방지) · `get_result_jobs()`(stage 평탄화) · `get_job_log()`(REST 아닌 `/download/.../build_logs/` 경로) 추가. 테스트 8개 신규(파일 26 passed, 플러그인 전체 97 passed)
+- 버전 SoT 3중 드리프트 정정 — `pyproject.toml`=0.2.0 / `__init__.py`=0.3.0 / CHANGELOG=v0.2.0 → 세 곳 모두 0.4.0
+- `requests-mock`(pyproject `dev` extra) platform venv 미설치로 기존 18개 테스트도 실행 불가 상태였음 → 설치
+- `platform/extensions/scripts/manage/bamboo_deploy.py` **신규** — `status`/`trigger --yes [--wait]`/`watch`. `trigger`는 `--yes` 없이 거부(배포는 명시 요청 시에만 — 규칙 9를 도구 레벨에서 강제). 실패 시 실패 job 로그 자동 출력, 성공 시 `--health-url` 200 확인. 자격증명은 keyring(`platform`/`bamboo_api_token`), 접속정보는 `personal.yml` `bamboo` 섹션(PyYAML 무의존 파서 — `hub_init.py`와 동일 관례)
+- `platform/TRIGGERS.md` — "QA 배포해줘" · "배포 상태 확인해줘" 트리거 2건 신규
+- `platform/processes/deployment/bamboo_ecs_pipeline_guide.md` §1-8 신규 — 수동 트리거 유지 + REST 원격 실행 조합, 플랜 키 vs 브랜치 플랜 키 함정
+- 프로젝트 문서: chatbot `bamboo_plan_setup_qa.md` §5-2 / mcp 동 문서 §6-1 신규 (mcp는 `/aliveCheck.do` 부재로 헬스체크 URL 미확정)
+- `personal.yml`에 `bamboo` 섹션 자리 추가(값은 비움 — 빈 문자열은 미설정으로 처리)
+
+**검증**: requests-mock으로 `status`·`trigger`(폴링→실패→로그 자동 출력) 전 구간 재현, `_health_check`는 실제 QA 엔드포인트로 200 확인, flake8 통과
+
+**연결 완료 (19:10)**: Jacey가 PAT 발급·keyring 등록(Read + Triggering), Bamboo URL `https://deploy.gsretail.com` 확인 → `personal.yml` 반영.
+- **트리거 대상 플랜 키 = `EAC-EQ`** (plan `eac-sap - 02. eacct_chatbot (qa)`). `GET /plan/EAC-EQ/branch` **0건**이라 브랜치 플랜 키는 존재하지 않고 마스터 키가 곧 대상 — Build #19 리비전 `2f01964`가 `bitbucket/release/chatbot_dev`의 ancestor임을 `git merge-base --is-ancestor`로 확증
+- `get_plan_branches()` 추가 (테스트 2개, 플러그인 전체 99 passed) — "브랜치 플랜 없음 = 마스터 키 사용" 판별을 코드·문서로 고정
+- 실패 로그 오류 라인 추출 추가 — 단, Bamboo 로그는 `{채널}\t{시각}\t{메시지}`이고 docker build 진행 출력이 **stderr(`error` 채널)** 로 나와 채널 접두사 포함 매칭 시 정상 로그가 전부 오류로 잡히는 함정 발견 → 메시지 본문만 매칭으로 수정. `EAC-EQ-18`로 실측 검증(실제 원인 `Waiter ServicesStable failed` 정확히 추출)
+- 실서버 검증: `status --plan-name eacct_chatbot_qa` → `EAC-EQ-19 Successful`·`EAC-EQ-18 Failed` 조회 성공
+
+---
+
+## 2026-07-29 — 응답 규칙 8-7 신규 (설치·초기화 스크립트 실행 전 전체 단계 Read) + 레슨런 3건 승격 (18:05)
+
+**배경**: eacct_mcp `setup.py`를 검증 목적으로 실행했을 때, 확인하지 않은 뒷 단계가 프로젝트 루트에 불필요한 `.env`를 생성하고 Claude Desktop 설정(`claude_desktop_config.json`)의 `eacct-mcp` 항목을 존재하지 않는 경로로 덮어씀. 아이다가 원복·정정.
+
+**변경 내용**:
+- 루트 `CLAUDE.md` 응답 규칙 **8-7 신규** — 설치·초기화 스크립트(`setup.py`·`install.*`·`init.*`·`bootstrap.*`)는 검증 목적 실행이라도 전체 단계를 Read해 부작용 파악. 작업 범위 밖 파일 생성·외부 앱 설정 수정 단계가 있으면 실행 전 대상 파일 현재 내용 확보 또는 Jacey 통보
+- `platform/processes/lessons_learned.md` 승격 3건 — 운영 1건(설치 스크립트 부작용 사전 확인), 개발 2건(사내 전용 패키지 PyPI 동명 충돌 방어를 pip 호출 전 경로에 적용 / 구조 이동 시 실행 스크립트 경로 전수 갱신)
+
+**출처 프로젝트**: eacct_chatbot(로컬 기동 실패 수정), eacct_mcp(동일 계열 결함 3건 + 낡은 경로 수정)
+
+---
+
 ## 2026-07-28 — `confluence_reader` 플러그인 신설 + keyring 자격증명 재구성 (19:18)
 
 **배경**: Confluence 특정 페이지(ID/URL)를 대화 중 즉시 읽어야 하는 요청이 반복되어, 임시 스크립트 대신 재사용 플러그인으로 분리. 기존 `atlassian_client`의 `ConfluenceClient`/`ContentParser`를 상속이 아닌 **조합(import+호출)**으로 재사용 — Jacey 확인.

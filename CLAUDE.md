@@ -67,6 +67,7 @@
 - 산출물 작성 규칙·절차·ID prefix·RAG 변환 → `platform/processes/project/deliverables_guide.md`
 - **DB 테이블/컬럼 신규 설계·DDL 생성 시 → `mds_governance` 플러그인(`platform/extensions/plugins/mds_governance/`)으로 실시간 표준사전 조회·검증 필수.** 원칙 문서는 `platform/docs/mds_governance/data-standard-design-guide-for-ai.md`(플러그인이 이 문서의 체크리스트를 코드화한 것 — 플러그인 미설치/API 접근 불가 시에만 문서 직접 대조로 대체). 표준사전 미등록/미확인 항목은 플러그인 리포트 그대로 사용자에게 보고, 조용히 통과 금지.
 - 버전 관리 → `platform/processes/project/versioning.md`
+- **Bamboo→ECR→ECS(Fargate) 배포 파이프라인 구성 → `platform/processes/deployment/bamboo_ecs_pipeline_guide.md`** (절차 + 실패 사례 기반 함정 카탈로그 + 진단 순서. 프로젝트별 확정값은 각 프로젝트 `docs/guides/deployment/bamboo_plan_setup_qa.md`)
 - 히스토리·이슈·To-Do 등 시간순 누적 문서 검색 정책(기본 2주 윈도우 + 확장 규칙) → `platform/processes/context_search_policy.md`
 - 교훈 기록·에스컬레이션 흐름 → `platform/processes/lessons_learned.md` (프로젝트별 `_manage/lessons.md` → `[공통]` 태그 → 플랫폼 승격) / **등록 시 `반영 위치` 필드 필수** — 재발방지 내용이 실제 기록된 파일·섹션 명시
 - 플랫폼 승격 심사 절차 → `platform/processes/project/platform_promotion.md` (미구현, 추후 설계)
@@ -96,6 +97,7 @@
   - **③ 레슨런 등록**: 프로젝트 레이어 → `projects/{프로젝트}/_manage/lessons.md` 최상단 [공통] + `platform/processes/lessons_learned.md` 승격. 플랫폼 레이어 → `lessons_learned.md` 직접 등록. `반영 위치` 필드 필수
   - **[완료 게이트]** ①②③ 산출물 셋 다 확인 후 완료 선언.
 8-6. **git 상태는 대화 요약·plan 파일이 아니라 실제 명령으로 확인** — 커밋·병합·브랜치 상태를 히스토리·todo·응답에 기록하기 전, 이전 세션 요약이나 plan 파일(미실행 전제로 작성된 계획 포함)을 그대로 신뢰하지 않고 `git log`/`git status`/`git branch --show-current`로 직접 재확인한다. plan 파일은 작성 시점의 "예정"일 뿐 "완료"의 증거가 아니다.
+8-7. **설치·초기화 스크립트는 전체 단계를 Read한 뒤 실행** — `setup.py`·`install.*`·`init.*`·`bootstrap.*` 등을 검증·수정 확인 목적으로 실행할 때도, 먼저 파일 전체를 Read해 각 단계의 부작용을 파악한다. **작업 범위 밖의 파일을 생성·덮어쓰는 단계(외부 앱 설정 파일 수정 — 예: `claude_desktop_config.json` / `.env` 등 신규 파일 생성 / 전역 설정 등록)가 있으면 실행 전 해당 단계의 대상 파일 현재 내용을 Read로 백업 확인하거나 {user_name}에게 알린다.** "설치 스크립트니 안전할 것"이라는 가정으로 실행 금지 — 스크립트 내 경로가 낡아 잘못된 값으로 외부 설정을 덮어쓸 수 있다.
 9. **명령·파일 작업은 비서가 직접** — 파일 생성·수정·삭제 등 작업은 비서가 직접 진행. 외부 조치 필요 시만 예외 ("완료되면 말씀해 주세요."). **commit·push는 모두 명시 요청 시에만 진행.** 커밋 요청 시: 누락 기록 작성 + 커밋. 푸시 요청 시: 누락 기록 작성 + 커밋 + 푸시.
 
 > 10-16 (간헐적 적용 규칙) → `platform/processes/response_rules.md`
