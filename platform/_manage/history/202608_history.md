@@ -7,6 +7,15 @@ sidebar_order: 1
 
 ---
 
+## 2026-08-05 — project-hub 서브모듈 5개 완전 제거 (gmail_cleaner·eacct_source_analyzer·wiki_builder·video_clipper·transit_finder)
+
+- 웹뷰 프로젝트 목록 확인용으로만 연결해둔 서브모듈이 실질 관리 공수(포인터 갱신)만 유발한다는 판단 → `git submodule deinit -f` + `git rm -f` + `.git/modules/projects/{name}` 잔여 메타 제거로 project-hub 로컬 연결 완전 해제. 각 GitHub 원본 repo(`JaceyBaek/{name}`)는 그대로 유지
+- `eacct_chatbot`·`eacct_mcp`는 제외 — 두 프로젝트는 project-hub 서브모듈 폴더가 유일한 로컬 작업 위치이고 당시 미커밋 DB 설계 파일이 있어 제거 대상에서 뺌. CLAUDE.md 이중 리모트·CI 감시 규칙도 그대로 유지(변경 없음)
+- `PROJECTS_GLOBAL.md` 5개 행의 폴더 컬럼을 로컬 경로 → GitHub 링크로 갱신, `sync_sidebar.py` 재실행으로 사이드바 웹뷰에서 5개 프로젝트 섹션 제거 확인
+- `wiki_builder` 제거 전 미커밋 `_manage/logs/run.log` 변경을 자기 repo에 커밋·push(`95a0a12`) 후 진행
+
+---
+
 ## 2026-08-04 — mds_governance v0.3.0 재구축 + v0.3.8 경량 검증모드 + API 통합 버그 3건 수정
 
 - Jacey 6단계 프로세스(DDL 작성 → DDL→Excel 표준사전 대조 → Excel 수정 → Excel→DDL 재생성 → 반영) 완전 재구현. `check-ddl`(기존 DDL 준수 여부만 리포팅, 신규 검증 로직 없이 콘솔/JSON/Excel 감사 리포트) 신규 명령 추가
