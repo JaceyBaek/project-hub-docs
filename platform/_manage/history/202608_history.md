@@ -7,6 +7,13 @@ sidebar_order: 1
 
 ---
 
+## 2026-08-06 — archived(wiki_faq_builder·wiki_mbo_builder) 서브모듈 해제 + project-hub 일반 파일로 흡수, VSCode 저장소 스캔 깊이 수정
+
+- VSCode Source Control REPOSITORIES 목록에서 `projects/` 하위 프로젝트들이 안 보이는 문제 확인 — 원인: 서브모듈→일반 clone 전환(`2e7ce94`) 이후 VSCode git 확장 기본 스캔 깊이(depth 1) 밖으로 벗어남. `.vscode/settings.json`에 `git.repositoryScanMaxDepth: -1` 추가로 해결
+- `archived/wiki_faq_builder`·`archived/wiki_mbo_builder`는 더 이상 사용하지 않는 플랫폼 기능이라 project-hub의 일반 추적 파일로 완전 흡수 요청 — 커밋 대상은 여전히 project-hub, 더 이상 독립 저장소가 아니므로 VSCode 목록에도 별도로 뜨지 않음
+- 처리 순서: `git rm --cached`로 gitlink만 제거(워킹트리 파일 무손상) → 내부 `.git`(`.git/modules/archived/{name}` 연결) 완전 제거 → `git add`로 project-hub 인덱스에 일반 파일로 재등록. `.gitmodules`에서 두 항목 제거(`apps/google_drive_backup`만 서브모듈로 남음), 부모 `.git/config` submodule 섹션 정리
+- 중간에 "서브모듈만 끊고 독립 repo로 유지"로 잘못 해석해 `.vscode/settings.json`에 `git.ignoredRepositories` 추가했던 임시 조치는 최종 방향(project-hub 흡수) 확정 후 제거
+
 ## 2026-08-06 — eacct_chatbot·eacct_mcp 서브모듈 제거 + 7개 프로젝트 비-서브모듈 일반 clone으로 원복
 
 - `eacct_chatbot`·`eacct_mcp`도 서브모듈 포인터 갱신 관리 공수 제거 대상으로 재검토 — 제거 전 eacct_chatbot 미커밋 3건(mds_governance DB 설계 문서, todo.md T032~T036, Excel 잠금파일 gitignore) 자기 repo에 커밋+push(`f98a1d2`·`cd5e66a`) 후 project-hub 포인터 2회 갱신(`2a00cc6`·`161053e`) 완료, CI success 확인
