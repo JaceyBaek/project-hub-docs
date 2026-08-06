@@ -7,6 +7,16 @@ sidebar_order: 1
 
 ---
 
+## 2026-08-06 — eacct_chatbot·eacct_mcp 서브모듈 제거 + 7개 프로젝트 비-서브모듈 일반 clone으로 원복
+
+- `eacct_chatbot`·`eacct_mcp`도 서브모듈 포인터 갱신 관리 공수 제거 대상으로 재검토 — 제거 전 eacct_chatbot 미커밋 3건(mds_governance DB 설계 문서, todo.md T032~T036, Excel 잠금파일 gitignore) 자기 repo에 커밋+push(`f98a1d2`·`cd5e66a`) 후 project-hub 포인터 2회 갱신(`2a00cc6`·`161053e`) 완료, CI success 확인
+- `git submodule deinit -f` + `git rm -f` + `.git/modules/projects/{name}` 잔여 메타 제거로 두 서브모듈 로컬 연결 완전 해제 (eacct_chatbot은 열려있던 `eacct_chatbot_20260805.xlsx` Excel 잠금으로 1차 시도 실패 → 파일 닫은 후 재시도로 해결)
+- **로컬 작업 편의성 유지를 위해 7개(기존 제거 5개 + 이번 2개) 전체를 원래 경로(`projects/{name}`)에 일반 `git clone`으로 재생성** — project-hub git이 더 이상 이 폴더들을 서브모듈/nested repo로 추적하지 않도록 루트 `.gitignore`에 7개 폴더 패턴 추가. eacct_chatbot·eacct_mcp는 clone 후 bitbucket 리모트 수동 재등록(origin은 clone 시 자동 등록)
+- `PROJECTS_GLOBAL.md` 7개 행의 폴더 컬럼을 GitHub 링크 → 로컬 경로(`projects/{name}`)로 원복, `sync_sidebar.py` 재실행으로 사이드바에 7개 프로젝트 전체 복귀 확인
+- 결과: 서브모듈 관리 공수(포인터 커밋)는 사라지고, 로컬 작업 경로·웹뷰 사이드바 노출은 기존과 동일하게 유지됨
+
+---
+
 ## 2026-08-05 — project-hub 서브모듈 5개 완전 제거 (gmail_cleaner·eacct_source_analyzer·wiki_builder·video_clipper·transit_finder)
 
 - 웹뷰 프로젝트 목록 확인용으로만 연결해둔 서브모듈이 실질 관리 공수(포인터 갱신)만 유발한다는 판단 → `git submodule deinit -f` + `git rm -f` + `.git/modules/projects/{name}` 잔여 메타 제거로 project-hub 로컬 연결 완전 해제. 각 GitHub 원본 repo(`JaceyBaek/{name}`)는 그대로 유지
