@@ -7,6 +7,15 @@ sidebar_order: 1
 
 ---
 
+## 2026-08-06 — wiki_builder 배치 실패 원인 해소 + 실패 알림(msg.exe) 구축, eacct_chatbot 서버 구동 실패 해소
+
+- eacct_chatbot `start.bat` 구동 실패 원인 = `.venv` 누락(서브모듈 제거+재clone과 무관, 단순 미설치) → `setup.py` 실행으로 해소, 기동·종료 테스트 확인
+- wiki_builder 일일 배치(`wiki_builder_auto.bat`) 무응답 원인 = ①`source/.venv` 누락 ②`source/.env`(비시크릿, gitignore 대상) 누락 — 후자는 서브모듈 제거+재clone 과정에서 실제로 사라진 파일로 확인됨. `archived/wiki_mbo_builder` 문서에서 `CONFLUENCE_URL` 값 복구해 `.env` 재생성, `.venv` 재생성 후 `--auto` 실행 성공 확인(`run.log` 08-06 16:22 기록)
+- 배치 실패 시 알림 메커니즘 신규 추가: 최초 Windows 토스트(WinRT, AUMID `Microsoft.Windows.Explorer`)로 구현했으나 반복 발송 시 화면 배너가 뜨지 않고 알림센터로만 조용히 전달되는 불안정성 확인 → 폐기. 대신 Windows 내장 `msg.exe`(직접 닫기 전까지 화면 유지되는 모달 팝업, AUMID/알림 설정 무관)로 교체해 `wiki_builder_auto.bat`에 반영, 실패 상황 모사 테스트로 정상 동작 확인
+- 서브모듈 제거+재clone에 의한 데이터 손실 여부 별도 조사(VSCode Local History·재활용 휴지통 확인) — 확인 가능한 범위에서 유실 발견 없음(단, 완전한 증명은 불가함을 사용자에게 명시)
+
+---
+
 ## 2026-08-06 — archived(wiki_faq_builder·wiki_mbo_builder) 서브모듈 해제 + project-hub 일반 파일로 흡수, VSCode 저장소 스캔 깊이 수정
 
 - VSCode Source Control REPOSITORIES 목록에서 `projects/` 하위 프로젝트들이 안 보이는 문제 확인 — 원인: 서브모듈→일반 clone 전환(`2e7ce94`) 이후 VSCode git 확장 기본 스캔 깊이(depth 1) 밖으로 벗어남. `.vscode/settings.json`에 `git.repositoryScanMaxDepth: -1` 추가로 해결
