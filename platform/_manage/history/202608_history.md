@@ -7,6 +7,30 @@ sidebar_order: 1
 
 ---
 
+## 2026-08-12 — eacct_chatbot G2 signed-routing-context collab 번들 archive 이동 + CLAUDE.md 응답규칙1 예외 명문화
+
+- `eacct_chatbot/20260715-1320_signed-routing-context` 콜랩 번들을 Jacey 명시 결정에 따라 `_archive/eacct_chatbot/`로 이동(08:47). D01 design 승인·DEV_D01 Codex 설계검증 완료분 및 관련 구현은 유지, D02~D05 후속 DEV 절차와 DEV_D01의 Gemini 제3자 테스트·Jacey DEV 종료 승인은 취소. D02~D05 design 문서는 완료 구현으로 재분류하지 않으며 D03의 ECS 다중 task 공유 replay state 논의는 INF-18 후속 검토 대상으로 남김
+- CLAUDE.md 응답 규칙 1번에 "예외 없음" 문구 신규 추가 — 코드·에러메시지·기술용어·영문 소스 비중이 높은 작업 요약이라도 최종 사용자 응답은 반드시 한국어로 작성. eacct_chatbot 16개 컬럼 정리 완료 요약을 영어로 작성해 Jacey에게 지적받은 사례가 계기
+- 세부 내용: [platform/processes/lessons_learned.md](../../processes/lessons_learned.md) 2026-08-12 항목
+
+---
+
+## 2026-08-11 — 품의서 자동 매핑 대안검토(DB 실측 기반) 작성
+
+- `20260727_품의서_자동_매핑.md` 원안의 "파일 실물에서 문서번호 추출" 경로를 e-Accounting QA DB(`qgseacc`) 실측으로 검증 — 대상 전표 15,681건/첨부 20,597건 기준 파일명에 20자리 문서번호 포함 0.1%(25건)로 원안 0단계 종결
+- 대안안(파일명·본문 제목/내용 매칭, DB만으로 94% 제외 후 6%만 파일 접근)을 `20260811_품의서_자동_매핑_대안검토.md`로 별도 작성 — 원안 폐기 아닌 병존 비교, 채택안은 미결정 상태로 §6 미확인 항목 확인 후 결정
+- 원안 문서 메타표에 비교 대안안 링크 추가
+
+---
+
+## 2026-08-10 — bamboo_ecs_troubleshooting.md 트러블슈팅 문서 분리 신설
+
+- `bamboo_ecs_pipeline_guide.md`에 누적되어 있던 실패 사례·함정 카탈로그·오해하기 쉬운 정상 로그·진단 순서를 별도 문서로 분리 — 절차 가이드와 실패 대응 카탈로그의 성격이 달라 한 문서에서 계속 커지면 탐색성이 떨어진다는 판단
+- 근거는 eacct_chatbot QA 파이프라인 실구축(2026-07-27~29, Build #1~#19)에서 실제 발생한 빌드 실패만 수록 — 가정 케이스 없음
+- `bamboo_ecs_pipeline_guide.md`에서 각 절차 단계·함정 항목마다 신규 문서 앵커로 상호 링크 반영
+
+---
+
 ## 2026-08-06 — wiki_builder 배치 실패 원인 해소 + 실패 알림(msg.exe) 구축, eacct_chatbot 서버 구동 실패 해소
 
 - eacct_chatbot `start.bat` 구동 실패 원인 = `.venv` 누락(서브모듈 제거+재clone과 무관, 단순 미설치) → `setup.py` 실행으로 해소, 기동·종료 테스트 확인
