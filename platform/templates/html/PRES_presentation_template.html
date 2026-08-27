@@ -11,8 +11,8 @@
     {{CATEGORY}}        사이드바 상단 카테고리 라벨 (예: INFRA ARCHITECTURE)
     {{DOC_TITLE_SHORT}} <title> 태그용 짧은 제목
     {{CHIP_LABEL}}      스크롤 상단 고정 칩 텍스트
-    {{SB_TITLE}}        사이드바 제목 (HTML, <br> 허용)
-    {{VERSION}}         버전 표기 (예: v1, v3, 2026-06)
+    {{SB_TITLE}}        사이드바 제목 (HTML, <br> 허용) — Hero h1과 동일한 내용으로 맞출 것
+    {{VERSION}}         버전 표기, Hero 상단 tag 배지(🔖)에만 사용 (예: v1, v3, 2026-06) — 사이드바에는 표기 안 함(2026-08-21 결정)
     {{HERO_BRAND}}      Hero 브랜드 라인 (예: INFRA ARCHITECTURE)
     {{HERO_H1_L1}}      Hero h1 첫 줄
     {{HERO_H1_L2}}      Hero h1 둘째 줄 (그라디언트 강조)
@@ -39,6 +39,7 @@
   --sky-400:#0071E3;--cyan-300:#0058B0;
   --card:#FFFFFF;--line:#E6E6EA;--ink:#1D1D1F;--muted:#6E6E73;
   --sidebar-w:224px;
+  --content-w:1320px;
 }
 html{scroll-behavior:smooth}
 body{font-family:'Noto Sans KR',-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif;background:#FBFBFD;color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
@@ -58,9 +59,9 @@ body{font-family:'Noto Sans KR',-apple-system,BlinkMacSystemFont,'SF Pro Display
 .sidebar::-webkit-scrollbar{width:4px}
 .sidebar::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:2px}
 .sb-brand{padding:22px 18px 16px;border-bottom:1px solid var(--line);flex-shrink:0}
-.sb-brand .sb-lbl{font-size:9px;font-weight:700;letter-spacing:.25em;color:var(--sky-400);text-transform:uppercase}
-.sb-brand .sb-title{font-size:12.5px;font-weight:700;color:var(--ink);margin-top:6px;line-height:1.45}
-.sb-brand .sb-ver{display:inline-block;margin-top:7px;font-size:10px;font-weight:700;padding:2px 9px;border-radius:999px;background:#E8F1FF;color:var(--cyan-300);letter-spacing:.05em}
+/* 사이드바 접힘 애니메이션 중 텍스트가 줄바꿈되며 찌그러지는 현상 방지 — nowrap으로 줄바꿈 자체를 막고 .sidebar의 overflow-x:hidden이 잘라내게 함 */
+.sb-brand .sb-lbl{font-size:9px;font-weight:700;letter-spacing:.25em;color:var(--sky-400);text-transform:uppercase;white-space:nowrap}
+.sb-brand .sb-title{font-size:12.5px;font-weight:700;color:var(--ink);margin-top:6px;line-height:1.45;cursor:pointer;white-space:nowrap}
 .sb-nav{padding:10px 0 20px;flex:1}
 .nav-ch{
   display:flex;align-items:center;gap:8px;
@@ -69,14 +70,16 @@ body{font-family:'Noto Sans KR',-apple-system,BlinkMacSystemFont,'SF Pro Display
 }
 .nav-ch::after{content:'';flex:1;height:1px;background:var(--line)}
 .nav-item{
-  display:flex;align-items:center;gap:7px;padding:7px 18px;cursor:pointer;
+  display:flex;align-items:flex-start;gap:7px;padding:7px 18px;cursor:pointer;
   font-size:12px;color:var(--muted);text-decoration:none;
   border-left:2px solid transparent;transition:all .15s;line-height:1.4;
 }
 .nav-item:hover{color:var(--ink);background:#ECECEF;border-left-color:var(--cyan-300)}
 .nav-item.active{color:#fff;border-left-color:var(--sky-400);background:var(--sky-400)}
 .nav-item .ni-n{font-size:10px;font-weight:700;color:var(--muted);flex-shrink:0;width:22px}
-.sb-foot{padding:14px 18px;border-top:1px solid var(--line);font-size:10.5px;color:var(--muted);line-height:1.55;flex-shrink:0}
+/* nav-ch/nav-item은 라벨 길이가 길어 상시 nowrap 시 펼침 상태에서 overflow-x:hidden에 잘려나갈 위험 있음 — 접힘 애니메이션 중에만 스코프 적용 */
+body.sb-collapsed .nav-ch,body.sb-collapsed .nav-item{white-space:nowrap}
+.sb-foot{padding:14px 18px;border-top:1px solid var(--line);font-size:10.5px;color:var(--muted);line-height:1.55;flex-shrink:0;text-align:center;white-space:nowrap}
 
 /* ── Progress & Chip ─────────────────────── */
 #progress{position:fixed;top:0;left:var(--sidebar-w);right:0;height:3px;background:linear-gradient(90deg,var(--sky-400),var(--cyan-300));width:0%;z-index:200;transition:width .1s,left .25s}
@@ -84,7 +87,7 @@ body{font-family:'Noto Sans KR',-apple-system,BlinkMacSystemFont,'SF Pro Display
 #chapter-chip.on{opacity:1}
 
 /* ── Wrap ────────────────────────────────── */
-.wrap{max-width:920px;margin:0 auto;padding:0 32px}
+.wrap{max-width:min(var(--content-w),94vw);margin:0 auto;padding:0 32px}
 
 /* ── Hero ────────────────────────────────── */
 .hero{background:#FBFBFD;color:var(--ink);padding:80px 0 72px;position:relative;overflow:hidden}
@@ -92,7 +95,7 @@ body{font-family:'Noto Sans KR',-apple-system,BlinkMacSystemFont,'SF Pro Display
 .hero .brand i{display:inline-block;width:20px;height:2px;background:var(--sky-400)}
 .hero h1{font-size:40px;font-weight:900;line-height:1.2;margin-bottom:14px;color:var(--ink)}
 .hero h1 .grad{background:linear-gradient(90deg,var(--sky-400),var(--cyan-300));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero .sub{font-size:15px;color:var(--muted);margin-bottom:28px;max-width:600px;line-height:1.65}
+.hero .sub{font-size:15px;color:var(--muted);margin-bottom:28px;line-height:1.65}
 .hero .meta-tags{display:flex;flex-wrap:wrap;gap:8px}
 .hero .tag{font-size:12px;font-weight:500;padding:5px 14px;border-radius:999px;background:#F2F2F4;border:1px solid var(--line);color:var(--ink)}
 
@@ -237,8 +240,7 @@ body.sb-collapsed #sidebar-toggle svg{transform:rotate(180deg)}
 <nav class="sidebar" id="sidebar">
   <div class="sb-brand">
     <div class="sb-lbl">{{CATEGORY}}</div>
-    <div class="sb-title">{{SB_TITLE}}</div>
-    <span class="sb-ver">{{VERSION}}</span>
+    <div class="sb-title" id="sb-title-home" tabindex="0">{{SB_TITLE}}</div>
   </div>
   <div class="sb-nav">
     <!-- 섹션 그룹 예시 (필요에 맞게 수정) -->
@@ -404,6 +406,29 @@ const chip = document.getElementById('chapter-chip');
 const dividers = [...document.querySelectorAll('[data-chapter]')];
 const navItems = [...document.querySelectorAll('.nav-item')];
 
+// 클릭 시 파란 하이라이트가 이전 위치→클릭 위치까지 순차 이동하는 효과. travelLock이 true인 동안
+// 아래 scroll 리스너의 자체 active 갱신을 잠시 멈춰 두 로직이 동시에 .active를 건드려 깜빡이는 것을 방지.
+let travelLock = false;
+let travelTimer = null;
+function travelHighlight(targetIdx) {
+  const fromIdx = navItems.findIndex(el => el.classList.contains('active'));
+  clearTimeout(travelTimer);
+  if (fromIdx < 0 || fromIdx === targetIdx) {
+    navItems.forEach((el, i) => el.classList.toggle('active', i === targetIdx));
+    return;
+  }
+  travelLock = true;
+  const dir = targetIdx > fromIdx ? 1 : -1;
+  let i = fromIdx;
+  const step = () => {
+    navItems.forEach((el, idx) => el.classList.toggle('active', idx === i));
+    if (i === targetIdx) { travelTimer = setTimeout(() => { travelLock = false; }, 300); return; }
+    i += dir;
+    travelTimer = setTimeout(step, 45);
+  };
+  step();
+}
+
 addEventListener('scroll', () => {
   const h = document.documentElement;
   // 스크롤 진행바
@@ -417,26 +442,41 @@ addEventListener('scroll', () => {
   const sections = [...document.querySelectorAll('section[id]')];
   let active = '';
   for (const s of sections) if (s.getBoundingClientRect().top < innerHeight * .4) active = s.id;
-  navItems.forEach(a => {
-    a.classList.toggle('active', a.dataset.target === active);
-  });
+  if (!travelLock) {
+    navItems.forEach(a => {
+      a.classList.toggle('active', a.dataset.target === active);
+    });
+  }
 }, { passive: true });
 
 // 등장 애니메이션 (IntersectionObserver)
 const io = new IntersectionObserver(es => {
   for (const e of es) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-}, { threshold: .12, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: 0, rootMargin: '0px 0px -40px 0px' });
 document.querySelectorAll('.rv:not(.in)').forEach(el => { el.classList.add('pre'); io.observe(el); });
 
 // 사이드바 링크: 네이티브 fragment 이동 대신 JS 스크롤 (Teams 등 미리보기 뷰어의 fragment 이동 오작동 방지) + 모바일 사이드바 닫기
-navItems.forEach(a => a.addEventListener('click', e => {
+navItems.forEach((a, idx) => a.addEventListener('click', e => {
   e.preventDefault();
   document.getElementById(a.dataset.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   document.querySelector('.sidebar').classList.remove('open');
+  travelHighlight(idx);
 }));
 navItems.forEach(a => a.addEventListener('keydown', e => {
   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); a.click(); }
 }));
+
+// 사이드바 제목 클릭/Enter/Space → 본문 최상단으로 스크롤
+const sbTitle = document.getElementById('sb-title-home');
+sbTitle.addEventListener('click', () => {
+  clearTimeout(travelTimer);
+  travelLock = false;
+  scrollTo({ top: 0, behavior: 'smooth' });
+  document.querySelector('.sidebar').classList.remove('open');
+});
+sbTitle.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sbTitle.click(); }
+});
 </script>
 </body>
 </html>

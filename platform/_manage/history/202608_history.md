@@ -7,6 +7,52 @@ sidebar_order: 1
 
 ---
 
+## 2026-08-27 — dashboard_practice(P2608261) 완전 삭제
+
+- 실습용 프로젝트로 유지 가치가 없다는 Jacey 판단(2026-08-27)에 따라 완전 삭제 — 아카이브(`archived/`) 이동이나 `서비스종료` 상태 전환 없이 레지스트리에서 행 자체를 제거
+- 삭제 범위: ① 원격 저장소 `JaceyBaek/dashboard_practice`(private, 최종 push 2026-08-26) `gh repo delete` ② 로컬 `projects/dashboard_practice/` 전체 ③ `PROJECTS_GLOBAL.md` 진행중 행 ④ `platform/extensions/services/webview/_sidebar.md` 항목 4건
+- 미커밋 작업물(Dash 앱 `source/src/app.py`·`components/` 7개·`etl.py`·`db.py`·`formatting.py`·`constants.py`·`assets/style.css`, `source/scripts/`, `docs/202607_BSPL_260810.xlsx`)은 보존하지 않고 함께 삭제 — 삭제 전 Jacey에게 복구 불가 사실 고지 후 명시 승인 받음. 원격에는 초기 scaffold 커밋(`01185f5`) 1건만 있었음
+- `.gitignore`의 "개인 독립 관리 프로젝트" 7개 목록에는 원래 미등록 상태였으므로 별도 정리 불필요
+
+---
+
+## 2026-08-24 — PRES-authoring-guide.md §12.4 "전체 현황" 구조로 갱신
+
+eacct_chatbot MDS 적용 리포트의 §4.1/4.2를 "일치 항목만"에서 "전체 테이블/컬럼을 판정과 함께 전수 표기"하는 구조로 재구성한 작업(Jacey 요청: 미등록 항목이 전체 중 어디인지 한눈에 보이게)을 계기로, §12.4 표준 구조 다이어그램의 `§4(4.1~4.2) 참고: 일치 항목` 줄을 `§4(4.1~4.2) 전체 현황`으로 교체하고, §1(하이라이트용 예외 목록)과 §4(전체 항목 상세 참조표)의 용도 구분을 설명하는 문장을 추가.
+
+**반영 위치:** `platform/templates/html/PRES-authoring-guide.md` §12.4. 상세 배경: `projects/eacct_chatbot/_manage/history/202608_history.md` 2026-08-24 "MDS 적용 리포트 §4.1/4.2..." 항목.
+
+---
+
+## 2026-08-21 — PRES-authoring-guide.md §12 "MDS 적용 리포트" 패턴 신설
+
+eacct_chatbot MDS 표준사전 준수 리포트(`eacct_chatbot_auth_state_ddl_mds_check_report.md/.html`) 작업을 계기로, 이 문서 유형을 향후 재사용 가능한 패턴으로 [PRES-authoring-guide.md](../../templates/html/PRES-authoring-guide.md) §12에 신설. HTML 템플릿 파일은 늘리지 않고 기존 `PRES_presentation_template.html` 1개 공용 원칙([feedback_html_pres_template.md] 메모리 원칙) 유지, 문서 유형 차이는 이 가이드로만 분기.
+
+- §1 사용 조건 표에 "MDS 표준사전 적용 리포트 (§12)" 행 추가.
+- §12.1 제목 규칙 — `{시스템/DB명} — MDS Governance 적용 리포트` 형식, 적용 4곳(MD H1·HTML `<title>`·히어로 H1·`#sb-title-home`) 명시. 챕터 칩·킥커·푸터 브랜드 등 재사용 배지는 제외.
+- §12.2 MD/HTML 역할 차이 — MD는 날짜별 변경이력을 계속 append하는 "living SoT", HTML은 표 데이터만 최신이면 되는 "고정 스냅샷"이라는 구조를 공식 컨벤션으로 문서화. HTML 공유 전 MD와 비교 테이블 데이터 diff 확인을 지시.
+- §12.3 물리 식별자 표기(항상 소문자) — PROTECTED 토큰(SQL 타입·`STD-xxx`·`MDS`·의사결정 ID 등) 표 + 이번 작업에서 실제로 발견한 정규식 함정(`\b[A-Z][A-Z0-9_]*\b`가 `_` 뒤 대문자 토큰을 놓치는 word-boundary 버그로 14개 셀 미변환) 경고 문단.
+- §12.4 표준 구조(섹션 스켈레톤), §12.5 저장 위치·파일명 규칙.
+- 리터럴 복사 예시로 eacct_chatbot 두 파일을 지정, "## 참고" 푸터에도 추가.
+
+**반영 위치:** `platform/templates/html/PRES-authoring-guide.md` §1·§12(신설)·참고. 상세 배경: `projects/eacct_chatbot/_manage/history/202608_history.md` 2026-08-21 "MDS 적용 리포트 제목 변경..." 항목.
+
+---
+
+## 2026-08-21 — PRES_presentation_template.html `.nav-item`/`.nav-ch` nowrap 스코프 정정
+
+바로 아래 2026-08-21 항목(사이드바 버그 3건 수정)에서 템플릿에 상시 적용한 `.nav-ch`/`.nav-item` `white-space:nowrap`을 `body.sb-collapsed .nav-ch, body.sb-collapsed .nav-item{white-space:nowrap}`로 재조정 — 상시 적용 시 라벨이 긴 nav 항목이 펼침 상태에서 `.sidebar{overflow-x:hidden}`에 잘려나가는 회귀 위험을 발견해 접힘 상태로만 스코프. 계기: eacct_chatbot 리포트 파일에서 같은 수정이 실제로는 절반만 적용된 상태였다는 Jacey 재질문(`projects/eacct_chatbot/_manage/history/202608_history.md` 2026-08-21 정정 항목 참조) — 그 정정 과정에서 상시 nowrap 자체의 잠재 위험을 재검토해 템플릿에도 반영. [PRES-authoring-guide.md](../../templates/html/PRES-authoring-guide.md) §5.1도 스코프 규칙으로 갱신.
+
+**참고 — 플랫폼 공유 문서 동시 편집 확인:** 이번 정정 작업 중 `PRES-authoring-guide.md`가 세션 내 마지막 Read 이후 다른 프로세스에 의해 변경된 것을 시스템이 감지·통지함(§3 "MD 먼저, HTML 나중" 인근에 eacct 프로젝트의 `ai_use_expns_ddl_mds_check_report.html` 사례 문단이 이 세션이 작성하지 않은 채로 새로 추가되어 있었음). Jacey가 사전에 언급한 "다른 세션에서 동일하게 html 작업 하고 있다"는 상황이 이 공유 가이드 문서에서 실시간으로 확인됨 — 공유 플랫폼 문서(`PRES_presentation_template.html`·`PRES-authoring-guide.md`) 편집 시 동시 편집 충돌 가능성을 감안할 것.
+
+---
+
+## 2026-08-21 — PRES_presentation_template.html 사이드바 버그 3건 수정 + 가이드 동기화
+
+eacct_chatbot MDS 체크 리포트에서 발견된 사이드바 버그 3건(접힘 애니메이션 중 텍스트 줄바꿈으로 찌그러짐·클릭 시 하이라이트 즉시 점프·사이드바 버전 배지)을 리포트뿐 아니라 마스터 템플릿([PRES_presentation_template.html](../../templates/html/PRES_presentation_template.html) — d:/03.project-hub/platform/templates/html/PRES_presentation_template.html)에도 동일 반영. 텍스트 찌그러짐은 `white-space:nowrap` 부재로 인한 템플릿 자체 결함으로 확인됨(리포트만의 문제가 아니었음). 사이드바 버전 배지는 템플릿에서 영구 제거(`{{VERSION}}`은 hero 배지에만 사용)로 정책 확정, 클릭 시 하이라이트는 45ms 간격 순차 이동(`travelHighlight()`)으로 구현, 사이드바 제목 클릭→최상단 이동 기능도 템플릿에 신규 반영. [PRES-authoring-guide.md](../../templates/html/PRES-authoring-guide.md) — d:/03.project-hub/platform/templates/html/PRES-authoring-guide.md §2·§5.1·§5.2(신규)·§5.3(신규) 동기화. 상세: `projects/eacct_chatbot/_manage/history/202608_history.md` 2026-08-21 항목.
+
+---
+
 ## 2026-08-12 — eacct_chatbot G2 signed-routing-context collab 번들 archive 이동 + CLAUDE.md 응답규칙1 예외 명문화
 
 - `eacct_chatbot/20260715-1320_signed-routing-context` 콜랩 번들을 Jacey 명시 결정에 따라 `_archive/eacct_chatbot/`로 이동(08:47). D01 design 승인·DEV_D01 Codex 설계검증 완료분 및 관련 구현은 유지, D02~D05 후속 DEV 절차와 DEV_D01의 Gemini 제3자 테스트·Jacey DEV 종료 승인은 취소. D02~D05 design 문서는 완료 구현으로 재분류하지 않으며 D03의 ECS 다중 task 공유 replay state 논의는 INF-18 후속 검토 대상으로 남김

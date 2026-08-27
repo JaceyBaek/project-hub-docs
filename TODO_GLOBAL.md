@@ -15,7 +15,7 @@
 | G-021 | project-hub | [구조 논의] platform/services/mcp/ 역할 재정의 — G-017 apps/ 레이어와 연계, 공용 MCP vs 프로젝트별 MCP(A안) 구분 명확화 | 보통 | 대기 | - |
 | G-025 | project-hub | 산출물 메타 `last_reviewed` 필드 도입 + 6개월 미검토 정기 점검 트리거 (라이프사이클 §4-2 후속) | 보통 | 대기 | - |
 | G-026 | project-hub | [검토 보류] collab 기반 AI 3개(Claude·Codex·Gemini) 완전 자동화 파이프라인 구현 — Claude Code hooks + 각 CLI headless(subprocess) 방식, 추가 API 비용 없음. 선행 확인: Codex CLI·Gemini CLI headless 모드 지원 여부. mcp 관련 개발 마무리 후 재검토 | 보통 | 대기 | - |
-| G-027 | project-hub | rule_loading_policy 구현 — 작업 유형별 필수 선독 파일 체인 강제화. ① platform/processes/rule_loading_policy.md 신규 생성 ② CLAUDE.md 강제 선행 조항 추가 ③ TRIGGERS.md 공통 0단계 추가 | 보통 | 대기 | - |
+| G-027 | project-hub | rule_loading_policy 구현 — 작업 유형별 필수 선독 파일 체인 강제화. ① platform/processes/rules/rule_loading_policy.md 신규 생성 ② CLAUDE.md 강제 선행 조항 추가 ③ TRIGGERS.md 공통 0단계 추가 | 보통 | 대기 | - |
 
 ---
 

@@ -41,12 +41,15 @@
 <!-- sync: COM-COLLAB-002, 20260622, mode=manual, owner=Codex -->
 **collab design 합의/동의 하드 게이트** (COM-COLLAB-002): `resolved_by`·`verified_by`·트래킹 상태 기입 직전 반드시 collab README §7·§8 Read. 기억·직관 의존 금지. blocking 없으면 즉시 합의 선언. 사용자가 `동의 검토`·`동의만`을 요청하면 최신 합의/미결/DoD/상태/MAP만 확인하는 fast-path를 기본 적용하고, 전체 재리뷰는 명시 요청 또는 불일치 감지 시에만 수행. 전문: `platform/processes/ai_agents/COMMON.md` §COM-COLLAB-002
 
+<!-- sync: COM-OPS-007, 20260827, mode=manual, owner=Codex -->
+**커밋·PR 개인 내부 식별자 기록 금지** (COM-OPS-007): 커밋 메시지·태그 주석·PR 제목·본문·CI 코멘트에 collab 문서 식별자(`D01`·`DEV_D01~D06`·`D02B`·`R5`·`G1`), collab 번들·세션 번호(`20260701-1737`·`bundle 20260529-2010`), 개인 관리 문서 ID(`TC-C09`·`T032`·`H-001`·`E-003`) 기록 금지. 공용 영역(조직 GitHub `origin` + 사내 Bitbucket) 양쪽 모두 적용. 사내 조회 가능한 식별자(Jira 키·Bamboo 빌드 키·릴리스 태그·경로·기능명)만 허용하고, 나머지는 기능 언어로 치환. 저장소 내부 문서 본문은 비적용. 커밋 직전 `D0\d`·`DEV_D`·`TC-`·`T0\d\d`·`H-0\d\d`·`E-0\d\d`·`\d{8}-\d{4}` 패턴 자가 점검 필수. 전문: `platform/processes/ai_agents/COMMON.md` §COM-OPS-007 / `platform/processes/project/project_lifecycle.md` §5-3-1
+
 <!-- sync: COM-OPS-003, 20260622, mode=manual, owner=Codex -->
 **collab 문서·MAP 즉시 갱신** (COM-OPS-003): 재수정 완료 시 DEV §2·§4·MAP.md 동일 작업 범위 즉시 갱신. `approved_by` 기입 즉시 `_archive/{ns}/MAP.md` + `collab/MAP.md` 양쪽 갱신. 편집 전 반드시 Read. 전문: `platform/processes/ai_agents/COMMON.md` §COM-OPS-003
 
 **충돌 우선순위**: Codex 역할 경계(코딩 금지 등)는 `AGENTS.md`가 우선한다. 공통 응답·기록·운영 규칙은 entrypoint 인라인을 우선 적용하고, COMMON.md와 drift 발견 시 review-blocking으로 처리한다.
 
-고위험 작업(collab 상태 전이·플랫폼 규칙 변경·문서 승인·리뷰 종료) 시 `platform/processes/rule_loading_policy.md` 확인.
+고위험 작업(collab 상태 전이·플랫폼 규칙 변경·문서 승인·리뷰 종료) 시 `platform/processes/rules/rule_loading_policy.md` 확인.
 
 ## 모델 라우팅 정책
 
@@ -86,7 +89,7 @@ AGENTS.md 자체는 런타임 모델을 직접 전환하지 못한다. 실제 �
 
 ## 규칙 선독 체인 (고위험 작업 필수)
 
-collab 상태 전이·플랫폼 규칙 변경·프로젝트 생성/종료 등 고위험 작업 진입 전 `platform/processes/rule_loading_policy.md`를 확인한다.
+collab 상태 전이·플랫폼 규칙 변경·프로젝트 생성/종료 등 고위험 작업 진입 전 `platform/processes/rules/rule_loading_policy.md`를 확인한다.
 세부 로딩 체인(Level 0–3)·Rule Context 선언 형식·Hard/Soft Block 기준·상태 전이 게이트는 해당 문서가 단일 SoT이며, 이 파일에 전문을 중복하지 않는다.
 
 ## Collab 문서 우선순위

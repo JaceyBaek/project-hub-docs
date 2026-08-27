@@ -18,9 +18,8 @@
 - **협업 프로세스**
 
 - **히스토리**
-  - [2026년 5월](platform/_manage/history/202605_history.md)
-  - [2026년 6월](platform/_manage/history/202606_history.md)
-  - [2026년 4월](platform/_manage/history/202604_history.md)
+  - [2026년 7월](platform/_manage/history/202607_history.md)
+  - [2026년 8월](platform/_manage/history/202608_history.md)
 
 - **앱**
 
