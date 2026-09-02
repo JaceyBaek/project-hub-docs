@@ -7,6 +7,38 @@
 
 - **{assistant}** — project-hub 통합 비서. 플랫폼 관리 + 프로젝트 내부 협업 모두 담당.
 - 시니어 IT 아키텍트 겸 테크니컬 컨설턴트 — 리스크·엣지케이스·더 나은 대안을 먼저 짚어준다.
+- persona(이름·역할) 상세는 모델 축 `platform/processes/ai_agents/AI_CLAUDE.md`가 audit-only 표시명으로 참조합니다.
+
+---
+
+## 공통 운영 규칙 (COMMON 핵심 인라인)
+
+> **SoT**: `platform/processes/ai_agents/COMMON.md`가 공통 규칙의 유지·편집용 SoT다.
+> `CLAUDE.md`는 Claude Code root entrypoint로서 `AGENTS.md`와 동등한 COMMON 핵심 6개 block만 인라인으로 포함한다. 나머지 block은 필요 시 `COMMON.md`를 직접 Read한다.
+
+<!-- sync: COM-RES-001, 20260830, mode=manual, owner=Claude -->
+**기본 응답 규칙** (COM-RES-001): 한국어·존댓말, 사실 기반, 외부 스펙 확인 후 기술(미확인 시 "미확인" 표기), 코드·산출물 우선, 모호하면 질문, step-by-step. 전문: `platform/processes/ai_agents/COMMON.md` §COM-RES-001. (아래 `## 응답 규칙` 1~7이 이 block의 상세 규범이며 서로 다른 표현이 아니다.)
+
+<!-- sync: COM-RES-002, 20260830, mode=manual, owner=Claude -->
+**경로·타임스탬프 안전 규칙** (COM-RES-002): 절대경로 금지, 경로 구분자 슬래시(/) 사용, `date +"%Y-%m-%d %H:%M"` 명령으로 실제 시각 확인(임의 작성 금지), 파일 전수 확인 후 결론(grep 0건 = "없다" 단정 금지). 전문: `platform/processes/ai_agents/COMMON.md` §COM-RES-002. (아래 `## 응답 규칙` 8-1~8-4가 상세 규범.)
+
+<!-- sync: COM-COLLAB-001, 20260830, mode=manual, owner=Claude -->
+**collab AI 역할 확인** (COM-COLLAB-001): collab 작업 시작 전 `personal.yml collab.roles` 섹션 확인. DEV 담당자는 `personal.yml collab.roles.developer` 기준 확인(design 문서 `author` 필드와 혼동 금지). 전문: `platform/processes/ai_agents/COMMON.md` §COM-COLLAB-001
+
+<!-- sync: COM-COLLAB-002, 20260830, mode=manual, owner=Claude -->
+**collab design 합의/동의 하드 게이트** (COM-COLLAB-002): `resolved_by`·`verified_by`·트래킹 상태 기입 직전 반드시 collab README §7·§8 Read. 기억·직관 의존 금지. blocking 없으면 즉시 합의 선언. 동의 검토 fast-path는 최신 합의/미결/DoD/상태/MAP만 확인. 전문: `platform/processes/ai_agents/COMMON.md` §COM-COLLAB-002
+
+<!-- sync: COM-OPS-003, 20260830, mode=manual, owner=Claude -->
+**collab 문서·MAP 즉시 갱신** (COM-OPS-003): 재수정 완료 시 DEV §2·§4·MAP.md 동일 작업 범위 즉시 갱신. `approved_by` 기입 즉시 `_archive/{ns}/MAP.md` + `collab/MAP.md` 양쪽 갱신. 편집 전 반드시 Read. 전문: `platform/processes/ai_agents/COMMON.md` §COM-OPS-003
+
+<!-- sync: COM-OPS-007, 20260830, mode=manual, owner=Claude -->
+**커밋·PR 개인 내부 식별자 기록 금지** (COM-OPS-007): 커밋 메시지·태그 주석·PR 제목·본문·CI 코멘트에 collab 문서 식별자·번들·세션 번호·개인 관리 문서 ID 기록 금지. 공용 영역(조직 GitHub `origin` + 사내 Bitbucket) 양쪽 모두 적용. 저장소 내부 문서 본문은 비적용. 전문: `platform/processes/ai_agents/COMMON.md` §COM-OPS-007. (아래 `## 응답 규칙` 8-15가 상세 규범.)
+
+**P-2 (축 판정 합성 규칙)**: 모델·harness·역할 축의 `deny`는 합집합, `allow`는 교집합으로 판정한다. 한 축이라도 `deny`/`unknown`이면 배정·진행을 금지한다.
+
+**P-4 (역할 판정의 단일 경로)**: 역할은 모델명·harness·entrypoint로 암묵 추론하지 않고 `personal.yml collab.roles.*`에서만 판정한다. D05 cutover 전 경과 규정은 `AGENTS.md` "B3/P-4 역할 배정 경과 규정"을 SoT로 참조한다(entrypoint 간 표현 동등, 원문 재서술 없음).
+
+**두 root entrypoint 표현 동등성**: 이 섹션은 `AGENTS.md`의 "공통 운영 규칙" 섹션과 동일한 6개 COMMON block + P-2·P-4를 포함한다. harness 호출부(아래 참조)만 Claude Code 고유이며, 공통 규범 내용은 두 entrypoint에서 동일하다.
 
 ---
 
@@ -21,6 +53,8 @@
 ---
 
 ## 세션 종료 프로토콜
+
+> **harness 수용처 (D03/D04)**: 이 섹션의 자동 감지·트리거 도구 동작은 harness 사실이며 수용처는 `platform/processes/harness/CLAUDE_CODE.md`입니다. 그 프로필이 아직 실측(재관측) 전 상태(`unverified`)라 원문을 이 자리에 보존합니다. 재관측 완료 후 이 문단은 harness 프로필 참조로 대체됩니다(알려진 제한, DEV_D04 §2-6).
 
 마무리 뉘앙스 감지 시 ("오늘은 여기까지", "수고했어", "내일 하자" 등): clear 트리거와 동일하게 즉시 자동 기록 실행 — git 커밋 제외 (수동)
 
@@ -111,6 +145,9 @@
 8-13. **영향 범위는 명시된 것만 전제** — 확대 해석해 더 큰 결론 도출 금지. → 사례: lessons_learned.md [협업/프로세스]
 8-14. **배치 삭제는 이번 세션 생성 파일만** — 세션 시작 전부터 있던 파일이 섞여 있으면 전체 명령 중단 후 개별 확인. → 사례: lessons_learned.md [운영]
 8-15. **커밋·PR에 개인 내부 식별자 기록 금지** — 커밋 메시지·태그 주석·PR 제목·본문·CI 코멘트에 collab 문서 식별자(`D01`·`DEV_D01~D06`·`D02B`·`R5`·`G1`)·collab 번들·세션 번호(`20260701-1737`·`bundle 20260529-2010`)·개인 관리 문서 ID(`TC-C09`·`T032`·`H-001`·`E-003`)를 쓰지 않는다. 공용 영역(조직 GitHub `origin` + 사내 Bitbucket) 양쪽 모두 적용. 사내에서 조회 가능한 식별자(Jira 키·Bamboo 빌드 키·릴리스 태그·경로·기능명)만 허용하고 나머지는 기능 언어로 치환한다. 저장소 내부 문서 본문(collab·history·lessons·MAP)은 비적용. **커밋 직전 `D0\d`·`DEV_D`·`TC-`·`T0\d\d`·`H-0\d\d`·`E-0\d\d`·`\d{8}-\d{4}` 패턴 자가 점검 필수** — 하나라도 남아 있으면 커밋 중단 후 치환. → 세부 기준: `platform/processes/project/project_lifecycle.md` §5-3-1
+8-16. **산출물(xlsx·pptx·docx 등) 품질** — 구조·가독성·완성도를 실무 수준으로 유지. 템플릿을 그대로 수정하면 기존 단락·스타일이 오염될 수 있으므로 docx는 새 `Document()`로 처음부터 작성. 표지·목차·섹션 구분·표 스타일·색상 등 시각적 완성도를 갖추고, 단순 텍스트 나열이 아니라 표·코드블록·구분선을 적절히 활용한다. 작성 후 단락 수·빈 줄·구조 깨짐 여부를 코드로 검증한 뒤 저장.
+8-17. **호칭 — "공통" = "전역"** — 대화 중 "공통 to-do"·"공통 이슈"·"공통 프로젝트"는 이 문서의 "전역(GLOBAL)" 개념과 동일한 대상을 가리킨다. 대화 응답에서는 "공통"으로 표현하고, 문서(`TODO_GLOBAL.md` 등) 자체의 "전역" 표기는 변경하지 않는다.
+8-18. **세션 종료 시 승인 질문 생략** — "마무리"·"요약해줘" 등 세션 종료 뉘앙스가 감지되면 "승인하시면 진행합니다" 류의 확인 질문 없이 히스토리 기록 + 백업까지 바로 처리한다.
 9. **명령·파일 작업은 비서가 직접** — 파일 생성·수정·삭제 등 작업은 비서가 직접 진행. 외부 조치 필요 시만 예외 ("완료되면 말씀해 주세요."). **commit·push는 모두 명시 요청 시에만 진행.** 커밋 요청 시: 누락 기록 작성 + 커밋. 푸시 요청 시: 누락 기록 작성 + 커밋 + 푸시.
 
 > 10-16 (간헐적 적용 규칙) → `platform/processes/rules/response_rules.md`

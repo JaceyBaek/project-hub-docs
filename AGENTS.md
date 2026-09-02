@@ -1,91 +1,59 @@
 ﻿# AGENTS.md
 
-이 저장소에서 Codex 계열 에이전트는 설계, 검증, 테스트, 문서 리뷰 중심으로 동작한다.
+이 파일은 이 저장소에서 동작하는 모든 하네스·모델이 공유하는 root entrypoint다. 특정 벤더·모델 계열 전용 지시가 아니다. 모델별 능력·역할 whitelist는 `platform/processes/ai_agents/AI_*.md`, 역할별 허용/금지는 `platform/processes/roles/`가 소유하며 이 문서는 두 축을 복제하지 않고 아래 공통 게이트·규칙만 규정한다.
 
-## 역할
+## 구현(코딩) 작업 요청 시 역할 확인 게이트
 
-당신은 시니어 소프트웨어 설계, 검증, 테스트 전문가다.
+**구현·코드 작성 요청이 오면 무조건**(collab 작업 여부와 무관하게) 진행 전 다음을 확인한다.
 
-기술 문서, 시스템 설계, 마이그레이션 계획, 오케스트레이션 흐름, 구현 계획, 검증 계획, 테스트 전략을 전문적이고 비판적인 관점에서 개선한다.
+1. `platform/setup/config/personal.yml` `collab.roles.developer`(또는 현행 스키마의 개발 담당 필드)에 실제 배정된 주체를 확인한다.
+2. 자신이 그 배정과 다르면 구현하지 않는다. 설계·검증·테스트 리뷰 전용 역할임을 알리고 명세, 테스트 계획, 인터페이스 명세, 인수 기준, 구현 체크리스트 제공을 제안한다.
+3. 이 확인을 생략하고 구현을 진행하는 것은 금지된다 — "지금 요청이 급하다"·"간단한 수정이다" 등 어떤 이유로도 생략하지 않는다.
 
-단순 요약이나 동의가 아니라 모호성, 숨은 가정, 누락된 요구사항, 아키텍처 리스크, 운영 리스크, 보안 우려, 테스트 공백, 유지보수성 문제를 찾아내는 엄격한 리뷰어로 행동한다.
+**이중 안전장치 (fail-closed)**: 위 확인이 어떤 이유로든 생략되거나 실패해도, GPT 계열은 `platform/processes/ai_agents/AI_GPT.md`의 `default_role_whitelist`에 `developer`가 없어 모델 능력 층에서 별도로 차단된다. 역할 정책(`platform/processes/roles/ROLE_DEVELOPER.md`)은 "GPT 계열을 `developer`로 배정하는 것" 자체를 금지하며, 모델 프로필은 "GPT의 `developer` whitelist 판정"만 소유한다. 두 층은 독립적으로 작동한다 — 한쪽이 누락돼도 다른 쪽이 차단한다.
 
-## 핵심 경계
-
-이 역할은 코딩에 참여하지 않는다.
-
-- 소스 코드 작성, 수정, 리팩터링, 생성 금지
-- 기능, 스크립트, API, 테스트, 자동화, 빌드 로직, 배포 로직, 실행 가능한 설정 구현 금지
-- 명시적으로 개념적 의사코드 예시를 요청받지 않는 한 실행 가능한 코드 스니펫 제공 금지
-- 코딩 작업 실행 금지
-- 설계 결정을 구현 산출물로 변환 금지
-- 코딩 요청을 받으면 설계, 검증, 테스트 리뷰 전용 역할임을 알리고 명세, 테스트 계획, 인터페이스 명세, 인수 기준, 구현 체크리스트 제공을 제안
-
-문서 편집은 허용된다. Markdown 문서, 설계 문서, 리뷰 문서, 오케스트레이션 계획, 마이그레이션 계획, 검증 노트, 테스트 전략, 인수 기준, 프로세스 문서, 구현 체크리스트 편집은 코딩으로 간주하지 않는다.
+문서 편집은 허용된다. Markdown 문서, 설계 문서, 리뷰 문서, 오케스트레이션 계획, 마이그레이션 계획, 검증 노트, 테스트 전략, 인수 기준, 프로세스 문서, 구현 체크리스트 편집은 구현으로 간주하지 않는다.
 
 ## 공통 운영 규칙
 
-> **[SoT 구조 변경 — D01]**: `platform/processes/ai_agents/COMMON.md`가 공통 규칙의 유지·편집용 SoT다.
-> `AGENTS.md`는 Codex 런타임 entrypoint로서 핵심 공통 규칙을 아래에 인라인으로 포함한다.
-> 기존 `CLAUDE.md` 단독 위임 선언은 이 구조로 대체된다.
+> **SoT**: `platform/processes/ai_agents/COMMON.md`가 공통 규칙의 유지·편집용 SoT다.
+> `AGENTS.md`는 공유 root entrypoint로서 COMMON 핵심 6개 block만 인라인으로 포함한다. 나머지 block은 필요 시 `COMMON.md`를 직접 Read한다.
 
-<!-- sync: COM-RES-001, 20260622, mode=manual, owner=Codex -->
+<!-- sync: COM-RES-001, 20260830, mode=manual, owner=Claude -->
 **기본 응답 규칙** (COM-RES-001): 한국어·존댓말, 사실 기반, 외부 스펙 확인 후 기술(미확인 시 "미확인" 표기), 코드·산출물 우선, 모호하면 질문, step-by-step. 전문: `platform/processes/ai_agents/COMMON.md` §COM-RES-001
 
-<!-- sync: COM-RES-002, 20260622, mode=manual, owner=Codex -->
+<!-- sync: COM-RES-002, 20260830, mode=manual, owner=Claude -->
 **경로·타임스탬프 안전 규칙** (COM-RES-002): 절대경로 금지, 경로 구분자 슬래시(/) 사용, `date +"%Y-%m-%d %H:%M"` 명령으로 실제 시각 확인(임의 작성 금지), 파일 전수 확인 후 결론(grep 0건 = "없다" 단정 금지). 전문: `platform/processes/ai_agents/COMMON.md` §COM-RES-002
 
-<!-- sync: COM-COLLAB-001, 20260622, mode=manual, owner=Codex -->
-**collab AI 역할 확인** (COM-COLLAB-001): collab 작업 시작 전 `personal.yml collab` 섹션 확인. DEV 담당자는 `personal.yml collab.author` 기준 확인 (design 문서 `author` 필드와 혼동 금지). 전문: `platform/processes/ai_agents/COMMON.md` §COM-COLLAB-001
+<!-- sync: COM-COLLAB-001, 20260830, mode=manual, owner=Claude -->
+**collab AI 역할 확인** (COM-COLLAB-001): collab 작업 시작 전 `personal.yml collab.roles` 섹션 확인. DEV 담당자는 `personal.yml collab.roles.developer` 기준 확인 (design 문서 `author` 필드와 혼동 금지). 전문: `platform/processes/ai_agents/COMMON.md` §COM-COLLAB-001
 
-<!-- sync: COM-COLLAB-002, 20260622, mode=manual, owner=Codex -->
+<!-- sync: COM-COLLAB-002, 20260830, mode=manual, owner=Claude -->
 **collab design 합의/동의 하드 게이트** (COM-COLLAB-002): `resolved_by`·`verified_by`·트래킹 상태 기입 직전 반드시 collab README §7·§8 Read. 기억·직관 의존 금지. blocking 없으면 즉시 합의 선언. 사용자가 `동의 검토`·`동의만`을 요청하면 최신 합의/미결/DoD/상태/MAP만 확인하는 fast-path를 기본 적용하고, 전체 재리뷰는 명시 요청 또는 불일치 감지 시에만 수행. 전문: `platform/processes/ai_agents/COMMON.md` §COM-COLLAB-002
 
-<!-- sync: COM-OPS-007, 20260827, mode=manual, owner=Codex -->
-**커밋·PR 개인 내부 식별자 기록 금지** (COM-OPS-007): 커밋 메시지·태그 주석·PR 제목·본문·CI 코멘트에 collab 문서 식별자(`D01`·`DEV_D01~D06`·`D02B`·`R5`·`G1`), collab 번들·세션 번호(`20260701-1737`·`bundle 20260529-2010`), 개인 관리 문서 ID(`TC-C09`·`T032`·`H-001`·`E-003`) 기록 금지. 공용 영역(조직 GitHub `origin` + 사내 Bitbucket) 양쪽 모두 적용. 사내 조회 가능한 식별자(Jira 키·Bamboo 빌드 키·릴리스 태그·경로·기능명)만 허용하고, 나머지는 기능 언어로 치환. 저장소 내부 문서 본문은 비적용. 커밋 직전 `D0\d`·`DEV_D`·`TC-`·`T0\d\d`·`H-0\d\d`·`E-0\d\d`·`\d{8}-\d{4}` 패턴 자가 점검 필수. 전문: `platform/processes/ai_agents/COMMON.md` §COM-OPS-007 / `platform/processes/project/project_lifecycle.md` §5-3-1
-
-<!-- sync: COM-OPS-003, 20260622, mode=manual, owner=Codex -->
+<!-- sync: COM-OPS-003, 20260830, mode=manual, owner=Claude -->
 **collab 문서·MAP 즉시 갱신** (COM-OPS-003): 재수정 완료 시 DEV §2·§4·MAP.md 동일 작업 범위 즉시 갱신. `approved_by` 기입 즉시 `_archive/{ns}/MAP.md` + `collab/MAP.md` 양쪽 갱신. 편집 전 반드시 Read. 전문: `platform/processes/ai_agents/COMMON.md` §COM-OPS-003
 
-**충돌 우선순위**: Codex 역할 경계(코딩 금지 등)는 `AGENTS.md`가 우선한다. 공통 응답·기록·운영 규칙은 entrypoint 인라인을 우선 적용하고, COMMON.md와 drift 발견 시 review-blocking으로 처리한다.
+<!-- sync: COM-OPS-007, 20260830, mode=manual, owner=Claude -->
+**커밋·PR 개인 내부 식별자 기록 금지** (COM-OPS-007): 커밋 메시지·태그 주석·PR 제목·본문·CI 코멘트에 collab 문서 식별자(`D01`·`DEV_D01~D06`·`D02B`·`R5`·`G1`), collab 번들·세션 번호(`20260701-1737`·`bundle 20260529-2010`), 개인 관리 문서 ID(`TC-C09`·`T032`·`H-001`·`E-003`) 기록 금지. 공용 영역(조직 GitHub `origin` + 사내 Bitbucket) 양쪽 모두 적용. 사내 조회 가능한 식별자(Jira 키·Bamboo 빌드 키·릴리스 태그·경로·기능명)만 허용하고, 나머지는 기능 언어로 치환. 저장소 내부 문서 본문은 비적용. 커밋 직전 `D0\d`·`DEV_D`·`TC-`·`T0\d\d`·`H-0\d\d`·`E-0\d\d`·`\d{8}-\d{4}` 패턴 자가 점검 필수. 전문: `platform/processes/ai_agents/COMMON.md` §COM-OPS-007 / `platform/processes/project/project_lifecycle.md` §5-3-1
+
+**P-2 (축 판정 합성 규칙)**: 모델·harness·역할 축의 `deny`는 합집합, `allow`는 교집합으로 판정한다. 한 축이라도 `deny`/`unknown`이면 배정·진행을 금지한다.
+
+**P-4 (역할 판정의 단일 경로)**: 역할은 모델명·harness·entrypoint로 암묵 추론하지 않고 `personal.yml collab.roles.*`에서만 판정한다.
+
+**B3/P-4 역할 배정 경과 규정 (D04 detail R3 확정)**: D05 cutover 완료 전에는 `personal.yml`의 legacy 필드 `collab.author`(→ `developer`), `collab.verified_by`(→ `verifier`), `collab.tested_by`(→ `tester`)를 역할 판정의 경과 경로로 사용한다. `collab.roles.*`가 존재하면 해당 경로를 우선하되, legacy 필드도 병존하는 경우 대응 역할 값의 불일치·누락·복수 해석은 모두 P-6 중단이다. `collab.roles.*`가 존재하지 않으면 위 legacy 매핑의 세 필드가 모두 존재하고 유일하게 해석될 때만 진행하며, 그 외에는 P-6 중단한다. 이 경과 규정은 D05가 `collab.roles.*` 필수 역할 값 기록 및 병존 값 일치 검증을 완료하고 D05 종료 승인이 기록된 뒤에만 종료된다. 종료 후 역할 판정은 `collab.roles.*` 단일 경로만 사용한다.
+
+**충돌 우선순위**: 구현(코딩) 작업 요청 시 역할 확인 게이트는 `AGENTS.md`가 우선한다. 공통 응답·기록·운영 규칙은 entrypoint 인라인을 우선 적용하고, COMMON.md와 drift 발견 시 review-blocking으로 처리한다.
 
 고위험 작업(collab 상태 전이·플랫폼 규칙 변경·문서 승인·리뷰 종료) 시 `platform/processes/rules/rule_loading_policy.md` 확인.
 
-## 모델 라우팅 정책
+## 모델·역할 배정 참조
 
-목표는 설계와 검증 품질이 필요한 구간에는 `GPT-5.5`를 사용하고, 설계 승인 이후 구현 실행 구간에는 `GPT-5.3-Codex`를 사용하는 것이다.
+> **축 분리 (D01/D02/D04)**: canonical 모델 배정·능력 whitelist는 `platform/processes/ai_agents/`, 역할별 허용/금지·서명 권한은 `platform/processes/roles/`가 소유한다. 이 문서는 두 축의 사실을 복제하지 않는다.
 
-AGENTS.md 자체는 런타임 모델을 직접 전환하지 못한다. 실제 자동 전환은 UI, API 호출자, Codex 실행 설정, 또는 외부 오케스트레이터에서 수행해야 한다. 이 문서는 모델 선택 기준과 전환 게이트를 정의한다.
+collab 작업에서 실제 역할 배정은 `platform/setup/config/personal.yml` `collab.roles.*`를 조회한다. 역할별 독립성·15쌍 매트릭스는 `platform/processes/roles/README.md`, 모델별 능력·whitelist는 `platform/processes/ai_agents/AI_*.md`를 참조한다.
 
-| 단계 | 대표 작업 | 권장 모델 | 전환 조건 |
-|---|---|---|---|
-| 문제 정의 | 요구사항 확인, 범위 설정, 제약 식별, 이해관계자 확인 | `GPT-5.5` | 요구사항과 주요 가정이 문서화됨 |
-| 설계 리뷰 | 아키텍처, 데이터 흐름, 인터페이스, 상태 전이, 운영 경계 검토 | `GPT-5.5` | 중대 설계 리스크가 resolved 또는 accepted-risk로 정리됨 |
-| 검증 설계 | 테스트 전략, 인수 기준, 실패 모드, 롤백, 관측성, 보안 검증 정의 | `GPT-5.5` | 검증 기준과 종료 기준이 명확해짐 |
-| 구현 준비 | 구현 체크리스트, 작업 분해, 변경 범위, 비기능 요구 매핑 | `GPT-5.5` | `Implementation Ready` 또는 동등한 승인 상태가 기록됨 |
-| 구현 실행 | 코드 작성, 리팩터링, 테스트 코드 작성, 빌드/배포 자동화 수정 | `GPT-5.3-Codex` | 설계/검증 게이트 통과 후 별도 구현 세션 또는 구현 담당 에이전트가 수행 |
-| 구현 검토 | 구현 결과의 요구사항 충족, 회귀 리스크, 테스트 결과 리뷰 | `GPT-5.5` 권장 | 구현 산출물과 테스트 결과가 준비됨 |
-
-### 전환 게이트
-
-`GPT-5.5`에서 `GPT-5.3-Codex`로 넘어가기 전에는 다음 조건을 충족해야 한다.
-
-- 목표, 범위, 비범위가 문서화되어 있음
-- 주요 인터페이스와 데이터 명세가 식별되어 있음
-- 실패 모드, 롤백 조건, 관측성 요구가 정의되어 있음
-- 테스트 전략과 최소 인수 기준이 명시되어 있음
-- 미해결 이슈가 `unresolved`, `accepted-risk`, `deferred` 중 하나로 추적됨
-- 구현 변경 범위와 소유 파일 또는 모듈 경계가 정리되어 있음
-
-조건이 충족되지 않으면 구현 모델로 전환하지 말고 설계 또는 검증 문서를 보완한다.
-
-### 경계 사례
-
-- 테스트 전략 작성은 `GPT-5.5` 영역이다.
-- 테스트 코드 작성과 실행 자동화 수정은 `GPT-5.3-Codex` 영역이다.
-- 구현 체크리스트 작성은 `GPT-5.5` 영역이다.
-- 체크리스트 항목을 실제 코드 변경으로 수행하는 것은 `GPT-5.3-Codex` 영역이다.
-- 구현 후 결함 분석, 회귀 리스크 판단, 운영 리스크 재평가는 `GPT-5.5`를 우선한다.
+운영 단계별 권장 모델(문제 정의·설계 리뷰·검증 설계 등)은 프로젝트·오케스트레이터 설정에서 관리하며, 이 문서는 특정 모델 ID를 특정 역할에 고정 배정하지 않는다. 구현 실행 단계의 실제 담당은 위 역할 확인 게이트를 통과한 `developer` 배정 주체이며, GPT 계열은 이 배정을 받을 수 없다(위 이중 안전장치 참조).
 
 ## 규칙 선독 체인 (고위험 작업 필수)
 
@@ -158,3 +126,18 @@ collab 상태 전이·플랫폼 규칙 변경·프로젝트 생성/종료 등 �
 - **경로 구분자 슬래시(/) 필수 사용**: Windows 환경에서 도구(예: `run_command`, `view_file` 등) 사용 시 권한 팝업이 발생하는 것을 방지하기 위해, 모든 경로 기술 및 명령 실행 시 경로 구분자로 반드시 백슬래시(`\`) 대신 슬래시(`/`)를 사용해야 한다.
 - **승인 팝업 최소화**: 문서 확인·검색·상태 점검에는 이미 승인된 단순 명령을 우선 사용한다. `rg`, `rg --files`, `Get-Content`, `Get-ChildItem`, `git diff`, `git status`처럼 단일 명령으로 끝나는 형태를 기본으로 하며, 파이프(`|`), 세미콜론(`;`), PowerShell 변수 할당, 스크립트 블록(`{ ... }`), 인라인 Python/Node, `pwsh.exe -Command` 래핑처럼 승인 규칙 매칭을 깨는 복합 명령은 필요한 경우가 아니면 사용하지 않는다.
 - **파일 일부 확인 방식**: 줄번호나 범위 확인이 필요하더라도 복합 PowerShell 파이프라인을 만들지 않는다. 우선 `rg -n`으로 대상 문구를 찾고, 필요한 경우 `Get-Content -TotalCount` 또는 `Get-Content -Tail` 같은 단일 명령으로 확인한다. 복합 명령이 꼭 필요하면 실행 전에 사용자에게 이유와 승인 범위를 설명한다.
+
+## 서브프로세스(kiro-cli 등 백그라운드 AI 호출) 관찰 규칙 (2026-09-02 Jacey 지시)
+
+collab dispatch에서 developer·verifier·tester 역할을 별도 kiro-cli 서브프로세스로 호출한 뒤 완료를 기다리는 동안, 진행 상태 확인과 결과 텍스트 조회를 분리한다. 두 작업을 같은 도구로 반복하면 토큰을 불필요하게 소모한다.
+
+- **진행 중 상태 확인은 프로세스 목록 조회(가벼운 조회)만 사용한다.** 실행 중인지(running) 종료됐는지(stopped)만 필요하므로, 출력 텍스트 전체를 반환하는 조회를 반복 호출하지 않는다.
+- **출력 텍스트 조회(무거운 조회)는 프로세스가 `stopped`로 바뀐 시점에만 수행한다.** 그 시점에 결과 전문을 한 번 읽어 최종 판단에 사용한다.
+- **여전히 `running`인데 중간 점검이 필요하면**, 반환 줄 수를 짧게 제한(10~20줄 수준)해 "멈췄는지·진행 중인지"만 가볍게 확인한다. 매번 40줄 이상을 반복 조회하지 않는다.
+- **직전 조회와 출력이 동일하면(새 진행 없음)** 같은 간격으로 계속 반복 조회하지 않는다. 대기 간격을 늘리거나, 무거운 조회(로직 실행·코드 대조·테스트 실행 등) 단계에 들어간 것이 확인되면 대기 간격을 더 길게 잡는다.
+- **채팅 응답에도 폴링마다 한 줄씩 보고하지 않는다.** 상태가 실제로 바뀌었을 때(새 단계 진입, 완료, 오류 발생)만 보고한다.
+- **프로세스 목록 조회의 `status` 필드는 지연·오지연될 수 있다.** 실제로 서브프로세스가 이미 종료(`Credits:`/`Time:` 완료 마커 출력)됐는데도 `status: running`으로 계속 보고되는 사례가 반복 확인됐다. `running`이 비정상적으로 길게 지속되면(경험적으로 10분 이상, 또는 대상 산출물 파일의 `LastWriteTime`이 여러 폴링 주기 동안 갱신되지 않으면) `status`만 믿지 말고 짧은 `get_process_output`으로 완료 마커나 실제 정지 여부를 직접 확인한다. 완료 마커가 보이면 `status`와 무관하게 완료로 처리하고 다음 단계로 진행한다.
+- **역할 전환·상태 보고 시 역할명과 실제 모델명을 항상 함께 표기한다 (2026-09-02 Jacey 지시).** "developer에게 지시합니다"처럼 역할명만 쓰지 않고, "developer(claude-sonnet-5)에게 지시합니다", "verifier(gpt-5.6-terra) 재검증 완료" 형식으로 역할과 raw model ID를 같은 문장에 병기한다. 대상 모델은 `personal.yml`의 `collab.roles.*` 배정값을 그대로 쓴다. 이 표기는 다음 시점 모두에 적용한다: 서브프로세스를 새로 호출할 때, 진행 상태를 보고할 때, 완료·실패를 보고할 때, Cycle 결과를 요약할 때. 사용자가 지금 어떤 모델이 실행 중인지 매 순간 실시간으로 알 수 있어야 한다는 목적이며, 이 규칙은 세션이나 harness와 무관하게 항상 적용한다.
+- **진행 상태 보고에 현재 작업 내용도 함께 짧게 표시한다 (2026-09-02 Jacey 지시).** "역할(모델명) — 작업 내용" 형식으로 한 줄 이내로 간단히 적는다. 예: "developer(claude-sonnet-5) — DEV_D04 Cycle C1 재개발 진행 중", "verifier(gpt-5.6-terra) — DEV_D03 §3-1 재검증 완료". 자세한 설명을 덧붙이지 않고 무엇을(어떤 DEV/Cycle/TC) 하고 있는지만 간결하게 밝힌다.
+- **서브프로세스 폴링은 2단계 간격을 쓴다 (2026-09-02 Jacey 지시).** 지시 직후엔 정상적으로 시작해서 작업 중인지부터 짧은 간격(약 20~30초)으로 1~2회 확인한다(조기 종료·오판·재확인 요구로 인한 즉시 종료 사례가 반복됐기 때문에, 이걸 놓치면 3분을 낭비하게 된다). 정상 진행이 확인되면 그 이후부터 3분(170초) 대기 간격으로 전환한다. 매번 처음부터 3분을 기다리지 않는다.
+- **developer↔verifier(↔tester) 역할 전환 지점에서 임의로 재확인을 요청하지 않는다.** 한 역할의 작업이 끝나 다음 역할을 호출하는 것은 이미 승인된 흐름(Cycle 진행)의 다음 단계일 뿐, 새로운 승인이 필요한 지점이 아니다. Jacey 확인이 실제로 필요한 지점은 오직 다음 경우뿐이다: (1) Cycle C5+ 도달, (2) 동일 TC ID 3회 연속 실패, (3) 서브프로세스 실행 자체의 오류·차단(예: 과부하 오류, 인젝션 방어로 인한 거부, 파일 누락으로 인한 실패). 이 세 경우가 아니면 developer 완료 → verifier 호출, verifier 완료 → developer 재개발 등 역할 전환을 확인 없이 그대로 이어간다.
