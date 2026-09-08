@@ -14,7 +14,7 @@
 ## 공통 운영 규칙 (COMMON 핵심 인라인)
 
 > **SoT**: `platform/processes/ai_agents/COMMON.md`가 공통 규칙의 유지·편집용 SoT다.
-> `CLAUDE.md`는 Claude Code root entrypoint로서 `AGENTS.md`와 동등한 COMMON 핵심 6개 block만 인라인으로 포함한다. 나머지 block은 필요 시 `COMMON.md`를 직접 Read한다.
+> `CLAUDE.md`는 Claude Code root entrypoint로서 `AGENTS.md`와 동등한 COMMON 핵심 7개 block만 인라인으로 포함한다. 나머지 block은 필요 시 `COMMON.md`를 직접 Read한다.
 
 <!-- sync: COM-RES-001, 20260830, mode=manual, owner=Claude -->
 **기본 응답 규칙** (COM-RES-001): 한국어·존댓말, 사실 기반, 외부 스펙 확인 후 기술(미확인 시 "미확인" 표기), 코드·산출물 우선, 모호하면 질문, step-by-step. 전문: `platform/processes/ai_agents/COMMON.md` §COM-RES-001. (아래 `## 응답 규칙` 1~7이 이 block의 상세 규범이며 서로 다른 표현이 아니다.)
@@ -33,6 +33,9 @@
 
 <!-- sync: COM-OPS-007, 20260830, mode=manual, owner=Claude -->
 **커밋·PR 개인 내부 식별자 기록 금지** (COM-OPS-007): 커밋 메시지·태그 주석·PR 제목·본문·CI 코멘트에 collab 문서 식별자·번들·세션 번호·개인 관리 문서 ID 기록 금지. 공용 영역(조직 GitHub `origin` + 사내 Bitbucket) 양쪽 모두 적용. 저장소 내부 문서 본문은 비적용. 전문: `platform/processes/ai_agents/COMMON.md` §COM-OPS-007. (아래 `## 응답 규칙` 8-15가 상세 규범.)
+
+<!-- sync: COM-RES-003, 20260904, mode=manual, owner=Claude -->
+**실수 시인 즉시 처리 프로세스** (COM-RES-003, enforcement: hard): 실수 시인 즉시 자동 3단계 — ① 원인 분석(직접/근본/영향) → ② 재발방지 대책 등록(해당 지침 파일 확인 후 업그레이드 또는 신규) → ③ 레슨런 등록(프로젝트 레이어는 `_manage/lessons.md` [공통] 태그 → `platform/processes/rules/lessons_learned.md` 승격, 플랫폼 레이어는 직접 등록). ①②③ 산출물이 셋 다 없으면 미완료 — 해당 단계부터 재실행. 트리거 목록은 `platform/TRIGGERS.md`가 SoT. 전문: `platform/processes/ai_agents/COMMON.md` §COM-RES-003 (2026-09-04 인라인 추가 — 신설 이후 이 block이 빠져 있어 레슨런 등록이 다수 세션에서 누락됨, `lessons_learned.md` [협업/프로세스] 참조)
 
 **P-2 (축 판정 합성 규칙)**: 모델·harness·역할 축의 `deny`는 합집합, `allow`는 교집합으로 판정한다. 한 축이라도 `deny`/`unknown`이면 배정·진행을 금지한다.
 
@@ -111,7 +114,7 @@
 - 연결 설정(Confluence/Miso) → `platform/setup/connection_setup.md`
 - MCP 등록 → `platform/setup/mcp_registration.md`
 - 산출물 작성 규칙·절차·ID prefix·RAG 변환 → `platform/processes/project/deliverables_guide.md`
-- **DB 테이블/컬럼 신규 설계·DDL 생성 시 → `mds_governance` 플러그인(`platform/extensions/plugins/mds_governance/`)으로 실시간 표준사전 조회·검증 필요 시 사용 가능.** (2026-08-07부터 "필수"→"필요 시 사용 가능"로 완화 — Jacey 지시) 원칙 문서는 `platform/docs/mds_governance/data-standard-design-guide-for-ai.md`. 사용하기로 한 경우, 표준사전 미등록/미확인 항목은 플러그인 리포트 그대로 사용자에게 보고, 조용히 통과 금지.
+- **DB 테이블/컬럼 신규 설계·DDL 생성 시 → `mds_governance` 플러그인(`platform/extensions/plugins/mds_governance/`)으로 실시간 표준사전 조회·검증 필요 시 사용 가능.** (2026-08-07부터 "필수"→"필요 시 사용 가능"로 완화 — Jacey 지시) 이 완화는 기존 DDL을 그대로 옮기거나 편집하는 등 **신규 물리명이 없는 작업**에만 적용되고, **실제로 새 테이블/컬럼 물리명을 짓는 경우는 완화 대상이 아니며 확정 전 `check-ddl` 실행이 필수**다(→ 사례: lessons_learned.md [운영]). 원칙 문서는 `platform/docs/mds_governance/data-standard-design-guide-for-ai.md`. 사용한 경우, 표준사전 미등록/미확인 항목은 플러그인 리포트 그대로 사용자에게 보고, 조용히 통과 금지.
 - 버전 관리(프로젝트/git 태그 단위) → `platform/processes/project/versioning.md`. **신규 산출물(HTML/MD) 버전 표기 전 반드시 확인** — 임의 숫자(`v1.0` 등) 기재 금지. 개별 산출물 WIP 버전은 `versioning.md`의 프로젝트 전체 git 태그 스킴(`v0.x.x`)과 별개로 `v{major}.{minor}` 2세그먼트 실제 순차 번호(`v0.1`→`v0.2`...)를 사용하고, `x`를 리터럴로 적지 않는다. → 사례: lessons_learned.md [협업/프로세스]
 - **Bamboo→ECR→ECS(Fargate) 배포 파이프라인 구성 → `platform/processes/deployment/bamboo_ecs_pipeline_guide.md`** (절차 + 실패 사례 기반 함정 카탈로그 + 진단 순서. 프로젝트별 확정값은 각 프로젝트 `docs/guides/deployment/bamboo_plan_setup_qa.md`)
 - 히스토리·이슈·To-Do 등 시간순 누적 문서 검색 정책(기본 2주 윈도우 + 확장 규칙) → `platform/processes/rules/context_search_policy.md`

@@ -17,7 +17,7 @@
 ## 공통 운영 규칙
 
 > **SoT**: `platform/processes/ai_agents/COMMON.md`가 공통 규칙의 유지·편집용 SoT다.
-> `AGENTS.md`는 공유 root entrypoint로서 COMMON 핵심 6개 block만 인라인으로 포함한다. 나머지 block은 필요 시 `COMMON.md`를 직접 Read한다.
+> `AGENTS.md`는 공유 root entrypoint로서 COMMON 핵심 7개 block만 인라인으로 포함한다. 나머지 block은 필요 시 `COMMON.md`를 직접 Read한다. 트리거 목록(SoT)은 `platform/TRIGGERS.md` 참조 — "아이다 실수 시인" 등 자동 실행 트리거는 이 entrypoint를 쓰는 하네스에도 동일 적용된다.
 
 <!-- sync: COM-RES-001, 20260830, mode=manual, owner=Claude -->
 **기본 응답 규칙** (COM-RES-001): 한국어·존댓말, 사실 기반, 외부 스펙 확인 후 기술(미확인 시 "미확인" 표기), 코드·산출물 우선, 모호하면 질문, step-by-step. 전문: `platform/processes/ai_agents/COMMON.md` §COM-RES-001
@@ -36,6 +36,9 @@
 
 <!-- sync: COM-OPS-007, 20260830, mode=manual, owner=Claude -->
 **커밋·PR 개인 내부 식별자 기록 금지** (COM-OPS-007): 커밋 메시지·태그 주석·PR 제목·본문·CI 코멘트에 collab 문서 식별자(`D01`·`DEV_D01~D06`·`D02B`·`R5`·`G1`), collab 번들·세션 번호(`20260701-1737`·`bundle 20260529-2010`), 개인 관리 문서 ID(`TC-C09`·`T032`·`H-001`·`E-003`) 기록 금지. 공용 영역(조직 GitHub `origin` + 사내 Bitbucket) 양쪽 모두 적용. 사내 조회 가능한 식별자(Jira 키·Bamboo 빌드 키·릴리스 태그·경로·기능명)만 허용하고, 나머지는 기능 언어로 치환. 저장소 내부 문서 본문은 비적용. 커밋 직전 `D0\d`·`DEV_D`·`TC-`·`T0\d\d`·`H-0\d\d`·`E-0\d\d`·`\d{8}-\d{4}` 패턴 자가 점검 필수. 전문: `platform/processes/ai_agents/COMMON.md` §COM-OPS-007 / `platform/processes/project/project_lifecycle.md` §5-3-1
+
+<!-- sync: COM-RES-003, 20260904, mode=manual, owner=Claude -->
+**실수 시인 즉시 처리 프로세스** (COM-RES-003, enforcement: hard): 실수 시인 즉시 자동 3단계 — ① 원인 분석(직접/근본/영향) → ② 재발방지 대책 등록(해당 지침 파일 확인 후 업그레이드 또는 신규) → ③ 레슨런 등록(프로젝트 레이어는 `_manage/lessons.md` [공통] 태그 → `platform/processes/rules/lessons_learned.md` 승격, 플랫폼 레이어는 직접 등록). ①②③ 산출물이 셋 다 없으면 미완료 — 해당 단계부터 재실행. 트리거 목록은 `platform/TRIGGERS.md`가 SoT("아이다 실수 시인" 행 참조). 전문: `platform/processes/ai_agents/COMMON.md` §COM-RES-003 (2026-09-04 인라인 추가 — 신설 이후 이 block이 빠져 있어 레슨런 등록이 다수 세션에서 누락됨, `lessons_learned.md` [협업/프로세스] 참조)
 
 **P-2 (축 판정 합성 규칙)**: 모델·harness·역할 축의 `deny`는 합집합, `allow`는 교집합으로 판정한다. 한 축이라도 `deny`/`unknown`이면 배정·진행을 금지한다.
 
@@ -141,3 +144,4 @@ collab dispatch에서 developer·verifier·tester 역할을 별도 kiro-cli 서�
 - **진행 상태 보고에 현재 작업 내용도 함께 짧게 표시한다 (2026-09-02 Jacey 지시).** "역할(모델명) — 작업 내용" 형식으로 한 줄 이내로 간단히 적는다. 예: "developer(claude-sonnet-5) — DEV_D04 Cycle C1 재개발 진행 중", "verifier(gpt-5.6-terra) — DEV_D03 §3-1 재검증 완료". 자세한 설명을 덧붙이지 않고 무엇을(어떤 DEV/Cycle/TC) 하고 있는지만 간결하게 밝힌다.
 - **서브프로세스 폴링은 2단계 간격을 쓴다 (2026-09-02 Jacey 지시).** 지시 직후엔 정상적으로 시작해서 작업 중인지부터 짧은 간격(약 20~30초)으로 1~2회 확인한다(조기 종료·오판·재확인 요구로 인한 즉시 종료 사례가 반복됐기 때문에, 이걸 놓치면 3분을 낭비하게 된다). 정상 진행이 확인되면 그 이후부터 3분(170초) 대기 간격으로 전환한다. 매번 처음부터 3분을 기다리지 않는다.
 - **developer↔verifier(↔tester) 역할 전환 지점에서 임의로 재확인을 요청하지 않는다.** 한 역할의 작업이 끝나 다음 역할을 호출하는 것은 이미 승인된 흐름(Cycle 진행)의 다음 단계일 뿐, 새로운 승인이 필요한 지점이 아니다. Jacey 확인이 실제로 필요한 지점은 오직 다음 경우뿐이다: (1) Cycle C5+ 도달, (2) 동일 TC ID 3회 연속 실패, (3) 서브프로세스 실행 자체의 오류·차단(예: 과부하 오류, 인젝션 방어로 인한 거부, 파일 누락으로 인한 실패). 이 세 경우가 아니면 developer 완료 → verifier 호출, verifier 완료 → developer 재개발 등 역할 전환을 확인 없이 그대로 이어간다.
+- **서브에이전트 호출용 지시사항 파일은 호출 1건이 끝나면 같은 턴에 즉시 삭제한다 (2026-09-03 Jacey 지시).** 저장 위치는 `platform/processes/collab/_scratch/`(워크스페이스 루트 아님, 위 규칙 참조)이며, 세부 규칙·판단 기준은 `platform/processes/collab/_scratch/README.md`가 SoT다. "나중에 한번에 정리"로 미루지 않는다 — 이 규칙이 문서에만 있고 실제로 지켜지지 않아 지시사항 파일 44개가 방치된 사례가 있었다.
