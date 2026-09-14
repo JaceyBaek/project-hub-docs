@@ -61,3 +61,26 @@ sidebar_order: 1
 - `projects/eacct_approval_doc_mapping/` (서브모듈 → 일반 clone으로 재생성)
 - `platform/_manage/brainstorm/20260727_eacct-approval-doc-mapping.md` (구 `20260727_품의서_자동_매핑.md`에서 영문 파일명으로 변경)
 - `platform/processes/rules/lessons_learned.md` (위 파일명 변경에 따른 참조 경로 갱신)
+
+---
+
+## 2026-09-14 — 브레인스톰 프로젝트 이동 + §A-6 사전 점검 실측 완료
+
+**작업 내용**
+
+- `platform/_manage/brainstorm/20260727_eacct-approval-doc-mapping.md`를 `projects/eacct_approval_doc_mapping/_manage/brainstorm/`로 이동(플랫폼 공용 영역 → 프로젝트 전용 영역). `lessons_learned.md`의 참조 링크 동기화, 프로젝트 `CLAUDE.md`에 배경·현재 차단 항목 요약 추가
+- 브레인스톰 §A-6(가능성을 좌우하는 단일 확인 항목) 사전 점검을 QA DB(`qgseacc`, 읽기 전용) 실측으로 진행 — `source/check_doc_url.py` 작성, `eacct_mcp`와 동일 접속 정보(keyring `eacct_mcp/gseaccaisel`) 재사용
+- **실측 결과**: `eacc_bill_header.DOC_URL` 컬럼 존재 확인, 값 패턴은 `/Upload_Approval/10000/Doc/{YYYY}/{끝3자리}/{20자리}.mht`(96.9%) 등 3종 혼재. 단 **`GW_DOC`(연결) 없이 `DOC_URL`만 있는 케이스가 0건** — `DOC_URL`은 "연결" 처리를 거친 건에만 채워짐이 확인됨
+- **핵심 재판정**: §A-6이 기대했던 "내용 지문 대조로 제목 인덱스의 천장(과거 연결 이력 필요)을 벗어난다"는 전제가 **성립하지 않음** — `DOC_URL` 인덱스도 `DOC_TITLE` 인덱스와 동일하게 연결 이력에 종속되어, 사후 매칭이 필요한 대상(파일첨부만 되고 연결 안 된 전표)의 품의서 원본 위치는 이 컬럼으로 얻을 수 없음
+- 미확인 잔여 항목(그룹웨어 서버 실제 접근 권한 등)은 DB 조회로 판단 불가한 영역이라 Jacey 확인 필요 항목으로 브레인스톰·todo.md에 별도 기록
+- PoC 방향 제안: 경로 A(파일명 선별)+B(제목 인덱스)만으로 담당자 모니터링 화면을 먼저 구현하고, 경로 C(그룹웨어 직접 연동)는 접근 권한 확인 후 2차 확장
+
+**변경 파일**
+
+- `projects/eacct_approval_doc_mapping/_manage/brainstorm/20260727_eacct-approval-doc-mapping.md` (플랫폼에서 이동 + §A-6 사전 점검 결과 섹션 추가)
+- `projects/eacct_approval_doc_mapping/_manage/todo.md` (T001~T004 등록)
+- `projects/eacct_approval_doc_mapping/CLAUDE.md` (배경·현재 차단 항목 섹션 추가)
+- `projects/eacct_approval_doc_mapping/source/check_doc_url.py` (신규 — DB 실측 스크립트)
+- `projects/eacct_approval_doc_mapping/source/.env.example` (DB 접속 비시크릿 값 추가)
+- `platform/processes/rules/lessons_learned.md` (브레인스톰 이동에 따른 참조 경로 갱신)
+- `platform/docs/catalog.yml`, `platform/docs/DOCS_STATUS.md`, `platform/extensions/services/webview/_sidebar.md` (자동 재생성)
