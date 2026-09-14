@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FBFBFD">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<!-- ===================================================
+  MOBILE PRESENTATION TEMPLATE — v1 (Apple-look, app-shell)
+  기반: PRES_presentation_template.html의 컬러/타이포 언어를
+  모바일 터치 UI(상단바 + 풀스크린 메뉴 + 하단 탭바 + 카드형 콘텐츠)로 재구성.
+  최초 작성: 2026-09-11 (7_Guys_Winter_Night_Story 모바일본에서 템플릿화)
+
+  필수 교체 항목 ({{...}} 표시):
+    {{DOC_TITLE_SHORT}}   <title> 태그용 짧은 제목
+    {{TOPBAR_LABEL}}      상단바 중앙 라벨 (기본 상태 텍스트, 보통 CHIP_LABEL과 동일)
+    {{MENU_LABEL}}        메뉴 상단 카테고리 라벨
+    {{MENU_TITLE}}        메뉴 상단 제목 (HTML, <br> 허용) — Hero h1과 동일한 내용으로 맞출 것
+    {{HERO_BRAND}}        Hero 브랜드 라인
+    {{HERO_H1_L1}}        Hero h1 첫 줄
+    {{HERO_H1_L2}}        Hero h1 둘째 줄 (그라디언트 강조)
+    {{HERO_SUB}}          Hero 소개 문구
+    {{META_DATE}}         작성일 태그
+    {{META_AUTHOR}}       작성자 태그
+    {{META_TARGET}}       대상 태그
+    {{VERSION}}           버전 태그 (Hero 🔖 배지에만 사용)
+    {{MENU_FOOT_DATE}}    메뉴 하단 작성일
+    {{MENU_FOOT_AUTHOR}}  메뉴 하단 작성자
+    {{FOOTER_TITLE}}      푸터 제목 (굵게)
+    {{FOOTER_SUB}}        푸터 부제
+  ===================================================
+-->
+<title>{{DOC_TITLE_SHORT}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy-800:#1D1D1F;--navy-700:#3A3A3C;
+  --sky-400:#0071E3;--cyan-300:#0058B0;
+  --card:#FFFFFF;--line:#E6E6EA;--ink:#1D1D1F;--muted:#6E6E73;
+  --frame-w:480px;--tb-h:52px;--tab-h:58px;
+}
+html,body{height:100%}
+body{
+  margin:0;background:#E5E5EA;color:var(--ink);
+  font-family:'Noto Sans KR',-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif;
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;overflow:hidden;
+}
+button{font-family:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+
+/* ── App Shell : 모바일 프레임 컨테이너 ─────────────
+   position:fixed + transform으로 하위 fixed 자식들의 containing block을
+   만들어, 넓은 화면에서도 실제 폭(480px) 안에서만 상단바/하단탭/메뉴가
+   붙어있는 "앱처럼 보이는" 프레임을 구성한다. 실제 폰에서는 100%가 되어
+   프레임 껍데기가 사라지고 순수 풀스크린 앱처럼 보인다. */
+.app{
+  position:fixed;top:0;bottom:0;left:50%;transform:translateX(-50%);
+  width:min(var(--frame-w),100%);background:#FBFBFD;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;
+  box-shadow:0 0 60px rgba(0,0,0,.10);
+}
+@media(min-width:481px){.app{border-left:1px solid var(--line);border-right:1px solid var(--line)}}
+
+/* ── Progress bar ─────────────────────────── */
+#progress{position:fixed;top:0;left:50%;transform:translateX(-50%);width:min(var(--frame-w),100%);height:3px;z-index:400;pointer-events:none}
+#progress i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--sky-400),var(--cyan-300));transition:width .1s}
+
+/* ── Top bar ──────────────────────────────── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;height:calc(var(--tb-h) + env(safe-area-inset-top));
+  padding-top:env(safe-area-inset-top);
+  background:rgba(251,251,253,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);z-index:300;
+}
+.tb-inner{height:var(--tb-h);display:flex;align-items:center;padding:0 12px;gap:8px}
+.tb-btn{
+  width:34px;height:34px;border-radius:10px;border:none;background:#F0F0F2;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:background .15s;
+}
+.tb-btn:active{background:#E2E2E5}
+.tb-btn svg{width:16px;height:16px;stroke:var(--ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tb-title{
+  flex:1;text-align:center;font-size:10.5px;font-weight:700;letter-spacing:.13em;
+  color:var(--muted);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  transition:color .25s;
+}
+.tb-title.on{color:var(--sky-400)}
+.tb-spacer{width:34px;flex-shrink:0}
+
+/* 본문이 상단바/하단탭 뒤로 숨지 않도록 여유 확보 */
+.main{padding-top:calc(var(--tb-h) + env(safe-area-inset-top));padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom) + 18px)}
+
+/* ── 풀스크린 오버레이 메뉴 ───────────────── */
+.menu-overlay{
+  position:absolute;top:0;left:0;right:0;bottom:0;background:#FBFBFD;z-index:500;
+  transform:translateX(100%);transition:transform .32s cubic-bezier(.32,.72,0,1);
+  display:flex;flex-direction:column;
+  padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);
+}
+.menu-overlay.open{transform:translateX(0)}
+.menu-head{display:flex;align-items:flex-start;justify-content:space-between;padding:18px 18px 14px;border-bottom:1px solid var(--line);flex-shrink:0}
+.menu-brand .m-lbl{font-size:9.5px;font-weight:700;color:var(--sky-400);letter-spacing:.2em;text-transform:uppercase}
+.menu-brand .m-title{font-size:16px;font-weight:800;margin-top:6px;line-height:1.35}
+.menu-nav{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 10px 10px}
+.menu-ch{display:flex;align-items:center;gap:8px;padding:16px 10px 6px;font-size:9.5px;font-weight:700;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
+.menu-ch::after{content:'';flex:1;height:1px;background:var(--line)}
+.menu-item{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  background:none;border:none;padding:13px 12px;border-radius:12px;
+  font-size:14px;color:var(--ink);font-weight:500;cursor:pointer;transition:background .12s;min-height:46px;
+}
+.menu-item:active{background:#ECECEF}
+.menu-item.active{background:var(--sky-400);color:#fff;font-weight:700}
+.menu-item.active .mi-n{color:rgba(255,255,255,.75)}
+.menu-item .mi-n{font-size:10.5px;font-weight:700;color:var(--muted);width:24px;flex-shrink:0}
+.menu-foot{padding:16px 18px;border-top:1px solid var(--line);font-size:10.5px;color:var(--muted);text-align:center;flex-shrink:0}
+
+/* ── 하단 탭바 ────────────────────────────── */
+.tabbar{
+  position:fixed;left:0;right:0;bottom:0;height:calc(var(--tab-h) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(251,251,253,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);display:flex;z-index:300;
+}
+.tab-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  background:none;border:none;color:var(--muted);font-size:10px;font-weight:600;cursor:pointer;
+}
+.tab-item svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+.tab-item.active{color:var(--sky-400)}
+.tab-item:active svg{transform:scale(.86)}
+
+/* ── Wrap ─────────────────────────────────── */
+.wrap{padding:0 18px}
+
+/* ── Hero ─────────────────────────────────── */
+.hero{padding:30px 0 28px}
+.hero .brand{font-size:9.5px;font-weight:700;letter-spacing:.24em;color:var(--sky-400);display:flex;align-items:center;gap:7px;margin-bottom:14px}
+.hero .brand i{display:inline-block;width:16px;height:2px;background:var(--sky-400)}
+.hero h1{font-size:26px;font-weight:900;line-height:1.24;margin-bottom:11px;color:var(--ink)}
+.hero h1 .grad{background:linear-gradient(90deg,var(--sky-400),var(--cyan-300));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .sub{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.65}
+.hero .meta-tags{display:flex;flex-wrap:wrap;gap:6px}
+.hero .tag{font-size:11px;font-weight:500;padding:5px 11px;border-radius:999px;background:#F2F2F4;border:1px solid var(--line);color:var(--ink)}
+
+/* ── Divider (챕터 구분선) ────────────────── */
+.divider{background:#F5F5F7;padding:30px 0;text-align:center}
+.divider .roman{font-size:46px;font-weight:900;color:rgba(0,0,0,.07);line-height:1;margin-bottom:-2px}
+.divider h2{font-size:18px;font-weight:700;margin-bottom:6px;color:var(--ink)}
+.divider p{color:var(--muted);font-size:12px;padding:0 8px}
+
+/* ── Sections ─────────────────────────────── */
+section:not(.hero):not(.divider){padding:28px 0}
+.kicker{font-size:9.5px;font-weight:700;letter-spacing:.2em;color:var(--sky-400);text-transform:uppercase;margin-bottom:8px}
+h2{font-size:18px;font-weight:700;color:var(--navy-800);margin-bottom:6px;line-height:1.34}
+h2 .hl{color:var(--sky-400)}
+.lede{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.62}
+
+/* ── Reveal 애니메이션 ────────────────────── */
+.rv{transition:opacity .45s,transform .45s;transition-delay:var(--d,0s)}
+.rv.pre{opacity:0;transform:translateY(14px)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv,.rv.pre{transition:none;opacity:1;transform:none}}
+
+/* ── 비교 카드 (compare) — 두 대안을 좌우로 비교할 때 사용 ── */
+.compare{display:flex;flex-direction:column;gap:8px}
+.cmp-row{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 13px;box-shadow:0 1px 8px rgba(0,0,0,.03)}
+.cmp-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.cmp-cols{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.cmp-col{padding:9px 10px;border-radius:10px;font-size:11.5px;line-height:1.5}
+.cmp-col.a{background:#F5F5F7;color:var(--muted)}
+.cmp-col.b{background:#EEF6FF;color:var(--ink);border:1px solid #D7E9FC}
+.cmp-col .cc-tag{display:block;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;opacity:.7}
+.cmp-col.b .cc-tag{color:var(--sky-400);opacity:1}
+
+/* ── 타임라인 (timeline) — 시간순 흐름/일정에 사용 ── */
+.timeline{position:relative;padding-left:20px}
+.timeline::before{content:'';position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding-bottom:20px}
+.tl-item:last-child{padding-bottom:0}
+.tl-dot{position:absolute;left:-20px;top:3px;width:12px;height:12px;border-radius:50%;background:var(--sky-400);border:2px solid #fff;box-shadow:0 0 0 2px var(--sky-400)}
+.tl-time{font-size:11px;font-weight:800;color:var(--sky-400);letter-spacing:.03em;margin-bottom:3px}
+.tl-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;box-shadow:0 1px 8px rgba(0,0,0,.03)}
+.tl-stage{font-size:13.5px;font-weight:700;color:var(--navy-800);margin-bottom:2px}
+.tl-place{font-size:11.5px;font-weight:600;color:var(--cyan-300);margin-bottom:7px}
+.tl-desc{font-size:12px;color:var(--ink);line-height:1.55;margin-bottom:8px}
+.tl-fun{display:flex;align-items:flex-start;gap:6px;font-size:11px;color:var(--muted);line-height:1.5;background:#F5F5F7;border-radius:9px;padding:8px 10px}
+.tl-fun b{color:var(--navy-700);font-weight:700}
+
+/* ── 상세 카드 리스트 (detail-card) — 항목 나열/요약에 사용 ── */
+.dc-list{display:flex;flex-direction:column;gap:8px}
+.dc-item{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;box-shadow:0 1px 8px rgba(0,0,0,.03)}
+.dc-num{font-size:10px;font-weight:800;color:var(--sky-400);letter-spacing:.05em;text-transform:uppercase;margin-bottom:3px}
+.dc-title{font-size:13.5px;font-weight:700;color:var(--navy-800);margin-bottom:5px}
+.dc-body{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ── 스펙 그리드 (spec-grid: 항목/값 2열) — 표 대체용 ── */
+.spec-grid{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,.03)}
+.spec-row{display:grid;grid-template-columns:84px 1fr;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line)}
+.spec-row:last-child{border-bottom:none}
+.spec-k{font-size:11px;font-weight:700;color:var(--muted)}
+.spec-v{font-size:12.5px;color:var(--ink);line-height:1.55}
+
+/* ── 체크리스트 ───────────────────────────── */
+.checklist{display:grid;gap:8px;margin-top:12px}
+.check-item{display:flex;align-items:flex-start;gap:11px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 14px}
+.check-box{width:19px;height:19px;border-radius:6px;border:2px solid var(--line);flex-shrink:0;margin-top:1px}
+.check-item .ci-text{font-size:12.5px;color:var(--ink);line-height:1.55}
+
+/* ── Badges ──────────────────────────────── */
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:3px;vertical-align:middle;white-space:nowrap}
+.badge-new{background:#EBF5FF;color:#1D6EC7}
+.badge-keep{background:#F0FFF4;color:#16A34A}
+.badge-req{background:#FFF8EB;color:#D97706}
+.badge-warn{background:#FFF1F1;color:#DC2626}
+/* 커스텀 배지 추가 시: .badge-{name}{background:...;color:...} */
+
+/* ── Proof / Callout 박스 ─────────────────── */
+.proof{background:#F5F5F7;border-radius:16px;color:var(--ink);padding:22px 20px;margin-top:6px;position:relative;overflow:hidden}
+.proof::after{content:'';position:absolute;right:-60px;top:-60px;width:160px;height:160px;border-radius:50%;border:26px solid rgba(0,113,227,.08)}
+.proof h3{font-size:16px;font-weight:700;margin-bottom:7px;color:var(--ink);position:relative;z-index:1}
+.proof h3 .hl{color:var(--cyan-300)}
+.proof p{color:var(--muted);font-size:12.5px;line-height:1.6;max-width:calc(100% - 46px);position:relative;z-index:1}
+
+/* ── Footer ──────────────────────────────── */
+footer{background:#F5F5F7;color:var(--muted);padding:28px 18px;font-size:11px;text-align:center}
+footer b{display:block;color:var(--ink);font-weight:700;letter-spacing:.14em;margin-bottom:4px;font-size:11.5px}
+footer .f-sub{margin-bottom:10px}
+
+/* ── 스크롤탑 FAB ─────────────────────────── */
+#totop{
+  position:fixed;z-index:290;width:38px;height:38px;border-radius:50%;
+  background:rgba(29,29,31,.82);backdrop-filter:blur(6px);border:none;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  opacity:0;transform:translateY(8px) scale(.9);transition:opacity .2s,transform .2s;pointer-events:none;
+}
+#totop.on{opacity:1;transform:none;pointer-events:auto}
+#totop svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── 아주 좁은 화면(≤360px) 미세 보정 ─────── */
+@media(max-width:360px){
+  .hero h1{font-size:23px}
+  .wrap{padding:0 15px}
+}
+
+/* ── 데스크톱/태블릿에서 미리보기 시 프레임 바깥 배경 안내 ─
+     실제 모바일 기기(폭 480px 이하)에서는 이 안내문이 노출되지 않는다. */
+@media(min-width:481px){
+  body::before{
+    content:'📱 모바일 미리보기 — 실제 기기에서는 프레임 없이 풀스크린으로 표시됩니다';
+    position:fixed;top:14px;left:50%;transform:translateX(-50%);
+    font-size:11.5px;color:#8E8E93;background:#F5F5F7;border:1px solid var(--line);
+    padding:6px 14px;border-radius:999px;z-index:1;white-space:nowrap;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- 스크롤 진행바 (프레임 폭 안에서만) -->
+<div id="progress"><i></i></div>
+
+<div class="app" id="app">
+
+  <!-- 상단바 -->
+  <div class="topbar">
+    <div class="tb-inner">
+      <button class="tb-btn" id="menu-btn" aria-label="메뉴 열기">
+        <svg viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="17" x2="20" y2="17"></line></svg>
+      </button>
+      <div class="tb-title" id="tb-title">{{TOPBAR_LABEL}}</div>
+      <div class="tb-spacer"></div>
+    </div>
+  </div>
+
+  <!-- 풀스크린 오버레이 메뉴
+       nav-item: data-target 값이 해당 <section id="...">와 반드시 일치해야 함 -->
+  <nav class="menu-overlay" id="menu-overlay" aria-hidden="true">
+    <div class="menu-head">
+      <div class="menu-brand">
+        <div class="m-lbl">{{MENU_LABEL}}</div>
+        <div class="m-title">{{MENU_TITLE}}</div>
+      </div>
+      <button class="tb-btn" id="menu-close" aria-label="메뉴 닫기">
+        <svg viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18"></line><line x1="18" y1="6" x2="6" y2="18"></line></svg>
+      </button>
+    </div>
+    <div class="menu-nav">
+      <div class="menu-ch">I. 챕터 이름</div>
+      <button class="menu-item" data-target="s1-1"><span class="mi-n">1.1</span>섹션 제목</button>
+      <button class="menu-item" data-target="s1-2"><span class="mi-n">1.2</span>섹션 제목</button>
+      <div class="menu-ch">II. 챕터 이름</div>
+      <button class="menu-item" data-target="s2-1"><span class="mi-n">2.1</span>섹션 제목</button>
+    </div>
+    <div class="menu-foot">{{MENU_FOOT_DATE}} 작성 · {{MENU_FOOT_AUTHOR}}</div>
+  </nav>
+
+  <!-- 메인 콘텐츠 -->
+  <div class="main">
+
+    <!-- Hero ────────────────────────────────── -->
+    <section class="hero" id="s-hero">
+      <div class="wrap">
+        <div class="brand"><i></i>{{HERO_BRAND}}</div>
+        <h1>{{HERO_H1_L1}}<br><span class="grad">{{HERO_H1_L2}}</span></h1>
+        <p class="sub">{{HERO_SUB}}</p>
+        <div class="meta-tags">
+          <span class="tag">📅 {{META_DATE}}</span>
+          <span class="tag">✍ {{META_AUTHOR}}</span>
+          <span class="tag">🎯 {{META_TARGET}}</span>
+          <span class="tag">🔖 {{VERSION}}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════
+         챕터 I 구분선
+         data-chapter: 상단바에 표시되는 텍스트 / roman: I, II, III ...
+         ═══════════════════════ -->
+    <section class="divider" data-chapter="I. 챕터 이름">
+      <div class="roman rv" style="--d:.05s">I</div>
+      <h2 class="rv" style="--d:.1s">챕터 제목</h2>
+      <p class="rv" style="--d:.15s">챕터 설명 한 줄</p>
+    </section>
+
+    <!-- 섹션 1.1 — 비교 카드(compare) 예시 ────── -->
+    <section id="s1-1">
+      <div class="wrap">
+        <div class="kicker rv">1.1 — Section Label</div>
+        <h2 class="rv" style="--d:.05s">섹션 <span class="hl">제목</span></h2>
+        <p class="lede rv" style="--d:.1s">섹션 소개 텍스트 (선택)</p>
+
+        <div class="compare rv" style="--d:.15s">
+          <div class="cmp-row">
+            <div class="cmp-label">비교 축 이름</div>
+            <div class="cmp-cols">
+              <div class="cmp-col a"><span class="cc-tag">기존 A</span>내용</div>
+              <div class="cmp-col b"><span class="cc-tag">신규 B</span>내용 <span class="badge badge-new">신규</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="proof rv" style="--d:.2s;margin-top:20px">
+          <h3>제목 <span class="hl">—</span> 부제</h3>
+          <p>본문 설명 텍스트. 강조하고 싶은 결론을 여기에 적는다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 섹션 1.2 — 체크리스트 예시 ─────────────── -->
+    <section id="s1-2">
+      <div class="wrap">
+        <div class="kicker rv">1.2 — Section Label</div>
+        <h2 class="rv" style="--d:.05s">섹션 <span class="hl">제목</span></h2>
+
+        <div class="checklist rv" style="--d:.1s">
+          <div class="check-item">
+            <div class="check-box"></div>
+            <div class="ci-text"><b>항목명</b>: 설명 텍스트</div>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <div class="ci-text"><b>항목명</b>: 설명 텍스트 <span class="badge badge-req">확인 필요</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════
+         챕터 II 구분선
+         ═══════════════════════ -->
+    <section class="divider" data-chapter="II. 챕터 이름">
+      <div class="roman rv" style="--d:.05s">II</div>
+      <h2 class="rv" style="--d:.1s">챕터 제목 <span style="color:var(--cyan-300)">강조 부분</span></h2>
+      <p class="rv" style="--d:.15s">챕터 설명 한 줄</p>
+    </section>
+
+    <!-- 섹션 2.1 — 타임라인 + 상세카드 예시 ────── -->
+    <section id="s2-1">
+      <div class="wrap">
+        <div class="kicker rv">2.1 — Section Label</div>
+        <h2 class="rv" style="--d:.05s">섹션 <span class="hl">제목</span></h2>
+        <p class="lede rv" style="--d:.1s">섹션 소개 텍스트</p>
+
+        <div class="timeline rv" style="--d:.15s">
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-time">00:00</div>
+            <div class="tl-card">
+              <div class="tl-stage">단계 이름</div>
+              <div class="tl-place">장소/담당</div>
+              <div class="tl-desc">이 단계에서 진행되는 내용 설명.</div>
+              <div class="tl-fun"><b>메모 —</b>&nbsp;부가 설명이나 재미 요소</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="spec-grid rv" style="--d:.2s;margin-top:20px">
+          <div class="spec-row"><div class="spec-k">항목</div><div class="spec-v">값</div></div>
+          <div class="spec-row"><div class="spec-k">항목</div><div class="spec-v">값</div></div>
+        </div>
+
+        <div class="dc-list rv" style="--d:.25s;margin-top:20px">
+          <div class="dc-item">
+            <div class="dc-num">라벨</div>
+            <div class="dc-title">제목</div>
+            <div class="dc-body">설명 텍스트</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer ──────────────────────────────── -->
+    <footer>
+      <b>{{FOOTER_TITLE}}</b>
+      <div class="f-sub">{{FOOTER_SUB}}</div>
+      작성일: {{META_DATE}} · 작성자: {{META_AUTHOR}}<br>대상: {{META_TARGET}} · {{VERSION}}
+    </footer>
+
+  </div><!-- .main -->
+
+  <!-- 하단 탭바 — 3~5개, data-target은 주요 챕터 첫 섹션 id를 가리킴 -->
+  <nav class="tabbar">
+    <button class="tab-item" data-target="s-hero">
+      <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+      <span>홈</span>
+    </button>
+    <button class="tab-item" data-target="s1-1">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg>
+      <span>탭 이름</span>
+    </button>
+    <button class="tab-item" data-target="s2-1">
+      <svg viewBox="0 0 24 24"><path d="M4 3v18M8 3v6a4 4 0 0 0 8 0V3M12 13v8"/></svg>
+      <span>탭 이름</span>
+    </button>
+  </nav>
+
+  <!-- 스크롤탑 FAB -->
+  <button id="totop" aria-label="맨 위로">
+    <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
+
+</div><!-- .app -->
+
+<script>
+(function(){
+  const app = document.getElementById('app');
+  const progressBar = document.querySelector('#progress i');
+  const tbTitle = document.getElementById('tb-title');
+  const menuOverlay = document.getElementById('menu-overlay');
+  const menuBtn = document.getElementById('menu-btn');
+  const menuClose = document.getElementById('menu-close');
+  const menuItems = [...document.querySelectorAll('.menu-item')];
+  const tabItems = [...document.querySelectorAll('.tab-item')];
+  const totop = document.getElementById('totop');
+  const dividers = [...document.querySelectorAll('[data-chapter]')];
+  const DEFAULT_LABEL = tbTitle.textContent;
+
+  function openMenu(){
+    menuOverlay.classList.add('open');
+    menuOverlay.setAttribute('aria-hidden','false');
+  }
+  function closeMenu(){
+    menuOverlay.classList.remove('open');
+    menuOverlay.setAttribute('aria-hidden','true');
+  }
+  menuBtn.addEventListener('click', openMenu);
+  menuClose.addEventListener('click', closeMenu);
+
+  function scrollToTarget(id){
+    const el = document.getElementById(id);
+    if(!el) return;
+    const topbarH = document.querySelector('.topbar').offsetHeight;
+    const y = el.offsetTop - topbarH + 1;
+    app.scrollTo({ top: Math.max(y,0), behavior: 'smooth' });
+  }
+
+  menuItems.forEach(btn => btn.addEventListener('click', () => {
+    scrollToTarget(btn.dataset.target);
+    closeMenu();
+  }));
+  tabItems.forEach(btn => btn.addEventListener('click', () => {
+    scrollToTarget(btn.dataset.target);
+  }));
+
+  // FAB: 맨 위로
+  totop.addEventListener('click', () => app.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // 등장 애니메이션 (IntersectionObserver, .app 스크롤 컨테이너 기준)
+  const io = new IntersectionObserver(es => {
+    for (const e of es) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }, { root: app, threshold: 0, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.rv:not(.in)').forEach(el => { el.classList.add('pre'); io.observe(el); });
+
+  // 스크롤: 진행바 + 상단바 라벨 + 메뉴/탭바 active + FAB 노출
+  const allSections = [...document.querySelectorAll('section[id]')];
+  app.addEventListener('scroll', () => {
+    const st = app.scrollTop;
+    const max = app.scrollHeight - app.clientHeight;
+    progressBar.style.width = (max > 0 ? (st / max * 100) : 0) + '%';
+
+    let label = '';
+    for (const d of dividers) if (d.getBoundingClientRect().top < app.clientHeight * .5) label = d.dataset.chapter;
+    tbTitle.textContent = label || DEFAULT_LABEL;
+    tbTitle.classList.toggle('on', !!label);
+
+    let active = '';
+    for (const s of allSections) if (s.getBoundingClientRect().top < app.clientHeight * .4) active = s.id;
+    menuItems.forEach(a => a.classList.toggle('active', a.dataset.target === active));
+
+    const tabTargets = tabItems.map(t => t.dataset.target);
+    let tabActive = tabTargets[0];
+    for (const t of tabTargets) {
+      const el = document.getElementById(t);
+      if (el && el.getBoundingClientRect().top < app.clientHeight * .5) tabActive = t;
+    }
+    tabItems.forEach(t => t.classList.toggle('active', t.dataset.target === tabActive));
+
+    totop.classList.toggle('on', st > app.clientHeight * .8);
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>
