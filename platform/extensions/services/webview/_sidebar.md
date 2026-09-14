@@ -20,6 +20,7 @@
 - **히스토리**
   - [2026년 7월](platform/_manage/history/202607_history.md)
   - [2026년 8월](platform/_manage/history/202608_history.md)
+  - [2026년 9월](platform/_manage/history/202609_history.md)
 
 - **앱**
 
