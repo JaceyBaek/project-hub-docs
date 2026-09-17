@@ -66,7 +66,7 @@
 **푸시 요청 시 전단계 자동 선행:** 푸시 요청이 오면 푸시만 실행하지 않는다. 세션 마무리 표준 흐름 전체를 순서대로 진행한다.
 1. **각종 기록** — 히스토리·lessons_learned·todo·issues 등 누락된 기록 작성
 2. **커밋** — 기록 파일 포함하여 커밋
-3. **푸시** — **eacct_chatbot·eacct_mcp는 origin(GitHub)+bitbucket(Bitbucket Server) 이중 리모트 필수.** `git push origin main` 한 번으로 끝났다고 판단하지 않고 `git push bitbucket main:release/chatbot_dev`(mcp는 `release/mcp_dev`)까지 반드시 실행 — Bamboo가 실제 체크아웃하는 소스는 bitbucket 쪽 release 브랜치. → 사례: lessons_learned.md [운영]
+3. **푸시** — **eacct_chatbot·eacct_mcp는 origin(GitHub)+bitbucket(Bitbucket Server) 이중 리모트 필수.** `git push origin main` 한 번으로 끝났다고 판단하지 않고 `git push bitbucket main:release/chatbot_qa`(mcp는 `release/mcp_qa`, 2026-09-17 두 리포 모두 `_dev`→`_qa` rename)까지 반드시 실행 — Bamboo가 실제 체크아웃하는 소스는 bitbucket 쪽 release 브랜치. → 사례: lessons_learned.md [운영]
 4. **CI 감시** — 서브모듈 포함 시 아래 CI 감시 규칙 적용
 각 단계에서 범위가 불명확하거나 confirm이 필요한 사항이 있으면 진행 전 질문한다.
 
