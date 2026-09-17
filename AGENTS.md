@@ -2,15 +2,22 @@
 
 이 파일은 이 저장소에서 동작하는 모든 하네스·모델이 공유하는 root entrypoint다. 특정 벤더·모델 계열 전용 지시가 아니다. 모델별 능력·역할 whitelist는 `platform/processes/ai_agents/AI_*.md`, 역할별 허용/금지는 `platform/processes/roles/`가 소유하며 이 문서는 두 축을 복제하지 않고 아래 공통 게이트·규칙만 규정한다.
 
-## 구현(코딩) 작업 요청 시 역할 확인 게이트
+## AI 비서 정체성 (하네스 무관 공통 적용)
 
-**구현·코드 작성 요청이 오면 무조건**(collab 작업 여부와 무관하게) 진행 전 다음을 확인한다.
+이 문서를 로드하는 모든 하네스·모델은 응답 중 자신을 하네스 이름(Kiro·Claude Code·Codex 등)이나 raw 모델명이 아니라 `platform/setup/config/personal.yml`의 `assistant.name_kr`(현재값: 아이다)로 자칭한다. 사용자는 같은 파일의 `user_name`(현재값: Jacey)으로 지칭한다. 값이 비어 있으면 `platform/hub_init.py`를 먼저 실행하도록 안내한다.
+
+- persona(이름·역할) 상세는 모델 축 `platform/processes/ai_agents/AI_CLAUDE.md`가 audit-only 표시명으로 참조한다. 이 섹션은 그 사실을 복제하지 않고 자칭·지칭 규칙만 규정한다.
+- `CLAUDE.md`의 `## AI 비서` 섹션과 표현 동등성을 유지한다. 두 파일 중 하나만 갱신되어 drift가 발견되면 review-blocking으로 처리한다.
+
+## 구현(코딩) 작업 요청 시 역할 확인 게이트 (collab 진행 중 전용)
+
+**collab 작업**(design·DEV·TC 문서 생성/편집, collab bundle 내 구현 등 `platform/processes/collab/` 프로세스가 진행 중인 경우) **중에 구현·코드 작성 요청이 오면 무조건** 진행 전 다음을 확인한다. collab이 아닌 일반 대화·플랫폼/프로젝트 코드 작업에는 이 게이트를 적용하지 않는다(2026-09-17 Jacey 지시로 collab 전용 축소 — 이전에는 "collab 작업 여부와 무관하게"였음).
 
 1. `platform/setup/config/personal.yml` `collab.roles.developer`(또는 현행 스키마의 개발 담당 필드)에 실제 배정된 주체를 확인한다.
 2. 자신이 그 배정과 다르면 구현하지 않는다. 설계·검증·테스트 리뷰 전용 역할임을 알리고 명세, 테스트 계획, 인터페이스 명세, 인수 기준, 구현 체크리스트 제공을 제안한다.
 3. 이 확인을 생략하고 구현을 진행하는 것은 금지된다 — "지금 요청이 급하다"·"간단한 수정이다" 등 어떤 이유로도 생략하지 않는다.
 
-**이중 안전장치 (fail-closed)**: 위 확인이 어떤 이유로든 생략되거나 실패해도, GPT 계열은 `platform/processes/ai_agents/AI_GPT.md`의 `default_role_whitelist`에 `developer`가 없어 모델 능력 층에서 별도로 차단된다. 역할 정책(`platform/processes/roles/ROLE_DEVELOPER.md`)은 "GPT 계열을 `developer`로 배정하는 것" 자체를 금지하며, 모델 프로필은 "GPT의 `developer` whitelist 판정"만 소유한다. 두 층은 독립적으로 작동한다 — 한쪽이 누락돼도 다른 쪽이 차단한다.
+> **GPT 구현 금지 이중 안전장치 폐지 (2026-09-17)**: 과거에는 회사가 Claude 계열만 지원해 GPT 활용 환경이 없었던 것을 근거로, GPT 계열을 `developer`로 배정하는 것을 역할 정책(`ROLE_DEVELOPER.md`)과 모델 whitelist(`AI_GPT.md`) 두 층에서 금지했다. 이제 Claude·GPT 모두 사용 가능해져 전제가 사라졌으므로 Jacey 지시로 두 층 모두 해제됐다. GPT 계열도 `personal.yml collab.roles.developer`에 배정될 수 있고, 위 collab 게이트는 모델 계열과 무관하게 배정 여부만으로 판정한다.
 
 문서 편집은 허용된다. Markdown 문서, 설계 문서, 리뷰 문서, 오케스트레이션 계획, 마이그레이션 계획, 검증 노트, 테스트 전략, 인수 기준, 프로세스 문서, 구현 체크리스트 편집은 구현으로 간주하지 않는다.
 
@@ -56,7 +63,7 @@
 
 collab 작업에서 실제 역할 배정은 `platform/setup/config/personal.yml` `collab.roles.*`를 조회한다. 역할별 독립성·15쌍 매트릭스는 `platform/processes/roles/README.md`, 모델별 능력·whitelist는 `platform/processes/ai_agents/AI_*.md`를 참조한다.
 
-운영 단계별 권장 모델(문제 정의·설계 리뷰·검증 설계 등)은 프로젝트·오케스트레이터 설정에서 관리하며, 이 문서는 특정 모델 ID를 특정 역할에 고정 배정하지 않는다. 구현 실행 단계의 실제 담당은 위 역할 확인 게이트를 통과한 `developer` 배정 주체이며, GPT 계열은 이 배정을 받을 수 없다(위 이중 안전장치 참조).
+운영 단계별 권장 모델(문제 정의·설계 리뷰·검증 설계 등)은 프로젝트·오케스트레이터 설정에서 관리하며, 이 문서는 특정 모델 ID를 특정 역할에 고정 배정하지 않는다. 구현 실행 단계의 실제 담당은 위 역할 확인 게이트를 통과한 `developer` 배정 주체이며, Claude·GPT 계열 모두 이 배정을 받을 수 있다(2026-09-17부터 — 과거 GPT 배정 금지 이중 안전장치는 폐지됨).
 
 ## 규칙 선독 체인 (고위험 작업 필수)
 
