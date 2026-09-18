@@ -14,7 +14,7 @@
 ## 공통 운영 규칙 (COMMON 핵심 인라인)
 
 > **SoT**: `platform/processes/ai_agents/COMMON.md`가 공통 규칙의 유지·편집용 SoT다.
-> `CLAUDE.md`는 Claude Code root entrypoint로서 `AGENTS.md`와 동등한 COMMON 핵심 7개 block만 인라인으로 포함한다. 나머지 block은 필요 시 `COMMON.md`를 직접 Read한다.
+> `CLAUDE.md`는 Claude Code root entrypoint로서 `AGENTS.md`와 동등한 COMMON 핵심 9개 block만 인라인으로 포함한다. 나머지 block은 필요 시 `COMMON.md`를 직접 Read한다.
 
 <!-- sync: COM-RES-001, 20260830, mode=manual, owner=Claude -->
 **기본 응답 규칙** (COM-RES-001): 한국어·존댓말, 사실 기반, 외부 스펙 확인 후 기술(미확인 시 "미확인" 표기), 코드·산출물 우선, 모호하면 질문, step-by-step. 전문: `platform/processes/ai_agents/COMMON.md` §COM-RES-001. (아래 `## 응답 규칙` 1~7이 이 block의 상세 규범이며 서로 다른 표현이 아니다.)
@@ -36,6 +36,12 @@
 
 <!-- sync: COM-RES-003, 20260904, mode=manual, owner=Claude -->
 **실수 시인 즉시 처리 프로세스** (COM-RES-003, enforcement: hard): 실수 시인 즉시 자동 3단계 — ① 원인 분석(직접/근본/영향) → ② 재발방지 대책 등록(해당 지침 파일 확인 후 업그레이드 또는 신규) → ③ 레슨런 등록(프로젝트 레이어는 `_manage/lessons.md` [공통] 태그 → `platform/processes/rules/lessons_learned.md` 승격, 플랫폼 레이어는 직접 등록). ①②③ 산출물이 셋 다 없으면 미완료 — 해당 단계부터 재실행. 트리거 목록은 `platform/TRIGGERS.md`가 SoT. 전문: `platform/processes/ai_agents/COMMON.md` §COM-RES-003 (2026-09-04 인라인 추가 — 신설 이후 이 block이 빠져 있어 레슨런 등록이 다수 세션에서 누락됨, `lessons_learned.md` [협업/프로세스] 참조)
+
+<!-- sync: COM-RES-006, 20260918, mode=manual, owner=Claude -->
+**서브프로세스 위임 시 실행 사실 검증 의무** (COM-RES-006, enforcement: hard gate, collab 무관 상시 적용): (1) "N분 지났다"류 경과 시간 문구는 그 문장을 쓰는 턴 안에 `Get-Date` 실행이 선행됐을 때만 쓴다 — 없으면 먼저 `Get-Date`를 실행한다. 폴링 횟수·감각적 추정으로 대체 금지. (2) 서브프로세스 로그에서 명령 실패를 발견하면 그 이후 재시도 성공 여부를 직접 재확인한 뒤에만 그 값(시각·경로·수치)을 서명·문서에 반영한다 — 재확인 불가면 해당 값 무효. (3) 서브프로세스에 시각 확인을 지시할 때는 대상 OS 셸 문법(Windows는 `Get-Date`, Unix `date` 문법 전달 금지)을 명시한다. 전문: `platform/processes/ai_agents/COMMON.md` §COM-RES-006 (2026-09-18 신규, 같은 세션에서 즉시 재위반 후 강화 — `lessons_learned.md` [협업/프로세스] 참조)
+
+<!-- sync: COM-COLLAB-005, 20260918, mode=manual, owner=Claude -->
+**타 참여자 명의 섹션·서명 대리 작성 절대 금지** (COM-COLLAB-005, enforcement: hard gate, collab 전용): designer·reviewer 등 collab 역할을 서브프로세스로 위임하는 구조에서, 무정지 원칙(다음 단계로 지체 없이 진행)과 대리 작성(그 단계 산출물을 오케스트레이터가 대신 씀)은 다르다. 대상 역할이 아직 응답하지 않았으면 플레이스홀더로 두고 기다린다 — 오케스트레이터는 스캐폴딩(파일·frontmatter 뼈대·MAP 노드)만 채우고, `resolved_by`·`verified_by`·§3 응답·§4 동의 검증은 예외 없이 대상 역할 본인이 작성한다. 전문: `platform/processes/ai_agents/COMMON.md` §COM-COLLAB-005 (2026-09-18 신규 — designer 명의 대리 서명 발생, `lessons_learned.md` [협업/프로세스] 참조)
 
 **P-2 (축 판정 합성 규칙)**: 모델·harness·역할 축의 `deny`는 합집합, `allow`는 교집합으로 판정한다. 한 축이라도 `deny`/`unknown`이면 배정·진행을 금지한다.
 
