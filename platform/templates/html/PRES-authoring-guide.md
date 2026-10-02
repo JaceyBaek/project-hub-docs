@@ -2,7 +2,7 @@
 title: "Presentation HTML 작성 가이드"
 type: guide
 template: PRES_presentation_template.html
-updated: "2026-08-21 (§12 MDS 적용 리포트 패턴 추가)"
+updated: "2026-09-30 (§7.5 role-grid, §7.6 클릭 확대 이미지 라이트박스 컴포넌트 추가)"
 ---
 
 # Presentation HTML 작성 가이드
@@ -299,7 +299,51 @@ HTML과 **같은 폴더**에 함께 보관한다.
 </div>
 ```
 
-### 7.5 통신 목록 (comm-section)
+### 7.5 역할 카드 그리드 (role-grid)
+
+역할·구성원·단계 등 3~6개 항목을 카드로 나열할 때 사용. 기본 3열 그리드이며 860px 이하에서 1열로 전환된다(반응형 내장).
+
+```html
+<div class="role-grid rv" style="--d:.2s">
+  <div class="role-card">
+    <div class="rc-tag">Designer</div>
+    <h5>기안</h5>
+    <p>방향성·상세설계 초안 작성</p>
+  </div>
+  <!-- 필요한 만큼 .role-card 반복 -->
+</div>
+```
+
+- `.rc-tag`: 상단 라벨(역할명·영문 태그 등, 대문자 권장)
+- `h5`: 카드 제목
+- `p`: 설명 텍스트
+- 2026-09-30 신규 추가 (eacct_chatbot collab 발표 자료에서 6개 역할 카드로 최초 사용 후 템플릿에 승격).
+
+### 7.6 클릭 확대 이미지 (라이트박스)
+
+스크린샷·다이어그램 등을 넣을 때 사용. 클릭하면 화면 대부분을 채우도록 확대되고, 배경 클릭 또는 ESC 키로 닫힌다.
+
+```html
+<div class="tbl-wrap rv" style="--d:.3s;padding:8px;background:var(--card);width:fit-content">
+  <img src="data:image/png;base64,{{BASE64_IMAGE_DATA}}" alt="이미지 설명" class="zoomable-img"
+       style="display:inline-block;width:600px;max-width:100%;border-radius:10px" onclick="openImageZoom(this)">
+</div>
+```
+
+**필수 규칙 — base64 인라인만 허용, 외부 파일 링크 금지.** 이 템플릿 문서는 단일 HTML 파일로 배포되는 것을 전제로 한다(§3.6 자기완결성 원칙과 동일 취지). `<img src="./assets/foo.png">` 같은 상대경로·외부 파일 참조는 배포 시 이미지가 깨진다 — 반드시 `data:image/{png|jpeg};base64,...` data URI로 이미지 자체를 HTML 안에 인라인 포함한다.
+
+**style 속성 3가지 필수 값**:
+- `width`: 이미지 원본 픽셀 크기로 고정(예: 원본이 596×379면 `width:596px`). `width:100%`로 컨테이너에 맞춰 늘리면 저해상도 스크린샷이 부자연스럽게 커진다.
+- `max-width:100%`: 좁은 화면(모바일)에서 `width` 고정값보다 화면이 좁을 때 자동으로 줄어들게 하는 반응형 처리.
+- 컨테이너 `.tbl-wrap`에 `width:fit-content`: 컨테이너가 `.wrap` 전체 폭을 차지해 이미지 우측으로 큰 여백이 남는 것을 방지하고, 이미지 크기에 정확히 맞춰 좌측 정렬한다(다른 컴포넌트와 동일한 본문 좌측 정렬 톤 유지). 이미지를 가운데 배치하고 싶으면 `margin:0 auto`를 추가한다.
+
+**동작 원리**: `class="zoomable-img"` + `onclick="openImageZoom(this)"`만 있으면 템플릿에 이미 포함된 `#img-zoom-overlay`(body 하단)와 `openImageZoom()`/`closeImageZoom()` 스크립트가 그대로 동작한다 — 이미지마다 별도 스크립트 작성 불필요, 문서 안에 이 패턴을 쓰는 이미지가 여러 개여도 오버레이 1개를 공유한다.
+
+**base64 변환 방법(Windows)**: `certutil -encode {이미지경로} {출력경로}.txt` 실행 후 PEM 헤더(`-----BEGIN CERTIFICATE-----`)·푸터 줄과 줄바꿈을 제거해 순수 base64 한 줄로 만든 뒤 `{{BASE64_IMAGE_DATA}}` 자리에 붙여넣는다. 이미지 원본 픽셀 크기는 PowerShell `[System.Drawing.Image]::FromFile(...)`의 `Width`/`Height`로 확인한다.
+
+2026-09-30 신규 추가 (eacct_chatbot collab 문서의 실제 산출물 스크린샷에서 최초 사용 후 템플릿에 승격).
+
+### 7.7 통신 목록 (comm-section)
 
 ```html
 <div class="comm-section">

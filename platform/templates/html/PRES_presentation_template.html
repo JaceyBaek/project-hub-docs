@@ -186,6 +186,20 @@ code{font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;fon
 pre{font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;background:#F5F5F7;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;font-size:13px;line-height:1.65;margin:14px 0}
 pre code{background:none;color:var(--ink);padding:0;font-size:1em}
 
+/* ── Role Grid (역할·구성원 카드 그리드) ─── */
+.role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+.role-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.role-card .rc-tag{font-size:9px;font-weight:700;letter-spacing:.15em;color:var(--sky-400);text-transform:uppercase;margin-bottom:6px}
+.role-card h5{font-size:14.5px;font-weight:700;color:var(--navy-800);margin-bottom:4px}
+.role-card p{font-size:12.5px;color:var(--muted);line-height:1.55}
+@media(max-width:860px){.role-grid{grid-template-columns:1fr}}
+
+/* ── Image Zoom (클릭 확대/축소 라이트박스) ── */
+.zoomable-img{transition:transform .15s;cursor:zoom-in}
+.img-zoom-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:none;align-items:center;justify-content:center;cursor:zoom-out;padding:32px}
+.img-zoom-overlay.on{display:flex}
+.img-zoom-overlay img{max-width:96vw;max-height:92vh;border-radius:10px;box-shadow:0 12px 48px rgba(0,0,0,.4);cursor:zoom-out}
+
 /* ── Footer ──────────────────────────────── */
 footer{background:#F5F5F7;color:var(--muted);padding:40px 24px;font-size:12.5px}
 footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
@@ -354,6 +368,34 @@ body.sb-collapsed #sidebar-toggle svg{transform:rotate(180deg)}
       <h3>제목 <span class="hl">—</span> 부제</h3>
       <p>본문 설명 텍스트. <b style="color:var(--sky-400)">강조 경로 또는 링크</b></p>
     </div>
+
+    <!-- 역할 카드 그리드 예시 (역할·구성원·단계 등 3~6개 항목을 카드로 나열할 때) -->
+    <div class="role-grid rv" style="--d:.2s">
+      <div class="role-card">
+        <div class="rc-tag">Tag</div>
+        <h5>카드 제목</h5>
+        <p>카드 설명 텍스트</p>
+      </div>
+      <div class="role-card">
+        <div class="rc-tag">Tag</div>
+        <h5>카드 제목</h5>
+        <p>카드 설명 텍스트</p>
+      </div>
+      <div class="role-card">
+        <div class="rc-tag">Tag</div>
+        <h5>카드 제목</h5>
+        <p>카드 설명 텍스트</p>
+      </div>
+    </div>
+
+    <!-- 클릭 확대 가능한 이미지 예시 (스크린샷·다이어그램 등) -->
+    <!-- 1) base64 data URI로 이미지 자체를 HTML에 인라인 포함(외부 파일 링크 금지, 단일 파일 배포 원칙)
+         2) style의 width는 이미지 원본 픽셀 크기로 고정 + max-width:100%로 반응형 처리
+         3) 컨테이너(.tbl-wrap)는 width:fit-content로 이미지 크기에 맞춰 감싸고 본문 좌측 정렬(다른 컴포넌트와 동일 톤).
+            가운데 배치가 필요하면 margin:0 auto 추가 -->
+    <div class="tbl-wrap rv" style="--d:.3s;padding:8px;background:var(--card);width:fit-content">
+      <img src="data:image/png;base64,{{BASE64_IMAGE_DATA}}" alt="이미지 설명" class="zoomable-img" style="display:inline-block;width:600px;max-width:100%;border-radius:10px" onclick="openImageZoom(this)">
+    </div>
   </div>
 </section>
 
@@ -404,6 +446,11 @@ body.sb-collapsed #sidebar-toggle svg{transform:rotate(180deg)}
 
 </div><!-- .main-content -->
 </div><!-- .layout -->
+
+<!-- 이미지 클릭 확대/축소 라이트박스 (본문 어디든 .zoomable-img + onclick="openImageZoom(this)" 인 img 태그가 있으면 동작) -->
+<div class="img-zoom-overlay" id="img-zoom-overlay" onclick="closeImageZoom()">
+  <img id="img-zoom-target" src="" alt="확대 이미지">
+</div>
 
 <script>
 const prog = document.getElementById('progress');
@@ -481,6 +528,21 @@ sbTitle.addEventListener('click', () => {
 });
 sbTitle.addEventListener('keydown', e => {
   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sbTitle.click(); }
+});
+
+// 이미지 클릭 확대/축소 (라이트박스) — .zoomable-img + onclick="openImageZoom(this)"인 img에서 사용
+function openImageZoom(imgEl) {
+  const overlay = document.getElementById('img-zoom-overlay');
+  const target = document.getElementById('img-zoom-target');
+  target.src = imgEl.src;
+  target.alt = imgEl.alt;
+  overlay.classList.add('on');
+}
+function closeImageZoom() {
+  document.getElementById('img-zoom-overlay').classList.remove('on');
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeImageZoom();
 });
 </script>
 </body>

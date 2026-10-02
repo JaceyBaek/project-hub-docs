@@ -84,3 +84,38 @@ sidebar_order: 1
 - `projects/eacct_approval_doc_mapping/source/.env.example` (DB 접속 비시크릿 값 추가)
 - `platform/processes/rules/lessons_learned.md` (브레인스톰 이동에 따른 참조 경로 갱신)
 - `platform/docs/catalog.yml`, `platform/docs/DOCS_STATUS.md`, `platform/extensions/services/webview/_sidebar.md` (자동 재생성)
+
+## 2026-09-29 — `.claude/settings.json` ↔ `.kiro/hooks/` 훅 하네스 공통화 (15:03)
+
+**작업 내용**
+
+- Jacey 문의로 시작 — `.claude/settings.json`에 정의된 H-001/H-006/H-RG/H-GIT-REMOTE/H-DOC-QUALITY/CI감시 훅이 Claude Code 전용 스키마(`matcher: Edit|Write|Bash`)라 Kiro에서는 전혀 실행되지 않고 있음을 확인. `.kiro/hooks/`에는 `h-shell-compound-guard.json` 1건만 등록돼 있었음
+- Kiro의 실제 PreToolUse stdin payload 스키마를 임시 프로브 훅으로 실측(검증 후 즉시 삭제) — `tool_name`/`tool_input`/`cwd` 키 이름은 Claude Code와 동일하나 도구명·필드명이 다름을 확인
+  - 파일 쓰기: Claude `Write/Edit`(`file_path`,`old_string`,`new_string`) vs Kiro `fs_write/str_replace/fs_append`(`path`,`oldStr`,`newStr`)
+  - 셸 실행: Claude `Bash`(`command`) vs Kiro `execute_pwsh/control_pwsh_process`(`command`, 키는 동일)
+  - transcript 조회: Claude Code는 `transcript_path`(세션 JSONL) 제공, Kiro는 미제공 — 이전 브레인스톰(`20260830_model-harness-role-separation-followups.md` V-04/V-05)에 미검증으로 남아있던 항목을 실측으로 확정
+- `platform/extensions/scripts/hooks/_adapter_common.py` 신규 — 하네스별 raw payload를 공통 스키마(`kind: file_write|shell`, `file_path`, `old_content`, `new_content`, `command`, `cwd`)로 정규화하는 `normalize_payload()`, transcript 지원 여부를 확인하는 `has_transcript_support()` 제공
+- 기존 5개 훅 스크립트를 공통 스키마 기반으로 수정(하네스 분기를 스크립트에서 제거, `_adapter_common` 호출로 대체): `h001_secret_detect.py`, `h006_sensitive_file.py`, `git_remote_guard.py`, `doc_quality_check.py`, `read_gate.py`
+  - `read_gate.py`(H-RG-001~003)는 Kiro에 `transcript_path`가 없어 기존 fail-safe 경로(`events is None` → warn)를 그대로 타도록 처리 — Kiro에서는 이 규칙들이 block(exit 2) 없이 warn-only로만 동작함(설계된 강등이며 버그 아님)
+  - `ci_watch_hook.ps1`(Claude Code `asyncRewake` 의존)은 Kiro v2 hook에 대응 기능이 없어 포팅 대상에서 제외
+- `.kiro/hooks/`에 대응 트리거 6건 신규 등록: `h001-secret-detect-pre/post`, `h006-sensitive-file-pre/post`, `h-git-remote-guard`, `h-doc-quality-check`, `h-rg-read-gate`
+- Kiro payload 샘플 파일로 5개 스크립트 전건 동작 검증(H-001 시크릿 감지, H-GIT-REMOTE `--force` 감지, H-RG-003 warn 강등 등 정상 확인) 후 임시 테스트 파일·러너 스크립트 삭제
+- 실제 세션에서 `execute_pwsh` 호출 시 `.kiro/hooks/h-git-remote-guard.json` → `git_remote_guard.py`가 실제로 트리거되는지 임시 로그로 실측 확인 후 검증 코드 원복
+- `platform/processes/security/hooks_policy_d02.md`에 어댑터 구조·한계(H-RG-003 Kiro warn 강등, CI 감시 미포팅)를 정책 SoT 갱신 규칙에 따라 인라인 기록
+
+**변경 파일**
+
+- `platform/extensions/scripts/hooks/_adapter_common.py` (신규)
+- `platform/extensions/scripts/hooks/h001_secret_detect.py`
+- `platform/extensions/scripts/hooks/h006_sensitive_file.py`
+- `platform/extensions/scripts/hooks/git_remote_guard.py`
+- `platform/extensions/scripts/hooks/doc_quality_check.py`
+- `platform/extensions/scripts/hooks/read_gate.py`
+- `platform/processes/security/hooks_policy_d02.md` (어댑터 구조·한계 기록)
+- `.kiro/hooks/h001-secret-detect-pre.json` (신규)
+- `.kiro/hooks/h001-secret-detect-post.json` (신규)
+- `.kiro/hooks/h006-sensitive-file-pre.json` (신규)
+- `.kiro/hooks/h006-sensitive-file-post.json` (신규)
+- `.kiro/hooks/h-git-remote-guard.json` (신규)
+- `.kiro/hooks/h-doc-quality-check.json` (신규)
+- `.kiro/hooks/h-rg-read-gate.json` (신규)
